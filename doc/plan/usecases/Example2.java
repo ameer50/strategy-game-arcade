@@ -5,7 +5,7 @@ public class Controller{
 	//from Example1.java
 	public void executeMovement(){
 		
-		List<String> moves = board.checkValidMoves(0, 0);
+		List<String> moves = board.getValidMoves(0, 0);
 		String move = moves.get(0);
 		
 		double score = board.doMove(0, 0, move);

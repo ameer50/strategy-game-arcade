@@ -13,7 +13,7 @@ public interface Board{
 	@param y y coordinate of the cell
 	@return potential moves of the piece at cell x,y
 	**/
-	List<String> checkValidMoves(int x, int y);
+	List<String> getValidMoves(int x, int y);
 
 	/**
 	Get piece at the specified coordinates
