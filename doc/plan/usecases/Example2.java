@@ -1,12 +1,21 @@
 public class Controller{
-	//This example illustrates how our Controller would execute a single move selected from the potential valid moves a given piece could make
+	//This example illustrates how our Controller would update the score of a player following a game move
 	ChessBoard board;
-	
+	Player currentPlayer
+	//from Example1.java
 	public void executeMovement(){
-		//using the getValidMoves API we obtain all the possible moves for the piece at board cell 0, 0
+		
 		List<String> moves = board.checkValidMoves(0, 0);
 		String move = moves.get(0);
-		//Using the doMove api we execute the instruction stored in the first valid move sequence from the selected piece 
-		board.doMove(0, 0, move);
+		
+		double score = board.doMove(0, 0, move);
+		//now use the score value to increase the active player's score as necessary
+		updatePlayerScores(currentPlayer, score)
+	}
+
+
+	public void updatePlayerScores(Player currentPlayer, double score){
+		//use the incrementScore method in the Player API to update the Player's score using the information obtained from the Board API
+		currentPlayer.incrementScore(score);
 	}
 }

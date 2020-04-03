@@ -19,7 +19,7 @@ public interface Board{
 	Get piece at the specified coordinates
 	@return piece object at x, y; null if empty cell
 	**/
-	//Piece getPieceAt(int x, int y);
+	Piece getPieceAt(int x, int y);
 
 	/**
 	Execute the desired move
@@ -27,8 +27,9 @@ public interface Board{
 	@param y y position of origin of move
 	@param move move to be executed through reflection
 	@throws NoSuchMethodException if unknown move type is requested
+	@return score from completing this move
 	**/
-	void doMove(int x, int y, String move) throws NoSuchMethodException;
+	double doMove(int x, int y, String move) throws NoSuchMethodException;
 
 	/**
 	Set up board from config file

@@ -7,6 +7,6 @@ public class Controller{
 		List<String> moves = board.checkValidMoves(0, 0);
 		String move = moves.get(0);
 		//Using the doMove api we execute the instruction stored in the first valid move sequence from the selected piece 
-		board.doMove(0, 0, move);
+		double score = board.doMove(0, 0, move);
 	}
 }

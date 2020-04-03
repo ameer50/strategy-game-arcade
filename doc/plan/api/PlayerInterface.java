@@ -24,4 +24,10 @@ public interface PlayerInterface{
 	@return the Color that the current player can control
 	**/
 	Color getColor();
+
+	/**
+	increment the score of the Player
+	@param score the score to be added to the current score
+	**/
+	void incrementScore(double score);
 }
