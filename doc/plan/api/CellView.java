@@ -1,15 +1,15 @@
-package game.views
+import javafx.scene.paint.Color;
+
 public interface CellView{
-	private boolean light;
 
 	/**
 	Make cell appear lit up on game board
 	**/
-	public void turnOn();
+	void turnOn();
 
 	/**
 	Set color of the cell in display
 	@param color the color of the cell
 	**/
-	public void setColor(Color color);
+	void setColor(Color color);
 }

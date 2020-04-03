@@ -1,10 +1,11 @@
-package game.board
+import java.util.List;
+
 public interface Board{
 	/**
 	Check board to see if the game has been completed and a winner has been found
 	@return if there is a winner
 	**/
-	public boolean checkWon();
+	boolean checkWon();
 
 	/**
 	Find valid moves from selected cell
@@ -12,13 +13,13 @@ public interface Board{
 	@param y y coordinate of the cell
 	@return potential moves of the piece at cell x,y
 	**/
-	public List<String> checkValidMoves(int x, int y);
+	List<String> checkValidMoves(int x, int y);
 
 	/**
 	Get piece at the specified coordinates
 	@return piece object at x, y; null if empty cell
 	**/
-	public Piece getPieceAt(int x, int y);
+	//Piece getPieceAt(int x, int y);
 
 	/**
 	Execute the desired move
@@ -27,12 +28,12 @@ public interface Board{
 	@param move move to be executed through reflection
 	@throws NoSuchMethodException if unknown move type is requested
 	**/
-	public void doMove(int x, int y, String move) throws NoSuchMethodException;
+	void doMove(int x, int y, String move) throws NoSuchMethodException;
 
 	/**
 	Set up board from config file
 	**/
-	private void initStartingPieces();
+	void initStartingPieces();
 
 	/**
 	Check if coordinates are valid on board
@@ -40,5 +41,5 @@ public interface Board{
 	@param y potential y coord
 	@return true if valid coordinate
 	**/
-	private boolean isValidCell(int x, int y);
+	boolean isValidCell(int x, int y);
 }

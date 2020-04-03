@@ -1,15 +1,13 @@
-package game.views
+import javafx.scene.image.ImageView;
+
 public interface PieceView{
-	/**
-	Image that represents this Piece
-	**/
-	ImageView image;
+
 	/**
 	Play unique animation of piece as it moves
 	**/
-	public void moveAnimation();
+	void moveAnimation();
 	/**
 	Play unique animation of piece when it is destroyed
 	**/
-	public void killedAnimation():
+	void killedAnimation();
 }
