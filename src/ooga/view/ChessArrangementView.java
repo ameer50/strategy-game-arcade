@@ -4,22 +4,26 @@ import javafx.scene.image.ImageView;
 
 import java.util.*;
 
-public class ChessArrangementView extends PieceArrangementView {
+public class ChessArrangementView implements ArrangementView {
 
     private PieceView[][] arrangement;
     private ImageView[] pieceImages;
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-    private static final int BOARD_HEIGHT = 8;
-    private static final int BOARD_WIDTH = 8;
     private static List<String> blackPieces;
     private static List<String> whitePieces;
     private String playerChoice;
+    private int pieceHeight;
+    private int pieceWidth;
+    private int dimension;
 
-    public ChessArrangementView(int boardHeight, int boardWidth, int pieceHeight, int pieceWidth, String playerChoice){
-        super( boardHeight, boardWidth, pieceHeight, pieceWidth, playerChoice);
-        arrangement = new PieceView[BOARD_WIDTH][BOARD_HEIGHT];
-        pieceImages = new ImageView[32];
+
+    public ChessArrangementView(int dimension, int pieceWidth, int pieceHeight, String playerChoice){
+        this.dimension = dimension;
+        arrangement = new PieceView[dimension][dimension];
+        pieceImages = new ImageView[4*dimension];
         this.playerChoice = playerChoice;
+        this.pieceWidth = pieceWidth;
+        this.pieceHeight = pieceHeight;
         blackPieces = new ArrayList(Arrays.asList(new String[]{"BlackRook", "BlackKnight", "BlackBishop", "BlackQueen", "BlackKing",
                 "BlackBishop", "BlackKnight", "BlackRook", "BlackPawn", "BlackPawn", "BlackPawn", "BlackPawn",
                 "BlackPawn", "BlackPawn", "BlackPawn", "BlackPawn"}));
@@ -27,7 +31,6 @@ public class ChessArrangementView extends PieceArrangementView {
                 "WhiteBishop", "WhiteKnight", "WhiteRook", "WhitePawn", "WhitePawn", "WhitePawn", "WhitePawn",
                 "WhitePawn", "WhitePawn", "WhitePawn", "WhitePawn"}));
         initialize();
-
     }
 
     @Override
@@ -36,17 +39,16 @@ public class ChessArrangementView extends PieceArrangementView {
         if(playerChoice.equals("black")){
             Collections.reverse(blackPieces);
             whitePieces.addAll(blackPieces);
-            pieceOrder = whitePieces.toArray(new String[32]);
+            pieceOrder = whitePieces.toArray(new String[4*dimension]);
         }else{
             Collections.reverse(whitePieces);
             blackPieces.addAll(whitePieces);
-            pieceOrder = blackPieces.toArray(new String[32]);
+            pieceOrder = blackPieces.toArray(new String[4*dimension]);
         }
         int pc = 0; // piece count to assing the proper order of pieces
-        System.out.println(Arrays.toString(pieceOrder));
         for(int i =0; i < 2; i++){
             for(int j =0; j < arrangement.length; j++){
-                arrangement[i][j] = new PieceView(115 + 70*j, 100 + 70*i, 45, 75, res.getString(pieceOrder[pc]));
+                arrangement[i][j] = new PieceView(115 + 70*j, 100 + 70*i, pieceWidth, pieceHeight, res.getString(pieceOrder[pc]));
                 pieceImages[pc] = arrangement[i][j].getIVShape();
                 pc++;
             }
@@ -54,13 +56,11 @@ public class ChessArrangementView extends PieceArrangementView {
 
         for(int i =0; i < 2; i++){
             for(int j =0; j < arrangement.length; j++){
-                arrangement[i][j] = new PieceView(115 + 70*j, 100 + 410 + 70*i, 45, 75, res.getString(pieceOrder[pc]));
+                arrangement[i][j] = new PieceView(115 + 70*j, 100 + 410 + 70*i, pieceWidth, pieceHeight, res.getString(pieceOrder[pc]));
                 pieceImages[pc] = arrangement[i][j].getIVShape();
                 pc++;
             }
         }
-        System.out.println(pc);
-        System.out.println(Arrays.toString(pieceImages));
 
     }
 
@@ -69,8 +69,5 @@ public class ChessArrangementView extends PieceArrangementView {
         return pieceImages;
     }
 
-    public ImageView bruh(){
-        return pieceImages[0];
-    }
 
 }

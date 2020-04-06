@@ -1,6 +1,8 @@
 .root {
     -fx-background: DARKGREEN;
     -fx-padding: 10;
+    -fx-box-border: white;
+    -fx-border-width: 10;
 }
 
 .button {
@@ -36,6 +38,7 @@
 .hbox {
     -fx-spacing: 10;
     -fx-alignment: center;
+
 }
 
 .text-area {
@@ -54,10 +57,6 @@
     -fx-pref-columns: 10;
 }
 
-.rectangle {
-    -fx-alignment: center;
-}
-
 .leftvbox {
     -fx-alignment: center;
     -fx-padding: 10;
@@ -70,4 +69,25 @@
 
 .buttonvbox {
     -fx-spacing: 10;
+}
+
+.pane {
+    -fx-border-color: black;
+    -fx-border-width: 10;
+    -fx-border-style: solid inside;
+    -fx-padding: 10;
+}
+
+.rectangle {
+    -fx-border-color: black;
+    -fx-border-width: 10;
+    -fx-border-style: solid inside;
+    -fx-padding: 10;
+}
+
+.yellowborder {
+    -fx-border-style: solid inside;
+    -fx-border-width: 2;
+    -fx-border-insets: 5;
+    -fx-border-color: yellow;
 }
