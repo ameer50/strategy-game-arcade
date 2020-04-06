@@ -1,0 +1,73 @@
+.root {
+    -fx-background: DARKGREEN;
+    -fx-padding: 10;
+}
+
+.button {
+    -fx-text-fill: BLACK;
+    -fx-background-color: LIGHTBLUE;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 10;
+    -fx-pref-width: 80;
+    -fx-pref-height: 5;
+    -fx-font-weight: bold;
+    -fx-font-size: 10px;
+    -fx-wrap-text: true;
+}
+
+.label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: BLACK;
+}
+
+.button:hover {
+    -fx-background-color: ORANGE;
+}
+
+.vbox {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+    -fx-padding: 10;
+    -fx-min-width: 400;
+}
+
+.hbox {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.text-area {
+    -fx-font-size: 12;
+    -fx-display-caret: true;
+    -fx-pref-width: 200;
+    -fx-pref-rows: 10;
+    -fx-min-width: 100;
+}
+
+.text-area .content {
+    -fx-background-color: WHITE;
+}
+
+.text-field {
+    -fx-pref-columns: 10;
+}
+
+.rectangle {
+    -fx-alignment: center;
+}
+
+.leftvbox {
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-spacing: 15;
+}
+
+.thishbox {
+    -fx-alignment: center;
+}
+
+.buttonvbox {
+    -fx-spacing: 10;
+}
