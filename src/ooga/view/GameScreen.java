@@ -1,11 +1,7 @@
 package ooga.view;
 
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Locale;
@@ -31,11 +27,12 @@ public class GameScreen {
         BorderPane root = new BorderPane();
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
-        Piece rook = new Piece(430, 410, 40, 70, res.getString("BlackRookImage"));
-        Piece rook2 = new Piece(430, 410, 40, 70, res.getString("RookImage"));
+        PieceView rook = new PieceView(115, 100, 45, 75, res.getString("BlackRookImage"));
+        PieceView rook2 = new PieceView(185, 100, 45, 75, res.getString("WhiteRookImage"));
+        PieceView rook3 = new PieceView(115, 170, 45, 75, res.getString("WhiteRookImage"));
         BoardView theBoard = new BoardView("ChessBoard");
         root.getChildren().add(theBoard.getBoardView());
-        root.getChildren().add(rook.getIVShape());
+        root.getChildren().addAll(rook.getIVShape(), rook2.getIVShape(), rook3.getIVShape());
         setAsScene(new Scene(root));
         stage.setScene(scene);
         stage.setTitle(res.getString("GameStageTitle"));

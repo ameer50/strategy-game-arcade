@@ -3,11 +3,11 @@ package ooga.view;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class Piece {
+public class PieceView {
 
     private ImageView imgview;
 
-    public Piece(double xpos, double ypos, double width, double height, String name){
+    public PieceView(double xpos, double ypos, double width, double height, String name){
         imgview = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(name)));
 
         setX(xpos);
