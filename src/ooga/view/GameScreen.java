@@ -1,19 +1,10 @@
 package ooga.view;
 
 import javafx.scene.Scene;
-import javafx.scene.control.ToolBar;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.paint.Paint;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
-import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -60,7 +51,7 @@ public class GameScreen {
 
         //rt2.getStyleClass().add("yellowborder");
 
-        TheBoardView board = new TheBoardView(8);
+        BoardView board = new BoardView(8);
         canvas.getChildren().addAll(board.getCells());
         board.getCell(0, 0).toggleRed();
         root.getChildren().addAll(canvas);
