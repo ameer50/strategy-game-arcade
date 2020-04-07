@@ -27,8 +27,9 @@ public abstract class Board{
   public void print(){
     for(int y = 0; y < myHeight; y++){
       for(int x = 0; x < myWidth; x++){
-        System.out.println(getPieceAt(x, y));
+        System.out.print(getPieceAt(x, y) + ", ");
       }
+      System.out.println("");
     }
   }
   /**
@@ -70,7 +71,8 @@ public abstract class Board{
       int x = (int) point.getX();
       int y = (int) point.getY();
       String movePattern = locs.get(point);
-
+      Piece piece = new Piece(movePattern);
+      myGrid[y][x] = piece;
     }
   }
 

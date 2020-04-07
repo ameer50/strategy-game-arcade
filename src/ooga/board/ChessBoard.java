@@ -1,10 +1,12 @@
 package ooga.board;
 
+import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.Map;
 
 public class ChessBoard extends Board{
-  public ChessBoard(int height, int width){
-    super(height, width);
+  public ChessBoard(Map<String, String> settings, Map<Point2D.Double, String> locs){
+    super(settings, locs);
   }
 
   @Override
