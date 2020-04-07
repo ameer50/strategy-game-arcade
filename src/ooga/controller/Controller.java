@@ -24,14 +24,14 @@ public class Controller {
 //            XMLParser p = new XMLParser();
 //            p.parse(file);
 //            myGameScreen = new GameScreen(stage);
-//            initializeBoard(p.getSettings(), p.getInitialPieceLocations());
+//            initializeBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 //        }
 //        myScreen.onPieceClicked((int x, int y) -> {
 //            myScreen.highlightPossibleMoves(myBoard.getValidMoves(x, y));
 //        });
     }
 
-    public void initializeBoard(Map<String, String> settings, Map<Point2D, String> pieceLocations) {
-        // myBoard.initialize(settings, pieceLocations);
+    public void initializeBoard(Map<String, String> settings, Map<Point2D, String> pieceLocations, Map<String, String> movePatterns) {
+        // myBoard.initialize(settings, pieceLocations, movePatterns);
     }
 }

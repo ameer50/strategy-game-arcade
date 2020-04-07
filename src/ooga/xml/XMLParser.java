@@ -17,12 +17,14 @@ public class XMLParser {
 
     private Map<String, String> settings;
     private Map<Point2D, String> initialPieceLocations;
+    private Map<String, String> movePatterns;
     private final static String PARSE_STRING = "parse";
     private final static String ERROR_MESSAGE = "Error parsing XML file.";
 
     public XMLParser() {
         settings = new HashMap<>();
         initialPieceLocations = new HashMap<>();
+        movePatterns = new HashMap<>();
     }
 
     public Map<String, String> getSettings() {
@@ -31,6 +33,10 @@ public class XMLParser {
 
     public Map<Point2D, String> getInitialPieceLocations() {
         return initialPieceLocations;
+    }
+
+    public Map<String, String> getMovePatterns() {
+        return movePatterns;
     }
 
     public void parse(String filename) {
@@ -64,6 +70,7 @@ public class XMLParser {
         }
 //        System.out.println(settings);
 //        System.out.println(initialPieceLocations);
+//        System.out.println(movePatterns);
     }
 
     private void parseSettings(Node node) {
@@ -76,13 +83,25 @@ public class XMLParser {
         }
     }
 
-    private void parsePieces(Node node) {
+    private void parseLocations(Node node) {
         node = node.getFirstChild();
         while (node != null) {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 String locationAndPiece = node.getTextContent().strip();
                 String[] arr = locationAndPiece.split(",");
                 initialPieceLocations.put(new Point2D.Double(Integer.parseInt(arr[0]), Integer.parseInt(arr[1])), arr[2]);
+            }
+            node = node.getNextSibling();
+        }
+    }
+
+    private void parsePatterns(Node node) {
+        node = node.getFirstChild();
+        while (node != null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                String pieceAndPattern = node.getTextContent().strip();
+                String[] arr = pieceAndPattern.split(":");
+                movePatterns.put(arr[0], arr[1]);
             }
             node = node.getNextSibling();
         }
