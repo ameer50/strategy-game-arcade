@@ -34,9 +34,14 @@ public class ChessBoard extends Board{
   }
 
   @Override
-  public double doMove(int x, int y, String move){
-    return 0;
+  public double doMove(int startX, int startY, int endX, int endY) {
+    Piece piece = getPieceAt(startX, startY);
+    if(piece == null){
+      return 0;
+    }
+    return -1;
   }
+
 
   private List<String> up(int x, int y, int dist){
     System.out.println("up called with distance " + dist);
