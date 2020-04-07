@@ -23,7 +23,7 @@ public class ChessBoard extends Board{
     String moveType = movePattern.split(" ")[0];
     int moveDist = Integer.parseInt(movePattern.split(" ")[1]);
     try {
-      Method methodToCall = this.getClass().getDeclaredMethgod(moveType, int.class);
+      Method methodToCall = this.getClass().getDeclaredMethod(moveType, int.class);
       methodToCall.invoke(this, moveDist);
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
       e.printStackTrace();
