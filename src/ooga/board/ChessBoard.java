@@ -3,6 +3,7 @@ package ooga.board;
 import java.awt.geom.Point2D;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +24,11 @@ public class ChessBoard extends Board{
     String moveType = movePattern.split(" ")[0];
     int moveDist = Integer.parseInt(movePattern.split(" ")[1]);
     try {
-      Method methodToCall = this.getClass().getDeclaredMethod(moveType, int.class);
-      methodToCall.invoke(this, moveDist);
+      Method methodToCall = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class);
+      Object returnVal = methodToCall.invoke(this, x, y, moveDist);
+      return ((List<String>)returnVal);
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
-      //System.out.println("Error handling method " + moveType);
+      System.out.println("Error handling method " + moveType);
     }
     return null;
   }
@@ -37,7 +38,22 @@ public class ChessBoard extends Board{
     return 0;
   }
 
-  private void up(int dist){
+  private List<String> up(int x, int y, int dist){
     System.out.println("up called with distance " + dist);
+    List<String> ret = new ArrayList<>();
+    int inc = 1;
+    while(inc <= dist){
+      int newY = y - inc;
+      if(!isValidCell(x, newY)){
+        return ret;
+      }
+      if(getPieceAt(x, newY) != null){
+        return ret;
+      }
+      String add = "(" + x + ", " + newY + ")";
+      ret.add(add);
+      inc++;
+    }
+    return ret;
   }
 }

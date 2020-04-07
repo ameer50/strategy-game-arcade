@@ -2,6 +2,7 @@ package ooga.board;
 
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BoardTest {
@@ -11,12 +12,20 @@ public class BoardTest {
     settings.put("width", "5");
 
     Map<Point2D.Double, String> locs = new HashMap<>();
-    Point2D.Double p1 = new Point2D.Double(0, 0);
+    Point2D.Double p1 = new Point2D.Double(0, 4);
+    Point2D.Double p2 = new Point2D.Double(0, 2);
     locs.put(p1, "up 5");
+    locs.put(p2, "up 2");
     Board board = new ChessBoard(settings, locs);
+    System.out.println("Starting board config:");
     board.print();
-
-    board.getValidMoves(0, 0);
+    System.out.println("");
+    List<String> moves = board.getValidMoves(0, 4);
+    System.out.println("Piece @ (0, 4) has move pattern up 5.");
+    System.out.println("Valid moves for (0, 4):");
+    for(String move: moves){
+      System.out.println(move);
+    }
   }
 
 }
