@@ -6,9 +6,10 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javafx.util.Pair;
 
 public class ChessBoard extends Board{
-  public ChessBoard(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, String> pieces){
+  public ChessBoard(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, Pair<String, Double>> pieces){
     super(settings, locs, pieces);
   }
 
@@ -20,6 +21,9 @@ public class ChessBoard extends Board{
   @Override
   public List<String> getValidMoves(int x, int y){
     Piece piece = myGrid[y][x];
+    if(piece == null){
+      return null;
+    }
     String movePattern = piece.getMovePattern();
     String moveType = movePattern.split(" ")[0];
     int moveDist = Integer.parseInt(movePattern.split(" ")[1]);
@@ -35,11 +39,19 @@ public class ChessBoard extends Board{
 
   @Override
   public double doMove(int startX, int startY, int endX, int endY) {
-    Piece piece = getPieceAt(startX, startY);
-    if(piece == null){
-      return 0;
+    Piece thisPiece = getPieceAt(startX, startY);
+    Piece hitPiece = getPieceAt(endX, endY);
+    double score = 0;
+    if(hitPiece == null){
+      score = 0;
     }
-    return -1;
+    else{
+      score = hitPiece.getValue();
+    }
+
+    myGrid[startY][startX] = null;
+    myGrid[endY][endX] = thisPiece;
+    return score;
   }
 
 
