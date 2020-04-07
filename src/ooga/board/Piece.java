@@ -7,4 +7,9 @@ public class Piece {
     movePattern = pattern;
   }
 
+  @Override
+  public String toString(){
+    return movePattern;
+  }
+
 }

@@ -11,6 +11,8 @@ public class BoardTest {
     settings.put("width", "5");
 
     Map<Point2D.Double, String> locs = new HashMap<>();
+    Point2D.Double p1 = new Point2D.Double(0, 0);
+    locs.put(p1, "up 5");
     Board board = new ChessBoard(settings, locs);
     board.print();
   }
