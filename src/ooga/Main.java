@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import ooga.controller.Controller;
 import ooga.view.GameScreen;
 import ooga.xml.XMLParser;
 
@@ -31,7 +32,8 @@ public class Main extends Application {
         // testing
 //        XMLParser p = new XMLParser();
 //        p.parse("resources/test_xml/test.xml");
-        GameScreen game = new GameScreen(primaryStage);
+        Controller c = new Controller(primaryStage);
+        // GameScreen game = new GameScreen(primaryStage);
 
     }
 }
