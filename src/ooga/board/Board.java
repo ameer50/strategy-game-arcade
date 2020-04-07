@@ -9,7 +9,7 @@ public abstract class Board{
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
   protected Piece[][] myGrid;
-  protected Map<String, String> pieceMapping;
+  protected Map<String, Pair<String, Double>> pieceMapping;
   protected int myHeight;
   protected int myWidth;
 
@@ -74,8 +74,10 @@ public abstract class Board{
       int x = (int) point.getX();
       int y = (int) point.getY();
       String pieceName = locs.get(point);
-      String movePattern = pieceMapping.get(pieceName);
-      Piece piece = new Piece(pieceName, movePattern);
+      Pair<String, Double> pieceInfo = pieceMapping.get(pieceName);
+      String movePattern = pieceInfo.getKey();
+      double score = pieceInfo.getValue();
+      Piece piece = new Piece(pieceName, movePattern, score);
       myGrid[y][x] = piece;
     }
   }
