@@ -15,6 +15,8 @@ public class BoardTest {
     locs.put(p1, "up 5");
     Board board = new ChessBoard(settings, locs);
     board.print();
+
+    board.getValidMoves(0, 0);
   }
 
 }

@@ -7,9 +7,9 @@ import java.util.Map;
 public abstract class Board{
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
-  private Piece[][] myGrid;
-  private int myHeight;
-  private int myWidth;
+  protected Piece[][] myGrid;
+  protected int myHeight;
+  protected int myWidth;
 
 
   public Board(Map<String, String> settings, Map<Point2D.Double, String> locs){

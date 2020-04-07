@@ -12,4 +12,8 @@ public class Piece {
     return movePattern;
   }
 
+  public String getMovePattern(){
+    return movePattern;
+  }
+
 }
