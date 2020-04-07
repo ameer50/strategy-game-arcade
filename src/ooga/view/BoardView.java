@@ -9,6 +9,10 @@ public class BoardView extends ImageView {
 
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private ImageView boardImage;
+    private static final int BOARD_WIDTH = 600;
+    private static final int BOARD_HEIGHT = 600;
+    private static final int BOARD_XOFFSET = 600;
+
 
     public BoardView(String boardType){
         boardImage = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(res.getString(boardType))));
@@ -20,8 +24,8 @@ public class BoardView extends ImageView {
     }
 
     private void setBoardConfiguration(){
-        boardImage.setFitWidth(600);
-        boardImage.setFitHeight(600);
+        boardImage.setFitWidth(BOARD_WIDTH);
+        boardImage.setFitHeight(BOARD_HEIGHT);
 
         boardImage.setX(75);
         boardImage.setY(75);

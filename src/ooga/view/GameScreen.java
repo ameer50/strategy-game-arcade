@@ -1,9 +1,19 @@
 package ooga.view;
 
 import javafx.scene.Scene;
+import javafx.scene.control.ToolBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Paint;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -27,17 +37,46 @@ public class GameScreen {
         BorderPane root = new BorderPane();
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
-        PieceView rook = new PieceView(115, 100, 45, 75, res.getString("BlackRookImage"));
-        PieceView rook2 = new PieceView(185, 100, 45, 75, res.getString("WhiteRookImage"));
-        PieceView rook3 = new PieceView(115, 170, 45, 75, res.getString("WhiteRookImage"));
-        BoardView theBoard = new BoardView("ChessBoard");
-        root.getChildren().add(theBoard.getBoardView());
-        root.getChildren().addAll(rook.getIVShape(), rook2.getIVShape(), rook3.getIVShape());
         setAsScene(new Scene(root));
         stage.setScene(scene);
         stage.setTitle(res.getString("GameStageTitle"));
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
-        System.out.println(scene.getStylesheets());
+
+        Pane canvas = new Pane();
+//        Rectangle rectangle = new Rectangle(100,100);
+//        canvas.setPrefSize(100, 100);
+//        rectangle.relocate(470,470);
+//        rectangle.getStyleClass().add("cellcolor1");
+//        HBox rt = new HBox();
+//        rt.getChildren().addAll(rectangle);
+//        rt.setLayoutX(470);
+//        rt.setLayoutY(470);
+//        rt.getStyleClass().add("yellowborder");
+//
+//        rt.setOnMouseClicked( ( e ) ->
+//        {
+//            rt.getStyleClass().add("blackborder");
+//        } );
+
+        //rt2.getStyleClass().add("yellowborder");
+
+        TheBoardView board = new TheBoardView(8);
+        canvas.getChildren().addAll(board.getCells());
+        board.getCell(0, 0).toggleRed();
+        root.getChildren().addAll(canvas);
+
+
+
+
+        //BoardView theBoard = new BoardView("ChessBoard");
+        //root.getChildren().add(theBoard.getBoardView());
+        ArrangementView ar = new ChessArrangementView(8, 45, 75, "black");
+        root.getChildren().addAll(ar.gamePieces());
+
+
+
+
+
     }
 
     private void setAsScene(Scene scene) {
