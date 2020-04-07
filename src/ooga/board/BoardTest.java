@@ -26,9 +26,33 @@ public class BoardTest {
     System.out.println("Starting board config:");
     board.print();
     System.out.println("");
-    List<String> moves = board.getValidMoves(0, 0);
-    System.out.println("Piece @ (0, 0) has move pattern up 1.");
-    System.out.println("Valid moves for (0, 0):");
+
+
+    System.out.println("Moving the rook @(0, 4) to (3, 4)");
+    double score = board.doMove(0, 4, 3, 4);
+    board.print();
+    System.out.println("Scored " + score + " points");
+    System.out.println("");
+
+    List<String> moves = board.getValidMoves(3, 4);
+    System.out.println("Rook @(3, 4) has move pattern up -1.");
+    System.out.println("Valid moves for (3, 4):");
+    for(String move: moves){
+      System.out.println(move);
+    }
+    System.out.println("");
+
+    System.out.println("Moving the rook @(3, 4) to (0, 0), killing the pawn (obv illegal move)");
+    score = board.doMove(3, 4, 0, 0);
+    board.print();
+    System.out.println("Scored " + score + " points");
+    System.out.println("");
+
+    System.out.println("Moving the rook @(0, 0) to (0, 4) to verify valid moves still works after killing piece");
+    score = board.doMove(0, 0, 0, 4);
+    board.print();
+    System.out.println("");
+
     for(String move: moves){
       System.out.println(move);
     }

@@ -21,6 +21,9 @@ public class ChessBoard extends Board{
   @Override
   public List<String> getValidMoves(int x, int y){
     Piece piece = myGrid[y][x];
+    if(piece == null){
+      return null;
+    }
     String movePattern = piece.getMovePattern();
     String moveType = movePattern.split(" ")[0];
     int moveDist = Integer.parseInt(movePattern.split(" ")[1]);
