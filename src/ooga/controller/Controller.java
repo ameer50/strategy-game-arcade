@@ -19,6 +19,9 @@ public class Controller {
     }
 
     public void makeScreen (Stage stage) {
+        XMLParser p = new XMLParser();
+        p.parse("resources/test_xml/test.xml");
+//        myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
 //        mySplashScreen = new SplashScreen(stage);
 //        myScreen.onGameSelection((String file) -> {
 //            XMLParser p = new XMLParser();
