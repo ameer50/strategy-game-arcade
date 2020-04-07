@@ -8,14 +8,16 @@ public abstract class Board{
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
   protected Piece[][] myGrid;
+  protected Map<String, String> pieceMapping;
   protected int myHeight;
   protected int myWidth;
 
 
-  public Board(Map<String, String> settings, Map<Point2D.Double, String> locs){
+  public Board(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, String> pieces){
     myHeight = Integer.parseInt(settings.get(HEIGHT));
     myWidth = Integer.parseInt(settings.get(WIDTH));
     myGrid = new Piece[myHeight][myWidth];
+    pieceMapping = pieces;
     initStartingPieces(locs);
   }
   /**
@@ -70,8 +72,9 @@ public abstract class Board{
     for(Point2D.Double point: locs.keySet()){
       int x = (int) point.getX();
       int y = (int) point.getY();
-      String movePattern = locs.get(point);
-      Piece piece = new Piece(movePattern);
+      String pieceName = locs.get(point);
+      String movePattern = pieceMapping.get(pieceName);
+      Piece piece = new Piece(pieceName, movePattern);
       myGrid[y][x] = piece;
     }
   }

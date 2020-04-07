@@ -1,19 +1,21 @@
 package ooga.board;
 
 public class Piece {
-  private String movePattern;
+  private String myName;
+  private String myPattern;
 
-  public Piece(String pattern){
-    movePattern = pattern;
+  public Piece(String name, String pattern){
+    myName = name;
+    myPattern = pattern;
   }
 
   @Override
   public String toString(){
-    return movePattern;
+    return myName;
   }
 
   public String getMovePattern(){
-    return movePattern;
+    return myPattern;
   }
 
 }

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ChessBoard extends Board{
-  public ChessBoard(Map<String, String> settings, Map<Point2D.Double, String> locs){
-    super(settings, locs);
+  public ChessBoard(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, String> pieces){
+    super(settings, locs, pieces);
   }
 
   @Override
