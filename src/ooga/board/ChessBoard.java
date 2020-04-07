@@ -42,7 +42,7 @@ public class ChessBoard extends Board{
     System.out.println("up called with distance " + dist);
     List<String> ret = new ArrayList<>();
     int inc = 1;
-    while(inc <= dist){
+    while(inc <= dist || dist < 0){
       int newY = y - inc;
       if(!isValidCell(x, newY)){
         return ret;
