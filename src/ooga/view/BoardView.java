@@ -11,8 +11,7 @@ public class BoardView extends ImageView {
     private ImageView boardImage;
     private static final int BOARD_WIDTH = 600;
     private static final int BOARD_HEIGHT = 600;
-    private static final int BOARD_XOFFSET = 75;
-    private static final int BOARD_YOFFSET = 75;
+    private static final int BOARD_XOFFSET = 600;
 
 
     public BoardView(String boardType){
@@ -28,8 +27,8 @@ public class BoardView extends ImageView {
         boardImage.setFitWidth(BOARD_WIDTH);
         boardImage.setFitHeight(BOARD_HEIGHT);
 
-        boardImage.setX(BOARD_XOFFSET);
-        boardImage.setY(BOARD_YOFFSET);
+        boardImage.setX(75);
+        boardImage.setY(75);
     }
 
 

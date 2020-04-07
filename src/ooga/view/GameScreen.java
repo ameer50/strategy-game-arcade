@@ -43,15 +43,28 @@ public class GameScreen {
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
 
         Pane canvas = new Pane();
-        Rectangle rectangle = new Rectangle(100,100,Color.SANDYBROWN);
-        canvas.setPrefSize(100, 100);
-        rectangle.relocate(470,470);
-        HBox rt = new HBox();
-        rt.getChildren().addAll(rectangle);
-        rt.setLayoutX(470);
-        rt.setLayoutY(470);
-        rt.getStyleClass().add("yellowborder");
-        canvas.getChildren().addAll(rt);
+//        Rectangle rectangle = new Rectangle(100,100);
+//        canvas.setPrefSize(100, 100);
+//        rectangle.relocate(470,470);
+//        rectangle.getStyleClass().add("cellcolor1");
+//        HBox rt = new HBox();
+//        rt.getChildren().addAll(rectangle);
+//        rt.setLayoutX(470);
+//        rt.setLayoutY(470);
+//        rt.getStyleClass().add("yellowborder");
+//
+//        rt.setOnMouseClicked( ( e ) ->
+//        {
+//            rt.getStyleClass().add("blackborder");
+//        } );
+
+        //rt2.getStyleClass().add("yellowborder");
+
+        TheBoardView board = new TheBoardView(8);
+        canvas.getChildren().addAll(board.getCells());
+        board.getCell(0, 0).toggleRed();
+        root.getChildren().addAll(canvas);
+
 
 
 
@@ -59,7 +72,7 @@ public class GameScreen {
         //root.getChildren().add(theBoard.getBoardView());
         ArrangementView ar = new ChessArrangementView(8, 45, 75, "black");
         root.getChildren().addAll(ar.gamePieces());
-        root.getChildren().addAll(canvas);
+
 
 
 

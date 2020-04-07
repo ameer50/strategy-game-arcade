@@ -79,15 +79,40 @@
 }
 
 .rectangle {
+    -fx-background-color: WHITE;
     -fx-border-color: black;
     -fx-border-width: 10;
     -fx-border-style: solid inside;
     -fx-padding: 10;
 }
 
+
 .yellowborder {
+    -fx-border-style: solid inside;
+    -fx-border-width: 3;
+    -fx-border-insets: 5;
+    -fx-border-color: yellow;
+}
+
+.redborder {
+    -fx-border-style: solid inside;
+    -fx-border-width: 3;
+    -fx-border-insets: 5;
+    -fx-border-color: red;
+}
+
+.blackborder {
     -fx-border-style: solid inside;
     -fx-border-width: 2;
     -fx-border-insets: 5;
-    -fx-border-color: yellow;
+    -fx-border-color: black;
+}
+
+.cellcolor1 {
+    -fx-fill: #F0F8FF;  /*Alice Blue*/
+}
+
+.cellcolor2 {
+    -fx-fill: #A9A9A9;
+
 }
