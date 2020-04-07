@@ -7,6 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import ooga.view.GameScreen;
+import ooga.xml.XMLParser;
 
 /**
  * Feel free to completely change this code or delete it entirely. 
@@ -27,6 +28,9 @@ public class Main extends Application {
 //        primaryStage.setWidth(500);
 //        primaryStage.setHeight(500);
 //        primaryStage.show();
+        // testing
+//        XMLParser p = new XMLParser();
+//        p.parse("resources/test_xml/test.xml");
         GameScreen game = new GameScreen(primaryStage);
 
     }

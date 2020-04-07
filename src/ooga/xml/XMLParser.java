@@ -1,5 +1,6 @@
 package ooga.xml;
 
+import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,12 +18,14 @@ public class XMLParser {
 
     private Map<String, String> settings;
     private Map<Point2D, String> initialPieceLocations;
+    private Map<String, Pair<String, Double>> movePatternsAndValues;
     private final static String PARSE_STRING = "parse";
     private final static String ERROR_MESSAGE = "Error parsing XML file.";
 
     public XMLParser() {
         settings = new HashMap<>();
         initialPieceLocations = new HashMap<>();
+        movePatternsAndValues = new HashMap<>();
     }
 
     public Map<String, String> getSettings() {
@@ -33,9 +36,14 @@ public class XMLParser {
         return initialPieceLocations;
     }
 
+    public Map<String, Pair<String, Double>> getMovePatternsAndValues() {
+        return movePatternsAndValues;
+    }
+
     public void parse(String filename) {
         settings.clear();
         initialPieceLocations.clear();
+        movePatternsAndValues.clear();
         try {
             File xmlFile = new File(filename);
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -62,8 +70,9 @@ public class XMLParser {
         } catch (Exception e) {
             System.out.println(ERROR_MESSAGE);
         }
-//        System.out.println(settings);
-//        System.out.println(initialPieceLocations);
+        System.out.println(settings);
+        System.out.println(initialPieceLocations);
+        System.out.println(movePatternsAndValues);
     }
 
     private void parseSettings(Node node) {
@@ -76,13 +85,25 @@ public class XMLParser {
         }
     }
 
-    private void parsePieces(Node node) {
+    private void parseLocations(Node node) {
         node = node.getFirstChild();
         while (node != null) {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 String locationAndPiece = node.getTextContent().strip();
                 String[] arr = locationAndPiece.split(",");
                 initialPieceLocations.put(new Point2D.Double(Integer.parseInt(arr[0]), Integer.parseInt(arr[1])), arr[2]);
+            }
+            node = node.getNextSibling();
+        }
+    }
+
+    private void parsePieces(Node node) {
+        node = node.getFirstChild();
+        while (node != null) {
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                String pieceAndPattern = node.getTextContent().strip();
+                String[] arr = pieceAndPattern.split(":");
+                movePatternsAndValues.put(arr[0], new Pair<>(arr[1], Double.parseDouble(arr[2])));
             }
             node = node.getNextSibling();
         }

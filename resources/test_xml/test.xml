@@ -11,12 +11,20 @@
             8
         </width>
     </settings>
-    <pieces>
+    <locations>
         <item>
             0,0,PAWN
         </item>
         <item>
             0,1,ROOK
+        </item>
+    </locations>
+    <pieces>
+        <item>
+            PAWN:UP 1:1
+        </item>
+        <item>
+            ROOK:UP -1, LEFT -1, RIGHT -1, DOWN -1:5
         </item>
     </pieces>
 </game_config>
