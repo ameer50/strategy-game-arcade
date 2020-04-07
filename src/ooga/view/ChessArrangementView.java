@@ -2,19 +2,21 @@ package ooga.view;
 
 import javafx.scene.image.ImageView;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 
 public class ChessArrangementView implements ArrangementView {
 
     private PieceView[][] arrangement;
     private ImageView[] pieceImages;
-    private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
+    private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private static List<String> blackPieces;
     private static List<String> whitePieces;
-    private String playerChoice;
+    private String playerChoice; // either 'Black' or 'White'
     private int pieceHeight;
     private int pieceWidth;
     private int dimension;
+    private Map<Point2D, String> pieceLocation;
 
 
     public ChessArrangementView(int dimension, int pieceWidth, int pieceHeight, String playerChoice){
@@ -24,19 +26,22 @@ public class ChessArrangementView implements ArrangementView {
         this.playerChoice = playerChoice;
         this.pieceWidth = pieceWidth;
         this.pieceHeight = pieceHeight;
+        this.pieceLocation = pieceLocation;
         blackPieces = new ArrayList(Arrays.asList(new String[]{"BlackRook", "BlackKnight", "BlackBishop", "BlackQueen", "BlackKing",
                 "BlackBishop", "BlackKnight", "BlackRook", "BlackPawn", "BlackPawn", "BlackPawn", "BlackPawn",
                 "BlackPawn", "BlackPawn", "BlackPawn", "BlackPawn"}));
         whitePieces = new ArrayList(Arrays.asList(new String[]{"WhiteRook", "WhiteKnight", "WhiteBishop", "WhiteQueen", "WhiteKing",
                 "WhiteBishop", "WhiteKnight", "WhiteRook", "WhitePawn", "WhitePawn", "WhitePawn", "WhitePawn",
                 "WhitePawn", "WhitePawn", "WhitePawn", "WhitePawn"}));
+        System.out.println(pieceLocation);
         initialize();
+        initializeDefaultLocations();
     }
 
     @Override
     public void initialize() {
         String[] pieceOrder;
-        if(playerChoice.equals("black")){
+        if(playerChoice.equals("Black")){
             Collections.reverse(blackPieces);
             whitePieces.addAll(blackPieces);
             pieceOrder = whitePieces.toArray(new String[4*dimension]);
@@ -64,9 +69,20 @@ public class ChessArrangementView implements ArrangementView {
 
     }
 
+
+
     @Override
     public ImageView[] gamePieces() {
         return pieceImages;
+    }
+
+    private void initializeDefaultLocations(){
+        ResourceBundle whiteLoc = ResourceBundle.getBundle("default" + playerChoice + "Loc", Locale.getDefault());
+        int i =0;
+        int j = 0;
+        System.out.println("First key" + whiteLoc.getString("" + i + "," + j ));
+
+
     }
 
 

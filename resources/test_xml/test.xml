@@ -13,10 +13,10 @@
     </settings>
     <locations>
         <item>
-            0,0,PAWN
+            0,0,BlackPawn
         </item>
         <item>
-            0,1,ROOK
+            0,1,BlackPawn
         </item>
     </locations>
     <pieces>
