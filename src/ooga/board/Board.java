@@ -41,7 +41,7 @@ public abstract class Board{
    @param y y coordinate of the cell
    @return potential moves of the piece at cell x,y
    **/
-  public abstract List<String> getValidMoves(int x, int y);
+  public abstract List<Point2D> getValidMoves(int x, int y);
 
   /**
    Get piece at the specified coordinates

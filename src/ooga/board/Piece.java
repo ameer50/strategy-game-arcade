@@ -11,9 +11,13 @@ public class Piece {
     this.myPattern = pattern;
     this.myScore = score;
     this.myColor = color;
-
   }
 
+  public Piece(String name, String pattern, double score){
+    this.myName = name;
+    this.myPattern = pattern;
+    this.myScore = score;
+  }
   @Override
   public String toString(){
     return this.myName;

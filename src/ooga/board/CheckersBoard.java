@@ -18,7 +18,7 @@ public class CheckersBoard extends Board {
     }
 
     @Override
-    public List<String> getValidMoves(int x, int y) {
+    public List<Point2D> getValidMoves(int x, int y) {
         Piece currPiece = getPieceAt(x,y);
         if(currPiece==null){return null;}
 

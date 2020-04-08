@@ -34,11 +34,11 @@ public class BoardTest {
     System.out.println("Scored " + score + " points");
     System.out.println("");
 
-    List<String> moves = board.getValidMoves(3, 4);
+    List<Point2D> moves = board.getValidMoves(3, 4);
     System.out.println("Rook @(3, 4) has move pattern up -1.");
     System.out.println("Valid moves for (3, 4):");
-    for(String move: moves){
-      System.out.println(move);
+    for(Point2D move: moves){
+      System.out.println(move.getX() + ", " + move.getY());
     }
     System.out.println("");
 
@@ -53,8 +53,8 @@ public class BoardTest {
     board.print();
     System.out.println("");
 
-    for(String move: moves){
-      System.out.println(move);
+    for(Point2D move: moves){
+      System.out.println(move.getX() + ", " + move.getY());
     }
   }
 
