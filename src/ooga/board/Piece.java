@@ -13,10 +13,8 @@ public class Piece {
     this.myColor = color;
   }
 
-  public Piece(String name, String pattern, double score){
-    this.myName = name;
-    this.myPattern = pattern;
-    this.myScore = score;
+  public boolean isOnSameTeam(Piece that){
+    return(this.getColor().equals(that.getColor()));
   }
   @Override
   public String toString(){

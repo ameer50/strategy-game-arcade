@@ -4,103 +4,80 @@ import javafx.scene.image.ImageView;
 
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.util.List;
 
 public class ChessArrangementView implements ArrangementView {
 
+    public static final int BOARD_XOFFSET = 35;
+    public static final int BOARD_YOFFSET = 35;
+    public static final double CELL_YOFFSET = 0.05;
+    private static final double PIECE_WIDTH_RATIO = 0.5;
+    public static final int CELL_XOFFSET = 4;
+    private double PIECE_DELTAX;
+    private double PIECE_DELTAY;
+    private double PIECE_OFFSETX;
+    private double PIECE_OFFSETY;
     private PieceView[][] arrangement;
-    private ImageView[] pieceImages;
+    private List<ImageView> pieceImages;
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-    //private ResourceBundle defaultLocations;
-    private static List<String> blackPieces;
-    private static List<String> whitePieces;
     private String playerChoice; // either 'Black' or 'White'
-    private int pieceHeight;
-    private int pieceWidth;
-    private int dimension;
-    private Map<Point2D, String> pieceLocation;
+    private double pieceHeight;
+    private double pieceWidth;
+    private Map<Point2D, String> pieceLocations;
 
 
-    public ChessArrangementView(int dimension, int pieceWidth, int pieceHeight, String playerChoice){
-        this.dimension = dimension;
-        arrangement = new PieceView[dimension][dimension];
-        pieceImages = new ImageView[4*dimension];
+    public ChessArrangementView(int rows, int cols, double cellSideLength,  String playerChoice, Map<Point2D, String> locs){
+        arrangement = new PieceView[rows][cols];
+        pieceImages = new ArrayList<>();
         this.playerChoice = playerChoice;
-        this.pieceWidth = pieceWidth;
-        this.pieceHeight = pieceHeight;
-        this.pieceLocation = new HashMap<>();
-        //this.pieceLocation = pieceLocation;
-//        blackPieces = new ArrayList(Arrays.asList(new String[]{"BlackRook", "BlackKnight", "BlackBishop", "BlackQueen", "BlackKing",
-//                "BlackBishop", "BlackKnight", "BlackRook", "BlackPawn", "BlackPawn", "BlackPawn", "BlackPawn",
-//                "BlackPawn", "BlackPawn", "BlackPawn", "BlackPawn"}));
-//        whitePieces = new ArrayList(Arrays.asList(new String[]{"WhiteRook", "WhiteKnight", "WhiteBishop", "WhiteQueen", "WhiteKing",
-//                "WhiteBishop", "WhiteKnight", "WhiteRook", "WhitePawn", "WhitePawn", "WhitePawn", "WhitePawn",
-//                "WhitePawn", "WhitePawn", "WhitePawn", "WhitePawn"}));
-        //System.out.println(pieceLocation);
+        this.pieceWidth = cellSideLength*PIECE_WIDTH_RATIO;
+        this.pieceHeight = cellSideLength;
+        System.out.println("cl " + cellSideLength);
+        PIECE_OFFSETX = BOARD_XOFFSET + ((cellSideLength)/ CELL_XOFFSET);
+        PIECE_OFFSETY = BOARD_YOFFSET + cellSideLength* CELL_YOFFSET;
+
+        PIECE_DELTAX = (cellSideLength) ;
+        PIECE_DELTAY = (cellSideLength);
+
+
+        this.pieceLocations = locs;
         initialize();
     }
 
     @Override
     public void initialize() {
-        initializeDefaultLocations();
-        fillArrangement();
+        for (Point2D point : pieceLocations.keySet()) {
+            int x = (int) point.getX();
+            int y = (int) point.getY();
+            arrangement[x][y] = new PieceView(PIECE_OFFSETX + PIECE_DELTAX * y, PIECE_OFFSETY + PIECE_DELTAY * x, pieceWidth, pieceHeight, res.getString(pieceLocations.get(point)));
+            pieceImages.add(arrangement[x][y].getIVShape());
+        }
     }
 
-//    @Override
-//    public void initialize() {
-//        String[] pieceOrder;
-//        if(playerChoice.equals("Black")){
-//            Collections.reverse(blackPieces);
-//            whitePieces.addAll(blackPieces);
-//            pieceOrder = whitePieces.toArray(new String[4*dimension]);
-//        }else{
-//            Collections.reverse(whitePieces);
-//            blackPieces.addAll(whitePieces);
-//            pieceOrder = blackPieces.toArray(new String[4*dimension]);
-//        }
-//        int pc = 0; // piece count to assing the proper order of pieces
-//        for(int i =0; i < 2; i++){
-//            for(int j =0; j < arrangement.length; j++){
-//                arrangement[i][j] = new PieceView(115 + 70*j, 100 + 70*i, pieceWidth, pieceHeight, res.getString(pieceOrder[pc]));
-//                pieceImages[pc] = arrangement[i][j].getIVShape();
-//                pc++;
-//            }
-//        }
-//
-//        for(int i =0; i < 2; i++){
-//            for(int j =0; j < arrangement.length; j++){
-//                arrangement[i][j] = new PieceView(115 + 70*j, 100 + 410 + 70*i, pieceWidth, pieceHeight, res.getString(pieceOrder[pc]));
-//                pieceImages[pc] = arrangement[i][j].getIVShape();
-//                pc++;
-//            }
-//        }
-//
+//    public void initializeFromXML(Map<Point2D, String> locs) {
+//        pieceLocations = locs;
+//        fillArrangement();
 //    }
-//
-
 
     @Override
     public ImageView[] gamePieces() {
-        return pieceImages;
+        return pieceImages.toArray(new ImageView[0]);
     }
 
-    private void initializeDefaultLocations(){
-        ResourceBundle defaultLocations = ResourceBundle.getBundle("default" + playerChoice + "Loc", Locale.getDefault());
-        for (String key: Collections.list(defaultLocations.getKeys())) {
-            String[] coord = key.split(",");
-            pieceLocation.put(new Point2D.Double(Double.parseDouble(coord[0]), Double.parseDouble(coord[1])), defaultLocations.getString(key));
-        }
-        //System.out.println(pieceLocation);
-    }
+//    private void initializeDefaultLocations(){
+//        ResourceBundle defaultLocations = ResourceBundle.getBundle("default" + playerChoice + "Loc", Locale.getDefault());
+//        for (String key: Collections.list(defaultLocations.getKeys())) {
+//            String[] coord = key.split(",");
+//            pieceLocation.put(new Point2D.Double(Double.parseDouble(coord[0]), Double.parseDouble(coord[1])), defaultLocations.getString(key));
+//        }
+//    }
 
     private void fillArrangement() {
-        int pc = 0;
-        for (Point2D point : pieceLocation.keySet()) {
+        for (Point2D point : pieceLocations.keySet()) {
             int x = (int) point.getX();
             int y = (int) point.getY();
-            arrangement[x][y] = new PieceView(115 + 70 * y, 110 + 70 * x, pieceWidth, pieceHeight, res.getString(pieceLocation.get(point)));
-            pieceImages[pc] = arrangement[x][y].getIVShape();
-            pc++;
+            arrangement[x][y] = new PieceView(115 + 70 * y, 110 + 70 * x, pieceWidth, pieceHeight, res.getString(pieceLocations.get(point)));
+            pieceImages.add(arrangement[x][y].getIVShape());
         }
-        System.out.println(Arrays.toString(pieceImages));
     }
 }

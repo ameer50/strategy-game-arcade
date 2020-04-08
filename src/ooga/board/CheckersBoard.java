@@ -9,9 +9,10 @@ import java.util.Map;
 
 public class CheckersBoard extends Board {
 
+
     public List<Point2D> validMoves;
 
-    public CheckersBoard(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, Pair<String, Double>> pieces){
+    public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
         super(settings, locs, pieces);
     }
 
@@ -41,9 +42,11 @@ public class CheckersBoard extends Board {
         return 0;
     }
 
-    private List<Point2D> left(int x, int y, int dist){
 
-    }
+//    private List<Point2D> left(int x, int y, int dist){
+//
+//    }
+
 
     public void helper(int x, int y){
         Piece piece = getPieceAt(x,y);

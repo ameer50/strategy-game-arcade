@@ -14,7 +14,7 @@ public abstract class Board{
   protected int myWidth;
 
 
-  public Board(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, Pair<String, Double>> pieces){
+  public Board(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     myHeight = Integer.parseInt(settings.get(HEIGHT));
     myWidth = Integer.parseInt(settings.get(WIDTH));
     myGrid = new Piece[myHeight][myWidth];
@@ -28,28 +28,28 @@ public abstract class Board{
   public abstract boolean checkWon();
 
   public void print(){
-    for(int y = 0; y < myHeight; y++){
-      for(int x = 0; x < myWidth; x++){
-        System.out.print(getPieceAt(x, y) + ", ");
+    for(int i = 0; i < myHeight; i++){
+      for(int j = 0; j < myWidth; j++){
+        System.out.print(getPieceAt(i, j) + ", ");
       }
       System.out.println("");
     }
   }
   /**
    Find valid moves from selected cell
-   @param x x coordinate of the cell
-   @param y y coordinate of the cell
-   @return potential moves of the piece at cell x,y
+   @param i y coordinate of the cell
+   @param j x coordinate of the cell
+   @return potential moves of the piece at cell
    **/
-  public abstract List<Point2D> getValidMoves(int x, int y);
+  public abstract List<Point2D> getValidMoves(int i, int j);
 
   /**
    Get piece at the specified coordinates
    @return piece object at x, y; null if empty cell
    **/
-  public Piece getPieceAt(int x, int y){
-    if(isValidCell(x, y)){
-      return myGrid[y][x];
+  public Piece getPieceAt(int i, int j){
+    if(isValidCell(i, j)){
+      return myGrid[i][j];
     }
     else{
       return null;
@@ -69,16 +69,18 @@ public abstract class Board{
   /**
    Set up board from config file
    **/
-  private void initStartingPieces(Map<Point2D.Double, String> locs){
-    for(Point2D.Double point: locs.keySet()){
+  private void initStartingPieces(Map<Point2D, String> locs){
+    for(Point2D point: locs.keySet()){
       int x = (int) point.getX();
       int y = (int) point.getY();
-      String pieceName = locs.get(point);
-      Pair<String, Double> pieceInfo = pieceMapping.get(pieceName);
+      String pieceId = locs.get(point);
+      String pieceColor = pieceId.split("_")[0];
+      String pieceName = pieceId.split("_")[1];
+      Pair<String, Double> pieceInfo = pieceMapping.get(pieceId);
       String movePattern = pieceInfo.getKey();
       double score = pieceInfo.getValue();
-      Piece piece = new Piece(pieceName, movePattern, score);
-      myGrid[y][x] = piece;
+      Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
+      myGrid[x][y] = piece;
     }
   }
 
@@ -89,6 +91,6 @@ public abstract class Board{
    @return true if valid coordinate
    **/
   public boolean isValidCell(int x, int y){
-    return y >= 0 && y < myHeight && x >= 0 && x < myWidth;
+    return x >= 0 && x < myHeight && y >= 0 && y < myWidth;
   }
 }

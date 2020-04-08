@@ -4,8 +4,10 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import ooga.controller.PieceClickedInterface;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -20,6 +22,7 @@ public class GameScreen {
     private Scene scene;
     private Map<String, String> nameDim;
     private Map<Point2D, String> pieceLocations;
+    private BoardView board;
 
     public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
@@ -27,7 +30,6 @@ public class GameScreen {
         this.pieceLocations = pieceLocations;
         startView();
         stage.show();
-
     }
 
     private void startView(){
@@ -40,43 +42,37 @@ public class GameScreen {
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
 
         Pane canvas = new Pane();
-//        Rectangle rectangle = new Rectangle(100,100);
-//        canvas.setPrefSize(100, 100);
-//        rectangle.relocate(470,470);
-//        rectangle.getStyleClass().add("cellcolor1");
-//        HBox rt = new HBox();
-//        rt.getChildren().addAll(rectangle);
-//        rt.setLayoutX(470);
-//        rt.setLayoutY(470);
-//        rt.getStyleClass().add("yellowborder");
-//
-//        rt.setOnMouseClicked( ( e ) ->
-//        {
-//            rt.getStyleClass().add("blackborder");
-//        } );
 
-        //rt2.getStyleClass().add("yellowborder");
-
-        BoardView board = new BoardView(Integer.parseInt(nameDim.get("height")));
+        board = new BoardView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")));
         canvas.getChildren().addAll(board.getCells());
-        board.getCell(0, 0).toggleRed();
         root.getChildren().addAll(canvas);
 
-
-
-
-        //BoardView theBoard = new BoardView("ChessBoard");
-        //root.getChildren().add(theBoard.getBoardView());
-        ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black");
+        ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")), board.getCellSideLength(), "Black", pieceLocations);
         root.getChildren().addAll(ar.gamePieces());
-
-
-
-
-
     }
 
     private void setAsScene(Scene scene) {
         this.scene = scene;
     }
+
+    public void onPieceClicked(PieceClickedInterface clicked){
+
+        for(int i =0; i< board.getBoardDimension(); i++){
+            for(int j =0; j < board.getBoardDimension(); j++){
+                board.getCell(i, j).setClickedFunction(clicked);
+            }
+        }
+    }
+
+    public void highlightValidMoves(List<Point2D> pointPairs) {
+        if (pointPairs == null){
+            return;
+        }
+        for (Point2D point : pointPairs) {
+            int x = (int) point.getX();
+            int y = (int) point.getY();
+            board.getCell(x,y).toggleYellow();
+        }
+    }
+
 }
