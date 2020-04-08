@@ -21,7 +21,6 @@ public class ChessBoard extends Board{
   @Override
   public List<Point2D> getValidMoves(int x, int y){
     Piece piece = myGrid[x][y];
-    System.out.println("The piece " + piece);
     if(piece == null){
       return null;
     }
@@ -30,7 +29,6 @@ public class ChessBoard extends Board{
     int moveDist = Integer.parseInt(movePattern.split(" ")[1]);
     try {
       Method methodToCall = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class);
-      System.out.println("x + \" \" + y +\" \" + moveDist = " + x + " " + y +" " + moveDist);
       Object returnVal = methodToCall.invoke(this, x, y, moveDist);
       return ((List<Point2D>)returnVal);
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -62,14 +60,14 @@ public class ChessBoard extends Board{
     List<Point2D> ret = new ArrayList<>();
     int inc = 1;
     while(inc <= dist || dist < 0){
-      int newY = y - inc;
-      if(!isValidCell(x, newY)){
+      int newX = x - inc;
+      if(!isValidCell(newX, y)){
         return ret;
       }
-      if(getPieceAt(x, newY) != null){
+      if(getPieceAt(newX, y) != null){
         return ret;
       }
-      Point2D newPoint = new Point2D.Double(x, newY);
+      Point2D newPoint = new Point2D.Double(newX, y);
       ret.add(newPoint);
       inc++;
     }

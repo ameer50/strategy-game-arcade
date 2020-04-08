@@ -39,7 +39,7 @@ public class CheckersBoard extends Board {
     }
 
     private List<Point2D> left(int x, int y, int dist){
-
+        return null;
     }
 
     public void helper(int x, int y){
