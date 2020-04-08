@@ -20,6 +20,7 @@ public class GameScreen {
     private Scene scene;
     private Map<String, String> nameDim;
     private Map<Point2D, String> pieceLocations;
+    private BoardView board;
 
     public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
@@ -40,24 +41,8 @@ public class GameScreen {
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
 
         Pane canvas = new Pane();
-//        Rectangle rectangle = new Rectangle(100,100);
-//        canvas.setPrefSize(100, 100);
-//        rectangle.relocate(470,470);
-//        rectangle.getStyleClass().add("cellcolor1");
-//        HBox rt = new HBox();
-//        rt.getChildren().addAll(rectangle);
-//        rt.setLayoutX(470);
-//        rt.setLayoutY(470);
-//        rt.getStyleClass().add("yellowborder");
-//
-//        rt.setOnMouseClicked( ( e ) ->
-//        {
-//            rt.getStyleClass().add("blackborder");
-//        } );
 
-        //rt2.getStyleClass().add("yellowborder");
-
-        BoardView board = new BoardView(Integer.parseInt(nameDim.get("height")));
+        board = new BoardView(Integer.parseInt(nameDim.get("height")));
         canvas.getChildren().addAll(board.getCells());
         board.getCell(0, 0).toggleRed();
         root.getChildren().addAll(canvas);
@@ -68,15 +53,24 @@ public class GameScreen {
         //BoardView theBoard = new BoardView("ChessBoard");
         //root.getChildren().add(theBoard.getBoardView());
         ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black");
+        ar.initializeFromXML(pieceLocations);
         root.getChildren().addAll(ar.gamePieces());
-
-
-
-
 
     }
 
     private void setAsScene(Scene scene) {
         this.scene = scene;
+    }
+
+    public void lightUpRed(int row, int col){
+        board.getCell(row, col).toggleRed();
+    }
+
+    public void lightUpYellow(int[] pair){
+
+        for(int i =0; i< pair.length; i+=2){
+            board.getCell(pair[i], pair[i+1]).toggleYellow();
+        }
+
     }
 }
