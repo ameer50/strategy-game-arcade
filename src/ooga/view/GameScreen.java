@@ -53,11 +53,8 @@ public class GameScreen {
         //BoardView theBoard = new BoardView("ChessBoard");
         //root.getChildren().add(theBoard.getBoardView());
         ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black");
+        ar.initializeFromXML(pieceLocations);
         root.getChildren().addAll(ar.gamePieces());
-
-
-
-
 
     }
 

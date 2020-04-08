@@ -13,18 +13,18 @@
     </settings>
     <locations>
         <item>
-            0,0,BlackPawn
+            0,0,Black_Pawn
         </item>
         <item>
-            0,1,BlackPawn
+            0,1,Black_Rook
         </item>
     </locations>
     <pieces>
         <item>
-            PAWN:UP 1:1
+            Black_Pawn:UP 1:1
         </item>
         <item>
-            ROOK:UP -1, LEFT -1, RIGHT -1, DOWN -1:5
+            Black_Rook:UP -1, LEFT -1, RIGHT -1, DOWN -1:5
         </item>
     </pieces>
 </game_config>
