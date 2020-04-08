@@ -23,7 +23,9 @@ public class Controller {
     public void makeScreen (Stage stage) {
         XMLParser p = new XMLParser();
         p.parse("resources/test_xml/test.xml");
-        //myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
+        myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
+        System.out.println("valid moves " + myBoard.getValidMoves(6,0));
+        myBoard.print();
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
 
 

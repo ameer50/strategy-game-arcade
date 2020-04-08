@@ -28,8 +28,8 @@ public abstract class Board{
   public abstract boolean checkWon();
 
   public void print(){
-    for(int y = 0; y < myHeight; y++){
-      for(int x = 0; x < myWidth; x++){
+    for(int x = 0; x < myHeight; x++){
+      for(int y = 0; y < myWidth; y++){
         System.out.print(getPieceAt(x, y) + ", ");
       }
       System.out.println("");
@@ -49,7 +49,7 @@ public abstract class Board{
    **/
   public Piece getPieceAt(int x, int y){
     if(isValidCell(x, y)){
-      return myGrid[y][x];
+      return myGrid[x][y];
     }
     else{
       return null;
@@ -74,11 +74,12 @@ public abstract class Board{
       int x = (int) point.getX();
       int y = (int) point.getY();
       String pieceName = locs.get(point);
+      System.out.println("pieceName = " + pieceName);
       Pair<String, Double> pieceInfo = pieceMapping.get(pieceName);
       String movePattern = pieceInfo.getKey();
       double score = pieceInfo.getValue();
       Piece piece = new Piece(pieceName, movePattern, score);
-      myGrid[y][x] = piece;
+      myGrid[x][y] = piece;
     }
   }
 

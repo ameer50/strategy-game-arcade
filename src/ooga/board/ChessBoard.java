@@ -20,15 +20,17 @@ public class ChessBoard extends Board{
 
   @Override
   public List<Point2D> getValidMoves(int x, int y){
-    Piece piece = myGrid[y][x];
+    Piece piece = myGrid[x][y];
+    System.out.println("The piece " + piece);
     if(piece == null){
       return null;
     }
     String movePattern = piece.getMovePattern();
-    String moveType = movePattern.split(" ")[0];
+    String moveType = movePattern.split(" ")[0].toLowerCase();
     int moveDist = Integer.parseInt(movePattern.split(" ")[1]);
     try {
       Method methodToCall = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class);
+      System.out.println("x + \" \" + y +\" \" + moveDist = " + x + " " + y +" " + moveDist);
       Object returnVal = methodToCall.invoke(this, x, y, moveDist);
       return ((List<Point2D>)returnVal);
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -49,8 +51,8 @@ public class ChessBoard extends Board{
       score = hitPiece.getValue();
     }
 
-    myGrid[startY][startX] = null;
-    myGrid[endY][endX] = thisPiece;
+    myGrid[startX][startY] = null;
+    myGrid[endX][endY] = thisPiece;
     return score;
   }
 
