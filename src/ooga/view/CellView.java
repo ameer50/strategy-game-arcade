@@ -27,6 +27,7 @@ public class CellView extends HBox {
         this.style = cellColorStyle;
         this.initialize();
         toggleRed = true;
+        toggleYellow = true;
 
         this.toggleRed();
     }
@@ -42,24 +43,29 @@ public class CellView extends HBox {
     }
 
     public void toggleYellow(){
-        this.getStyleClass().clear();
-        this.getStyleClass().add("yellowborder");
+        if(toggleYellow){
+            this.getStyleClass().clear();
+            this.getStyleClass().add("yellowborder");
+        }else{
+            toggleNoBorder();
+        }
+        toggleYellow = !toggleYellow;
+
     }
 
-    public boolean toggleRed(){
+    public void toggleRed(){
 
         this.setOnMouseClicked(e -> {
             if(toggleRed){
                 this.getStyleClass().clear();
                 this.getStyleClass().add("redborder");
-                System.out.println("what " + clicked);
-                clicked.clickPiece(xindex,yindex);
+                clicked.clickPiece(xindex,yindex, true);
             }else{
                 toggleNoBorder();
+                clicked.clickPiece(xindex,yindex, false);
             }
             toggleRed = !toggleRed;
         });
-        return toggleRed;
 
     }
 
@@ -69,7 +75,7 @@ public class CellView extends HBox {
     }
 
     public String toString(){
-        return "Hi";
+        return "[ " + xindex + " , " + yindex + " ] at x = " + xpos + " , y = " + ypos;
     }
 
     public void setClickedFunction(PieceClickedInterface clicked){

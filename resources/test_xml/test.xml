@@ -28,7 +28,7 @@
             Black_Pawn:UP 2:1
         </item>
         <item>
-            Black_Rook:UP -1:5
+            Black_Rook:LATERAL -1:5
            <!-- Black_Rook:UP -1, LEFT -1, RIGHT -1, DOWN -1:5 -->
         </item>
     </pieces>

@@ -45,29 +45,14 @@ public class GameScreen {
 
         board = new BoardView(Integer.parseInt(nameDim.get("height")));
         canvas.getChildren().addAll(board.getCells());
-        board.getCell(5, 4).toggleYellow();
         root.getChildren().addAll(canvas);
 
-        //BoardView theBoard = new BoardView("ChessBoard");
-        //root.getChildren().add(theBoard.getBoardView());
         ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black", pieceLocations);
         root.getChildren().addAll(ar.gamePieces());
     }
 
     private void setAsScene(Scene scene) {
         this.scene = scene;
-    }
-
-    public void lightUpRed(int row, int col){
-        board.getCell(row, col).toggleRed();
-    }
-
-    public void lightUpYellow(int[] pair){
-
-        for(int i =0; i< pair.length; i+=2){
-            board.getCell(pair[i], pair[i+1]).toggleYellow();
-        }
-
     }
 
     public void onPieceClicked(PieceClickedInterface clicked){
@@ -80,10 +65,14 @@ public class GameScreen {
     }
 
     public void highlightValidMoves(List<Point2D> pointPairs) {
+        if (pointPairs == null){
+            return;
+        }
         for (Point2D point : pointPairs) {
             int x = (int) point.getX();
             int y = (int) point.getY();
             board.getCell(x,y).toggleYellow();
         }
     }
+
 }
