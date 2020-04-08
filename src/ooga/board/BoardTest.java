@@ -12,7 +12,7 @@ public class BoardTest {
     settings.put("height", "5");
     settings.put("width", "5");
 
-    Map<Point2D.Double, String> locs = new HashMap<>();
+    Map<Point2D, String> locs = new HashMap<>();
     Point2D.Double p1 = new Point2D.Double(0, 4);
     Point2D.Double p2 = new Point2D.Double(0, 0);
     locs.put(p1, "rook");

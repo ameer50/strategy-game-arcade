@@ -20,6 +20,8 @@ public class CellView extends HBox {
         this.height = height;
         this.style = cellColorStyle;
         this.initialize();
+        toggleRed = true;
+        this.toggleRed();
     }
 
     private void initialize(){
@@ -29,7 +31,7 @@ public class CellView extends HBox {
         this.setLayoutX(xpos);
         this.setLayoutY(ypos);
 
-        this.getStyleClass().add("blackborder");
+        toggleNoBorder();
     }
 
     public void toggleYellow(){
@@ -38,12 +40,22 @@ public class CellView extends HBox {
     }
 
     public void toggleRed(){
-        this.getStyleClass().clear();
-        this.getStyleClass().add("redborder");
+
+        this.setOnMouseClicked(e -> {
+            if(toggleRed){
+                this.getStyleClass().clear();
+                this.getStyleClass().add("redborder");
+            }else{
+                toggleNoBorder();
+            }
+            toggleRed = !toggleRed;
+        });
+
     }
 
     public void toggleNoBorder(){
         this.getStyleClass().clear();
+        this.getStyleClass().add("blackborder");
     }
 
     public String toString(){

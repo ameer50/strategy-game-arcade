@@ -1,6 +1,8 @@
 package ooga.controller;
 
 import javafx.stage.Stage;
+import ooga.board.Board;
+import ooga.board.ChessBoard;
 import ooga.view.GameScreen;
 import ooga.view.SplashScreen;
 import ooga.xml.XMLParser;
@@ -12,7 +14,7 @@ public class Controller {
 
     private GameScreen myGameScreen;
     private SplashScreen mySplashScreen;
-    //private Board myBoard;
+    private Board myBoard;
 
     public Controller (Stage stage) {
         makeScreen(stage);
@@ -21,7 +23,10 @@ public class Controller {
     public void makeScreen (Stage stage) {
         XMLParser p = new XMLParser();
         p.parse("resources/test_xml/test.xml");
+        //myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
+
+
 //        mySplashScreen = new SplashScreen(stage);
 //        myScreen.onGameSelection((String file) -> {
 //            XMLParser p = new XMLParser();
@@ -35,6 +40,9 @@ public class Controller {
     }
 
     public void initializeBoard(Map<String, String> settings, Map<Point2D, String> pieceLocations, Map<String, String> movePatterns) {
+
         // myBoard.initialize(settings, pieceLocations, movePatterns);
     }
+
+
 }

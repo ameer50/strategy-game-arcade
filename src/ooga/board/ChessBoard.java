@@ -9,7 +9,7 @@ import java.util.Map;
 import javafx.util.Pair;
 
 public class ChessBoard extends Board{
-  public ChessBoard(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, Pair<String, Double>> pieces){
+  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     super(settings, locs, pieces);
   }
 

@@ -14,7 +14,7 @@ public abstract class Board{
   protected int myWidth;
 
 
-  public Board(Map<String, String> settings, Map<Point2D.Double, String> locs, Map<String, Pair<String, Double>> pieces){
+  public Board(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     myHeight = Integer.parseInt(settings.get(HEIGHT));
     myWidth = Integer.parseInt(settings.get(WIDTH));
     myGrid = new Piece[myHeight][myWidth];
@@ -69,8 +69,8 @@ public abstract class Board{
   /**
    Set up board from config file
    **/
-  private void initStartingPieces(Map<Point2D.Double, String> locs){
-    for(Point2D.Double point: locs.keySet()){
+  private void initStartingPieces(Map<Point2D, String> locs){
+    for(Point2D point: locs.keySet()){
       int x = (int) point.getX();
       int y = (int) point.getY();
       String pieceName = locs.get(point);
