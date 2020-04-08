@@ -21,17 +21,29 @@ public class BoardView {
     private List<String> firstColorSequence;
     private List<String> secondColorSequence;
     private int boardDimension;
-    private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
 
     private double cellLength;
 
-    public BoardView(int boardDim){
-        boardDimension = boardDim;
-        arrangement = new CellView[boardDim][boardDim];
-        cellList = new CellView[boardDim*boardDim];
-        this.boardLength = boardDim;
-        cellLength = (BOARD_WIDTH) / boardDim;
+    public BoardView(int rows, int cols){
+        boardDimension = rows;
+        arrangement = new CellView[rows][cols];
+        cellList = new CellView[rows*cols];
+        this.boardLength = rows;
+        cellLength = (BOARD_WIDTH) / rows;
         initialize();
+    }
+
+    private void checkeredColor(){
+        firstColorSequence = new ArrayList<>();
+        for(int i =0; i<boardLength; i++){
+            if (i % 2 == 0){
+                firstColorSequence.add("cellcolor1");
+            }else{
+                firstColorSequence.add("cellcolor2");
+            }
+        }
+        secondColorSequence = new ArrayList<>(firstColorSequence);
+        Collections.reverse(secondColorSequence);
     }
 
 
@@ -61,27 +73,12 @@ public class BoardView {
         return arrangement[row][col];
     }
 
-
-
-    private void checkeredColor(){
-        firstColorSequence = new ArrayList<>();
-        for(int i =0; i<boardLength; i++){
-            if (i % 2 == 0){
-                firstColorSequence.add("cellcolor1");
-            }else{
-                firstColorSequence.add("cellcolor2");
-            }
-        }
-        //System.out.println(firstColorSequence);
-
-
-        secondColorSequence = new ArrayList<>(firstColorSequence);
-        Collections.reverse(secondColorSequence);
-        //System.out.println(secondColorSequence);
-    }
-
     public int getBoardDimension(){
         return boardDimension;
+    }
+
+    public double getCellSideLength(){
+        return cellLength + PIECE_SPACE;
     }
 
 

@@ -34,8 +34,6 @@ public class Controller {
         toggleMoves = true;
 
 
-
-
 //        mySplashScreen = new SplashScreen(stage);
 //        myScreen.onGameSelection((String file) -> {
 //            XMLParser p = new XMLParser();

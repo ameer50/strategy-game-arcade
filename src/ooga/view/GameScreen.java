@@ -43,11 +43,11 @@ public class GameScreen {
 
         Pane canvas = new Pane();
 
-        board = new BoardView(Integer.parseInt(nameDim.get("height")));
+        board = new BoardView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")));
         canvas.getChildren().addAll(board.getCells());
         root.getChildren().addAll(canvas);
 
-        ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black", pieceLocations);
+        ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")), board.getCellSideLength(), "Black", pieceLocations);
         root.getChildren().addAll(ar.gamePieces());
     }
 
