@@ -3,6 +3,7 @@ package ooga.controller;
 import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.ChessBoard;
+import ooga.board.Piece;
 import ooga.view.GameScreen;
 import ooga.view.SplashScreen;
 import ooga.xml.XMLParser;
@@ -22,11 +23,12 @@ public class Controller {
 
     public void makeScreen (Stage stage) {
         XMLParser p = new XMLParser();
-        p.parse("resources/defaultWhite.xml");
+        p.parse("resources/test_xml/test.xml");
         //myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
         //System.out.println("valid moves " + myBoard.getValidMoves(6,0));
         //myBoard.print();
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
+
 
 
 //        mySplashScreen = new SplashScreen(stage);
@@ -36,15 +38,18 @@ public class Controller {
 //            myGameScreen = new GameScreen(stage);
 //            initializeBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 //        }
-//        myScreen.onPieceClicked((int x, int y) -> {
-//            myScreen.highlightPossibleMoves(myBoard.getValidMoves(x, y));
-//        });
+        myGameScreen.onPieceClicked((int x, int y) -> {
+            System.out.println("blahhhhh");
+            System.out.println("blah" + myBoard.getValidMoves(x, y));
+            myGameScreen.highlightValidMoves(myBoard.getValidMoves(x, y));
+        });
     }
 
     public void initializeBoard(Map<String, String> settings, Map<Point2D, String> pieceLocations, Map<String, String> movePatterns) {
 
         // myBoard.initialize(settings, pieceLocations, movePatterns);
     }
+
 
 
 }

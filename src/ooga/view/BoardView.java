@@ -20,12 +20,13 @@ public class BoardView {
     private static final double BOARD_HEIGHT = 600;
     private List<String> firstColorSequence;
     private List<String> secondColorSequence;
+    private int boardDimension;
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
 
     private double cellLength;
 
     public BoardView(int boardDim){
-
+        boardDimension = boardDim;
         arrangement = new CellView[boardDim][boardDim];
         cellList = new CellView[boardDim*boardDim];
         this.boardLength = boardDim;
@@ -40,9 +41,9 @@ public class BoardView {
         for(int i = 0; i < boardLength; i++){
             for(int j =0; j < boardLength; j++){
                 if( i % 2 == 0){
-                    arrangement[i][j] = new CellView((BOARD_XOFFSET + cellLength * i + PIECE_SPACE*i), (BOARD_YOFFSET + cellLength * j + PIECE_SPACE*j), cellLength, cellLength, secondColorSequence.get(j));
+                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength * i + PIECE_SPACE*i), (BOARD_YOFFSET + cellLength * j + PIECE_SPACE*j), cellLength, cellLength, secondColorSequence.get(j));
                 }else{
-                    arrangement[i][j] = new CellView((BOARD_XOFFSET + cellLength*i + PIECE_SPACE*i), (BOARD_YOFFSET + cellLength*j + PIECE_SPACE*j), cellLength, cellLength, firstColorSequence.get(j));
+                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength*i + PIECE_SPACE*i), (BOARD_YOFFSET + cellLength*j + PIECE_SPACE*j), cellLength, cellLength, firstColorSequence.get(j));
                 }
                 cellList[cellIndex] = arrangement[i][j];
                 cellIndex++;
@@ -79,5 +80,10 @@ public class BoardView {
         Collections.reverse(secondColorSequence);
         System.out.println(secondColorSequence);
     }
+
+    public int getBoardDimension(){
+        return boardDimension;
+    }
+
 
 }
