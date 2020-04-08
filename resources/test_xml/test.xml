@@ -4,8 +4,8 @@
         <name>
             Chess
         </name>
-        <width>10</width>
-        <height>10</height>
+        <width>8</width>
+        <height>8</height>
 
     </settings>
     <locations>

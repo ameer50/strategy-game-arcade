@@ -2,22 +2,24 @@ package ooga.view;
 
 import javafx.scene.image.ImageView;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
 
 public class ChessArrangementView implements ArrangementView {
 
-    private static double PIECE_DELTAX;
-    private static double PIECE_DELTAY;
-    private static double PIECE_OFFSETX;
-    private static double PIECE_OFFSETY;
+    public static final int BOARD_XOFFSET = 35;
+    public static final int BOARD_YOFFSET = 35;
+    public static final double CELL_YOFFSET = 0.05;
+    private static final double PIECE_WIDTH_RATIO = 0.5;
+    public static final int CELL_XOFFSET = 4;
+    private double PIECE_DELTAX;
+    private double PIECE_DELTAY;
+    private double PIECE_OFFSETX;
+    private double PIECE_OFFSETY;
     private PieceView[][] arrangement;
     private List<ImageView> pieceImages;
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-    private static List<String> blackPieces;
-    private static List<String> whitePieces;
     private String playerChoice; // either 'Black' or 'White'
     private double pieceHeight;
     private double pieceWidth;
@@ -28,11 +30,11 @@ public class ChessArrangementView implements ArrangementView {
         arrangement = new PieceView[rows][cols];
         pieceImages = new ArrayList<>();
         this.playerChoice = playerChoice;
-        this.pieceWidth = cellSideLength*0.5;
+        this.pieceWidth = cellSideLength*PIECE_WIDTH_RATIO;
         this.pieceHeight = cellSideLength;
         System.out.println("cl " + cellSideLength);
-        PIECE_OFFSETX = 35 + ((cellSideLength)/4);
-        PIECE_OFFSETY = 35 + cellSideLength*0.05;
+        PIECE_OFFSETX = BOARD_XOFFSET + ((cellSideLength)/ CELL_XOFFSET);
+        PIECE_OFFSETY = BOARD_YOFFSET + cellSideLength* CELL_YOFFSET;
 
         PIECE_DELTAX = (cellSideLength) ;
         PIECE_DELTAY = (cellSideLength);
