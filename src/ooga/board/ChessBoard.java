@@ -80,6 +80,12 @@ public class ChessBoard extends Board{
     while(inc <= dist || dist < 0){
       int newX = x + inc;
       Point2D newPoint = findPoint(newX, y);
+      if(newPoint != null) {
+        ret.add(newPoint);
+      }
+      else{
+        break;
+      }
       inc++;
     }
     return ret;
