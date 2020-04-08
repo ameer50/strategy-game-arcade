@@ -61,16 +61,39 @@ public class ChessBoard extends Board{
     int inc = 1;
     while(inc <= dist || dist < 0){
       int newX = x - inc;
-      if(!isValidCell(newX, y)){
-        return ret;
+      Point2D newPoint = findPoint(newX, y);
+      if(newPoint != null) {
+        ret.add(newPoint);
       }
-      if(getPieceAt(newX, y) != null){
-        return ret;
+      else{
+        break;
       }
-      Point2D newPoint = new Point2D.Double(newX, y);
-      ret.add(newPoint);
       inc++;
     }
+    return ret;
+  }
+
+  private List<Point2D> down(int x, int y, int dist){
+    System.out.println("down called with distance " + dist);
+    List<Point2D> ret = new ArrayList<>();
+    int inc = 1;
+    while(inc <= dist || dist < 0){
+      int newX = x + inc;
+      Point2D newPoint = findPoint(newX, y);
+      inc++;
+    }
+    return ret;
+  }
+
+  private Point2D findPoint(int x, int y){
+    Point2D ret;
+    if(!isValidCell(x, y)){
+      return null;
+    }
+    if(getPieceAt(x, y) != null){
+      return null;
+    }
+    ret = new Point2D.Double(x, y);
     return ret;
   }
 }
