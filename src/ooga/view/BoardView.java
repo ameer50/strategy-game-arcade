@@ -41,9 +41,9 @@ public class BoardView {
         for(int i = 0; i < boardLength; i++){
             for(int j =0; j < boardLength; j++){
                 if( i % 2 == 0){
-                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength * i + PIECE_SPACE*i), (BOARD_YOFFSET + cellLength * j + PIECE_SPACE*j), cellLength, cellLength, secondColorSequence.get(j));
+                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength * j + PIECE_SPACE*j), (BOARD_YOFFSET + cellLength * i + PIECE_SPACE*i), cellLength, cellLength, secondColorSequence.get(j));
                 }else{
-                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength*i + PIECE_SPACE*i), (BOARD_YOFFSET + cellLength*j + PIECE_SPACE*j), cellLength, cellLength, firstColorSequence.get(j));
+                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength*j + PIECE_SPACE*j), (BOARD_YOFFSET + cellLength*i + PIECE_SPACE*i), cellLength, cellLength, firstColorSequence.get(j));
                 }
                 cellList[cellIndex] = arrangement[i][j];
                 cellIndex++;
@@ -54,7 +54,6 @@ public class BoardView {
 
 
     public HBox[] getCells() {
-
         return cellList;
     }
 
@@ -73,12 +72,12 @@ public class BoardView {
                 firstColorSequence.add("cellcolor2");
             }
         }
-        System.out.println(firstColorSequence);
+        //System.out.println(firstColorSequence);
 
 
         secondColorSequence = new ArrayList<>(firstColorSequence);
         Collections.reverse(secondColorSequence);
-        System.out.println(secondColorSequence);
+        //System.out.println(secondColorSequence);
     }
 
     public int getBoardDimension(){

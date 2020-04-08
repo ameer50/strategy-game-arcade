@@ -45,7 +45,7 @@ public class GameScreen {
 
         board = new BoardView(Integer.parseInt(nameDim.get("height")));
         canvas.getChildren().addAll(board.getCells());
-        //board.getCell(0, 0).toggleRed();
+        board.getCell(5, 4).toggleYellow();
         root.getChildren().addAll(canvas);
 
         //BoardView theBoard = new BoardView("ChessBoard");

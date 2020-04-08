@@ -23,9 +23,10 @@ public class Controller {
 
     public void makeScreen (Stage stage) {
         XMLParser p = new XMLParser();
+
         p.parse("resources/test_xml/test.xml");
-        //myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
-        //System.out.println("valid moves " + myBoard.getValidMoves(6,0));
+        myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
+        System.out.println("valid moves " + myBoard.getValidMoves(6,0));
         //myBoard.print();
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
 
@@ -39,7 +40,7 @@ public class Controller {
 //            initializeBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 //        }
         myGameScreen.onPieceClicked((int x, int y) -> {
-            System.out.println("blahhhhh");
+            System.out.println("blahhhhh" + x + " " + y);
             System.out.println("blah" + myBoard.getValidMoves(x, y));
             myGameScreen.highlightValidMoves(myBoard.getValidMoves(x, y));
         });
