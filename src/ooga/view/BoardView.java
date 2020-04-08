@@ -5,10 +5,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
 
+import java.awt.geom.Point2D;
 import java.util.*;
 
 public class BoardView {
-
 
     private CellView[][] arrangement;
     private HBox[] cellList;
@@ -24,12 +24,40 @@ public class BoardView {
 
     private double cellLength;
 
-    public BoardView(int rows, int cols){
+    public static final double CELL_YOFFSET = 0.05;
+    private static final double PIECE_WIDTH_RATIO = 0.5;
+    public static final int CELL_XOFFSET = 4;
+    private double PIECE_DELTAX;
+    private double PIECE_DELTAY;
+    private double PIECE_OFFSETX;
+    private double PIECE_OFFSETY;
+    private List<ImageView> pieceImages;
+    private String playerChoice;
+    private double pieceWidth;
+    private double pieceHeight;
+    private Map<Point2D, String> pieceLocations;
+    private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
+    private double cellSideLength;
+
+    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs){
         boardDimension = rows;
         arrangement = new CellView[rows][cols];
         cellList = new CellView[rows*cols];
         this.boardLength = rows;
         cellLength = (BOARD_WIDTH) / rows;
+        cellSideLength = cellLength + PIECE_SPACE;
+
+        pieceImages = new ArrayList<>();
+        this.playerChoice = playerChoice;
+
+        this.pieceWidth = cellSideLength*PIECE_WIDTH_RATIO;
+        this.pieceHeight = cellSideLength;
+        System.out.println("cl " + cellSideLength);
+        PIECE_OFFSETX = BOARD_XOFFSET + ((cellSideLength)/ CELL_XOFFSET);
+        PIECE_OFFSETY = BOARD_YOFFSET + cellSideLength* CELL_YOFFSET;
+        PIECE_DELTAX = cellSideLength;
+        PIECE_DELTAY = cellSideLength;
+        this.pieceLocations = locs;
         initialize();
     }
 
@@ -62,6 +90,13 @@ public class BoardView {
 
             }
         }
+
+        for (Point2D point : pieceLocations.keySet()) {
+            int x = (int) point.getX();
+            int y = (int) point.getY();
+            arrangement[x][y].setPiece(new PieceView(PIECE_OFFSETX + PIECE_DELTAX * y, PIECE_OFFSETY + PIECE_DELTAY * x, pieceWidth, pieceHeight, res.getString(pieceLocations.get(point))));
+            pieceImages.add(arrangement[x][y].getPiece().getIVShape());
+        }
     }
 
 
@@ -71,6 +106,10 @@ public class BoardView {
 
     public CellView getCell(int row, int col){
         return arrangement[row][col];
+    }
+
+    public ImageView[] getPieces() {
+        return pieceImages.toArray(new ImageView[0]);
     }
 
     public int getBoardDimension(){
