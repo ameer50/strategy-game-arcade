@@ -9,7 +9,5 @@ public interface ArrangementView {
 
     public abstract void initialize();
 
-    public abstract void initializeFromXML(Map<Point2D, String> locs);
-
     public abstract ImageView[] gamePieces();
 }
