@@ -5,7 +5,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.awt.geom.Point2D;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class GameScreen {
@@ -16,9 +18,13 @@ public class GameScreen {
 
     private Stage stage;
     private Scene scene;
+    private Map<String, String> nameDim;
+    private Map<Point2D, String> pieceLocations;
 
-    public GameScreen(Stage stage){
+    public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
+        this.nameDim = nameDim;
+        this.pieceLocations = pieceLocations;
         startView();
         stage.show();
 
@@ -51,7 +57,7 @@ public class GameScreen {
 
         //rt2.getStyleClass().add("yellowborder");
 
-        BoardView board = new BoardView(8);
+        BoardView board = new BoardView(Integer.parseInt(nameDim.get("height")));
         canvas.getChildren().addAll(board.getCells());
         board.getCell(0, 0).toggleRed();
         root.getChildren().addAll(canvas);
@@ -61,7 +67,7 @@ public class GameScreen {
 
         //BoardView theBoard = new BoardView("ChessBoard");
         //root.getChildren().add(theBoard.getBoardView());
-        ArrangementView ar = new ChessArrangementView(8, 45, 75, "black");
+        ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black");
         root.getChildren().addAll(ar.gamePieces());
 
 
