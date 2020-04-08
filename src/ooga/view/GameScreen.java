@@ -28,7 +28,6 @@ public class GameScreen {
         this.pieceLocations = pieceLocations;
         startView();
         stage.show();
-
     }
 
     private void startView(){
@@ -47,15 +46,10 @@ public class GameScreen {
         board.getCell(0, 0).toggleRed();
         root.getChildren().addAll(canvas);
 
-
-
-
         //BoardView theBoard = new BoardView("ChessBoard");
         //root.getChildren().add(theBoard.getBoardView());
-        ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black");
-        ar.initializeFromXML(pieceLocations);
+        ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("height")), 45, 75, "Black", pieceLocations);
         root.getChildren().addAll(ar.gamePieces());
-
     }
 
     private void setAsScene(Scene scene) {
