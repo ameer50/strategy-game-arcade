@@ -14,21 +14,21 @@ public class BoardTest {
 
     Map<Point2D, String> locs = new HashMap<>();
     Point2D.Double p1 = new Point2D.Double(0, 1);
-    Point2D.Double p2 = new Point2D.Double(0, 4);
-    locs.put(p1, "white_rook");
-    locs.put(p2, "black_pawn");
+    Point2D.Double p2 = new Point2D.Double(0, 3);
+    locs.put(p1, "black_rook");
+    locs.put(p2, "white_pawn");
 
     Map<String, Pair<String, Double>> pieces = new HashMap<>();
-    pieces.put("white_rook", new Pair<String, Double>("up -1", 5.0));
-    pieces.put("black_pawn", new Pair<String, Double>("left 1", 1.0));
+    pieces.put("black_rook", new Pair<String, Double>("lateral -1", 5.0));
+    pieces.put("white_pawn", new Pair<String, Double>("left -1", 1.0));
     Board board = new ChessBoard(settings, locs, pieces);
 
     System.out.println("Starting board config:");
     board.print();
     System.out.println("");
 
-    System.out.println("Valid moves for pawn at 0,0 with left -1:");
-    List<Point2D> moves = board.getValidMoves(0, 4);
+    System.out.println("Valid moves for rook at 0,1 with lateral -1:");
+    List<Point2D> moves = board.getValidMoves(0, 1);
     for(Point2D move: moves){
       System.out.println(move.getX() + ", " + move.getY());
     }
