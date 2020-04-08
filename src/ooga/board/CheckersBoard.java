@@ -38,9 +38,11 @@ public class CheckersBoard extends Board {
         return 0;
     }
 
+
 //    private List<Point2D> left(int x, int y, int dist){
 //
 //    }
+
 
     public void helper(int x, int y){
         Piece piece = getPieceAt(x,y);

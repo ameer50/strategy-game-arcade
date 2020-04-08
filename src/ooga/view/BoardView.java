@@ -72,12 +72,12 @@ public class BoardView {
                 firstColorSequence.add("cellcolor2");
             }
         }
-        System.out.println(firstColorSequence);
+        //System.out.println(firstColorSequence);
 
 
         secondColorSequence = new ArrayList<>(firstColorSequence);
         Collections.reverse(secondColorSequence);
-        System.out.println(secondColorSequence);
+        //System.out.println(secondColorSequence);
     }
 
 }
