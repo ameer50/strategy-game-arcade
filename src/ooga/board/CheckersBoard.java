@@ -25,6 +25,10 @@ public class CheckersBoard extends Board {
         Piece currPiece = getPieceAt(x,y);
         if(currPiece==null){return null;}
         validMoves = new ArrayList<Point2D>();
+        goLeft(x, y, currPiece);
+        goRight(x, y, currPiece);
+
+        return validMoves;
 
 
 
