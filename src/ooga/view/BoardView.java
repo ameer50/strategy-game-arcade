@@ -12,7 +12,6 @@ public class BoardView {
 
     private CellView[][] arrangement;
     private HBox[] cellList;
-    private int boardLength;
     private static final int BOARD_XOFFSET = 35;
     private static final int BOARD_YOFFSET = 35;
     private static final int PIECE_SPACE = 6;
@@ -20,10 +19,10 @@ public class BoardView {
     private static final double BOARD_HEIGHT = 600;
     private List<String> firstColorSequence;
     private List<String> secondColorSequence;
-    private int boardDimension;
+    private int boardWidth;
+    private int boardHeight;
 
     private double cellLength;
-
     public static final double CELL_YOFFSET = 0.05;
     private static final double PIECE_WIDTH_RATIO = 0.5;
     public static final int CELL_XOFFSET = 4;
@@ -40,30 +39,26 @@ public class BoardView {
     private double cellSideLength;
 
     public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs){
-        boardDimension = rows;
+        boardWidth = rows;
+        boardHeight = cols;
         arrangement = new CellView[rows][cols];
         cellList = new CellView[rows*cols];
-        this.boardLength = rows;
         cellLength = (BOARD_WIDTH) / rows;
         cellSideLength = cellLength + PIECE_SPACE;
-
         pieceImages = new ArrayList<>();
         this.playerChoice = playerChoice;
-
         this.pieceWidth = cellSideLength*PIECE_WIDTH_RATIO;
         this.pieceHeight = cellSideLength;
-        System.out.println("cl " + cellSideLength);
         PIECE_OFFSETX = BOARD_XOFFSET + ((cellSideLength)/ CELL_XOFFSET);
         PIECE_OFFSETY = BOARD_YOFFSET + cellSideLength* CELL_YOFFSET;
-        PIECE_DELTAX = cellSideLength;
-        PIECE_DELTAY = cellSideLength;
+        PIECE_DELTAX = PIECE_DELTAY = cellSideLength;
         this.pieceLocations = locs;
         initialize();
     }
 
     private void checkeredColor(){
         firstColorSequence = new ArrayList<>();
-        for(int i =0; i<boardLength; i++){
+        for(int i =0; i< boardWidth; i++){
             if (i % 2 == 0){
                 firstColorSequence.add("cellcolor1");
             }else{
@@ -78,15 +73,23 @@ public class BoardView {
     public void initialize() {
         checkeredColor();
         int cellIndex = 0;
-        for(int i = 0; i < boardLength; i++){
-            for(int j =0; j < boardLength; j++){
+        for(int i = 0; i < boardWidth; i++){
+            for(int j =0; j < boardHeight; j++){
                 if( i % 2 == 0){
-                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength * j + PIECE_SPACE*j), (BOARD_YOFFSET + cellLength * i + PIECE_SPACE*i), cellLength, cellLength, secondColorSequence.get(j));
+                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSideLength*j)), (BOARD_YOFFSET + (cellSideLength*i)), cellLength, cellLength, secondColorSequence.get(j));
                 }else{
-                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + cellLength*j + PIECE_SPACE*j), (BOARD_YOFFSET + cellLength*i + PIECE_SPACE*i), cellLength, cellLength, firstColorSequence.get(j));
+                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSideLength*j)), (BOARD_YOFFSET + (cellSideLength*i)), cellLength, cellLength, firstColorSequence.get(j));
                 }
                 cellList[cellIndex] = arrangement[i][j];
                 cellIndex++;
+                arrangement[i][j].setNoBorderFunction((a,b)-> {
+                    for(int x = 0; x < boardWidth; x++){
+                        for(int y =0; y < boardHeight; y++) {
+                            arrangement[x][y].toggleNoBorder();
+                        }
+                    }
+
+                });
 
             }
         }
@@ -113,7 +116,7 @@ public class BoardView {
     }
 
     public int getBoardDimension(){
-        return boardDimension;
+        return boardWidth;
     }
 
     public double getCellSideLength(){

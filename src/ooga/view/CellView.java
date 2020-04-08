@@ -2,12 +2,12 @@ package ooga.view;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
-import ooga.controller.PieceClickedInterface;
+import ooga.controller.CellClickedInterface;
 
 public class CellView extends HBox {
 
-    private boolean toggleYellow;
-    private boolean toggleRed;
+    private boolean isYellow;
+    private boolean isRed;
     private double xpos;
     private double ypos;
     private double width;
@@ -15,7 +15,8 @@ public class CellView extends HBox {
     private String style;
     private int xindex;
     private int yindex;
-    private PieceClickedInterface clicked;
+    private CellClickedInterface clickPieceFunction;
+    private CellClickedInterface noBorderFunction;
     private PieceView piece;
 
     public CellView(int xindex, int yindex, double xpos, double ypos, double width, double height, String cellColorStyle){
@@ -27,10 +28,10 @@ public class CellView extends HBox {
         this.height = height;
         this.style = cellColorStyle;
         this.initialize();
-        toggleRed = true;
-        toggleYellow = true;
+        isRed = false;
+        isYellow = false;
         piece = null;
-        this.toggleRed();
+        this.lightUpCells();
     }
 
     private void initialize(){
@@ -41,6 +42,7 @@ public class CellView extends HBox {
         this.setLayoutY(ypos);
 
         toggleNoBorder();
+        lightUpCells();
     }
 
     public void setPiece(PieceView piece) {
@@ -52,30 +54,46 @@ public class CellView extends HBox {
     }
 
     public void toggleYellow(){
-        if(toggleYellow){
+        if(!isYellow){
             this.getStyleClass().clear();
             this.getStyleClass().add("yellowborder");
         }else{
             toggleNoBorder();
         }
-        toggleYellow = !toggleYellow;
+        isYellow = !isYellow;
 
     }
 
     public void toggleRed(){
+        if(!isRed){
+            this.getStyleClass().clear();
+            this.getStyleClass().add("redborder");
+        }else{
+            toggleNoBorder();
+        }
+        isRed = !isRed;
+
+    }
+
+
+    public void lightUpCells(){
 
         this.setOnMouseClicked(e -> {
-            if (piece != null) {
-                if(toggleRed){
-                    this.getStyleClass().clear();
-                    this.getStyleClass().add("redborder");
-                    clicked.clickPiece(xindex, yindex, true);
-                }else{
-                    toggleNoBorder();
-                    clicked.clickPiece(xindex, yindex, false);
-                }
-                toggleRed = !toggleRed;
+            if(piece == null && !isYellow){
+                noBorderFunction.clickCell(xindex, yindex);
+                return;
             }
+
+            if (!isRed && !isYellow){
+                toggleRed();
+                clickPieceFunction.clickCell(xindex, yindex);
+            }else if(isYellow){
+                clickPieceFunction.clickCell(xindex, yindex);
+                noBorderFunction.clickCell(xindex, yindex);
+            }else{
+                noBorderFunction.clickCell(xindex, yindex);
+            }
+
         });
 
     }
@@ -83,14 +101,19 @@ public class CellView extends HBox {
     public void toggleNoBorder(){
         this.getStyleClass().clear();
         this.getStyleClass().add("blackborder");
+        isRed = isYellow = false;
     }
 
     public String toString(){
         return "[ " + xindex + " , " + yindex + " ] at x = " + xpos + " , y = " + ypos;
     }
 
-    public void setClickedFunction(PieceClickedInterface clicked){
-        this.clicked = clicked;
+    public void setClickedFunction(CellClickedInterface clicked){
+        this.clickPieceFunction = clicked;
+    }
+
+    public void setNoBorderFunction(CellClickedInterface clicked){
+        this.noBorderFunction = clicked;
     }
 
 }

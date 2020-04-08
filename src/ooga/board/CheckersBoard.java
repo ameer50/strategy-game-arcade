@@ -34,7 +34,7 @@ public class CheckersBoard extends Board {
     }
 
     @Override
-    public double doMove(int startX, int startY, int endX, int endY) {
+    public double doMove(int endX, int endY) {
         return 0;
     }
 

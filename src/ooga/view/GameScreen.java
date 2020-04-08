@@ -4,7 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import ooga.controller.PieceClickedInterface;
+import ooga.controller.CellClickedInterface;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -23,6 +23,8 @@ public class GameScreen {
     private Map<String, String> nameDim;
     private Map<Point2D, String> pieceLocations;
     private BoardView board;
+    private int curr_x;
+    private int curr_y;
 
     public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
@@ -55,7 +57,7 @@ public class GameScreen {
         this.scene = scene;
     }
 
-    public void onPieceClicked(PieceClickedInterface clicked){
+    public void onPieceClicked(CellClickedInterface clicked){
 
         for(int i =0; i< board.getBoardDimension(); i++){
             for(int j =0; j < board.getBoardDimension(); j++){
@@ -65,6 +67,19 @@ public class GameScreen {
     }
 
     public void highlightValidMoves(List<Point2D> pointPairs) {
+
+        if (pointPairs == null){
+            return;
+        }
+        for (Point2D point : pointPairs) {
+            int x = (int) point.getX();
+            int y = (int) point.getY();
+            board.getCell(x,y).toggleYellow();
+        }
+    }
+
+    public void updatePiecePosition(List<Point2D> pointPairs) {
+
         if (pointPairs == null){
             return;
         }
