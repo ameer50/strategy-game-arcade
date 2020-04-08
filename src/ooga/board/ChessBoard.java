@@ -107,6 +107,24 @@ public class ChessBoard extends Board{
     }
     return ret;
   }
+
+  private List<Point2D> left(int x, int y, int dist){
+    List<Point2D> ret = new ArrayList<>();
+    int inc = 1;
+    while(inc <= dist || dist < 0){
+      int newY = y - inc;
+      Point2D newPoint = findPoint(x, newY);
+      if(newPoint != null) {
+        ret.add(newPoint);
+      }
+      else{
+        break;
+      }
+      inc++;
+    }
+    return ret;
+  }
+
   private Point2D findPoint(int x, int y){
     Point2D ret;
     if(!isValidCell(x, y)){
