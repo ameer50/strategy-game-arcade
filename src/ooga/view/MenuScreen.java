@@ -2,6 +2,7 @@ package ooga.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -61,7 +62,8 @@ public class MenuScreen {
         for(Button b: buttons.getButtonList()){
             b.setOnAction(event -> {
                 gameSelected = b.getText();
-                e.handle(event);
+                displaySettingsPopUp(e);
+                //e.handle(event);
             });
         }
 
@@ -76,5 +78,26 @@ public class MenuScreen {
         this.scene = scene;
     }
 
+    public void displaySettingsPopUp(EventHandler<ActionEvent> e) {
+        Stage settingsStage = new Stage();
+        Group settingsRoot = new Group();
+        Scene settingsScene = setUpPopUp(settingsStage, settingsRoot, e);
+        settingsStage.setScene(settingsScene);
+        settingsStage.show();
+    }
+
+    private Scene setUpPopUp(Stage settingsStage, Group settingsRoot, EventHandler<ActionEvent> event) {
+        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black"));
+        ButtonGroup fileGroup = new ButtonGroup(List.of("Default settings", "Load custom XML"));
+        HBox hbox = new HBox();
+        hbox.getChildren().addAll(colorGroup.getButtons(), fileGroup.getButtons());
+        Button goButton = new Button("Go!");
+        settingsRoot.getChildren().addAll(hbox, goButton);
+        goButton.setOnAction(e -> {
+            settingsStage.close();
+            event.handle(e);
+        });
+        return new Scene(settingsRoot, 400, 400);
+    }
 
 }

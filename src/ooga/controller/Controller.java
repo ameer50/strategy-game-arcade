@@ -21,19 +21,15 @@ public class Controller {
     private List<Point2D> temp;
 
     public Controller (Stage stage) {
-
-
         menuScreen = new MenuScreen(stage);
 
         menuScreen.buttonListener(e -> {
             makeScreen(stage, menuScreen.getGameType());
-
         });
 
     }
 
     public void makeScreen (Stage stage, String gameType) {
-
         String file = "resources/defaultGames/" + gameType + ".xml";
         XMLParser p = new XMLParser();
         //p.parse("resources/test_xml/Chess.xml");
@@ -43,11 +39,10 @@ public class Controller {
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
         myBoardView = myGameScreen.getBoard();
         toggleMoves = true;
-        listen();
-
+        setListeners();
     }
 
-    private void listen(){
+    private void setListeners(){
         myBoardView.setOnPieceClicked((int x, int y) -> {
             myBoardView.setSelectedLocation(x, y);
             myBoardView.highlightValidMoves(myBoard.getValidMoves(x, y));
