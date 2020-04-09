@@ -12,8 +12,6 @@ public abstract class Board{
   protected Map<String, Pair<String, Double>> pieceMapping;
   protected int myHeight;
   protected int myWidth;
-  protected int startX;
-  protected int startY;
 
 
   public Board(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
@@ -64,7 +62,7 @@ public abstract class Board{
    @param endY new y position
    @return score from completing this move
    **/
-  public abstract Pair<Point2D, Double> doMove( int endX, int endY);
+  public abstract double doMove(int startX, int startY, int endX, int endY);
 
   /**
    Set up board from config file
