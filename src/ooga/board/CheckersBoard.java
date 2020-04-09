@@ -34,8 +34,8 @@ public class CheckersBoard extends Board {
     }
 
     @Override
-    public double doMove(int endX, int endY) {
-        return 0;
+    public Pair<Point2D, Double> doMove(int endX, int endY) {
+        return null;
     }
 
 

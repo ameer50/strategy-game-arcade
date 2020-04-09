@@ -64,7 +64,7 @@ public abstract class Board{
    @param endY new y position
    @return score from completing this move
    **/
-  public abstract double doMove( int endX, int endY);
+  public abstract Pair<Point2D, Double> doMove( int endX, int endY);
 
   /**
    Set up board from config file

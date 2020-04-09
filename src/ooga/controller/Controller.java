@@ -46,7 +46,7 @@ public class Controller {
         });
 
         myGameScreen.onMoveClicked((int x, int y) -> {
-            //myGameScreen.movePiece(myBoard.doMove(x, y));
+            myGameScreen.movePiece(x, y, myBoard.doMove(x, y));
             //myGameScreen.movePiece(6, 0, 5, 0);
         });
     }

@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import ooga.controller.CellClickedInterface;
 
 import java.awt.geom.Point2D;
@@ -73,7 +74,9 @@ public class GameScreen {
         }
     }
 
-    public void movePiece(int init_x, int init_y, int final_x, int final_y) {
+    public void movePiece(int final_x, int final_y, Pair<Point2D, Double> p) {
+        int init_x = (int) p.getKey().getX();
+        int init_y = (int) p.getKey().getY();
         board.getCell(final_x, final_y).setPiece(board.getCell(init_x, init_y).getPiece());
         board.getCell(init_x, init_y).setPiece(null);
         board.getCell(final_x, final_y).getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
