@@ -23,6 +23,7 @@ public class ChessBoard extends Board{
     Integer blackKingJ = coords[1];
     Integer whiteKingI = coords[2];
     Integer whiteKingJ = coords[3];
+    //getValidMoves(0, 0);
     isKingInDanger(blackKingI, blackKingJ);
     return false;
   }
@@ -67,7 +68,7 @@ public class ChessBoard extends Board{
     }
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     if(allPossibleMoves.contains(kingPoint)){
-      System.out.println("Someone can kill the king!");
+      System.out.println("Someone can kill the king");
     }
     return false;
   }
