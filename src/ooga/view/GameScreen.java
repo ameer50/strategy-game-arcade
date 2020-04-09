@@ -19,13 +19,12 @@ public class GameScreen {
     private static final double STAGE_HEIGHT = 800;
     private static final double STAGE_WIDTH = 1200;
 
+    private BorderPane root;
     private Stage stage;
     private Scene scene;
     private Map<String, String> nameDim;
     private Map<Point2D, String> pieceLocations;
     private BoardView board;
-    private int curr_x;
-    private int curr_y;
 
     public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
@@ -36,7 +35,7 @@ public class GameScreen {
     }
 
     private void startView(){
-        BorderPane root = new BorderPane();
+        root = new BorderPane();
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
         setAsScene(new Scene(root));
@@ -77,10 +76,17 @@ public class GameScreen {
     public void movePiece(int final_x, int final_y, Pair<Point2D, Double> p) {
         int init_x = (int) p.getKey().getX();
         int init_y = (int) p.getKey().getY();
-        board.getCell(final_x, final_y).setPiece(board.getCell(init_x, init_y).getPiece());
-        board.getCell(init_x, init_y).setPiece(null);
-        board.getCell(final_x, final_y).getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
-        board.getCell(final_x, final_y).getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+        CellView initCell = board.getCell(init_x, init_y);
+        CellView finalCell = board.getCell(final_x, final_y);
+        if (finalCell.getPiece() != null) {
+            root.getChildren().remove(finalCell.getPiece().getIVShape());
+        }
+        // update final cell in grid
+        finalCell.setPiece(initCell.getPiece());
+        // update piece image
+        finalCell.getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
+        finalCell.getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+        initCell.setPiece(null);
     }
 
     public void highlightValidMoves(List<Point2D> pointPairs) {
