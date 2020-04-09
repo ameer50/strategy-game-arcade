@@ -10,6 +10,7 @@ import javafx.util.Pair;
 
 public class ChessBoard extends Board{
   public static final String KING_STRING = "King";
+  public static final String BLACK_STRING = "Black";
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     super(settings, locs, pieces);
   }
@@ -17,8 +18,20 @@ public class ChessBoard extends Board{
   @Override
   public boolean checkWon() {
     System.out.println("Running checkWon");
-    double kingI = 0;
-    double kingJ = 0;
+    Integer[] coords = locateKings();
+    Integer blackKingI = coords[0];
+    Integer blackKingJ = coords[1];
+    Integer whiteKingI = coords[2];
+    Integer whiteKingJ = coords[3];
+    isKingInDanger(blackKingI, blackKingJ);
+    return false;
+  }
+
+  private Integer[] locateKings(){
+    Integer blackKingI = null;
+    Integer blackKingJ = null;
+    Integer whiteKingI = null;
+    Integer whiteKingJ = null;
     for(int i = 0; i < myHeight; i++){
       for(int j = 0; j < myWidth; j++){
         Piece p = getPieceAt(i, j);
@@ -26,16 +39,38 @@ public class ChessBoard extends Board{
           continue;
         }
         if(p.toString().equals(KING_STRING)){
-          kingI = i;
-          kingJ = j;
+          if(p.getColor().equals(BLACK_STRING)) {
+            blackKingI = i;
+            blackKingJ = j;
+          }
+          else{
+            whiteKingI = i;
+            whiteKingJ = j;
+          }
         }
       }
     }
-    System.out.println("kingI = " + kingI);
-    System.out.println("kingJ = " + kingJ);
-    return false;
+    Integer[] ret = {blackKingI, blackKingJ, whiteKingI, whiteKingJ};
+    return ret;
   }
 
+  private boolean isKingInDanger(int kingI, int kingJ){
+    List<Point2D> allPossibleMoves = new ArrayList<>();
+    for(int i = 0; i < myHeight; i++){
+      for(int j = 0; j < myWidth; j++){
+        List<Point2D> thisPieceMoves = getValidMoves(i, j);
+        if((i == kingI && j == kingJ) || thisPieceMoves == null){
+          continue;
+        }
+        allPossibleMoves.addAll(thisPieceMoves);
+      }
+    }
+    Point2D kingPoint = new Point2D.Double(kingI, kingJ);
+    if(allPossibleMoves.contains(kingPoint)){
+      System.out.println("Someone can kill the king!");
+    }
+    return false;
+  }
   @Override
   public List<Point2D> getValidMoves(int x, int y){
     Piece piece = myGrid[x][y];
