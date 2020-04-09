@@ -58,28 +58,29 @@ public class GameScreen {
     }
 
     public void onPieceClicked(CellClickedInterface clicked){
-
         for(int i =0; i< board.getBoardDimension(); i++){
             for(int j =0; j < board.getBoardDimension(); j++){
-                board.getCell(i, j).setClickedFunction(clicked);
+                board.getCell(i, j).setPieceClickedFunction(clicked);
             }
         }
     }
 
-    public void highlightValidMoves(List<Point2D> pointPairs) {
-
-        if (pointPairs == null){
-            return;
-        }
-        for (Point2D point : pointPairs) {
-            int x = (int) point.getX();
-            int y = (int) point.getY();
-            board.getCell(x,y).toggleYellow();
+    public void onMoveClicked(CellClickedInterface clicked){
+        for(int i =0; i< board.getBoardDimension(); i++){
+            for(int j =0; j < board.getBoardDimension(); j++){
+                board.getCell(i, j).setMoveClickedFunction(clicked);
+            }
         }
     }
 
-    public void updatePiecePosition(List<Point2D> pointPairs) {
+    public void movePiece(int init_x, int init_y, int final_x, int final_y) {
+        board.getCell(final_x, final_y).setPiece(board.getCell(init_x, init_y).getPiece());
+        board.getCell(init_x, init_y).setPiece(null);
+        board.getCell(final_x, final_y).getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
+        board.getCell(final_x, final_y).getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+    }
 
+    public void highlightValidMoves(List<Point2D> pointPairs) {
         if (pointPairs == null){
             return;
         }

@@ -17,6 +17,7 @@ public class CellView extends HBox {
     private int yindex;
     private CellClickedInterface clickPieceFunction;
     private CellClickedInterface noBorderFunction;
+    private CellClickedInterface movePieceFunction;
     private PieceView piece;
 
     public CellView(int xindex, int yindex, double xpos, double ypos, double width, double height, String cellColorStyle){
@@ -88,7 +89,7 @@ public class CellView extends HBox {
                 toggleRed();
                 clickPieceFunction.clickCell(xindex, yindex);
             }else if(isYellow){
-                clickPieceFunction.clickCell(xindex, yindex);
+                movePieceFunction.clickCell(xindex, yindex);
                 noBorderFunction.clickCell(xindex, yindex);
             }else{
                 noBorderFunction.clickCell(xindex, yindex);
@@ -108,8 +109,12 @@ public class CellView extends HBox {
         return "[ " + xindex + " , " + yindex + " ] at x = " + xpos + " , y = " + ypos;
     }
 
-    public void setClickedFunction(CellClickedInterface clicked){
+    public void setPieceClickedFunction(CellClickedInterface clicked){
         this.clickPieceFunction = clicked;
+    }
+
+    public void setMoveClickedFunction(CellClickedInterface clicked) {
+        this.movePieceFunction = clicked;
     }
 
     public void setNoBorderFunction(CellClickedInterface clicked){

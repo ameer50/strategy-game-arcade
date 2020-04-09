@@ -56,6 +56,22 @@ public class BoardView {
         initialize();
     }
 
+    public double getPieceOffsetX() {
+        return PIECE_OFFSETX;
+    }
+
+    public double getPieceOffsetY() {
+        return PIECE_OFFSETY;
+    }
+
+    public double getPieceDeltaX() {
+        return PIECE_DELTAX;
+    }
+
+    public double getPieceDeltaY() {
+        return PIECE_DELTAY;
+    }
+
     private void checkeredColor(){
         firstColorSequence = new ArrayList<>();
         for(int i =0; i< boardWidth; i++){
