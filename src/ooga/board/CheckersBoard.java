@@ -31,18 +31,19 @@ public class CheckersBoard extends Board {
         return validMoves;
     }
 
-    public boolean checkRight(int x, int y, Piece currPiece){
-        if(!isValidCell(x+1, y+1) || !isValidCell(x+2, y+2)){
+    public boolean checkRight(int x, int y, Piece currPiece) {
+        if (!isValidCell(x + 1, y + 1) || !isValidCell(x + 2, y + 2)) {
             return false;
         }
 
-        Piece temp = getPieceAt(x+1, y+1);
+        Piece temp = getPieceAt(x + 1, y + 1);
 
-        if(!(temp.getColor().equals(currPiece.getColor())) && (getPieceAt(x+2, y+2) == null)){
-            validMoves.add(new Point2D.Double(x+2, y+2));
+        if (!(temp.getColor().equals(currPiece.getColor())) && (getPieceAt(x + 2, y + 2) == null)) {
+            validMoves.add(new Point2D.Double(x + 2, y + 2));
         }
 
         return true;
+    }
 
 
     @Override
