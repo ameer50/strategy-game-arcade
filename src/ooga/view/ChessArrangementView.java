@@ -25,8 +25,7 @@ public class ChessArrangementView implements ArrangementView {
     private double pieceWidth;
     private Map<Point2D, String> pieceLocations;
 
-
-    public ChessArrangementView(int rows, int cols, double cellSideLength,  String playerChoice, Map<Point2D, String> locs){
+    public ChessArrangementView(int rows, int cols, double cellSideLength, String playerChoice, Map<Point2D, String> locs){
         arrangement = new PieceView[rows][cols];
         pieceImages = new ArrayList<>();
         this.playerChoice = playerChoice;
@@ -35,11 +34,8 @@ public class ChessArrangementView implements ArrangementView {
         System.out.println("cl " + cellSideLength);
         PIECE_OFFSETX = BOARD_XOFFSET + ((cellSideLength)/ CELL_XOFFSET);
         PIECE_OFFSETY = BOARD_YOFFSET + cellSideLength* CELL_YOFFSET;
-
-        PIECE_DELTAX = (cellSideLength) ;
-        PIECE_DELTAY = (cellSideLength);
-
-
+        PIECE_DELTAX = cellSideLength;
+        PIECE_DELTAY = cellSideLength;
         this.pieceLocations = locs;
         initialize();
     }
@@ -54,30 +50,13 @@ public class ChessArrangementView implements ArrangementView {
         }
     }
 
-//    public void initializeFromXML(Map<Point2D, String> locs) {
-//        pieceLocations = locs;
-//        fillArrangement();
-//    }
-
     @Override
     public ImageView[] gamePieces() {
         return pieceImages.toArray(new ImageView[0]);
     }
 
-//    private void initializeDefaultLocations(){
-//        ResourceBundle defaultLocations = ResourceBundle.getBundle("default" + playerChoice + "Loc", Locale.getDefault());
-//        for (String key: Collections.list(defaultLocations.getKeys())) {
-//            String[] coord = key.split(",");
-//            pieceLocation.put(new Point2D.Double(Double.parseDouble(coord[0]), Double.parseDouble(coord[1])), defaultLocations.getString(key));
-//        }
-//    }
-
-    private void fillArrangement() {
-        for (Point2D point : pieceLocations.keySet()) {
-            int x = (int) point.getX();
-            int y = (int) point.getY();
-            arrangement[x][y] = new PieceView(115 + 70 * y, 110 + 70 * x, pieceWidth, pieceHeight, res.getString(pieceLocations.get(point)));
-            pieceImages.add(arrangement[x][y].getIVShape());
-        }
+    public PieceView pieceAt(int x, int y) {
+        return arrangement[x][y];
     }
+
 }
