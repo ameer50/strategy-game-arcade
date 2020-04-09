@@ -2,6 +2,7 @@ package ooga.view;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -15,8 +16,6 @@ public class GameScreen {
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private static final double STAGE_HEIGHT = 800;
     private static final double STAGE_WIDTH = 1200;
-    private static final int ANIM_DURATION = 2;
-
     private BorderPane root;
     private Stage stage;
     private Scene scene;
@@ -43,12 +42,11 @@ public class GameScreen {
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
 
         Pane canvas = new Pane();
-
-        board = new BoardView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")), "Black", pieceLocations, root);
+        board = new BoardView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")),
+                "Black", pieceLocations, root);
         canvas.getChildren().addAll(board.getCells());
         root.getChildren().addAll(canvas);
 
-        //ArrangementView ar = new ChessArrangementView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")), board.getCellSideLength(), "Black", pieceLocations);
         root.getChildren().addAll(board.getPieces());
     }
 
