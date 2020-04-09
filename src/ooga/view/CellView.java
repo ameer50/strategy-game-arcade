@@ -86,6 +86,7 @@ public class CellView extends HBox {
             }
 
             if (!isRed && !isYellow){
+                noBorderFunction.clickCell(xindex, yindex);
                 toggleRed();
                 clickPieceFunction.clickCell(xindex, yindex);
             }else if(isYellow){
