@@ -4,14 +4,21 @@
         <name>
             Chess
         </name>
-        <height>
-            8
-        </height>
-        <width>
-            8
-        </width>
+        <width>8</width>
+        <height>8</height>
+
     </settings>
     <locations>
+        <item>0,0,Black_Pawn</item>
+        <item>0,1,Black_Pawn</item>
+        <item>0,2,Black_Pawn</item>
+        <item>0,3,Black_Pawn</item>
+        <item>0,4,Black_Pawn</item>
+        <item>0,5,Black_Pawn</item>
+        <item>0,6,Black_Pawn</item>
+        <item>0,7,Black_Pawn</item>
+        <item>1,0,Black_Rook</item>
+
         <item>6,0,Black_Pawn</item>
         <item>6,1,Black_Pawn</item>
         <item>6,2,Black_Pawn</item>
@@ -28,8 +35,8 @@
             Black_Pawn:UP 2:1
         </item>
         <item>
-            Black_Rook:UP -1:5
-           <!-- Black_Rook:UP -1, LEFT -1, RIGHT -1, DOWN -1:5 -->
+            Black_Rook:LATERAL -1:5
+            <!-- Black_Rook:UP -1, LEFT -1, RIGHT -1, DOWN -1:5 -->
         </item>
     </pieces>
 </game_config>
