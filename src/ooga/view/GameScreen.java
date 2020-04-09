@@ -1,16 +1,11 @@
 package ooga.view;
 
-import javafx.animation.TranslateTransition;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.util.Pair;
-import ooga.controller.CellClickedInterface;
 
 import java.awt.geom.Point2D;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;

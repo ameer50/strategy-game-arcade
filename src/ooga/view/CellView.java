@@ -2,7 +2,7 @@ package ooga.view;
 
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
-import ooga.controller.CellClickedInterface;
+import ooga.CellClickedInterface;
 
 public class CellView extends HBox {
 
