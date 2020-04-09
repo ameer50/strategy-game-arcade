@@ -7,7 +7,6 @@ public class PieceView {
 
     private ImageView imgview;
 
-    //TODO: add binding?
     public PieceView(double xpos, double ypos, double width, double height, String name){
         imgview = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(name)));
 

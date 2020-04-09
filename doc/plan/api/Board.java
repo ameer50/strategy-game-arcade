@@ -19,7 +19,7 @@ public interface Board{
 	Get piece at the specified coordinates
 	@return piece object at x, y; null if empty cell
 	**/
-	Piece getPieceAt(int x, int y);
+	//Piece getPieceAt(int x, int y);
 
 	/**
 	Execute the desired move
