@@ -1,9 +1,11 @@
 package ooga.view;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import ooga.controller.CellClickedInterface;
 
@@ -18,14 +20,13 @@ public class GameScreen {
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private static final double STAGE_HEIGHT = 800;
     private static final double STAGE_WIDTH = 1200;
+    private static final int ANIM_DURATION = 2;
 
     private Stage stage;
     private Scene scene;
     private Map<String, String> nameDim;
     private Map<Point2D, String> pieceLocations;
     private BoardView board;
-    private int curr_x;
-    private int curr_y;
 
     public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
@@ -79,8 +80,16 @@ public class GameScreen {
         int init_y = (int) p.getKey().getY();
         board.getCell(final_x, final_y).setPiece(board.getCell(init_x, init_y).getPiece());
         board.getCell(init_x, init_y).setPiece(null);
-        board.getCell(final_x, final_y).getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
-        board.getCell(final_x, final_y).getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+
+//        board.getCell(final_x, final_y).getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
+//        board.getCell(final_x, final_y).getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+
+        TranslateTransition trans = new TranslateTransition(Duration.seconds(ANIM_DURATION),board.getCell(final_x, final_y).getPiece().getIVShape());
+        trans.setFromX(0);
+        trans.setFromY(0);
+        trans.setToX(board.getPieceDeltaX() * (final_y - init_y));
+        trans.setToY(board.getPieceDeltaY() * (final_x - init_x));
+        trans.play();
     }
 
     public void highlightValidMoves(List<Point2D> pointPairs) {
