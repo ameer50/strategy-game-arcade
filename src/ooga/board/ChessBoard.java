@@ -9,6 +9,7 @@ import java.util.Map;
 import javafx.util.Pair;
 
 public class ChessBoard extends Board{
+
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     super(settings, locs, pieces);
   }
@@ -21,6 +22,8 @@ public class ChessBoard extends Board{
   @Override
   public List<Point2D> getValidMoves(int x, int y){
     Piece piece = myGrid[x][y];
+    startX = x;
+    startY = y;
     if(piece == null){
       return null;
     }
@@ -39,7 +42,7 @@ public class ChessBoard extends Board{
   }
 
   @Override
-  public double doMove(int startX, int startY, int endX, int endY) {
+  public Pair<Point2D, Double> doMove(int endX, int endY) {
     Piece thisPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
     double score = 0;
@@ -52,7 +55,8 @@ public class ChessBoard extends Board{
 
     myGrid[startX][startY] = null;
     myGrid[endX][endY] = thisPiece;
-    return score;
+    //return score;
+    return new Pair<>(new Point2D.Double(startX, startY), score);
   }
 
   private List<Point2D> lateral(int x, int y, int dist, Piece piece){

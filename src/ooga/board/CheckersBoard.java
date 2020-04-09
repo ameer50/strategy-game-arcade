@@ -26,29 +26,43 @@ public class CheckersBoard extends Board {
         Piece currPiece = getPieceAt(x,y);
         if(currPiece==null){return null;}
         validMoves = new ArrayList<Point2D>();
+        checkRight(x, y, currPiece);
+        checkLeft(x, y, currPiece);
+        return validMoves;
+    }
+
+    public boolean checkRight(int x, int y, Piece currPiece) {
+        if (!isValidCell(x + 1, y + 1) || !isValidCell(x + 2, y + 2)) {
+            return false;
+        }
+
+        Piece temp = getPieceAt(x + 1, y + 1);
+
+        if (!(temp.getColor().equals(currPiece.getColor())) && (getPieceAt(x + 2, y + 2) == null)) {
+            validMoves.add(new Point2D.Double(x + 2, y + 2));
+        }
+
+        return true;
+    }
 
 
-
-
+    @Override
+    public Pair<Point2D, Double> doMove(int endX, int endY) {
         return null;
     }
 
-    @Override
-    public double doMove(int startX, int startY, int endX, int endY) {
-        return 0;
-    }
+    public boolean checkLeft(int x, int y, Piece currPiece){
+        if(!isValidCell(x-1, y-1) || !isValidCell(x-2, y-2)){
+            return false;
+        }
 
+        Piece temp = getPieceAt(x-1, y-1);
 
-//    private List<Point2D> left(int x, int y, int dist){
-//
-//    }
+        if(!(temp.getColor().equals(currPiece.getColor())) && (getPieceAt(x-2, y-2) == null)){
+            validMoves.add(new Point2D.Double(x-2, y-2));
+        }
 
-
-    public void helper(int x, int y){
-        Piece piece = getPieceAt(x,y);
-
-
-
+        return true;
 
     }
 

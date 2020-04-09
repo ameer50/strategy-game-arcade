@@ -9,6 +9,7 @@ import ooga.view.SplashScreen;
 import ooga.xml.XMLParser;
 
 import java.awt.geom.Point2D;
+import java.util.List;
 import java.util.Map;
 
 public class Controller {
@@ -16,6 +17,8 @@ public class Controller {
     private GameScreen myGameScreen;
     private SplashScreen mySplashScreen;
     private Board myBoard;
+    private boolean toggleMoves;
+    private List<Point2D> temp;
 
     public Controller (Stage stage) {
         makeScreen(stage);
@@ -26,10 +29,9 @@ public class Controller {
 
         p.parse("resources/test_xml/test.xml");
         myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
-        System.out.println("valid moves " + myBoard.getValidMoves(6,0));
         //myBoard.print();
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
-
+        toggleMoves = true;
 
 
 //        mySplashScreen = new SplashScreen(stage);
@@ -40,9 +42,12 @@ public class Controller {
 //            initializeBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 //        }
         myGameScreen.onPieceClicked((int x, int y) -> {
-            System.out.println("blahhhhh" + x + " " + y);
-            System.out.println("blah" + myBoard.getValidMoves(x, y));
             myGameScreen.highlightValidMoves(myBoard.getValidMoves(x, y));
+        });
+
+        myGameScreen.onMoveClicked((int x, int y) -> {
+            myGameScreen.movePiece(x, y, myBoard.doMove(x, y));
+            //myGameScreen.movePiece(6, 0, 5, 0);
         });
     }
 
