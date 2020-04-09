@@ -28,11 +28,15 @@
         <item>6,6,Black_Pawn</item>
         <item>6,7,Black_Pawn</item>
         <item>7,0,Black_Rook</item>
+        <item>7,1,Black_King</item>
 
     </locations>
     <pieces>
         <item>
             Black_Pawn:UP 2:1
+        </item>
+        <item>
+            Black_King:LATERAL 1:1
         </item>
         <item>
             Black_Rook:LATERAL -1:5

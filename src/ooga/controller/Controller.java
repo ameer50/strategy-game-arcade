@@ -43,6 +43,7 @@ public class Controller {
 //        }
         myGameScreen.onPieceClicked((int x, int y) -> {
             myGameScreen.highlightValidMoves(myBoard.getValidMoves(x, y));
+            myBoard.checkWon();
         });
 
         myGameScreen.onMoveClicked((int x, int y) -> {

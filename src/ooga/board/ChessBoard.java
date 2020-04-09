@@ -9,13 +9,30 @@ import java.util.Map;
 import javafx.util.Pair;
 
 public class ChessBoard extends Board{
-
+  public static final String KING_STRING = "King";
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     super(settings, locs, pieces);
   }
 
   @Override
   public boolean checkWon() {
+    System.out.println("Running checkWon");
+    double kingI = 0;
+    double kingJ = 0;
+    for(int i = 0; i < myHeight; i++){
+      for(int j = 0; j < myWidth; j++){
+        Piece p = getPieceAt(i, j);
+        if(p == null){
+          continue;
+        }
+        if(p.toString().equals(KING_STRING)){
+          kingI = i;
+          kingJ = j;
+        }
+      }
+    }
+    System.out.println("kingI = " + kingI);
+    System.out.println("kingJ = " + kingJ);
     return false;
   }
 
