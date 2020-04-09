@@ -19,7 +19,7 @@
         <item>0,7,Black_Pawn</item>
         <item>1,0,Black_Rook</item>
 
-        <item>6,0,Black_Pawn</item>
+        <item>6,0,White_Pawn</item>
         <item>6,1,Black_Pawn</item>
         <item>6,2,Black_Pawn</item>
         <item>6,3,Black_Pawn</item>
@@ -37,7 +37,9 @@
         <item>
             Black_Rook:LATERAL -1:5
             <!-- Black_Rook:UP -1, LEFT -1, RIGHT -1, DOWN -1:5 -->
-
+        </item>
+        <item>
+            White_Pawn:DOWN 2:1
         </item>
     </pieces>
 </game_config>
