@@ -1,9 +1,11 @@
 package ooga.view;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.util.Pair;
 import ooga.controller.CellClickedInterface;
 
@@ -18,6 +20,7 @@ public class GameScreen {
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private static final double STAGE_HEIGHT = 800;
     private static final double STAGE_WIDTH = 1200;
+    private static final int ANIM_DURATION = 2;
 
     private BorderPane root;
     private Stage stage;
@@ -25,6 +28,7 @@ public class GameScreen {
     private Map<String, String> nameDim;
     private Map<Point2D, String> pieceLocations;
     private BoardView board;
+
 
     public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
@@ -74,6 +78,7 @@ public class GameScreen {
     }
 
     public void movePiece(int final_x, int final_y, Pair<Point2D, Double> p) {
+
         int init_x = (int) p.getKey().getX();
         int init_y = (int) p.getKey().getY();
         CellView initCell = board.getCell(init_x, init_y);
@@ -84,8 +89,16 @@ public class GameScreen {
         // update final cell in grid
         finalCell.setPiece(initCell.getPiece());
         // update piece image
-        finalCell.getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
-        finalCell.getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+//        finalCell.getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
+//        finalCell.getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+
+        TranslateTransition trans = new TranslateTransition(Duration.seconds(ANIM_DURATION),finalCell.getPiece().getIVShape());
+        trans.setFromX(trans.getFromX());
+        trans.setFromY(trans.getFromY());
+        trans.setByX(board.getPieceDeltaX() * (final_y - init_y));
+        trans.setByY(board.getPieceDeltaY() * (final_x - init_x));
+        trans.play();
+
         initCell.setPiece(null);
     }
 
