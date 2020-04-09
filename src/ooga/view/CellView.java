@@ -78,9 +78,8 @@ public class CellView extends HBox {
 
 
     public void lightUpCells(){
-
         this.setOnMouseClicked(e -> {
-            if(piece == null && !isYellow){
+            if (piece == null && !isYellow){
                 noBorderFunction.clickCell(xindex, yindex);
                 return;
             }
@@ -89,15 +88,13 @@ public class CellView extends HBox {
                 noBorderFunction.clickCell(xindex, yindex);
                 toggleRed();
                 clickPieceFunction.clickCell(xindex, yindex);
-            }else if(isYellow){
+            } else if(isYellow){
                 movePieceFunction.clickCell(xindex, yindex);
                 noBorderFunction.clickCell(xindex, yindex);
-            }else{
+            } else{
                 noBorderFunction.clickCell(xindex, yindex);
             }
-
         });
-
     }
 
     public void toggleNoBorder(){
