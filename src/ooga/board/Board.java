@@ -84,6 +84,10 @@ public abstract class Board{
     }
   }
 
+  public void updateCell(int x, int y, Piece piece){
+    this.myGrid[x][y] = piece;
+  }
+
   /**
    Check if coordinates are valid on board
    @param x potential x coord
