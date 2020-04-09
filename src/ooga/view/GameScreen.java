@@ -29,6 +29,7 @@ public class GameScreen {
     private Map<Point2D, String> pieceLocations;
     private BoardView board;
 
+
     public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
         this.stage = stage;
         this.nameDim = nameDim;
@@ -77,6 +78,7 @@ public class GameScreen {
     }
 
     public void movePiece(int final_x, int final_y, Pair<Point2D, Double> p) {
+
         int init_x = (int) p.getKey().getX();
         int init_y = (int) p.getKey().getY();
         CellView initCell = board.getCell(init_x, init_y);
@@ -91,10 +93,10 @@ public class GameScreen {
 //        finalCell.getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
 
         TranslateTransition trans = new TranslateTransition(Duration.seconds(ANIM_DURATION),finalCell.getPiece().getIVShape());
-        trans.setFromX(0);
-        trans.setFromY(0);
-        trans.setToX(board.getPieceDeltaX() * (final_y - init_y));
-        trans.setToY(board.getPieceDeltaY() * (final_x - init_x));
+        trans.setFromX(trans.getFromX());
+        trans.setFromY(trans.getFromY());
+        trans.setByX(board.getPieceDeltaX() * (final_y - init_y));
+        trans.setByY(board.getPieceDeltaY() * (final_x - init_x));
         trans.play();
 
         initCell.setPiece(null);
