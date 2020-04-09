@@ -22,9 +22,9 @@ public class ChessBoard extends Board{
     //if in check, three options.
     //b) move king. does king.validMoves have point not in allPossibleMoves. if yes, return false. if not, keep going
     //c) if when the king moves it kills an opposing piece, we need to make sure that the new square isn't newly accessible by opposing pieces
-    //at this point if there are multiple checking pieces, return color
-    //d) kill threatening piece. is piece.xy in valid moves of our team?
-    //e) block threatening piece. what is the path from threatening to king?
+    //d) at this point if there are multiple checking pieces, return color
+    //e) kill threatening piece. is piece.xy in valid moves of our team?
+    //f) block threatening piece. what is the path from threatening to king?
     //if same x and higher y, it is moving upwards. if lower y, moving downwards. both in straight line.
     //if same y and higher x, it is moving left. otherwise moving right.
     //if different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
@@ -36,11 +36,11 @@ public class ChessBoard extends Board{
     Integer whiteKingI = coords[2];
     Integer whiteKingJ = coords[3];
 
-    Pair<List<Point2D>, List<Piece>> dataForWhite = getMovesAndCheckPieces(whiteKingI, whiteKingJ, WHITE_STRING);
+    Pair<List<Point2D>, List<Point2D>> dataForWhite = getMovesAndCheckPieces(whiteKingI, whiteKingJ, WHITE_STRING);
     //a) not in check -> false
-    List<Piece> checkPieces = dataForWhite.getValue();
+    List<Point2D> checkPieces = dataForWhite.getValue();
     if(checkPieces.size() == 0){
-      //return false;
+      return false;
     }
     //b) no safe moves -> true
     List<Point2D> opponentMoves = dataForWhite.getKey();
@@ -66,6 +66,26 @@ public class ChessBoard extends Board{
     for(Point2D p: safeMoves){
       System.out.println("p = " + p);
     }
+    //king is safe if after all that, there are still safe moves. return false
+    if(safeMoves.size() != 0){
+      return false;
+    }
+    System.out.println("Past safe moves");
+    //at this point the king can't move anywhere.
+    //d) if there are multiple pieces holding king in check, it's dead
+    if(checkPieces.size() > 1){
+      System.out.println("Dead at D");
+      return true;
+    }
+    //e) there is only one piece holding the king in check. the king can't escape check. can we kill the piece?
+    Pair<List<Point2D>, List<Point2D>> ourMoveData = getMovesAndCheckPieces(whiteKingI, whiteKingJ, BLACK_STRING);
+    List<Point2D> ourMoves = ourMoveData.getKey();
+    Point2D threatening = checkPieces.get(0);
+    if(ourMoves.contains(threatening)){
+      System.out.println("SAFE");
+      return false;
+    }
+
     return false;
   }
 
@@ -96,9 +116,9 @@ public class ChessBoard extends Board{
     return ret;
   }
 
-  private Pair<List<Point2D>, List<Piece>> getMovesAndCheckPieces(int kingI, int kingJ, String color){
+  private Pair<List<Point2D>, List<Point2D>> getMovesAndCheckPieces(int kingI, int kingJ, String color){
     List<Point2D> allPossibleMoves = new ArrayList<>();
-    List<Piece> checkPieces = new ArrayList<>();
+    List<Point2D> checkPieces = new ArrayList<>();
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     for(int i = 0; i < myHeight; i++){
       for(int j = 0; j < myWidth; j++){
@@ -108,7 +128,7 @@ public class ChessBoard extends Board{
           continue;
         }
         if(thisPieceMoves.contains(kingPoint)){
-          checkPieces.add(thisPiece);
+          checkPieces.add(new Point2D.Double(i, j));
         }
         allPossibleMoves.addAll(thisPieceMoves);
       }
@@ -116,7 +136,7 @@ public class ChessBoard extends Board{
     if(allPossibleMoves.size() == 0 && checkPieces.size() == 0){
       return null;
     }
-    Pair<List<Point2D>, List<Piece>> ret = new Pair<>(allPossibleMoves, checkPieces);
+    Pair<List<Point2D>, List<Point2D>> ret = new Pair<>(allPossibleMoves, checkPieces);
     return ret;
   }
 

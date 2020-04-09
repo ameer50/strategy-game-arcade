@@ -9,11 +9,11 @@
 
     </settings>
     <locations>
-        <item>0,0,Black_Pawn</item>
-        <item>0,1,Black_Pawn</item>
-        <item>0,2,Black_Pawn</item>
-        <item>0,3,Black_Pawn</item>
-        <item>0,4,Black_Pawn</item>
+        <item>0,0,White_Pawn</item>
+        <item>0,1,White_Pawn</item>
+        <item>0,2,White_Pawn</item>
+        <item>0,3,White_Pawn</item>
+        <item>0,4,White_Pawn</item>
         <item>0,5,Black_Pawn</item>
         <item>0,6,Black_Pawn</item>
         <item>0,7,Black_Pawn</item>
@@ -25,9 +25,9 @@
         <item>6,2,Black_Pawn</item>
         <item>6,3,Black_Pawn</item>
         <item>6,4,Black_Pawn</item>
-        <item>6,5,Black_Pawn</item>
-        <item>6,6,Black_Pawn</item>
-        <item>6,7,Black_Pawn</item>
+        <item>6,5,Black_Rook</item>
+        <item>6,6,Black_Rook</item>
+        <item>6,7,Black_Rook</item>
         <item>7,0,Black_Rook</item>
         <item>7,1,Black_King</item>
 
