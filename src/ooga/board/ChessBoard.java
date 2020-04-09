@@ -1,5 +1,6 @@
 package ooga.board;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,6 +22,7 @@ public class ChessBoard extends Board{
 
   @Override
   public boolean checkWon() {
+    //TODO: when getting opponent valid moves, pretend king doesn't exist
     //a) if not in check return null. if in check, checkPieces.size() is 0
     //if in check, three options.
     //b) move king. does king.validMoves have point not in allPossibleMoves. if yes, return false. if not, keep going
@@ -44,14 +46,15 @@ public class ChessBoard extends Board{
     //a) not in check -> false
     List<Point2D> checkPieces = dataForWhite.getValue();
     if(checkPieces.size() == 0){
+      System.out.println("NO CHECK");
       return false;
     }
-    //b) no safe moves -> true
+    //b) safe moves -> false
     List<Point2D> opponentMoves = dataForWhite.getKey();
     List<Point2D> kingMoves = getValidMoves(whiteKingI, whiteKingJ);
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
-    if(safeMoves.size() == 0){
-      return true;
+    if(safeMoves.size() != 0){
+      return false;
     }
     //c) in safe spots, check if there is currently a piece here. if so, check if the spot is newly accessible by opposing team. if so, remove the spot.
     System.out.println("safe spots");
@@ -97,8 +100,13 @@ public class ChessBoard extends Board{
       return true;
     }
     //h) there is one blockable piece threatening king. king can't move. piece can't be killed. can we block the piece?
-    //
-
+    //get path
+    List<Point2D> path = getPath(i, j, whiteKingI, whiteKingJ);
+    for(Point2D p: path){
+      if(ourMoves.contains(p)){
+        System.out.println("CAN BLOCK");
+      }
+    }
     return false;
   }
 
@@ -188,6 +196,46 @@ public class ChessBoard extends Board{
     }
     myGrid[potentialI][potentialJ] = storedPiece;
     return false;
+  }
+
+  private List<Point2D> getPath(int threatI, int threatJ, int kingI, int kingJ){
+    List<Point2D> path = new ArrayList<>();
+    //lateral movement in same row
+    if(threatI == kingI){
+      if(threatJ < kingJ){
+        for(int j = threatJ; j < kingJ; j++){
+          Point2D pointOnPath = new Point2D.Double(threatI, j);
+          path.add(pointOnPath);
+        }
+        return path;
+      }
+      if(threatJ > kingJ){
+        for(int j = kingJ; j < threatJ; j++){
+          Point2D pointOnPath = new Point2D.Double(threatI, j);
+          path.add(pointOnPath);
+        }
+        return path;
+      }
+    }
+    //lateral movement in same column
+    if(threatJ == kingJ){
+      if(threatI < kingI){
+        for(int i = threatI; i < kingI; i++){
+          Point2D pointOnPath = new Point2D.Double(i, threatJ);
+          path.add(pointOnPath);
+        }
+        return path;
+      }
+      if(threatI > kingI){
+        for(int i = kingI; i < threatI; i++){
+          Point2D pointOnPath = new Point2D.Double(i, threatJ);
+          path.add(pointOnPath);
+        }
+        return path;
+      }
+    }
+    //add diagonals
+    return null;
   }
 
   @Override
