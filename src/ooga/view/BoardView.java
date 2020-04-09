@@ -1,19 +1,16 @@
 package ooga.view;
 
 import javafx.animation.TranslateTransition;
-import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-import javafx.util.Pair;
-import ooga.controller.CellClickedInterface;
+import ooga.CellClickedInterface;
 
 import java.awt.geom.Point2D;
 import java.util.*;
 
-public class BoardView {
+public class BoardView implements BoardViewInterface {
 
     private CellView[][] arrangement;
     private HBox[] cellList;
@@ -82,7 +79,7 @@ public class BoardView {
         return PIECE_DELTAY;
     }
 
-    private void checkeredColor(){
+    public void checkeredColor(){
         firstColorSequence = new ArrayList<>();
         for(int i =0; i< boardWidth; i++){
             if (i % 2 == 0){
@@ -108,7 +105,7 @@ public class BoardView {
                 }
                 cellList[cellIndex] = arrangement[i][j];
                 cellIndex++;
-                arrangement[i][j].setNoBorderFunction((a,b)-> {
+                arrangement[i][j].setNoBorderFunction((a,b) -> {
                     for(int x = 0; x < boardWidth; x++){
                         for(int y =0; y < boardHeight; y++) {
                             arrangement[x][y].toggleNoBorder();
