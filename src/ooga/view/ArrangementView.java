@@ -7,7 +7,9 @@ import java.util.Map;
 
 public interface ArrangementView {
 
-    public abstract void initialize();
+    void initialize();
 
-    public abstract ImageView[] gamePieces();
+    ImageView[] gamePieces();
+
+    PieceView pieceAt(int x, int y);
 }

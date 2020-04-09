@@ -41,9 +41,13 @@ public class Controller {
 //            myGameScreen = new GameScreen(stage);
 //            initializeBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 //        }
-        myGameScreen.onPieceClicked((int x, int y, boolean check) -> {
-                myGameScreen.highlightValidMoves(myBoard.getValidMoves(x, y));
+        myGameScreen.onPieceClicked((int x, int y) -> {
+            myGameScreen.highlightValidMoves(myBoard.getValidMoves(x, y));
+        });
 
+        myGameScreen.onMoveClicked((int x, int y) -> {
+            myGameScreen.movePiece(x, y, myBoard.doMove(x, y));
+            //myGameScreen.movePiece(6, 0, 5, 0);
         });
     }
 
