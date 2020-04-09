@@ -45,12 +45,6 @@ public class CheckersBoard extends Board {
         return true;
     }
 
-
-    @Override
-    public Pair<Point2D, Double> doMove(int endX, int endY) {
-        return null;
-    }
-
     public boolean checkLeft(int x, int y, Piece currPiece){
         if(!isValidCell(x-1, y-1) || !isValidCell(x-2, y-2)){
             return false;

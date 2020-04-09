@@ -1,9 +1,14 @@
 package ooga.view;
 
+import javafx.animation.TranslateTransition;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
+import javafx.util.Pair;
+import ooga.controller.CellClickedInterface;
 
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -37,8 +42,12 @@ public class BoardView {
     private Map<Point2D, String> pieceLocations;
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private double cellSideLength;
+    private BorderPane root;
 
-    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs){
+    private Point2D selectedLocation;
+    private static final int ANIM_DURATION = 2;
+
+    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs, BorderPane root){
         boardWidth = rows;
         boardHeight = cols;
         arrangement = new CellView[rows][cols];
@@ -53,6 +62,7 @@ public class BoardView {
         PIECE_OFFSETY = BOARD_YOFFSET + cellSideLength* CELL_YOFFSET;
         PIECE_DELTAX = PIECE_DELTAY = cellSideLength;
         this.pieceLocations = locs;
+        this.root = root;
         initialize();
     }
 
@@ -118,7 +128,6 @@ public class BoardView {
         }
     }
 
-
     public HBox[] getCells() {
         return cellList;
     }
@@ -139,5 +148,63 @@ public class BoardView {
         return cellLength + PIECE_SPACE;
     }
 
+    public void highlightValidMoves(List<Point2D> validMoves) {
+        if (validMoves == null){
+            return;
+        }
+        for (Point2D point : validMoves) {
+            int x = (int) point.getX();
+            int y = (int) point.getY();
+            this.getCell(x,y).toggleYellow();
+        }
+    }
+
+    public void movePiece(int final_x, int final_y) {
+        int init_x = (int) selectedLocation.getX();
+        int init_y = (int) selectedLocation.getY();
+        CellView initCell = this.getCell(init_x, init_y);
+        CellView finalCell = this.getCell(final_x, final_y);
+        if (finalCell.getPiece() != null) {
+            root.getChildren().remove(finalCell.getPiece().getIVShape());
+        }
+        // update final cell in grid
+        finalCell.setPiece(initCell.getPiece());
+        // update piece image
+//        finalCell.getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
+//        finalCell.getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+
+        TranslateTransition trans = new TranslateTransition(Duration.seconds(ANIM_DURATION),finalCell.getPiece().getIVShape());
+        trans.setFromX(trans.getFromX());
+        trans.setFromY(trans.getFromY());
+        trans.setByX(this.getPieceDeltaX() * (final_y - init_y));
+        trans.setByY(this.getPieceDeltaY() * (final_x - init_x));
+        trans.play();
+
+        initCell.setPiece(null);
+    }
+
+    public void setOnPieceClicked(CellClickedInterface clicked) {
+        for(int i =0; i< boardWidth; i++){
+            for(int j =0; j < boardHeight; j++){
+                this.getCell(i, j).setPieceClickedFunction(clicked);
+            }
+        }
+    }
+
+    public void setOnMoveClicked(CellClickedInterface clicked) {
+        for(int i =0; i< boardWidth; i++){
+            for(int j =0; j < boardHeight; j++){
+                this.getCell(i, j).setMoveClickedFunction(clicked);
+            }
+        }
+    }
+
+    public void setSelectedLocation(int x, int y) {
+        selectedLocation = new Point2D.Double(x, y);
+    }
+
+    public Point2D getSelectedLocation() {
+        return selectedLocation;
+    }
 
 }
