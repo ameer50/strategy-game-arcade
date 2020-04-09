@@ -11,20 +11,61 @@ import javafx.util.Pair;
 public class ChessBoard extends Board{
   public static final String KING_STRING = "King";
   public static final String BLACK_STRING = "Black";
+  public static final String WHITE_STRING = "White";
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     super(settings, locs, pieces);
   }
 
   @Override
   public boolean checkWon() {
-    System.out.println("Running checkWon");
+    //a) if not in check return null. if in check, checkPieces.size() is 0
+    //if in check, three options.
+    //b) move king. does king.validMoves have point not in allPossibleMoves. if yes, return false. if not, keep going
+    //c) if when the king moves it kills an opposing piece, we need to make sure that the new square isn't newly accessible by opposing pieces
+    //at this point if there are multiple checking pieces, return color
+    //d) kill threatening piece. is piece.xy in valid moves of our team?
+    //e) block threatening piece. what is the path from threatening to king?
+    //if same x and higher y, it is moving upwards. if lower y, moving downwards. both in straight line.
+    //if same y and higher x, it is moving left. otherwise moving right.
+    //if different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
+    //if diff x and y and those differences aren't the same, it's a knight and we can't block
+    //I need every move the other team can make and every piece holding in check
     Integer[] coords = locateKings();
     Integer blackKingI = coords[0];
     Integer blackKingJ = coords[1];
     Integer whiteKingI = coords[2];
     Integer whiteKingJ = coords[3];
-    //getValidMoves(0, 0);
-    isKingInDanger(blackKingI, blackKingJ);
+
+    Pair<List<Point2D>, List<Piece>> dataForWhite = getMovesAndCheckPieces(whiteKingI, whiteKingJ, WHITE_STRING);
+    //a) not in check -> false
+    List<Piece> checkPieces = dataForWhite.getValue();
+    if(checkPieces.size() == 0){
+      //return false;
+    }
+    //b) no safe moves -> true
+    List<Point2D> opponentMoves = dataForWhite.getKey();
+    List<Point2D> kingMoves = getValidMoves(whiteKingI, whiteKingJ);
+    List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
+    if(safeMoves.size() == 0){
+      return true;
+    }
+    //c) in safe spots, check if there is currently a piece here. if so, check if the spot is newly accessible by opposing team. if so, remove the spot.
+    System.out.println("safe spots");
+    List<Point2D> hiddenDangerMoves = new ArrayList<>();
+    for(Point2D p: safeMoves){
+      int x = (int) p.getX();
+      int y = (int) p.getY();
+      if(isSpotInDanger(x, y)){
+        hiddenDangerMoves.add(p);
+      }
+    }
+
+    for(Point2D p: hiddenDangerMoves){
+      safeMoves.remove(p);
+    }
+    for(Point2D p: safeMoves){
+      System.out.println("p = " + p);
+    }
     return false;
   }
 
@@ -55,26 +96,70 @@ public class ChessBoard extends Board{
     return ret;
   }
 
-  private boolean isKingInDanger(int kingI, int kingJ){
+  private Pair<List<Point2D>, List<Piece>> getMovesAndCheckPieces(int kingI, int kingJ, String color){
     List<Point2D> allPossibleMoves = new ArrayList<>();
+    List<Piece> checkPieces = new ArrayList<>();
+    Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     for(int i = 0; i < myHeight; i++){
       for(int j = 0; j < myWidth; j++){
+        Piece thisPiece = getPieceAt(i, j);
         List<Point2D> thisPieceMoves = getValidMoves(i, j);
-        if((i == kingI && j == kingJ) || thisPieceMoves == null){
+        if((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor().equals(color)){
           continue;
+        }
+        if(thisPieceMoves.contains(kingPoint)){
+          checkPieces.add(thisPiece);
         }
         allPossibleMoves.addAll(thisPieceMoves);
       }
     }
-    Point2D kingPoint = new Point2D.Double(kingI, kingJ);
-    if(allPossibleMoves.contains(kingPoint)){
-      System.out.println("CHECK");
+    if(allPossibleMoves.size() == 0 && checkPieces.size() == 0){
+      return null;
     }
+    Pair<List<Point2D>, List<Piece>> ret = new Pair<>(allPossibleMoves, checkPieces);
+    return ret;
+  }
+
+  private List<Point2D> getSafeKingMoves(List<Point2D> kingMoves, List<Point2D> oppMoves){
+    List<Point2D> safePoints = new ArrayList<>();
+    for(Point2D kingMove: kingMoves){
+      if(!oppMoves.contains(kingMove)){
+        safePoints.add(kingMove);
+      }
+    }
+    return safePoints;
+  }
+
+  //used to see if killing a piece could keep king in check
+  private boolean isSpotInDanger(int potentialI, int potentialJ){
+    Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
+    Piece storedPiece = getPieceAt(potentialI, potentialJ);
+    if(storedPiece == null){
+      return false;
+    }
+    myGrid[potentialI][potentialJ] = null;
+    System.out.println("Potentials: " + potentialI + ", " + potentialJ);
+    for(int i = 0; i < myHeight; i++){
+      for(int j = 0; j < myWidth; j++){
+        Piece thisPiece = getPieceAt(i, j);
+        List<Point2D> thisPieceMoves = getValidMoves(i, j);
+        if((i == potentialI && j == potentialJ) || thisPiece == null || !storedPiece.getColor().equals(thisPiece.getColor())){
+          continue;
+        }
+        if(thisPieceMoves.contains(potentialPoint)){
+          myGrid[potentialI][potentialJ] = storedPiece;
+          System.out.println(thisPiece + " at " + i + ", " + j);
+          return true;
+        }
+      }
+    }
+    myGrid[potentialI][potentialJ] = storedPiece;
     return false;
   }
+
   @Override
   public List<Point2D> getValidMoves(int x, int y){
-    Piece piece = myGrid[x][y];
+    Piece piece = getPieceAt(x, y);
     if(piece == null){
       return null;
     }
@@ -121,7 +206,6 @@ public class ChessBoard extends Board{
     return combined;
   }
   private List<Point2D> up(int x, int y, int dist, Piece piece){
-    System.out.println("up called with distance " + dist);
     List<Point2D> ret = new ArrayList<>();
     int inc = 1;
     while(inc <= dist || dist < 0){
@@ -142,7 +226,6 @@ public class ChessBoard extends Board{
   }
 
   private List<Point2D> down(int x, int y, int dist, Piece piece){
-    System.out.println("down called with distance " + dist);
     List<Point2D> ret = new ArrayList<>();
     int inc = 1;
     while(inc <= dist || dist < 0){

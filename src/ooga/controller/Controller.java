@@ -53,6 +53,7 @@ public class Controller {
         myBoardView.setOnMoveClicked((int x, int y) -> {
             myBoard.doMove((int) myBoardView.getSelectedLocation().getX(), (int) myBoardView.getSelectedLocation().getY(), x, y);
             myBoardView.movePiece(x, y);
+            myBoard.checkWon();
         });
     }
 

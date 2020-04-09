@@ -17,7 +17,7 @@
         <item>0,5,Black_Pawn</item>
         <item>0,6,Black_Pawn</item>
         <item>0,7,Black_Pawn</item>
-        <item>1,0,Black_Rook</item>
+        <item>1,0,White_Rook</item>
         <item>1,1,White_King</item>
 
         <item>6,0,White_Pawn</item>
@@ -44,7 +44,9 @@
         </item>
         <item>
             Black_Rook:LATERAL -1:5
-            <!-- Black_Rook:UP -1, LEFT -1, RIGHT -1, DOWN -1:5 -->
+        </item>
+        <item>
+            White_Rook:LATERAL -1:5
         </item>
         <item>
             White_Pawn:DOWN 2:1
