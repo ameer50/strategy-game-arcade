@@ -10,6 +10,9 @@ import javafx.util.Pair;
 
 public class ChessBoard extends Board{
   public static final String KING_STRING = "King";
+  public static final String PAWN_STRING = "Pawn";
+  public static final String KNIGHT_STRING = "knight";
+
   public static final String BLACK_STRING = "Black";
   public static final String WHITE_STRING = "White";
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
@@ -24,7 +27,8 @@ public class ChessBoard extends Board{
     //c) if when the king moves it kills an opposing piece, we need to make sure that the new square isn't newly accessible by opposing pieces
     //d) at this point if there are multiple checking pieces, return color
     //e) kill threatening piece. is piece.xy in valid moves of our team?
-    //f) block threatening piece. what is the path from threatening to king?
+    //f) knights and pawns cannot be blocked.
+    //g) block threatening piece. what is the path from threatening to king?
     //if same x and higher y, it is moving upwards. if lower y, moving downwards. both in straight line.
     //if same y and higher x, it is moving left. otherwise moving right.
     //if different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
@@ -80,11 +84,20 @@ public class ChessBoard extends Board{
     //e) there is only one piece holding the king in check. the king can't escape check. can we kill the piece?
     Pair<List<Point2D>, List<Point2D>> ourMoveData = getMovesAndCheckPieces(whiteKingI, whiteKingJ, BLACK_STRING);
     List<Point2D> ourMoves = ourMoveData.getKey();
-    Point2D threatening = checkPieces.get(0);
-    if(ourMoves.contains(threatening)){
+    Point2D threatLoc = checkPieces.get(0);
+    if(ourMoves.contains(threatLoc)){
       System.out.println("SAFE");
       return false;
     }
+    //f) knights and pawns can't be blocked
+    int i = (int) threatLoc.getX();
+    int j = (int) threatLoc.getY();
+    Piece threat = getPieceAt(i, j);
+    if(threat.toString().equals(KNIGHT_STRING) || threat.toString().equals(PAWN_STRING)){
+      return true;
+    }
+    //h) there is one blockable piece threatening king. king can't move. piece can't be killed. can we block the piece?
+    //
 
     return false;
   }
