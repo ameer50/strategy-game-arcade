@@ -65,8 +65,7 @@ public class CheckersBoard extends Board {
         return true;
 
     }
-
-    @Override
+    
     public double doMove(int x_i, int y_i, int x_f, int y_f) {
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);
