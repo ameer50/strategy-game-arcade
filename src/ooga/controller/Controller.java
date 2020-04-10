@@ -3,47 +3,46 @@ package ooga.controller;
 import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.ChessBoard;
-import ooga.board.Piece;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
-import ooga.view.SplashScreen;
+import ooga.view.MenuScreen;
 import ooga.xml.XMLParser;
 
 import java.awt.geom.Point2D;
 import java.util.List;
-import java.util.Map;
 
 public class Controller {
 
     private GameScreen myGameScreen;
-    private SplashScreen mySplashScreen;
+    private MenuScreen menuScreen;
     private Board myBoard;
     private BoardView myBoardView;
     private boolean toggleMoves;
     private List<Point2D> temp;
 
     public Controller (Stage stage) {
-        makeScreen(stage);
+        menuScreen = new MenuScreen(stage);
+
+        menuScreen.buttonListener(e -> {
+            makeScreen(stage, menuScreen.getGameType());
+        });
+
     }
 
-    public void makeScreen (Stage stage) {
+    public void makeScreen (Stage stage, String gameType) {
+        String file = "resources/defaultGames/" + gameType + ".xml";
         XMLParser p = new XMLParser();
-
-        p.parse("resources/test_xml/test.xml");
+        //p.parse("resources/test_xml/Chess.xml");
+        p.parse(file);
         myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
         //myBoard.print();
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
         myBoardView = myGameScreen.getBoard();
         toggleMoves = true;
+        setListeners();
+    }
 
-
-//        mySplashScreen = new SplashScreen(stage);
-//        myScreen.onGameSelection((String file) -> {
-//            XMLParser p = new XMLParser();
-//            p.parse(file);
-//            myGameScreen = new GameScreen(stage);
-//            initializeBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
-//        }
+    private void setListeners(){
         myBoardView.setOnPieceClicked((int x, int y) -> {
             myBoardView.setSelectedLocation(x, y);
             myBoardView.highlightValidMoves(myBoard.getValidMoves(x, y));
@@ -54,12 +53,5 @@ public class Controller {
             myBoardView.movePiece(x, y);
         });
     }
-
-    public void initializeBoard(Map<String, String> settings, Map<Point2D, String> pieceLocations, Map<String, String> movePatterns) {
-
-        // myBoard.initialize(settings, pieceLocations, movePatterns);
-    }
-
-
 
 }

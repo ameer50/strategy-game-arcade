@@ -3,6 +3,7 @@ package ooga.view;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import ooga.CellClickedInterface;
@@ -161,6 +162,8 @@ public class BoardView implements BoardViewInterface {
         int init_y = (int) selectedLocation.getY();
         CellView initCell = this.getCell(init_x, init_y);
         CellView finalCell = this.getCell(final_x, final_y);
+        /* TODO: Find out a way to remove piece without passing root in the constructor OR move the piece to right
+          side of the screen (need to figure out a mechanism for that)*/
         if (finalCell.getPiece() != null) {
             root.getChildren().remove(finalCell.getPiece().getIVShape());
         }

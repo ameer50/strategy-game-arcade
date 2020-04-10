@@ -31,7 +31,7 @@ public class Main extends Application {
 //        primaryStage.show();
         // testing
 //        XMLParser p = new XMLParser();
-//        p.parse("resources/test_xml/test.xml");
+//        p.parse("resources/test_xml/Chess.xml");
         Controller c = new Controller(primaryStage);
         // GameScreen game = new GameScreen(primaryStage);
 
