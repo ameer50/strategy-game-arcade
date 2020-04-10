@@ -42,20 +42,18 @@ public class ChessBoard extends Board{
     Integer whiteKingI = coords[2];
     Integer whiteKingJ = coords[3];
 
-    Pair<List<Point2D>, List<Point2D>> dataForWhite = getMovesAndCheckPieces(whiteKingI, whiteKingJ, WHITE_STRING);
+    Pair<List<Point2D>, List<Point2D>> blackMoves = getMovesAndCheckPieces(whiteKingI, whiteKingJ, WHITE_STRING, true);
     //a) not in check -> false
-    List<Point2D> checkPieces = dataForWhite.getValue();
+    List<Point2D> checkPieces = blackMoves.getValue();
     if(checkPieces.size() == 0){
       System.out.println("NO CHECK");
       return false;
     }
-    //b) safe moves -> false
-    List<Point2D> opponentMoves = dataForWhite.getKey();
+    //b) safe moves
+    List<Point2D> opponentMoves = blackMoves.getKey();
     List<Point2D> kingMoves = getValidMoves(whiteKingI, whiteKingJ);
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
-    if(safeMoves.size() != 0){
-      return false;
-    }
+
     //c) in safe spots, check if there is currently a piece here. if so, check if the spot is newly accessible by opposing team. if so, remove the spot.
     System.out.println("safe spots");
     List<Point2D> hiddenDangerMoves = new ArrayList<>();
@@ -75,21 +73,22 @@ public class ChessBoard extends Board{
     }
     //king is safe if after all that, there are still safe moves. return false
     if(safeMoves.size() != 0){
+      System.out.println("CHECK BUT SAFE MOVES");
       return false;
     }
     System.out.println("Past safe moves");
     //at this point the king can't move anywhere.
     //d) if there are multiple pieces holding king in check, it's dead
     if(checkPieces.size() > 1){
-      System.out.println("Dead at D");
+      System.out.println("Dead, multiple checkers and no safe moves");
       return true;
     }
     //e) there is only one piece holding the king in check. the king can't escape check. can we kill the piece?
-    Pair<List<Point2D>, List<Point2D>> ourMoveData = getMovesAndCheckPieces(whiteKingI, whiteKingJ, BLACK_STRING);
+    Pair<List<Point2D>, List<Point2D>> ourMoveData = getMovesAndCheckPieces(whiteKingI, whiteKingJ, BLACK_STRING,false);
     List<Point2D> ourMoves = ourMoveData.getKey();
     Point2D threatLoc = checkPieces.get(0);
     if(ourMoves.contains(threatLoc)){
-      System.out.println("SAFE");
+      System.out.println("CAN KILL THREAT");
       return false;
     }
     //f) knights and pawns can't be blocked
@@ -97,6 +96,7 @@ public class ChessBoard extends Board{
     int j = (int) threatLoc.getY();
     Piece threat = getPieceAt(i, j);
     if(threat.toString().equals(KNIGHT_STRING) || threat.toString().equals(PAWN_STRING)){
+      System.out.println("CANT BLOCK KNIGHT OR PAWN, DEAD");
       return true;
     }
     //h) there is one blockable piece threatening king. king can't move. piece can't be killed. can we block the piece?
@@ -137,15 +137,19 @@ public class ChessBoard extends Board{
     return ret;
   }
 
-  private Pair<List<Point2D>, List<Point2D>> getMovesAndCheckPieces(int kingI, int kingJ, String color){
+  private Pair<List<Point2D>, List<Point2D>> getMovesAndCheckPieces(int kingI, int kingJ, String targetColor, boolean ignoreTheirKing){
     List<Point2D> allPossibleMoves = new ArrayList<>();
     List<Point2D> checkPieces = new ArrayList<>();
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
+    Piece storedKing = getPieceAt(kingI, kingJ);
+    if(ignoreTheirKing) {
+      myGrid[kingI][kingJ] = null;
+    }
     for(int i = 0; i < myHeight; i++){
       for(int j = 0; j < myWidth; j++){
         Piece thisPiece = getPieceAt(i, j);
         List<Point2D> thisPieceMoves = getValidMoves(i, j);
-        if((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor().equals(color)){
+        if((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor().equals(targetColor) || (!ignoreTheirKing && thisPiece.toString().equals(KING_STRING))){
           continue;
         }
         if(thisPieceMoves.contains(kingPoint)){
@@ -153,6 +157,9 @@ public class ChessBoard extends Board{
         }
         allPossibleMoves.addAll(thisPieceMoves);
       }
+    }
+    if(ignoreTheirKing) {
+      myGrid[kingI][kingJ] = storedKing;
     }
     if(allPossibleMoves.size() == 0 && checkPieces.size() == 0){
       return null;
