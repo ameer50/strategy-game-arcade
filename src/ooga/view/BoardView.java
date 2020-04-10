@@ -1,149 +1,128 @@
 package ooga.view;
 
+import java.awt.Image;
 import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Duration;
 import ooga.CellClickedInterface;
-
 import java.awt.geom.Point2D;
 import java.util.*;
 
 public class BoardView implements BoardViewInterface {
 
-    private CellView[][] arrangement;
+    private CellView[][] cellArray;
     private HBox[] cellList;
     private static final int BOARD_XOFFSET = 35;
     private static final int BOARD_YOFFSET = 35;
     private static final int PIECE_SPACE = 6;
     private static final double BOARD_WIDTH = 600;
     private static final double BOARD_HEIGHT = 600;
-    private List<String> firstColorSequence;
-    private List<String> secondColorSequence;
-    private int boardWidth;
-    private int boardHeight;
+    private List<String> colorSequence1;
+    private List<String> colorSequence2;
+    private int rowNum;
+    private int colNum;
 
-    private double cellLength;
+    private double cellSize;
+    private double cellSpan;
+    //TODO: what are the differences b/w these?
     public static final double CELL_YOFFSET = 0.05;
-    private static final double PIECE_WIDTH_RATIO = 0.5;
     public static final int CELL_XOFFSET = 4;
+    //TODO: are these too necessary?
+    private static final double PIECE_WIDTH_RATIO = 0.5;
     private double PIECE_DELTAX;
     private double PIECE_DELTAY;
-    private double PIECE_OFFSETX;
-    private double PIECE_OFFSETY;
+    private double PIECE_XOFFSET;
+    private double PIECE_YOFFSET;
     private List<ImageView> pieceImages;
     private String playerChoice;
     private double pieceWidth;
     private double pieceHeight;
     private Map<Point2D, String> pieceLocations;
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-    private double cellSideLength;
     private BorderPane root;
-
     private Point2D selectedLocation;
-    private static final int ANIM_DURATION = 2;
+    private static final int ANIM_DURATION = 20;
 
-    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs, BorderPane root){
-        boardWidth = rows;
-        boardHeight = cols;
-        arrangement = new CellView[rows][cols];
+    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs,
+        BorderPane root){
+        rowNum = rows;
+        colNum = cols;
+        cellArray = new CellView[rows][cols];
         cellList = new CellView[rows*cols];
-        cellLength = (BOARD_WIDTH) / rows;
-        cellSideLength = cellLength + PIECE_SPACE;
+        //FIXME: is this data duplication?
+        cellSize = (BOARD_WIDTH)/rows;
+        cellSpan = cellSize + PIECE_SPACE;
         pieceImages = new ArrayList<>();
+        this.pieceWidth = cellSpan*PIECE_WIDTH_RATIO;
+        this.pieceHeight = cellSpan;
+        PIECE_XOFFSET = BOARD_XOFFSET+((cellSpan)/CELL_XOFFSET);
+        PIECE_YOFFSET = BOARD_YOFFSET+cellSpan*CELL_YOFFSET;
+
         this.playerChoice = playerChoice;
-        this.pieceWidth = cellSideLength*PIECE_WIDTH_RATIO;
-        this.pieceHeight = cellSideLength;
-        PIECE_OFFSETX = BOARD_XOFFSET + ((cellSideLength)/ CELL_XOFFSET);
-        PIECE_OFFSETY = BOARD_YOFFSET + cellSideLength* CELL_YOFFSET;
-        PIECE_DELTAX = PIECE_DELTAY = cellSideLength;
+        PIECE_DELTAX = PIECE_DELTAY = cellSpan;
         this.pieceLocations = locs;
         this.root = root;
+
         initialize();
     }
 
-    public double getPieceOffsetX() {
-        return PIECE_OFFSETX;
-    }
-
-    public double getPieceOffsetY() {
-        return PIECE_OFFSETY;
-    }
-
-    public double getPieceDeltaX() {
-        return PIECE_DELTAX;
-    }
-
-    public double getPieceDeltaY() {
-        return PIECE_DELTAY;
-    }
-
-    public void checkeredColor(){
-        firstColorSequence = new ArrayList<>();
-        for(int i =0; i< boardWidth; i++){
-            if (i % 2 == 0){
-                firstColorSequence.add("cellcolor1");
-            }else{
-                firstColorSequence.add("cellcolor2");
-            }
-        }
-        secondColorSequence = new ArrayList<>(firstColorSequence);
-        Collections.reverse(secondColorSequence);
-    }
-
-
     public void initialize() {
         checkeredColor();
-        int cellIndex = 0;
-        for(int i = 0; i < boardWidth; i++){
-            for(int j =0; j < boardHeight; j++){
-                if( i % 2 == 0){
-                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSideLength*j)), (BOARD_YOFFSET + (cellSideLength*i)), cellLength, cellLength, secondColorSequence.get(j));
-                }else{
-                    arrangement[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSideLength*j)), (BOARD_YOFFSET + (cellSideLength*i)), cellLength, cellLength, firstColorSequence.get(j));
+        fillCellStructures();
+        setUpPieces();
+    }
+
+    public void checkeredColor() {
+        colorSequence1 = new ArrayList<>();
+        for (int i=0; i<rowNum; i++){
+            if (i % 2 == 0) colorSequence1.add("cellcolor1");
+            else colorSequence1.add("cellcolor2");
+        }
+        colorSequence2 = new ArrayList<>(colorSequence1);
+        Collections.reverse(colorSequence2);
+    }
+
+    private void fillCellStructures() {
+        int index = 0;
+        for (int i=0; i<rowNum; i++) {
+            for(int j=0; j<colNum; j++) {
+                String color;
+                if (i % 2 == 0) {
+                    color = colorSequence2.get(j);
+                } else {
+                    color = colorSequence1.get(j);
                 }
-                cellList[cellIndex] = arrangement[i][j];
-                cellIndex++;
-                arrangement[i][j].setNoBorderFunction((a,b) -> {
-                    for(int x = 0; x < boardWidth; x++){
-                        for(int y =0; y < boardHeight; y++) {
-                            arrangement[x][y].toggleNoBorder();
+                cellArray[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSpan * j)),
+                    (BOARD_YOFFSET + (cellSpan * i)),
+                    cellSize, cellSize, color);
+                cellList[index] = cellArray[i][j];
+                index++;
+                cellArray[i][j].setNoBorderFunction((a, b) -> {
+                    for (int x = 0; x < rowNum; x++) {
+                        for (int y = 0; y < colNum; y++) {
+                            cellArray[x][y].toggleNoBorder();
                         }
                     }
-
                 });
-
             }
         }
+    }
 
+    private void setUpPieces() {
         for (Point2D point : pieceLocations.keySet()) {
             int x = (int) point.getX();
             int y = (int) point.getY();
-            arrangement[x][y].setPiece(new PieceView(PIECE_OFFSETX + PIECE_DELTAX * y, PIECE_OFFSETY + PIECE_DELTAY * x, pieceWidth, pieceHeight, res.getString(pieceLocations.get(point))));
-            pieceImages.add(arrangement[x][y].getPiece().getIVShape());
+            cellArray[x][y].setPiece(new PieceView(PIECE_XOFFSET+PIECE_DELTAX*y,
+                PIECE_YOFFSET+PIECE_DELTAY*x, pieceWidth, pieceHeight,
+                res.getString(pieceLocations.get(point))));
+            pieceImages.add(cellArray[x][y].getPiece().getImage());
         }
     }
 
     public HBox[] getCells() {
         return cellList;
-    }
-
-    public CellView getCell(int row, int col){
-        return arrangement[row][col];
-    }
-
-    public ImageView[] getPieces() {
-        return pieceImages.toArray(new ImageView[0]);
-    }
-
-    public int getBoardDimension(){
-        return boardWidth;
-    }
-
-    public double getCellSideLength(){
-        return cellLength + PIECE_SPACE;
     }
 
     public void highlightValidMoves(List<Point2D> validMoves) {
@@ -153,58 +132,68 @@ public class BoardView implements BoardViewInterface {
         for (Point2D point : validMoves) {
             int x = (int) point.getX();
             int y = (int) point.getY();
-            this.getCell(x,y).toggleYellow();
+            getCell(x,y).toggleYellow();
         }
     }
 
-    public void movePiece(int final_x, int final_y) {
-        int init_x = (int) selectedLocation.getX();
-        int init_y = (int) selectedLocation.getY();
-        CellView initCell = this.getCell(init_x, init_y);
-        CellView finalCell = this.getCell(final_x, final_y);
-        /* TODO: Find out a way to remove piece without passing root in the constructor OR move the piece to right
-          side of the screen (need to figure out a mechanism for that)*/
+    public void movePiece(int finalX, int finalY) {
+        int initX = (int) selectedLocation.getX();
+        int initY = (int) selectedLocation.getY();
+        CellView initCell = getCell(initX, initY);
+        CellView finalCell = getCell(finalX, finalY);
+        PieceView piece = initCell.getPiece();
         if (finalCell.getPiece() != null) {
-            root.getChildren().remove(finalCell.getPiece().getIVShape());
+            root.getChildren().remove(finalCell.getPiece().getImage());
+            // FIXME: A long chain of calls here...
         }
-        // update final cell in grid
-        finalCell.setPiece(initCell.getPiece());
-        // update piece image
-//        finalCell.getPiece().setX(board.getPieceOffsetX() + board.getPieceDeltaX() * final_y);
-//        finalCell.getPiece().setY(board.getPieceOffsetY() + board.getPieceDeltaY() * final_x);
+        finalCell.setPiece(piece);
 
-        TranslateTransition trans = new TranslateTransition(Duration.seconds(ANIM_DURATION),finalCell.getPiece().getIVShape());
-        trans.setFromX(trans.getFromX());
-        trans.setFromY(trans.getFromY());
-        trans.setByX(this.getPieceDeltaX() * (final_y - init_y));
-        trans.setByY(this.getPieceDeltaY() * (final_x - init_x));
-        trans.play();
+//        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
+//        tr.setFromX(tr.getFromX());
+//        tr.setFromY(tr.getFromY());
+//        tr.setByX(getDeltaX()*(finalY-initY));
+//        tr.setByY(getDeltaY()*(finalX-initX));
+//        tr.play();
+        ImageView image = piece.getImage();
+        image.setX(image.getX() + getDeltaX()*(finalY-initY));
+        image.setY(image.getY() + getDeltaY()*(finalX-initX));
 
         initCell.setPiece(null);
     }
 
     public void setOnPieceClicked(CellClickedInterface clicked) {
-        for(int i =0; i< boardWidth; i++){
-            for(int j =0; j < boardHeight; j++){
-                this.getCell(i, j).setPieceClickedFunction(clicked);
+        for (int i=0; i<rowNum; i++){
+            for (int j=0; j<colNum; j++){
+                getCell(i, j).setPieceClicked(clicked);
             }
         }
     }
 
     public void setOnMoveClicked(CellClickedInterface clicked) {
-        for(int i =0; i< boardWidth; i++){
-            for(int j =0; j < boardHeight; j++){
-                this.getCell(i, j).setMoveClickedFunction(clicked);
+        for (int i=0; i<rowNum; i++) {
+            for (int j=0; j<colNum; j++) {
+                this.getCell(i, j).setMoveClicked(clicked);
             }
         }
     }
 
-    public void setSelectedLocation(int x, int y) {
-        selectedLocation = new Point2D.Double(x, y);
+    public CellView getCell(int row, int col){ return cellArray[row][col]; }
+    public ImageView[] getPieces() { return pieceImages.toArray(new ImageView[0]); }
+    public int getRowNum(){ return rowNum; }
+    public int getColNum(){ return colNum; }
+    public double getCellSpan(){ return cellSpan; }
+    public void setSelectedLocation(int x, int y) { selectedLocation = new Point2D.Double(x, y); }
+    public Point2D getSelectedLocation() { return selectedLocation; }
+    public double getPieceOffsetX() {
+        return PIECE_XOFFSET;
     }
-
-    public Point2D getSelectedLocation() {
-        return selectedLocation;
+    public double getPieceOffsetY() {
+        return PIECE_YOFFSET;
     }
-
+    public double getDeltaX() {
+        return PIECE_DELTAX;
+    }
+    public double getDeltaY() {
+        return PIECE_DELTAY;
+    }
 }

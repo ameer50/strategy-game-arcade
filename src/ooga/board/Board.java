@@ -13,45 +13,46 @@ public abstract class Board{
   protected int myHeight;
   protected int myWidth;
 
-
-  public Board(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
+  public Board(Map<String, String> settings, Map<Point2D, String> locations,
+      Map<String, Pair<String, Double>> pieces){
     myHeight = Integer.parseInt(settings.get(HEIGHT));
     myWidth = Integer.parseInt(settings.get(WIDTH));
     myGrid = new Piece[myHeight][myWidth];
     pieceMapping = pieces;
-    initStartingPieces(locs);
+    initStartingPieces(locations);
   }
+
   /**
-   Check board to see if the game has been completed and a winner has been found
-   @return if there is a winner
+   Check the board to see if the game has been completed and a winner has been found.
+   @return true if there was a winner.
    **/
   public abstract boolean checkWon();
 
-  public void print(){
-    for(int i = 0; i < myHeight; i++){
-      for(int j = 0; j < myWidth; j++){
+  public void print() {
+    for(int i=0; i<myHeight; i++){
+      for(int j=0; j<myWidth; j++){
         System.out.print(getPieceAt(i, j) + ", ");
       }
       System.out.println("");
     }
   }
-  /**
-   Find valid moves from selected cell
-   @param i y coordinate of the cell
-   @param j x coordinate of the cell
-   @return potential moves of the piece at cell
-   **/
-  public abstract List<Point2D> getValidMoves(int i, int j);
 
   /**
-   Get piece at the specified coordinates
-   @return piece object at x, y; null if empty cell
+   Find valid the moves for a piece in the selected cell.
+   @param i y-coordinate of the cell.
+   @param j x-coordinate of the cell.
+   @return potential moves of the piece at cell.
    **/
-  public Piece getPieceAt(int i, int j){
-    if(isValidCell(i, j)){
+//  public abstract List<Point2D> exceptionMoves(int i, int j);
+
+  /**
+   Get piece at the specified coordinates.
+   @return the Piece object at x, y; null if nothing in the cell.
+   **/
+  public Piece getPieceAt(int i, int j) {
+    if (isValidCell(i, j)) {
       return myGrid[i][j];
-    }
-    else{
+    } else {
       return null;
     }
   }
@@ -65,7 +66,7 @@ public abstract class Board{
   public abstract double doMove(int startX, int startY, int endX, int endY);
 
   /**
-   Set up board from config file
+   Set up the board from the config file.
    **/
   private void initStartingPieces(Map<Point2D, String> locs){
     for(Point2D point: locs.keySet()){
@@ -87,12 +88,16 @@ public abstract class Board{
   }
 
   /**
-   Check if coordinates are valid on board
-   @param x potential x coord
-   @param y potential y coord
-   @return true if valid coordinate
+   @param x potential x-coordinate.
+   @param y potential y-coordinate.
+   @return true if the cell coordinated are within the bounds of the board.
    **/
   public boolean isValidCell(int x, int y){
     return x >= 0 && x < myHeight && y >= 0 && y < myWidth;
   }
+
+  public abstract List<Point2D> getValidMoves(int i, int j);
+
+  public int getHeight() { return myHeight; }
+  public int getWidth() { return myWidth; }
 }

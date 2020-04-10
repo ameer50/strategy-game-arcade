@@ -3,57 +3,69 @@ package ooga.controller;
 import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.ChessBoard;
+import ooga.strategy.StrategyAI;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
 import ooga.xml.XMLParser;
-
 import java.awt.geom.Point2D;
 import java.util.List;
 
 public class Controller {
-
+    public enum StrategyType {
+        TRIVIAL,
+        RANDOM,
+        BRUTE_FORCE,
+        ALPHA_BETA,
+    }
     private GameScreen myGameScreen;
     private MenuScreen menuScreen;
     private Board myBoard;
     private BoardView myBoardView;
-    private boolean toggleMoves;
+    private StrategyAI myAI;
+    private boolean toggleMoves = true;
+    private boolean isAIOpponent = true;
+    private boolean isOpponentTurn = false;
     private List<Point2D> temp;
 
     public Controller (Stage stage) {
         menuScreen = new MenuScreen(stage);
-
         menuScreen.buttonListener(e -> {
-            makeScreen(stage, menuScreen.getGameType());
+            makeGameScreen(stage, menuScreen.getGameType());
         });
-
     }
 
-    public void makeScreen (Stage stage, String gameType) {
-        String file = "resources/defaultGames/" + gameType + ".xml";
+    public void makeGameScreen(Stage stage, String gameType) {
+        String file = String.format("%s%s%s", "resources/defaultGames/", gameType, ".xml");
         XMLParser p = new XMLParser();
-        //p.parse("resources/test_xml/Chess.xml");
         p.parse(file);
-        myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatternsAndValues());
-        //myBoard.print();
+        myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(),
+            p.getMovePatterns());
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
         myBoardView = myGameScreen.getBoard();
-        toggleMoves = true;
         setListeners();
     }
 
-    private void setListeners(){
-
+    private void setListeners() {
+        myAI = new StrategyAI(StrategyType.TRIVIAL, myBoard);
+        // TODO: this will be set to something selected by the user
         myBoardView.setOnPieceClicked((int x, int y) -> {
             myBoardView.setSelectedLocation(x, y);
             myBoardView.highlightValidMoves(myBoard.getValidMoves(x, y));
         });
 
         myBoardView.setOnMoveClicked((int x, int y) -> {
-            myBoard.doMove((int) myBoardView.getSelectedLocation().getX(), (int) myBoardView.getSelectedLocation().getY(), x, y);
+            Point2D indexes = myBoardView.getSelectedLocation();
+            myBoard.doMove((int) indexes.getX(), (int) indexes.getY(), x, y);
             myBoardView.movePiece(x, y);
+            if (isAIOpponent) {
+                List<Integer> AIMove = myAI.generateMove();
+                myBoardView.setSelectedLocation(AIMove.get(2), AIMove.get(3));
+                myBoard.doMove(AIMove.get(0), AIMove.get(1), AIMove.get(2), AIMove.get(3));
+                myBoardView.movePiece(AIMove.get(0), AIMove.get(1));
+            }
+            myBoardView.setSelectedLocation(0, 0);
             myBoard.checkWon();
         });
     }
-
 }

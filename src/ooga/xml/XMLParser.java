@@ -36,7 +36,7 @@ public class XMLParser {
         return initialPieceLocations;
     }
 
-    public Map<String, Pair<String, Double>> getMovePatternsAndValues() {
+    public Map<String, Pair<String, Double>> getMovePatterns() {
         return movePatternsAndValues;
     }
 
