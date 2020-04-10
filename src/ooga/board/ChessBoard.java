@@ -107,9 +107,11 @@ public class ChessBoard extends Board{
     for(Point2D p: path){
       if(ourMoves.contains(p)){
         System.out.println("CAN BLOCK");
+        return false;
       }
     }
-    return false;
+    System.out.println("CHECKMATE");
+    return true;
   }
 
   private Integer[] locateKings(){
