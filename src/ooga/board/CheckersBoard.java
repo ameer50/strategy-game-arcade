@@ -41,7 +41,6 @@ public class CheckersBoard extends Board {
         if (!(temp.getColor().equals(currPiece.getColor())) && (getPieceAt(x + 2, y + 2) == null)) {
             validMoves.add(new Point2D.Double(x + 2, y + 2));
         }
-
         return true;
     }
 
@@ -74,7 +73,7 @@ public class CheckersBoard extends Board {
     }
 
 
-    public boolean goLeft(int x, int y, Piece currPiece){
+    /*public boolean goLeft(int x, int y, Piece currPiece){
         if(!isValidCell(x-1, y-1) || !isValidCell(x-2, y-2)){
             return false;
         }
@@ -100,7 +99,7 @@ public class CheckersBoard extends Board {
 
         return goRight(x+2, y+2, currPiece);
 
-    }
+    }*/
 
     public boolean isOppColor(int x, int y, String currPieceColor){
         return currPieceColor.equals(getPieceAt(x,y).getColor());

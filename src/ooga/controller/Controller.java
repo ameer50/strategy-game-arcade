@@ -43,6 +43,7 @@ public class Controller {
     }
 
     private void setListeners(){
+
         myBoardView.setOnPieceClicked((int x, int y) -> {
             myBoardView.setSelectedLocation(x, y);
             myBoardView.highlightValidMoves(myBoard.getValidMoves(x, y));
@@ -51,6 +52,7 @@ public class Controller {
         myBoardView.setOnMoveClicked((int x, int y) -> {
             myBoard.doMove((int) myBoardView.getSelectedLocation().getX(), (int) myBoardView.getSelectedLocation().getY(), x, y);
             myBoardView.movePiece(x, y);
+            myBoard.checkWon();
         });
     }
 
