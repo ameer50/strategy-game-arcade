@@ -2,10 +2,15 @@ package ooga.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -44,12 +49,15 @@ public class MenuScreen {
         stage.setTitle(res.getString("MenuStageTitle"));
         scene.getStylesheets().add(res.getString("MenuStyleSheet"));
 
-        buttonNames = Arrays.asList(new String[]{"Chess", "Checkers"});
+        buttonNames = Arrays.asList(new String[]{"Chess", "Checkers", "Othello"});
         buttons = new ButtonGroup(buttonNames);
         buttonArrange = buttons.getButtons();
         buttonArrange.setLayoutX(600);
-        buttonArrange.setLayoutY(400);
+        buttonArrange.setLayoutY(550);
+        buttonArrange.getStyleClass().add("vbox");
         root.getChildren().add(buttonArrange);
+
+        arrangeMenuImages();
 
     }
 
@@ -92,6 +100,26 @@ public class MenuScreen {
             event.handle(e);
         });
         return new Scene(settingsRoot, 400, 400);
+    }
+
+    private void arrangeMenuImages(){
+        GridPane gridPane = new GridPane();
+        ImageView chess = new ImageView(res.getString("CheckersIcon"));
+        ImageView chess1 = new ImageView(res.getString("ChessIcon"));
+        ImageView chess2 = new ImageView(res.getString("OthelloIcon"));
+        chess.setFitHeight(140);
+        chess.setFitWidth(250);
+        chess1.setFitHeight(250);
+        chess1.setFitWidth(250);
+        chess2.setFitHeight(200);
+        chess2.setFitWidth(200);
+        gridPane.add(chess, 0, 0);
+        gridPane.add(chess1, 1, 0);
+        gridPane.add(chess2, 3, 0);
+        gridPane.setHgap(40);
+        gridPane.setLayoutX(160);
+        gridPane.setLayoutY(190);
+        root.getChildren().add(gridPane);
     }
 
 }

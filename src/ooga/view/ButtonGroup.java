@@ -34,9 +34,8 @@ public class ButtonGroup {
     private void createButtons() {
         for (String buttonName : buttonNames) {
             Button temp = new Button(buttonName);
-            temp.setMinHeight(40);
-            temp.setMinWidth(100);
-            temp.setFont(new Font(30));
+            temp.setMinHeight(60);
+            temp.setMinWidth(250);
             buttons.add(temp);
         }
     }
