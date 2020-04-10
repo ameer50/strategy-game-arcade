@@ -58,7 +58,6 @@ public class Controller {
             Point2D indexes = myBoardView.getSelectedLocation();
             myBoard.doMove((int) indexes.getX(), (int) indexes.getY(), x, y);
             myBoardView.movePiece(x, y);
-            // Do the AI turn if the User has chosen.
             if (isAIOpponent) {
                 List<Integer> AIMove = myAI.generateMove();
                 myBoardView.setSelectedLocation(AIMove.get(2), AIMove.get(3));
@@ -66,6 +65,7 @@ public class Controller {
                 myBoardView.movePiece(AIMove.get(0), AIMove.get(1));
             }
             myBoardView.setSelectedLocation(0, 0);
+            myBoard.checkWon();
         });
     }
 }
