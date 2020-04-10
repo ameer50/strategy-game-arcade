@@ -22,11 +22,10 @@ public class ChessBoard extends Board{
 
   @Override
   public boolean checkWon() {
-    //TODO: when getting opponent valid moves, pretend king doesn't exist
-    //a) if not in check return null. if in check, checkPieces.size() is 0
-    //if in check, three options.
+    //a) if not in check return null. if not in check, checkPieces.size() is 0
     //b) move king. does king.validMoves have point not in allPossibleMoves. if yes, return false. if not, keep going
     //c) if when the king moves it kills an opposing piece, we need to make sure that the new square isn't newly accessible by opposing pieces
+    //if we have a safe move return false
     //d) at this point if there are multiple checking pieces, return color
     //e) kill threatening piece. is piece.xy in valid moves of our team?
     //f) knights and pawns cannot be blocked.
@@ -41,7 +40,10 @@ public class ChessBoard extends Board{
     Integer blackKingJ = coords[1];
     Integer whiteKingI = coords[2];
     Integer whiteKingJ = coords[3];
-
+    if(whiteKingI == null || whiteKingJ == null){
+      System.out.println("NULL");
+      return false;
+    }
     Pair<List<Point2D>, List<Point2D>> blackMoves = getMovesAndCheckPieces(whiteKingI, whiteKingJ, WHITE_STRING, true);
     //a) not in check -> false
     List<Point2D> checkPieces = blackMoves.getValue();
@@ -60,7 +62,7 @@ public class ChessBoard extends Board{
     for(Point2D p: safeMoves){
       int x = (int) p.getX();
       int y = (int) p.getY();
-      if(isSpotInDanger(x, y)){
+      if(isSpotInDanger(x, y, whiteKingI, whiteKingJ)){
         hiddenDangerMoves.add(p);
       }
     }
@@ -179,12 +181,15 @@ public class ChessBoard extends Board{
   }
 
   //used to see if killing a piece could keep king in check
-  private boolean isSpotInDanger(int potentialI, int potentialJ){
+  //ignore current position of king
+  private boolean isSpotInDanger(int potentialI, int potentialJ, int kingI, int kingJ){
     Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
     Piece storedPiece = getPieceAt(potentialI, potentialJ);
+    Piece storedKing = getPieceAt(kingI, kingJ);
     if(storedPiece == null){
       return false;
     }
+    myGrid[kingI][kingJ] = null;
     myGrid[potentialI][potentialJ] = null;
     System.out.println("Potentials: " + potentialI + ", " + potentialJ);
     for(int i = 0; i < myHeight; i++){
@@ -196,12 +201,14 @@ public class ChessBoard extends Board{
         }
         if(thisPieceMoves.contains(potentialPoint)){
           myGrid[potentialI][potentialJ] = storedPiece;
+          myGrid[kingI][kingJ] = storedKing;
           System.out.println(thisPiece + " at " + i + ", " + j);
           return true;
         }
       }
     }
     myGrid[potentialI][potentialJ] = storedPiece;
+    myGrid[kingI][kingJ] = storedKing;
     return false;
   }
 
