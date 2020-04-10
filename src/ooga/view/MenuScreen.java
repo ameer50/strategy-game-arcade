@@ -3,12 +3,8 @@ package ooga.view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -57,16 +53,14 @@ public class MenuScreen {
 
     }
 
-    public void buttonListener(EventHandler<ActionEvent> e){
-
-        for(Button b: buttons.getButtonList()){
+    public void buttonListener(EventHandler<ActionEvent> e) {
+        for (Button b: buttons.getButtonList()) {
             b.setOnAction(event -> {
                 gameSelected = b.getText();
-                displaySettingsPopUp(e);
-                //e.handle(event);
+                settingsPopUp(e);
+                // e.handle(event);
             });
         }
-
     }
 
 
@@ -78,7 +72,7 @@ public class MenuScreen {
         this.scene = scene;
     }
 
-    public void displaySettingsPopUp(EventHandler<ActionEvent> e) {
+    public void settingsPopUp(EventHandler<ActionEvent> e) {
         Stage settingsStage = new Stage();
         Group settingsRoot = new Group();
         Scene settingsScene = setUpPopUp(settingsStage, settingsRoot, e);

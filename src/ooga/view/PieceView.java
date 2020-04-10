@@ -33,9 +33,7 @@ public class PieceView {
         return this.imgview.getFitWidth();
     }
 
-    public ImageView getIVShape(){
-        return this.imgview;
-    }
+    public ImageView getImage() { return this.imgview; }
 
     public void setX(double new_x){
         this.imgview.setX(new_x);

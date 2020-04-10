@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
 
-public class ChessBoard extends Board{
+public class ChessBoard extends Board {
 
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
     super(settings, locs, pieces);
@@ -19,40 +19,34 @@ public class ChessBoard extends Board{
     return false;
   }
 
-  @Override
   public List<Point2D> getValidMoves(int x, int y){
     Piece piece = myGrid[x][y];
-    if(piece == null){
-      return null;
-    }
+    if (piece == null) return null;
+
     String movePattern = piece.getMovePattern();
     String moveType = movePattern.split(" ")[0].toLowerCase();
-    int moveDist = Integer.parseInt(movePattern.split(" ")[1]);
+    int moveDistance = Integer.parseInt(movePattern.split(" ")[1]);
     try {
-      Method methodToCall = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class, piece.getClass());
-      Object returnVal = methodToCall.invoke(this, x, y, moveDist, piece);
-      return ((List<Point2D>)returnVal);
+      Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
+          piece.getClass());
+      Object returnVal = moveMethod.invoke(this, x, y, moveDistance, piece);
+      return (List<Point2D>) returnVal;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      //e.printStackTrace();
-      System.out.println("Error handling method " + moveType);
+      System.out.println("Error handling method: " + moveType);
     }
     return null;
   }
 
   @Override
   public double doMove(int startX, int startY, int endX, int endY) {
-    Piece thisPiece = getPieceAt(startX, startY);
+    Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
     double score = 0;
-    if(hitPiece == null){
-      score = 0;
-    }
-    else{
-      score = hitPiece.getValue();
-    }
+    if (hitPiece == null) score = 0;
+    else score = hitPiece.getValue();
 
     myGrid[startX][startY] = null;
-    myGrid[endX][endY] = thisPiece;
+    myGrid[endX][endY] = currPiece;
     return score;
   }
 

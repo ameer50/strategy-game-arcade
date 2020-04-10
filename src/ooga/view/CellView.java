@@ -107,11 +107,11 @@ public class CellView extends HBox {
         return "[ " + xindex + " , " + yindex + " ] at x = " + xpos + " , y = " + ypos;
     }
 
-    public void setPieceClickedFunction(CellClickedInterface clicked){
+    public void setPieceClicked(CellClickedInterface clicked){
         this.clickPieceFunction = clicked;
     }
 
-    public void setMoveClickedFunction(CellClickedInterface clicked) {
+    public void setMoveClicked(CellClickedInterface clicked) {
         this.movePieceFunction = clicked;
     }
 
