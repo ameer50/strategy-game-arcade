@@ -2,24 +2,28 @@ package ooga.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class MenuScreen {
 
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
+    private final FileChooser fileChooser = new FileChooser();
     private static final double STAGE_HEIGHT = 800;
     private static final double STAGE_WIDTH = 1200;
     private BorderPane root;
@@ -27,6 +31,8 @@ public class MenuScreen {
     private Scene scene;
     private ButtonGroup buttons;
     private String gameSelected;
+    private String colorChoice;
+    private String fileName;
 
     public MenuScreen(Stage stage){
 
@@ -71,8 +77,8 @@ public class MenuScreen {
     }
 
 
-    public String getGameType(){
-        return gameSelected;
+    public String getFileType(){
+        return fileName;
     }
 
     private void setAsScene(Scene scene) {
@@ -83,7 +89,7 @@ public class MenuScreen {
         Stage settingsStage = new Stage();
         settingsStage.setHeight(500);
         settingsStage.setWidth(500);
-        Group settingsRoot = new Group();
+        StackPane settingsRoot = new StackPane();
         Scene settingsScene = new Scene(settingsRoot);
         settingsScene.getStylesheets().add(res.getString("MenuStyleSheet"));
         settingsStage.setScene(settingsScene);
@@ -91,41 +97,33 @@ public class MenuScreen {
         setUpPopUp(settingsStage, settingsRoot, e);
     }
 
-    private void setUpPopUp(Stage settingsStage, Group settingsRoot, EventHandler<ActionEvent> event) {
-        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black"), 20, 50);
-        ButtonGroup fileGroup = new ButtonGroup(List.of("Default settings", "Load custom XML"), 20, 50);
-        VBox vbox = new VBox();
-        settingsRoot.getChildren().add(vbox);
+    private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {
 
-        HBox hboxColors = new HBox();
-        for (Button b : colorGroup.getButtons()) {
-            hboxColors.getChildren().add(b);
+        GridPane pane = new GridPane();
+        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black", "Default Game", "Load XML File"), 20, 40);
+
+        int[] position = {0, 0, 2, 0, 0, 1, 2, 1};
+        int i = 0;
+        for(Button b: colorGroup.getButtons()){
+            if(i == 0 || i == 2){
+                b.setOnAction(newEvent -> setColorChoice(b.getText()));
+            }else{
+                b.setOnAction(newEvent -> assignXMLFile(b.getText()));
+            }
+            b.getStyleClass().add("settingsbuttons");
+
+            pane.add(b, position[i++], position[i++]);
+            GridPane.setHalignment(b, HPos.CENTER);
+            GridPane.setValignment(b, VPos.CENTER);
         }
-        //hboxColors.setLayoutX(200);
-        //hboxColors.setLayoutY(50);
-        hboxColors.setAlignment(Pos.CENTER);
-        hboxColors.getStyleClass().add("hbox");
-
-        HBox hboxFile = new HBox();
-        for (Button b : fileGroup.getButtons()) {
-            hboxFile.getChildren().add(b);
-        }
-        //hboxFile.setLayoutX(200);
-        //hboxFile.setLayoutY(150);
-        hboxFile.setAlignment(Pos.CENTER);
-        hboxFile.getStyleClass().add("hbox");
-
         Button goButton = new Button("Go!");
-        //goButton.setLayoutX(200);
-        //goButton.setLayoutY(250);
-        HBox hboxGo = new HBox(goButton);
-        hboxGo.setAlignment(Pos.CENTER);
+        goButton.getStyleClass().add("settingsbuttons");
+        pane.add(goButton, 1,2);
 
-        vbox.getChildren().addAll(hboxColors, hboxFile, hboxGo);
-        vbox.setAlignment(Pos.CENTER);
-        System.out.println(vbox.getBoundsInLocal().getWidth());
-        vbox.setLayoutX(250 - vbox.getBoundsInLocal().getWidth() / 2);
-        vbox.setLayoutY(50);
+        pane.getStyleClass().add("gpane");
+        settingsRoot.getChildren().add(pane);
+
+        System.out.println("CHECKPOINT 1.5: ");
 
         goButton.setOnAction(e -> {
             settingsStage.close();
@@ -135,22 +133,44 @@ public class MenuScreen {
 
     private void arrangeMenuImages(){
         GridPane gridPane = new GridPane();
-        ImageView chess = new ImageView(res.getString("CheckersIcon"));
-        ImageView chess1 = new ImageView(res.getString("ChessIcon"));
-        ImageView chess2 = new ImageView(res.getString("OthelloIcon"));
-        chess.setFitHeight(140);
-        chess.setFitWidth(250);
-        chess1.setFitHeight(250);
-        chess1.setFitWidth(250);
-        chess2.setFitHeight(200);
-        chess2.setFitWidth(200);
-        gridPane.add(chess, 0, 0);
-        gridPane.add(chess1, 1, 0);
-        gridPane.add(chess2, 3, 0);
+
+        int[] dimensions = {250, 140, 250, 250, 200, 200};
+        int i = 0;
+        int colIndex = 0;
+        for(String s: List.of("CheckersIcon", "ChessIcon", "OthelloIcon" )){
+            ImageView picture = new ImageView(new Image(res.getString(s), dimensions[i++], dimensions[i++], false, false));
+            gridPane.add(picture, colIndex, 0);
+            colIndex+=2;
+        }
+
         gridPane.setHgap(40);
         gridPane.setLayoutX(160);
         gridPane.setLayoutY(190);
+
         root.getChildren().add(gridPane);
     }
+
+    private void setColorChoice(String color){
+        colorChoice = color;
+        System.out.println(colorChoice);
+    }
+
+    private void assignXMLFile(String choice){
+        if (choice.equals("Default Game")){
+            System.out.println(colorChoice);
+            this.fileName = String.format("%s%s%s%s%s", "resources/", gameSelected,"/default", colorChoice , ".xml");;
+        }else{
+            File file = fileChooser.showOpenDialog(new Stage());
+            if (file != null) {
+                fileName = file.getAbsolutePath();
+                System.out.println("CHECKPOINT 0.5: " + fileName);
+            }
+        }
+
+        System.out.println("CHECKPOINT 1: " + fileName);
+    }
+
+
+
 
 }
