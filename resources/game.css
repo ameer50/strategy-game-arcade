@@ -1,13 +1,13 @@
 .root {
-    -fx-background: DARKGREEN;
+    -fx-background: #c8825a;
     -fx-padding: 10;
     -fx-box-border: white;
     -fx-border-width: 10;
 }
 
 .button {
-    -fx-text-fill: BLACK;
-    -fx-background-color: LIGHTBLUE;
+    -fx-text-fill: #404040;
+    -fx-background-color: #c8dcff;
     -fx-border-radius: 20;
     -fx-background-radius: 20;
     -fx-padding: 10;
@@ -22,11 +22,11 @@
 .label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-text-fill: BLACK;
+    -fx-text-fill: #404040;
 }
 
 .button:hover {
-    -fx-background-color: ORANGE;
+    -fx-background-color: #c8aaff;
 }
 
 .vbox {
@@ -39,19 +39,18 @@
 .hbox {
     -fx-spacing: 10;
     -fx-alignment: center;
-
 }
 
 .text-area {
     -fx-font-size: 12;
     -fx-display-caret: true;
+    -fx-min-width: 100;
     -fx-pref-width: 200;
     -fx-pref-rows: 10;
-    -fx-min-width: 100;
 }
 
 .text-area .content {
-    -fx-background-color: WHITE;
+    -fx-background-color: #ffffff;
 }
 
 .text-field {
@@ -64,24 +63,20 @@
     -fx-spacing: 15;
 }
 
-.thishbox {
-    -fx-alignment: center;
-}
-
 .buttonvbox {
     -fx-spacing: 10;
 }
 
 .pane {
-    -fx-border-color: black;
+    -fx-border-color: #000000;
     -fx-border-width: 10;
     -fx-border-style: solid inside;
     -fx-padding: 10;
 }
 
 .rectangle {
-    -fx-background-color: WHITE;
-    -fx-border-color: black;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
     -fx-border-width: 10;
     -fx-border-style: solid inside;
     -fx-padding: 10;
@@ -91,29 +86,28 @@
 .yellowborder {
     -fx-border-style: solid inside;
     -fx-border-width: 3;
-    -fx-border-insets: 5;
-    -fx-border-color: yellow;
+    -fx-border-insets: 3;
+    -fx-border-color: #00e1f0;
 }
 
 .redborder {
     -fx-border-style: solid inside;
     -fx-border-width: 3;
-    -fx-border-insets: 5;
-    -fx-border-color: red;
+    -fx-border-insets: 3;
+    -fx-border-color: #e60000;
 }
 
 .blackborder {
     -fx-border-style: solid inside;
-    -fx-border-width: 2;
-    -fx-border-insets: 5;
+    -fx-border-width: 3;
+    -fx-border-insets: 3;
     -fx-border-color: black;
 }
 
 .cellcolor1 {
-    -fx-fill: #F0F8FF;  /*Alice Blue*/
+    -fx-fill: #f0f0f0;  /*Alice Blue*/
 }
 
 .cellcolor2 {
-    -fx-fill: #A9A9A9;
-
+    -fx-fill: #404040;
 }
