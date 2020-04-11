@@ -8,18 +8,38 @@ import javafx.util.Pair;
 public abstract class Board{
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
-  protected Piece[][] myGrid;
-  protected Map<String, Pair<String, Double>> pieceMapping;
+  protected Piece[][] pieceGrid;
+  protected Map<String, Pair<String, Double>> pieceTypeMap;
+  protected Map<Point2D, String> pieceLocations;
   protected int myHeight;
   protected int myWidth;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
-      Map<String, Pair<String, Double>> pieces){
+      Map<String, Pair<String, Double>> pieceTypeMap) {
     myHeight = Integer.parseInt(settings.get(HEIGHT));
     myWidth = Integer.parseInt(settings.get(WIDTH));
-    myGrid = new Piece[myHeight][myWidth];
-    pieceMapping = pieces;
+    pieceGrid = new Piece[myHeight][myWidth];
+    this.pieceTypeMap = pieceTypeMap;
+    pieceLocations = Map.copyOf(locations); // ***
     initStartingPieces(locations);
+  }
+
+  /**
+   Set up the board from the config file.
+   **/
+  private void initStartingPieces(Map<Point2D, String> locations) {
+    for (Point2D point: locations.keySet()){
+      int x = (int) point.getX();
+      int y = (int) point.getY();
+      String pieceId = locations.get(point);
+      String pieceColor = pieceId.split("_")[0];
+      String pieceName = pieceId.split("_")[1];
+      Pair<String, Double> pieceInfo = pieceTypeMap.get(pieceId);
+      String movePattern = pieceInfo.getKey();
+      double score = pieceInfo.getValue();
+      Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
+      pieceGrid[x][y] = piece;
+    }
   }
 
   /**
@@ -38,20 +58,12 @@ public abstract class Board{
   }
 
   /**
-   Find valid the moves for a piece in the selected cell.
-   @param i y-coordinate of the cell.
-   @param j x-coordinate of the cell.
-   @return potential moves of the piece at cell.
-   **/
-//  public abstract List<Point2D> exceptionMoves(int i, int j);
-
-  /**
    Get piece at the specified coordinates.
    @return the Piece object at x, y; null if nothing in the cell.
    **/
   public Piece getPieceAt(int i, int j) {
-    if (isValidCell(i, j)) {
-      return myGrid[i][j];
+    if (isCellInBounds(i, j)) {
+      return pieceGrid[i][j];
     } else {
       return null;
     }
@@ -65,26 +77,14 @@ public abstract class Board{
    **/
   public abstract double doMove(int startX, int startY, int endX, int endY);
 
-  /**
-   Set up the board from the config file.
-   **/
-  private void initStartingPieces(Map<Point2D, String> locs){
-    for(Point2D point: locs.keySet()){
-      int x = (int) point.getX();
-      int y = (int) point.getY();
-      String pieceId = locs.get(point);
-      String pieceColor = pieceId.split("_")[0];
-      String pieceName = pieceId.split("_")[1];
-      Pair<String, Double> pieceInfo = pieceMapping.get(pieceId);
-      String movePattern = pieceInfo.getKey();
-      double score = pieceInfo.getValue();
-      Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
-      myGrid[x][y] = piece;
-    }
+  public abstract List<Point2D> getValidMoves(int i, int j);
+
+  public Map<Point2D, String> getPieceLocations() {
+    return pieceLocations;
   }
 
-  public void updateCell(int x, int y, Piece piece){
-    this.myGrid[x][y] = piece;
+  public void placePiece(int x, int y, Piece piece){
+    this.pieceGrid[x][y] = piece;
   }
 
   /**
@@ -92,11 +92,8 @@ public abstract class Board{
    @param y potential y-coordinate.
    @return true if the cell coordinated are within the bounds of the board.
    **/
-  public boolean isValidCell(int x, int y){
-    return x >= 0 && x < myHeight && y >= 0 && y < myWidth;
-  }
-
-  public abstract List<Point2D> getValidMoves(int i, int j);
+  public boolean isCellInBounds(int x, int y) {
+    return x >= 0 && x < myHeight && y >= 0 && y < myWidth; }
 
   public int getHeight() { return myHeight; }
   public int getWidth() { return myWidth; }

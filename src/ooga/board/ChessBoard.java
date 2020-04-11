@@ -9,31 +9,31 @@ import java.util.Map;
 import javafx.util.Pair;
 
 public class ChessBoard extends Board{
-  public static final String KING_STRING = "King";
-  public static final String PAWN_STRING = "Pawn";
-  public static final String KNIGHT_STRING = "knight";
+  public static final String KING = "King";
+  public static final String PAWN = "Pawn";
+  public static final String KNIGHT = "knight";
+  public static final String BLACK = "Black";
+  public static final String WHITE = "White";
 
-  public static final String BLACK_STRING = "Black";
-  public static final String WHITE_STRING = "White";
-  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
-    super(settings, locs, pieces);
+  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, Pair<String, Double>> pieces) {
+    super(settings, locations, pieces);
   }
 
   @Override
   public boolean checkWon() {
-    //a) if not in check return null. if not in check, checkPieces.size() is 0
-    //b) move king. does king.validMoves have point not in allPossibleMoves. if yes, return false. if not, keep going
-    //c) if when the king moves it kills an opposing piece, we need to make sure that the new square isn't newly accessible by opposing pieces
-    //if we have a safe move return false
-    //d) at this point if there are multiple checking pieces, return color
-    //e) kill threatening piece. is piece.xy in valid moves of our team?
-    //f) knights and pawns cannot be blocked.
-    //g) block threatening piece. what is the path from threatening to king?
-    //if same x and higher y, it is moving upwards. if lower y, moving downwards. both in straight line.
-    //if same y and higher x, it is moving left. otherwise moving right.
-    //if different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
-    //if diff x and y and those differences aren't the same, it's a knight and we can't block
-    //I need every move the other team can make and every piece holding in check
+    // a) If not in check return 'null'. If not in check, checkPieces.size() is 0.
+    // b) Move king. Does king.validMoves have point not in allPossibleMoves. If yes, return FALSE. If not, keep going.
+    // c) If, when the king moves, it kills an opposing piece, we need to make sure that the new square isn't newly
+    // accessible to opposing pieces. If we have a safe move return FALSE.
+    // d) At this point, if there are multiple checking pieces, return color.
+    // e) Kill threatening piece. Is piece.xy in valid moves of our team?
+    // f) Knights and Pawns cannot be blocked.
+    // g) Block threatening piece. What is the path from threatening to king?
+    // If same x and higher y, it is moving upwards. If lower y, moving downwards.
+    // If same y and higher x, it is moving left. Otherwise moving right.
+    // If different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
+    // If diff x and y and those differences aren't the same, it's a knight and we can't block.
+    // I need every move the other team can make and every piece holding in check.
     Integer[] coords = locateKings();
     Integer blackKingI = coords[0];
     Integer blackKingJ = coords[1];
@@ -43,7 +43,8 @@ public class ChessBoard extends Board{
       System.out.println("NULL");
       return false;
     }
-    Pair<List<Point2D>, List<Point2D>> blackMoves = getMovesAndCheckPieces(whiteKingI, whiteKingJ, WHITE_STRING, true);
+    Pair<List<Point2D>, List<Point2D>> blackMoves = getMovesAndCheckPieces(whiteKingI, whiteKingJ,
+        WHITE, true);
     //a) not in check -> false
     List<Point2D> checkPieces = blackMoves.getValue();
     if(checkPieces.size() == 0){
@@ -85,7 +86,8 @@ public class ChessBoard extends Board{
       return true;
     }
     //e) there is only one piece holding the king in check. the king can't escape check. can we kill the piece?
-    Pair<List<Point2D>, List<Point2D>> ourMoveData = getMovesAndCheckPieces(whiteKingI, whiteKingJ, BLACK_STRING,false);
+    Pair<List<Point2D>, List<Point2D>> ourMoveData = getMovesAndCheckPieces(whiteKingI, whiteKingJ,
+        BLACK,false);
     List<Point2D> ourMoves = ourMoveData.getKey();
     Point2D threatLoc = checkPieces.get(0);
     if(ourMoves.contains(threatLoc)){
@@ -96,7 +98,7 @@ public class ChessBoard extends Board{
     int i = (int) threatLoc.getX();
     int j = (int) threatLoc.getY();
     Piece threat = getPieceAt(i, j);
-    if(threat.toString().equals(KNIGHT_STRING) || threat.toString().equals(PAWN_STRING)){
+    if(threat.toString().equals(KNIGHT) || threat.toString().equals(PAWN)){
       System.out.println("CANT BLOCK KNIGHT OR PAWN, DEAD");
       return true;
     }
@@ -124,8 +126,8 @@ public class ChessBoard extends Board{
         if(p == null){
           continue;
         }
-        if(p.toString().equals(KING_STRING)){
-          if(p.getColor().equals(BLACK_STRING)) {
+        if(p.toString().equals(KING)){
+          if(p.getColor().equals(BLACK)) {
             blackKingI = i;
             blackKingJ = j;
           }
@@ -140,19 +142,21 @@ public class ChessBoard extends Board{
     return ret;
   }
 
-  private Pair<List<Point2D>, List<Point2D>> getMovesAndCheckPieces(int kingI, int kingJ, String targetColor, boolean ignoreTheirKing){
+  private Pair<List<Point2D>, List<Point2D>> getMovesAndCheckPieces(int kingI, int kingJ, String targetColor,
+      boolean ignoreTheirKing){
     List<Point2D> allPossibleMoves = new ArrayList<>();
     List<Point2D> checkPieces = new ArrayList<>();
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     Piece storedKing = getPieceAt(kingI, kingJ);
     if(ignoreTheirKing) {
-      myGrid[kingI][kingJ] = null;
+      pieceGrid[kingI][kingJ] = null;
     }
     for(int i = 0; i < myHeight; i++){
       for(int j = 0; j < myWidth; j++){
         Piece thisPiece = getPieceAt(i, j);
         List<Point2D> thisPieceMoves = getValidMoves(i, j);
-        if((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor().equals(targetColor) || (!ignoreTheirKing && thisPiece.toString().equals(KING_STRING))){
+        if((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor().equals(targetColor) || (!ignoreTheirKing && thisPiece.toString().equals(
+            KING))){
           continue;
         }
         if(thisPieceMoves.contains(kingPoint)){
@@ -162,7 +166,7 @@ public class ChessBoard extends Board{
       }
     }
     if(ignoreTheirKing) {
-      myGrid[kingI][kingJ] = storedKing;
+      pieceGrid[kingI][kingJ] = storedKing;
     }
     if(allPossibleMoves.size() == 0 && checkPieces.size() == 0){
       return null;
@@ -181,8 +185,8 @@ public class ChessBoard extends Board{
     return safePoints;
   }
 
-  //used to see if killing a piece could keep king in check
-  //ignore current position of king
+  // Used to see if killing a piece could keep king in check.
+  // Ignore current position of king.
   private boolean isSpotInDanger(int potentialI, int potentialJ, int kingI, int kingJ){
     Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
     Piece storedPiece = getPieceAt(potentialI, potentialJ);
@@ -190,8 +194,8 @@ public class ChessBoard extends Board{
     if(storedPiece == null){
       return false;
     }
-    myGrid[kingI][kingJ] = null;
-    myGrid[potentialI][potentialJ] = null;
+    pieceGrid[kingI][kingJ] = null;
+    pieceGrid[potentialI][potentialJ] = null;
     System.out.println("Potentials: " + potentialI + ", " + potentialJ);
     for(int i = 0; i < myHeight; i++){
       for(int j = 0; j < myWidth; j++){
@@ -201,15 +205,15 @@ public class ChessBoard extends Board{
           continue;
         }
         if(thisPieceMoves.contains(potentialPoint)){
-          myGrid[potentialI][potentialJ] = storedPiece;
-          myGrid[kingI][kingJ] = storedKing;
+          pieceGrid[potentialI][potentialJ] = storedPiece;
+          pieceGrid[kingI][kingJ] = storedKing;
           System.out.println(thisPiece + " at " + i + ", " + j);
           return true;
         }
       }
     }
-    myGrid[potentialI][potentialJ] = storedPiece;
-    myGrid[kingI][kingJ] = storedKing;
+    pieceGrid[potentialI][potentialJ] = storedPiece;
+    pieceGrid[kingI][kingJ] = storedKing;
     return false;
   }
 
@@ -254,9 +258,9 @@ public class ChessBoard extends Board{
   }
 
   @Override
-  public List<Point2D> getValidMoves(int x, int y){
+  public List<Point2D> getValidMoves(int x, int y) {
     Piece piece = getPieceAt(x, y);
-    if(piece == null){
+    if (piece == null){
       return null;
     }
     String movePattern = piece.getMovePattern();
@@ -265,10 +269,10 @@ public class ChessBoard extends Board{
     try {
       Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
           piece.getClass());
-      Object returnVal = moveMethod.invoke(this, x, y, moveDistance, piece);
-      return (List<Point2D>) returnVal;
+      Object ret = moveMethod.invoke(this, x, y, moveDistance, piece);
+      return (List<Point2D>) ret;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      System.out.println("Error handling method: " + moveType);
+      System.out.println("Error: " + moveType);
     }
     return null;
   }
@@ -278,15 +282,17 @@ public class ChessBoard extends Board{
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
     double score = 0;
-    if (hitPiece == null) score = 0;
-    else score = hitPiece.getValue();
+    if (hitPiece != null) {
+      score = hitPiece.getValue();
+      // TODO: In the future, will we do more than just returning the score?
+    }
 
-    myGrid[startX][startY] = null;
-    myGrid[endX][endY] = currPiece;
+    pieceGrid[startX][startY] = null;
+    pieceGrid[endX][endY] = currPiece;
     return score;
   }
 
-  private List<Point2D> lateral(int x, int y, int dist, Piece piece){
+  private List<Point2D> lateral(int x, int y, int dist, Piece piece) {
     List<Point2D> up = up(x, y, dist, piece);
     List<Point2D> down = down(x, y, dist, piece);
     List<Point2D> left = left(x, y, dist, piece);
@@ -297,97 +303,86 @@ public class ChessBoard extends Board{
     combined.addAll(right);
     return combined;
   }
-  private List<Point2D> up(int x, int y, int dist, Piece piece){
+
+  // FIXME: these have a ton of duplication; could be made into much simpler methods
+  private List<Point2D> up(int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
-    int inc = 1;
-    while(inc <= dist || dist < 0){
-      int newX = x - inc;
-      Point2D newPoint = findPoint(newX, y, piece);
-      if(newPoint != null) {
+    int squares = 1;
+    while (squares <= distance || distance < 0) {
+      int newX = x - squares;
+      Point2D newPoint = checkPoint(newX, y, piece); // ***
+      if (newPoint != null) {
         ret.add(newPoint);
-        if(getPieceAt(newX, y) != null){
+        if (getPieceAt(newX, y) != null) {
           break;
         }
-      }
-      else{
-        break;
-      }
-      inc++;
+      } else { break; }
+      squares++;
     }
     return ret;
   }
 
-  private List<Point2D> down(int x, int y, int dist, Piece piece){
+  private List<Point2D> down (int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
-    int inc = 1;
-    while(inc <= dist || dist < 0){
-      int newX = x + inc;
-      Point2D newPoint = findPoint(newX, y, piece);
-      if(newPoint != null) {
+    int squares = 1;
+    while (squares <= distance || distance < 0){
+      int newX = x + squares;
+      Point2D newPoint = checkPoint(newX, y, piece); //***
+      if (newPoint != null) {
         ret.add(newPoint);
-        if(getPieceAt(newX, y) != null){
+        if (getPieceAt(newX, y) != null){
           break;
         }
-      }
-      else{
-        break;
-      }
-      inc++;
+      } else { break; }
+      squares++;
     }
     return ret;
   }
 
-  private List<Point2D> right(int x, int y, int dist, Piece piece){
+  private List<Point2D> right(int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
-    int inc = 1;
-    while(inc <= dist || dist < 0){
-      int newY = y + inc;
-      Point2D newPoint = findPoint(x, newY, piece);
-      if(newPoint != null) {
+    int squares = 1;
+    while (squares <= distance || distance < 0) {
+      int newY = y + squares;
+      Point2D newPoint = checkPoint(x, newY, piece);
+      if (newPoint != null) {
         ret.add(newPoint);
-        if(getPieceAt(x, newY) != null){
+        if (getPieceAt(x, newY) != null){
           break;
         }
-      }
-      else{
-        break;
-      }
-      inc++;
+      } else { break; }
+      squares++;
     }
     return ret;
   }
 
-  private List<Point2D> left(int x, int y, int dist, Piece piece){
+  private List<Point2D> left(int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
-    int inc = 1;
-    while(inc <= dist || dist < 0){
-      int newY = y - inc;
-      Point2D newPoint = findPoint(x, newY, piece);
-      if(newPoint != null) {
+    int squares = 1;
+    while (squares <= distance || distance < 0){
+      int newY = y - distance;
+      Point2D newPoint = checkPoint(x, newY, piece);
+      if (newPoint != null) {
         ret.add(newPoint);
-        if(getPieceAt(x, newY) != null){
+        if (getPieceAt(x, newY) != null){
           break;
         }
-      }
-      else{
-        break;
-      }
-      inc++;
+      } else { break; }
+      // FIXME: is else break necessary?
+      squares++;
     }
     return ret;
   }
 
-  private Point2D findPoint(int x, int y, Piece thisPiece){
+  private Point2D checkPoint(int x, int y, Piece thisPiece) {
     Point2D ret;
-    if(!isValidCell(x, y)){
+    if (!isCellInBounds(x, y)) {
       return null;
     }
-
     Piece thatPiece = getPieceAt(x, y);
-    if(thatPiece != null && thisPiece.isOnSameTeam(thatPiece)){
+    if (thatPiece != null && thisPiece.isOnSameTeam(thatPiece)){
       return null;
     }
-
     ret = new Point2D.Double(x, y);
     return ret;
   }
