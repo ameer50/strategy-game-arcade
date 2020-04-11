@@ -26,9 +26,7 @@ public class MenuScreen {
     private Stage stage;
     private Scene scene;
     private ButtonGroup buttons;
-    private List<String> buttonNames;
     private String gameSelected;
-    private VBox buttonArrange;
 
     public MenuScreen(Stage stage){
 
@@ -40,8 +38,6 @@ public class MenuScreen {
 
     private void startView() {
         root = new BorderPane();
-
-
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
         setAsScene(new Scene(root));
@@ -49,20 +45,23 @@ public class MenuScreen {
         stage.setTitle(res.getString("MenuStageTitle"));
         scene.getStylesheets().add(res.getString("MenuStyleSheet"));
 
-        buttonNames = Arrays.asList(new String[]{"Chess", "Checkers", "Othello"});
-        buttons = new ButtonGroup(buttonNames);
-        buttonArrange = buttons.getButtons();
-        buttonArrange.setLayoutX(600);
-        buttonArrange.setLayoutY(550);
-        buttonArrange.getStyleClass().add("vbox");
-        root.getChildren().add(buttonArrange);
+        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"), 250, 60);
+        VBox vbox = new VBox();
+        for (Button b : buttons.getButtons()) {
+            vbox.getChildren().add(b);
+        }
+        root.getChildren().add(vbox);
+        System.out.println(vbox.getWidth());
+        vbox.setLayoutX(STAGE_WIDTH / 2 - vbox.getWidth() / 2);
+        vbox.setLayoutY(550);
+        vbox.getStyleClass().add("vbox");
 
         arrangeMenuImages();
 
     }
 
     public void buttonListener(EventHandler<ActionEvent> e) {
-        for (Button b: buttons.getButtonList()) {
+        for (Button b: buttons.getButtons()) {
             b.setOnAction(event -> {
                 gameSelected = b.getText();
                 settingsPopUp(e);
@@ -82,24 +81,56 @@ public class MenuScreen {
 
     public void settingsPopUp(EventHandler<ActionEvent> e) {
         Stage settingsStage = new Stage();
+        settingsStage.setHeight(500);
+        settingsStage.setWidth(500);
         Group settingsRoot = new Group();
-        Scene settingsScene = setUpPopUp(settingsStage, settingsRoot, e);
+        Scene settingsScene = new Scene(settingsRoot);
+        settingsScene.getStylesheets().add(res.getString("MenuStyleSheet"));
         settingsStage.setScene(settingsScene);
         settingsStage.show();
+        setUpPopUp(settingsStage, settingsRoot, e);
     }
 
-    private Scene setUpPopUp(Stage settingsStage, Group settingsRoot, EventHandler<ActionEvent> event) {
-        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black"));
-        ButtonGroup fileGroup = new ButtonGroup(List.of("Default settings", "Load custom XML"));
-        HBox hbox = new HBox();
-        hbox.getChildren().addAll(colorGroup.getButtons(), fileGroup.getButtons());
+    private void setUpPopUp(Stage settingsStage, Group settingsRoot, EventHandler<ActionEvent> event) {
+        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black"), 20, 50);
+        ButtonGroup fileGroup = new ButtonGroup(List.of("Default settings", "Load custom XML"), 20, 50);
+        VBox vbox = new VBox();
+        settingsRoot.getChildren().add(vbox);
+
+        HBox hboxColors = new HBox();
+        for (Button b : colorGroup.getButtons()) {
+            hboxColors.getChildren().add(b);
+        }
+        //hboxColors.setLayoutX(200);
+        //hboxColors.setLayoutY(50);
+        hboxColors.setAlignment(Pos.CENTER);
+        hboxColors.getStyleClass().add("hbox");
+
+        HBox hboxFile = new HBox();
+        for (Button b : fileGroup.getButtons()) {
+            hboxFile.getChildren().add(b);
+        }
+        //hboxFile.setLayoutX(200);
+        //hboxFile.setLayoutY(150);
+        hboxFile.setAlignment(Pos.CENTER);
+        hboxFile.getStyleClass().add("hbox");
+
         Button goButton = new Button("Go!");
-        settingsRoot.getChildren().addAll(hbox, goButton);
+        //goButton.setLayoutX(200);
+        //goButton.setLayoutY(250);
+        HBox hboxGo = new HBox(goButton);
+        hboxGo.setAlignment(Pos.CENTER);
+
+        vbox.getChildren().addAll(hboxColors, hboxFile, hboxGo);
+        vbox.setAlignment(Pos.CENTER);
+        System.out.println(vbox.getBoundsInLocal().getWidth());
+        vbox.setLayoutX(250 - vbox.getBoundsInLocal().getWidth() / 2);
+        vbox.setLayoutY(50);
+
         goButton.setOnAction(e -> {
             settingsStage.close();
             event.handle(e);
         });
-        return new Scene(settingsRoot, 400, 400);
     }
 
     private void arrangeMenuImages(){
