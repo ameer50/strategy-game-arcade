@@ -36,7 +36,6 @@ public class Controller {
     }
 
     public void makeGameScreen(Stage stage, String file) {
-        System.out.println("CHECKPOINT 2:  " + file);
         XMLParser p = new XMLParser();
         p.parse(file);
         myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(),

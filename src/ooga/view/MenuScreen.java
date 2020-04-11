@@ -106,24 +106,30 @@ public class MenuScreen {
         int i = 0;
         for(Button b: colorGroup.getButtons()){
             if(i == 0 || i == 2){
-                b.setOnAction(newEvent -> setColorChoice(b.getText()));
+                b.setOnAction((newEvent) -> {
+                    setColorChoice(b.getText());
+                    b.setDisable(true);
+                });
             }else{
-                b.setOnAction(newEvent -> assignXMLFile(b.getText()));
+                b.setOnAction((newEvent) -> {
+                    assignXMLFile(b.getText());
+                    b.setDisable(true);
+                });
+
             }
-            b.getStyleClass().add("settingsbuttons");
+            b.getStyleClass().add(res.getString("SettingsButtons"));
 
             pane.add(b, position[i++], position[i++]);
             GridPane.setHalignment(b, HPos.CENTER);
             GridPane.setValignment(b, VPos.CENTER);
         }
         Button goButton = new Button("Go!");
-        goButton.getStyleClass().add("settingsbuttons");
+        goButton.getStyleClass().add(res.getString("SettingsButtons"));
         pane.add(goButton, 1,2);
 
         pane.getStyleClass().add("gpane");
         settingsRoot.getChildren().add(pane);
 
-        System.out.println("CHECKPOINT 1.5: ");
 
         goButton.setOnAction(e -> {
             settingsStage.close();
@@ -157,17 +163,14 @@ public class MenuScreen {
 
     private void assignXMLFile(String choice){
         if (choice.equals("Default Game")){
-            System.out.println(colorChoice);
             this.fileName = String.format("%s%s%s%s%s", "resources/", gameSelected,"/default", colorChoice , ".xml");;
         }else{
             File file = fileChooser.showOpenDialog(new Stage());
             if (file != null) {
                 fileName = file.getAbsolutePath();
-                System.out.println("CHECKPOINT 0.5: " + fileName);
             }
         }
 
-        System.out.println("CHECKPOINT 1: " + fileName);
     }
 
 
