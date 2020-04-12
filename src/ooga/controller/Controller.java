@@ -102,7 +102,8 @@ public class Controller {
                 doAIMove();
                 printMessageAndTime("Did CPU's move.");
             }
-            board.checkWon();
+            // board.checkWon();
+            // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
     }
 

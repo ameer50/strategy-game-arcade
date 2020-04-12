@@ -6,26 +6,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 
 public abstract class Board{
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
-  protected Piece[][] pieceGrid;
   protected Map<String, Pair<String, Double>> pieceTypeMap;
-  protected Map<Point2D, String> pieceLocations;
+  protected Map<String, List<Piece>> pieceColorMap;
+  protected BiMap<Point2D, Piece> pieceLocationBiMap;
   protected int height;
   protected int width;
-  protected Map<String, List<Piece>> pieceColorMap;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
-      Map<String, Pair<String, Double>> pieceTypeMap) {
+      Map<String, Pair<String, java.lang.Double>> pieceTypeMap) {
     height = Integer.parseInt(settings.get(HEIGHT));
     width = Integer.parseInt(settings.get(WIDTH));
-    pieceGrid = new Piece[width][height];
+
+    pieceLocationBiMap = HashBiMap.create();
     this.pieceTypeMap = pieceTypeMap;
-    pieceLocations = locations;
     pieceColorMap = new HashMap<>();
-    // FIXME: This is a data structure that is accessed in three different classes.
     initializePieces(locations);
   }
 
@@ -44,14 +44,15 @@ public abstract class Board{
 
       String movePattern = pieceInfo.getKey();
       double score = pieceInfo.getValue();
-
       Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
-      updatePieceColorMap(piece, pieceColor);
-      pieceGrid[x][y] = piece;
+
+      updatePieceColorMap(piece);
+      pieceLocationBiMap.put(new Point2D.Double(x, y), piece);
     }
   }
 
-  private void updatePieceColorMap(Piece piece, String color) {
+  private void updatePieceColorMap(Piece piece) {
+    String color = piece.getColor();
     if (!pieceColorMap.keySet().contains(color)) {
       pieceColorMap.put(color, new ArrayList<>());
     } else {
@@ -76,9 +77,9 @@ public abstract class Board{
    Get piece at the specified coordinates.
    @return the Piece object at x, y; null if nothing in the cell.
    **/
-  public Piece getPieceAt(int i, int j) {
+  public Piece getPieceAt (int i, int j) {
     if (isCellInBounds(i, j)) {
-      return pieceGrid[i][j];
+      return pieceLocationBiMap.get(new Point2D.Double(i, j));
     } else {
       return null;
     }
@@ -92,6 +93,21 @@ public abstract class Board{
     }
   }
 
+  public void placePiece (int i, int j, Piece piece) {
+    pieceLocationBiMap.forcePut(new Point2D.Double(i, j), piece);
+  }
+
+  /**
+   @param i potential x-coordinate.
+   @param j potential y-coordinate.
+   @return true if the cell coordinated are within the bounds of the board.
+   **/
+  public boolean isCellInBounds(int i, int j) { return i >= 0 && i < height && j >= 0 && j < width; }
+
+  public int getHeight() { return height; }
+
+  public int getWidth() { return width; }
+
   public abstract boolean checkWon();
 
   /**
@@ -103,23 +119,4 @@ public abstract class Board{
   public abstract double doMove(int startX, int startY, int endX, int endY);
 
   public abstract List<Point2D> getValidMoves(int i, int j, String color);
-
-  public Map<Point2D, String> getPieceLocations() {
-    return pieceLocations;
-  }
-
-  public void placePiece(int x, int y, Piece piece){
-    this.pieceGrid[x][y] = piece;
-  }
-
-  /**
-   @param x potential x-coordinate.
-   @param y potential y-coordinate.
-   @return true if the cell coordinated are within the bounds of the board.
-   **/
-  public boolean isCellInBounds(int x, int y) {
-    return x >= 0 && x < height && y >= 0 && y < width; }
-
-  public int getHeight() { return height; }
-  public int getWidth() { return width; }
 }

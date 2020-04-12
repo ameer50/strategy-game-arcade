@@ -1,6 +1,7 @@
 package ooga.board;
 
 import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -11,11 +12,12 @@ import javafx.util.Pair;
 public class ChessBoard extends Board{
   public static final String KING = "King";
   public static final String PAWN = "Pawn";
-  public static final String KNIGHT = "knight";
+  public static final String KNIGHT = "Knight";
   public static final String BLACK = "Black";
   public static final String WHITE = "White";
 
-  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, Pair<String, Double>> pieces) {
+  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
+      Pair<String, java.lang.Double>> pieces) {
     super(settings, locations, pieces);
   }
 
@@ -48,12 +50,15 @@ public class ChessBoard extends Board{
     double score = 0;
     if (hitPiece != null) {
       score = hitPiece.getValue();
+      removePiece(hitPiece);
       // TODO: In the future, will we do more than just returning the score?
     }
-
-    pieceGrid[startX][startY] = null;
-    pieceGrid[endX][endY] = currPiece;
+    pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
     return score;
+  }
+
+  private void removePiece(Piece piece) {
+    pieceColorMap.get(piece.getColor()).remove(piece);
   }
 
   @Override
@@ -185,13 +190,13 @@ public class ChessBoard extends Board{
     List<Point2D> checkPieces = new ArrayList<>();
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     Piece storedKing = getPieceAt(kingI, kingJ);
-    if(ignoreTheirKing) {
-      pieceGrid[kingI][kingJ] = null;
+    if (ignoreTheirKing) {
+      pieceLocationBiMap.forcePut(new Double(kingI, kingJ), null);
     }
     for(int i = 0; i < height; i++){
       for(int j = 0; j < width; j++){
         Piece thisPiece = getPieceAt(i, j);
-        List<Point2D> thisPieceMoves = getValidMoves(i, j, thisPiece.getColor());
+        List<Point2D> thisPieceMoves = getValidMoves(i, j, "White");
         if((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor().equals(targetColor) || (!ignoreTheirKing && thisPiece.toString().equals(
             KING))){
           continue;
@@ -202,8 +207,8 @@ public class ChessBoard extends Board{
         allPossibleMoves.addAll(thisPieceMoves);
       }
     }
-    if(ignoreTheirKing) {
-      pieceGrid[kingI][kingJ] = storedKing;
+    if (ignoreTheirKing) {
+      pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
     }
     if(allPossibleMoves.size() == 0 && checkPieces.size() == 0){
       return null;
@@ -228,29 +233,29 @@ public class ChessBoard extends Board{
     Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
     Piece storedPiece = getPieceAt(potentialI, potentialJ);
     Piece storedKing = getPieceAt(kingI, kingJ);
-    if(storedPiece == null){
+    if (storedPiece == null){
       return false;
     }
-    pieceGrid[kingI][kingJ] = null;
-    pieceGrid[potentialI][potentialJ] = null;
+    pieceLocationBiMap.forcePut(new Double(kingI, kingJ), null);
+    pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), null);
     System.out.println("Potentials: " + potentialI + ", " + potentialJ);
-    for(int i = 0; i < height; i++){
-      for(int j = 0; j < width; j++){
+    for (int i = 0; i < height; i++){
+      for (int j = 0; j < width; j++){
         Piece thisPiece = getPieceAt(i, j);
         List<Point2D> thisPieceMoves = getValidMoves(i, j, thisPiece.getColor());
-        if((i == potentialI && j == potentialJ) || thisPiece == null || !storedPiece.getColor().equals(thisPiece.getColor())){
+        if ((i == potentialI && j == potentialJ) || thisPiece == null || !storedPiece.getColor().equals(thisPiece.getColor())){
           continue;
         }
-        if(thisPieceMoves.contains(potentialPoint)){
-          pieceGrid[potentialI][potentialJ] = storedPiece;
-          pieceGrid[kingI][kingJ] = storedKing;
+        if (thisPieceMoves.contains(potentialPoint)){
+          pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
+          pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
           System.out.println(thisPiece + " at " + i + ", " + j);
           return true;
         }
       }
     }
-    pieceGrid[potentialI][potentialJ] = storedPiece;
-    pieceGrid[kingI][kingJ] = storedKing;
+    pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
+    pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
     return false;
   }
 
