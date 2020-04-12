@@ -1,10 +1,7 @@
 package ooga.view;
 
-import java.awt.Image;
-import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import ooga.CellClickedInterface;
@@ -22,8 +19,8 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private static final double BOARD_HEIGHT = 600;
     private List<String> colorSequence1;
     private List<String> colorSequence2;
-    private int rowNum;
-    private int colNum;
+    private int unitWidth;
+    private int unitHeight;
 
     private double cellSize;
     private double cellSpan;
@@ -34,9 +31,9 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private Point2D selectedLocation;
     private static final int ANIM_DURATION = 20;
 
-    public BoardView (int rows, int cols, String playerChoice, Map<Point2D, String> locs) {
-        rowNum = rows;
-        colNum = cols;
+    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locations) {
+        unitWidth = rows;
+        unitHeight = cols;
         cellArray = new CellView[rows][cols];
         cellList = new CellView[rows * cols];
         //FIXME: is this data duplication?
@@ -44,7 +41,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         cellSpan = cellSize + PIECE_SPACE;
 
         this.playerChoice = playerChoice;
-        this.pieceLocations = locs;
+        this.pieceLocations = locations;
 
         initialize();
     }
@@ -61,7 +58,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     public void checkeredColor() {
         colorSequence1 = new ArrayList<>();
-        for (int i = 0; i < rowNum; i++){
+        for (int i = 0; i < unitWidth; i++){
             if (i % 2 == 0) colorSequence1.add("cellcolor1");
             else colorSequence1.add("cellcolor2");
         }
@@ -71,8 +68,8 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     private void fillCellStructures() {
         int index = 0;
-        for (int i = 0; i < rowNum; i++) {
-            for(int j = 0; j < colNum; j++) {
+        for (int i = 0; i < unitWidth; i++) {
+            for (int j = 0; j < unitHeight; j++) {
                 String color = (i % 2 == 0) ? colorSequence2.get(j) : colorSequence1.get(j);
                 cellArray[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSpan * j)),
                     (BOARD_YOFFSET + (cellSpan * i)),
@@ -111,14 +108,12 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         }
     }
 
-    public void movePiece(int finalX, int finalY) {
-        int initX = (int) selectedLocation.getX();
-        int initY = (int) selectedLocation.getY();
-        CellView initCell = this.getCellAt(initX, initY);
-        CellView finalCell = this.getCellAt(finalX, finalY);
+    public void movePiece(int fromX, int fromY, int toX, int toY) {
+        CellView initCell = getCellAt(fromX, fromY);
+        CellView finalCell = getCellAt(toX, toY);
         PieceView piece = initCell.getPiece();
-        finalCell.setPiece(piece);
 
+        finalCell.setPiece(piece);
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
 //        tr.setFromX(tr.getFromX());
 //        tr.setFromY(tr.getFromY());
@@ -141,9 +136,9 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         }
     }
 
-    public int getRowNum(){ return rowNum; }
+    public int getUnitWidth(){ return unitWidth; }
 
-    public int getColNum(){ return colNum; }
+    public int getUnitHeight(){ return unitHeight; }
 
     public double getCellSpan(){ return cellSpan; }
 

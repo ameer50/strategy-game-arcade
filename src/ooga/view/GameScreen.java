@@ -2,7 +2,6 @@ package ooga.view;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -10,6 +9,7 @@ import java.awt.geom.Point2D;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
+import ooga.board.Board;
 
 public class GameScreen {
 
@@ -19,40 +19,31 @@ public class GameScreen {
     private BorderPane root;
     private Stage stage;
     private Scene scene;
-    private Map<String, String> nameDim;
-    private Map<Point2D, String> pieceLocations;
-    private BoardView board;
+    private BoardView boardView;
 
-
-    public GameScreen(Stage stage, Map<String, String> nameDim, Map<Point2D, String> pieceLocations){
+    public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
-        this.nameDim = nameDim;
-        this.pieceLocations = pieceLocations;
-        startView();
+        initializeView(width, height, locations);
         stage.show();
     }
 
-    private void startView(){
-        root = new BorderPane();
+    private void initializeView(int width, int height, Map<Point2D, String> locations){
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
-        setAsScene(new Scene(root));
+        root = new BorderPane();
+        scene = new Scene(root);
+        scene.getStylesheets().add(res.getString("GameStyleSheet"));
         stage.setScene(scene);
         stage.setTitle(res.getString("GameStageTitle"));
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
 
         Pane canvas = new Pane();
-        board = new BoardView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")),
-                "Black", pieceLocations);
-        canvas.getChildren().addAll(board.getCells());
+        boardView = new BoardView(width, height, "Black", locations);
+        canvas.getChildren().addAll(boardView.getCells());
         root.getChildren().addAll(canvas);
     }
 
-    private void setAsScene(Scene scene) {
-        this.scene = scene;
-    }
-
-    public BoardView getBoard() {
-        return board;
+    public BoardView getBoardView() {
+        return boardView;
     }
 }

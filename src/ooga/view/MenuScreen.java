@@ -35,7 +35,6 @@ public class MenuScreen {
     private String fileName;
 
     public MenuScreen(Stage stage){
-
         this.stage = stage;
         startView();
         stage.show();
@@ -75,7 +74,6 @@ public class MenuScreen {
             });
         }
     }
-
 
     public String getFileType(){
         return fileName;
@@ -137,7 +135,7 @@ public class MenuScreen {
         });
     }
 
-    private void arrangeMenuImages(){
+    private void arrangeMenuImages() {
         GridPane gridPane = new GridPane();
 
         int[] dimensions = {250, 140, 250, 250, 200, 200};
@@ -156,15 +154,15 @@ public class MenuScreen {
         root.getChildren().add(gridPane);
     }
 
-    private void setColorChoice(String color){
+    private void setColorChoice(String color) {
         colorChoice = color;
         System.out.println(colorChoice);
     }
 
-    private void assignXMLFile(String choice){
-        if (choice.equals("Default Game")){
+    private void assignXMLFile(String choice) {
+        if (choice.equals("Default Game")) {
             this.fileName = String.format("%s%s%s%s%s", "resources/", gameSelected,"/default", colorChoice , ".xml");;
-        }else{
+        } else {
             File file = fileChooser.showOpenDialog(new Stage());
             if (file != null) {
                 fileName = file.getAbsolutePath();
@@ -173,7 +171,7 @@ public class MenuScreen {
 
     }
 
-
-
-
+    public String getGameSelected() {
+        return gameSelected;
+    }
 }

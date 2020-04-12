@@ -21,8 +21,8 @@ public class CheckersBoard extends Board {
         int numWhite = 0;
         int numBlack = 0;
 
-        for(int i = 0; i<myGrid[0].length;i++){
-            for(int j = 0; j<myGrid.length; j++){
+        for(int i = 0; i<width; i++){
+            for(int j = 0; j<height; j++){
                 if(getPieceAt(i,j).getColor().equals("white")){
                     numWhite++;
                 }
@@ -39,17 +39,20 @@ public class CheckersBoard extends Board {
     }
 
     @Override
-    public List<Point2D> getValidMoves(int x, int y) {
-        Piece currPiece = getPieceAt(x,y);
-        if(currPiece==null){return null;}
-        validMoves = new ArrayList<Point2D>();
-        checkRight(x, y, currPiece);
-        checkLeft(x, y, currPiece);
-        return validMoves;
+    public List<Point2D> getValidMoves(int x, int y, String color) {
+        Piece piece = getPieceAt(x,y);
+        if (piece == null) { return null; }
+        if (pieceColorMap.get(color).contains(piece)) {
+            validMoves = new ArrayList<Point2D>();
+            checkRight(x, y, piece);
+            checkLeft(x, y, piece);
+            return validMoves;
+        }
+        return null;
     }
 
     public boolean checkRight(int x, int y, Piece currPiece) {
-        if (!isValidCell(x + 1, y + 1) || !isValidCell(x + 2, y + 2)) {
+        if (!isCellInBounds(x + 1, y + 1) || !isCellInBounds(x + 2, y + 2)) {
             return false;
         }
 
@@ -62,7 +65,7 @@ public class CheckersBoard extends Board {
     }
 
     public boolean checkLeft(int x, int y, Piece currPiece){
-        if(!isValidCell(x-1, y-1) || !isValidCell(x-2, y-2)){
+        if(!isCellInBounds(x-1, y-1) || !isCellInBounds(x-2, y-2)){
             return false;
         }
 
@@ -79,8 +82,8 @@ public class CheckersBoard extends Board {
     public double doMove(int x_i, int y_i, int x_f, int y_f) {
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);
-        updateCell(x_i, y_i, null);
-        updateCell(x_f, y_f, currPiece);
+        placePiece(x_i, y_i, null);
+        placePiece(x_f, y_f, currPiece);
         if(oppPiece == null){
             return 0;
         }
