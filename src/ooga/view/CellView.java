@@ -109,7 +109,7 @@ public class CellView extends StackPane {
             // also unhighlight everything
             if (!isRed && !isYellow){
                 noBorderFunction.clickCell(xIndex, yIndex);
-                toggleRed();
+                //toggleRed();
                 clickPieceFunction.clickCell(xIndex, yIndex);
             // if a cell is yellow and clicked, trigger lambda to move the piece, unhighlight everything
             } else if (isYellow) {
