@@ -145,7 +145,9 @@ public class ChessBoard extends Board{
     List<Point2D> checkPieces = new ArrayList<>();
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     Piece storedKing = getPieceAt(kingI, kingJ);
+    System.out.println("storedKing = " + storedKing);
     if(ignoreTheirKing) {
+      System.out.println("MAKING NULL");
       myGrid[kingI][kingJ] = null;
     }
     for(int i = 0; i < myHeight; i++){
@@ -162,7 +164,11 @@ public class ChessBoard extends Board{
       }
     }
     if(ignoreTheirKing) {
+      System.out.println("MAKING NOT NULL");
       myGrid[kingI][kingJ] = storedKing;
+      System.out.println("myGrid[kingI][kingJ] = " + myGrid[kingI][kingJ]);
+      System.out.println("PRINTING INTERNALLY");
+      print();
     }
     if(allPossibleMoves.size() == 0 && checkPieces.size() == 0){
       return null;
@@ -276,6 +282,7 @@ public class ChessBoard extends Board{
   @Override
   public double doMove(int startX, int startY, int endX, int endY) {
     Piece currPiece = getPieceAt(startX, startY);
+    currPiece.move();
     Piece hitPiece = getPieceAt(endX, endY);
     double score = 0;
     if (hitPiece == null) score = 0;
@@ -296,6 +303,37 @@ public class ChessBoard extends Board{
     combined.addAll(left);
     combined.addAll(right);
     return combined;
+  }
+  private List<Point2D> pawn(int i, int j, int dist, Piece piece) {
+    List<Point2D> ret = new ArrayList<>();
+    int inc;
+    if(piece.getColor().equals(bottomColor)){
+      inc = -1;
+    }
+    else{
+      inc = 1;
+    }
+    int[] diagJ = {-1, 1};
+    int newI = i + inc;
+    for (int jInc : diagJ) {
+      int potJ = j + jInc;
+      Point2D newPoint = findPoint(newI, potJ, piece);
+      if (newPoint != null && getPieceAt(newI, potJ) != null) {
+        ret.add(newPoint);
+      }
+    }
+    Point2D newPoint = findPoint(newI, j, piece);
+    if(getPieceAt(newI, j) == null && newPoint != null) {
+      ret.add(newPoint);
+      if(!piece.hasMoved()){
+        newI += inc;
+        newPoint = findPoint(newI, j, piece);
+        if(getPieceAt(newI, j) == null && newPoint != null) {
+          ret.add(newPoint);
+        }
+      }
+    }
+    return ret;
   }
   private List<Point2D> up(int x, int y, int dist, Piece piece){
     List<Point2D> ret = new ArrayList<>();
@@ -382,7 +420,6 @@ public class ChessBoard extends Board{
     if(!isValidCell(x, y)){
       return null;
     }
-
     Piece thatPiece = getPieceAt(x, y);
     if(thatPiece != null && thisPiece.isOnSameTeam(thatPiece)){
       return null;

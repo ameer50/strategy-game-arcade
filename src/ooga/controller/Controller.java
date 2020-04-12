@@ -28,7 +28,7 @@ public class Controller {
     private BoardView myBoardView;
     private StrategyAI myAI;
     private boolean toggleMoves = true;
-    private boolean isAIOpponent = true;
+    private boolean isAIOpponent = false;
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -78,6 +78,7 @@ public class Controller {
             }
             myBoardView.setSelectedLocation(0, 0);
             myBoard.checkWon();
+            myBoard.print();
         });
     }
 
