@@ -3,11 +3,15 @@ package ooga.controller;
 import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.ChessBoard;
+import ooga.strategy.HumanPlayer;
+import ooga.strategy.Player;
 import ooga.strategy.StrategyAI;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
 import ooga.xml.XMLParser;
+
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -27,6 +31,9 @@ public class Controller {
     private boolean isAIOpponent = false;
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
+    private Player activePlayer;
+    private Player playerOne;
+    private Player playerTwo;
 
     public Controller (Stage stage) {
         menuScreen = new MenuScreen(stage);
@@ -42,6 +49,10 @@ public class Controller {
             p.getMovePatterns());
         myGameScreen = new GameScreen(stage, p.getSettings(), p.getInitialPieceLocations());
         myBoardView = myGameScreen.getBoard();
+        // replace with AI if AI, but player 1 is always white since they start
+        playerOne = new HumanPlayer("a", Color.WHITE, myBoard);
+        playerTwo = new HumanPlayer("b", Color.BLACK, myBoard);
+        activePlayer = playerOne;
         setListeners();
     }
 
@@ -55,17 +66,23 @@ public class Controller {
 
         myBoardView.setOnMoveClicked((int x, int y) -> {
             Point2D indexes = myBoardView.getSelectedLocation();
-            myBoard.doMove((int) indexes.getX(), (int) indexes.getY(), x, y);
+            activePlayer.doMove((int) indexes.getX(), (int) indexes.getY(), x, y);
             myBoardView.movePiece(x, y);
-            if (isAIOpponent) {
+            toggleActivePlayer();
+            if (activePlayer.isCPU()) {
                 List<Integer> AIMove = myAI.generateMove();
                 myBoardView.setSelectedLocation(AIMove.get(2), AIMove.get(3));
-                myBoard.doMove(AIMove.get(2), AIMove.get(3), AIMove.get(0), AIMove.get(1));
+                activePlayer.doMove(AIMove.get(2), AIMove.get(3), AIMove.get(0), AIMove.get(1));
                 myBoardView.movePiece(AIMove.get(0), AIMove.get(1));
+                toggleActivePlayer();
             }
             myBoardView.setSelectedLocation(0, 0);
             myBoard.checkWon();
             myBoard.print();
         });
+    }
+
+    private void toggleActivePlayer() {
+        activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
     }
 }
