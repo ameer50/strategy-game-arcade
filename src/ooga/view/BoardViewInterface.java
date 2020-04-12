@@ -2,6 +2,7 @@ package ooga.view;
 
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import ooga.CellClickedInterface;
 
 import java.awt.geom.Point2D;
@@ -13,7 +14,7 @@ public interface BoardViewInterface {
 
     void checkeredColor();
 
-    HBox[] getCells();
+    StackPane[] getCells();
 
     CellView getCell(int x, int y);
 

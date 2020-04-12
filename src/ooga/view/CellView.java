@@ -1,10 +1,12 @@
 package ooga.view;
 
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import ooga.CellClickedInterface;
 
-public class CellView extends HBox {
+public class CellView extends StackPane {
 
     private boolean isYellow;
     private boolean isRed;
@@ -32,7 +34,7 @@ public class CellView extends HBox {
         isRed = false;
         isYellow = false;
         piece = null;
-        this.lightUpCells();
+        this.setOnClickFunctions();
     }
 
     private void initialize(){
@@ -43,11 +45,31 @@ public class CellView extends HBox {
         this.setLayoutY(ypos);
 
         toggleNoBorder();
-        lightUpCells();
+        setOnClickFunctions();
     }
 
     public void setPiece(PieceView piece) {
+        // remove original piece if it exists
+        if (this.piece != null) {
+            this.getChildren().remove(this.piece.getImage());
+        }
+        // set new piece
         this.piece = piece;
+        // if we want to set it to null, return since we don't want to put an image there
+        if (piece == null) return;
+        ImageView pieceImage = piece.getImage();
+        pieceImage.setFitHeight(0.95 * height);
+        pieceImage.setPreserveRatio(true);
+        pieceImage.setLayoutX(width / 2 - pieceImage.getBoundsInLocal().getWidth() / 2);
+        this.getChildren().add(pieceImage);
+    }
+
+    public double getWidthOfCell() {
+        return width;
+    }
+
+    public double getHeightOfCell() {
+        return height;
     }
 
     public PieceView getPiece() {
@@ -77,7 +99,7 @@ public class CellView extends HBox {
     }
 
 
-    public void lightUpCells(){
+    public void setOnClickFunctions(){
         this.setOnMouseClicked(e -> {
             if (piece == null && !isYellow){
                 noBorderFunction.clickCell(xindex, yindex);

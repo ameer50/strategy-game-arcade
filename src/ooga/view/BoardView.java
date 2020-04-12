@@ -5,6 +5,7 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import ooga.CellClickedInterface;
 import java.awt.geom.Point2D;
@@ -13,7 +14,7 @@ import java.util.*;
 public class BoardView implements BoardViewInterface {
 
     private CellView[][] cellArray;
-    private HBox[] cellList;
+    private StackPane[] cellList;
     private static final int BOARD_XOFFSET = 35;
     private static final int BOARD_YOFFSET = 35;
     private static final int PIECE_SPACE = 6;
@@ -117,11 +118,16 @@ public class BoardView implements BoardViewInterface {
             cellArray[x][y].setPiece(new PieceView(PIECE_XOFFSET+PIECE_DELTAX*y,
                 PIECE_YOFFSET+PIECE_DELTAY*x, pieceWidth, pieceHeight,
                 res.getString(pieceLocations.get(point))));
-            pieceImages.add(cellArray[x][y].getPiece().getImage());
+            //ImageView pieceImage = cellArray[x][y].getPiece().getImage();
+//            pieceImage.setFitHeight(0.8 * cellArray[x][y].getHeightOfCell());
+//            pieceImage.setPreserveRatio(true);
+//            pieceImage.setLayoutX(0);
+            //pieceImage.setX(cellArray[x][y].getWidthOfCell() / 2 - pieceImage.getBoundsInLocal().getWidth() / 2);
+            //pieceImages.add(cellArray[x][y].getPiece().getImage());
         }
     }
 
-    public HBox[] getCells() {
+    public StackPane[] getCells() {
         return cellList;
     }
 
@@ -142,10 +148,11 @@ public class BoardView implements BoardViewInterface {
         CellView initCell = getCell(initX, initY);
         CellView finalCell = getCell(finalX, finalY);
         PieceView piece = initCell.getPiece();
-        if (finalCell.getPiece() != null) {
-            root.getChildren().remove(finalCell.getPiece().getImage());
-            // FIXME: A long chain of calls here...
-        }
+//        if (finalCell.getPiece() != null) {
+//            //root.getChildren().remove(finalCell.getPiece().getImage());
+//            finalCell.getChildren().remove(finalCell.getPiece());
+//            // FIXME: A long chain of calls here...
+//        }
         finalCell.setPiece(piece);
 
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
@@ -154,9 +161,10 @@ public class BoardView implements BoardViewInterface {
 //        tr.setByX(getDeltaX()*(finalY-initY));
 //        tr.setByY(getDeltaY()*(finalX-initX));
 //        tr.play();
-        ImageView image = piece.getImage();
-        image.setX(image.getX() + getDeltaX()*(finalY-initY));
-        image.setY(image.getY() + getDeltaY()*(finalX-initX));
+
+//        ImageView image = piece.getImage();
+//        image.setX(image.getX() + getDeltaX()*(finalY-initY));
+//        image.setY(image.getY() + getDeltaY()*(finalX-initX));
 
         initCell.setPiece(null);
     }
