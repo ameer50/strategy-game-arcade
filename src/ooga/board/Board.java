@@ -111,7 +111,7 @@ public abstract class Board{
 
   public int getWidth() { return width; }
 
-  public abstract boolean checkWon();
+  public abstract String checkWon();
 
   /**
    Execute the desired move
