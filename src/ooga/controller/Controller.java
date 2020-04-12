@@ -24,7 +24,7 @@ public class Controller {
     private BoardView myBoardView;
     private StrategyAI myAI;
     private boolean toggleMoves = true;
-    private boolean isAIOpponent = true;
+    private boolean isAIOpponent = false;
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
 
@@ -60,11 +60,12 @@ public class Controller {
             if (isAIOpponent) {
                 List<Integer> AIMove = myAI.generateMove();
                 myBoardView.setSelectedLocation(AIMove.get(2), AIMove.get(3));
-                myBoard.doMove(AIMove.get(0), AIMove.get(1), AIMove.get(2), AIMove.get(3));
+                myBoard.doMove(AIMove.get(2), AIMove.get(3), AIMove.get(0), AIMove.get(1));
                 myBoardView.movePiece(AIMove.get(0), AIMove.get(1));
             }
             myBoardView.setSelectedLocation(0, 0);
             myBoard.checkWon();
+            myBoard.print();
         });
     }
 }

@@ -8,15 +8,18 @@ import javafx.util.Pair;
 public abstract class Board{
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
+  public static final String BOTTOM_COLOR = "bottomColor";
   protected Piece[][] myGrid;
   protected Map<String, Pair<String, Double>> pieceMapping;
   protected int myHeight;
   protected int myWidth;
+  protected String bottomColor;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
       Map<String, Pair<String, Double>> pieces){
     myHeight = Integer.parseInt(settings.get(HEIGHT));
     myWidth = Integer.parseInt(settings.get(WIDTH));
+    bottomColor = settings.get(BOTTOM_COLOR);
     myGrid = new Piece[myHeight][myWidth];
     pieceMapping = pieces;
     initStartingPieces(locations);
