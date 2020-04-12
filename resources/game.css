@@ -45,20 +45,15 @@
     -fx-alignment: center;
 }
 
-.text-area {
-    -fx-font-size: 15;
-    -fx-display-caret: true;
-    -fx-min-width: 350;
-    -fx-min-height: 600;
-    -fx-pref-rows: 10;
+.display {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-border-color:  BLACK;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-background-color: BLUE;
 }
 
-.text-area .content {
-    -fx-background-color: #F0FFFF;
-
-
-
-}
 
 .text-area:focused .content {
     -fx-border-color:  BLACK;

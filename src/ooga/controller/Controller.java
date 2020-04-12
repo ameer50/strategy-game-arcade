@@ -88,6 +88,7 @@ public class Controller {
         // replace with AI if AI, but player 1 is always white since they start
         playerOne = new HumanPlayer("a", Color.WHITE, board);
         playerTwo = new HumanPlayer("b", Color.BLACK, board);
+        gameScreen.getRightView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
 
         if (isAIOpponent) {
