@@ -31,12 +31,11 @@ public class Controller {
     public Controller (Stage stage) {
         menuScreen = new MenuScreen(stage);
         menuScreen.buttonListener(e -> {
-            makeGameScreen(stage, menuScreen.getGameType());
+            makeGameScreen(stage, menuScreen.getFileType());
         });
     }
 
-    public void makeGameScreen(Stage stage, String gameType) {
-        String file = String.format("%s%s%s", "resources/defaultGames/", gameType, ".xml");
+    public void makeGameScreen(Stage stage, String file) {
         XMLParser p = new XMLParser();
         p.parse(file);
         myBoard = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(),

@@ -15,45 +15,39 @@ public class ButtonGroup {
 
     private static ResourceBundle myResources =
             ResourceBundle.getBundle("resources", Locale.getDefault());
-    private HBox box;
-    private List<HBox> hboxes;
-    private VBox vbox;
     private List<Button> buttons;
-    private List<String> buttonNames;
+    //private List<String> buttonNames;
+    private double width;
+    private double height;
 
-    public ButtonGroup(List<String> buttonNames) {
-        vbox = new VBox();
-        vbox.getStyleClass().add("buttonvbox");
+    public ButtonGroup(List<String> buttonNames, double width, double height) {
+//        vbox = new VBox();
+//        vbox.getStyleClass().add("buttonvbox");
         buttons = new ArrayList<>();
-        this.buttonNames = buttonNames;
-        createButtons();
-        addElementsToVBox();
-
+        //this.buttonNames = buttonNames;
+        this.width = width;
+        this.height = height;
+        createButtons(buttonNames, width, height);
     }
 
-    private void createButtons() {
+    private void createButtons(List<String> buttonNames, double width, double height) {
         for (String buttonName : buttonNames) {
-            Button temp = new Button(buttonName);
-            temp.setMinHeight(40);
-            temp.setMinWidth(100);
-            temp.setFont(new Font(30));
-            buttons.add(temp);
+            Button button = new Button(buttonName);
+            button.setMinHeight(height);
+            button.setMinWidth(width);
+            buttons.add(button);
         }
     }
 
-    private void addElementsToVBox() {
-        for (Button button : buttons) {
-            vbox.getChildren().add(button);
-        }
-    }
-
-    public VBox getButtons() {
-        return vbox;
-    }
-
-    public List<Button> getButtonList() {
+    public List<Button> getButtons() {
         return buttons;
     }
 
+    public double getWidth() {
+        return width;
+    }
 
+    public double getHeight() {
+        return height;
+    }
 }

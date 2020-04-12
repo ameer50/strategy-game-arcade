@@ -8,7 +8,7 @@ public class PieceView {
     private ImageView imgview;
 
     public PieceView(double xpos, double ypos, double width, double height, String name){
-        imgview = new ImageView(new Image(getClass().getClassLoader().getResourceAsStream(name)));
+        imgview = new ImageView(name);
 
         setX(xpos);
         setY(ypos);
