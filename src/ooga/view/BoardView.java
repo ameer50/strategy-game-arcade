@@ -1,11 +1,8 @@
 package ooga.view;
 
-import java.awt.Image;
-import javafx.animation.TranslateTransition;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.util.Duration;
 import ooga.CellClickedInterface;
 import java.awt.geom.Point2D;
 import java.util.*;
@@ -21,8 +18,8 @@ public class BoardView implements BoardViewInterface {
     private static final double BOARD_HEIGHT = 600;
     private List<String> colorSequence1;
     private List<String> colorSequence2;
-    private int rowNum;
-    private int colNum;
+    private int unitWidth;
+    private int unitHeight;
 
     private double cellSize;
     private double cellSpan;
@@ -46,9 +43,9 @@ public class BoardView implements BoardViewInterface {
     private static final int ANIM_DURATION = 20;
 
     public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs,
-        BorderPane root){
-        rowNum = rows;
-        colNum = cols;
+        BorderPane root) {
+        unitWidth = rows;
+        unitHeight = cols;
         cellArray = new CellView[rows][cols];
         cellList = new CellView[rows*cols];
         //FIXME: is this data duplication?
@@ -76,7 +73,7 @@ public class BoardView implements BoardViewInterface {
 
     public void checkeredColor() {
         colorSequence1 = new ArrayList<>();
-        for (int i=0; i<rowNum; i++){
+        for (int i=0; i< unitWidth; i++){
             if (i % 2 == 0) colorSequence1.add("cellcolor1");
             else colorSequence1.add("cellcolor2");
         }
@@ -86,8 +83,8 @@ public class BoardView implements BoardViewInterface {
 
     private void fillCellStructures() {
         int index = 0;
-        for (int i=0; i<rowNum; i++) {
-            for(int j=0; j<colNum; j++) {
+        for (int i=0; i< unitWidth; i++) {
+            for(int j=0; j< unitHeight; j++) {
                 String color;
                 if (i % 2 == 0) {
                     color = colorSequence2.get(j);
@@ -100,8 +97,8 @@ public class BoardView implements BoardViewInterface {
                 cellList[index] = cellArray[i][j];
                 index++;
                 cellArray[i][j].setNoBorderFunction((a, b) -> {
-                    for (int x = 0; x < rowNum; x++) {
-                        for (int y = 0; y < colNum; y++) {
+                    for (int x = 0; x < unitWidth; x++) {
+                        for (int y = 0; y < unitHeight; y++) {
                             cellArray[x][y].toggleNoBorder();
                         }
                     }
@@ -136,18 +133,16 @@ public class BoardView implements BoardViewInterface {
         }
     }
 
-    public void movePiece(int finalX, int finalY) {
-        int initX = (int) selectedLocation.getX();
-        int initY = (int) selectedLocation.getY();
-        CellView initCell = getCell(initX, initY);
-        CellView finalCell = getCell(finalX, finalY);
+    public void movePiece(int fromX, int fromY, int toX, int toY) {
+        CellView initCell = getCell(fromX, fromY);
+        CellView finalCell = getCell(toX, toY);
         PieceView piece = initCell.getPiece();
         if (finalCell.getPiece() != null) {
             root.getChildren().remove(finalCell.getPiece().getImage());
+            System.out.println("removed cell!");
             // FIXME: A long chain of calls here...
         }
         finalCell.setPiece(piece);
-
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
 //        tr.setFromX(tr.getFromX());
 //        tr.setFromY(tr.getFromY());
@@ -155,23 +150,22 @@ public class BoardView implements BoardViewInterface {
 //        tr.setByY(getDeltaY()*(finalX-initX));
 //        tr.play();
         ImageView image = piece.getImage();
-        image.setX(image.getX() + getDeltaX()*(finalY-initY));
-        image.setY(image.getY() + getDeltaY()*(finalX-initX));
-
+        image.setX(image.getX() + getDeltaX()*(toY-fromY));
+        image.setY(image.getY() + getDeltaY()*(toX-fromX));
         initCell.setPiece(null);
     }
 
     public void setOnPieceClicked(CellClickedInterface clicked) {
-        for (int i=0; i<rowNum; i++){
-            for (int j=0; j<colNum; j++){
+        for (int i=0; i< unitWidth; i++){
+            for (int j=0; j< unitHeight; j++){
                 getCell(i, j).setPieceClicked(clicked);
             }
         }
     }
 
     public void setOnMoveClicked(CellClickedInterface clicked) {
-        for (int i=0; i<rowNum; i++) {
-            for (int j=0; j<colNum; j++) {
+        for (int i=0; i< unitWidth; i++) {
+            for (int j=0; j< unitHeight; j++) {
                 this.getCell(i, j).setMoveClicked(clicked);
             }
         }
@@ -179,8 +173,8 @@ public class BoardView implements BoardViewInterface {
 
     public CellView getCell(int row, int col){ return cellArray[row][col]; }
     public ImageView[] getPieces() { return pieceImages.toArray(new ImageView[0]); }
-    public int getRowNum(){ return rowNum; }
-    public int getColNum(){ return colNum; }
+    public int getUnitWidth(){ return unitWidth; }
+    public int getUnitHeight(){ return unitHeight; }
     public double getCellSpan(){ return cellSpan; }
     public void setSelectedLocation(int x, int y) { selectedLocation = new Point2D.Double(x, y); }
     public Point2D getSelectedLocation() { return selectedLocation; }
