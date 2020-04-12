@@ -2,6 +2,7 @@ package ooga.controller;
 
 import javafx.stage.Stage;
 import ooga.board.Board;
+import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
 import ooga.strategy.HumanPlayer;
 import ooga.strategy.Player;
@@ -66,6 +67,7 @@ public class Controller {
 
     private void setUpGameScreen(Stage stage, String typeString, String fileName) {
         GameType gameType = GameType.valueOf(typeString.toUpperCase());
+        System.out.println("File name" + fileName);
         String gameXML = String.format(fileName);
         XMLParser p = new XMLParser();
         p.parse(gameXML);
@@ -75,6 +77,9 @@ public class Controller {
         switch (gameType) {
             default:
                 board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+//            case CHECKERS:
+//                board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+
         }
         printMessageAndTime("Setup Board.");
         gameScreen = new GameScreen(stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
@@ -101,6 +106,7 @@ public class Controller {
         boardView.setOnPieceClicked((int x, int y) -> {
             boardView.setSelectedLocation(x, y);
             // TODO: change "White" to whatever the user chose.
+            System.out.println("Valid moves " + board.getValidMoves(x, y, "White"));
             boardView.highlightValidMoves(board.getValidMoves(x, y, "White"));
         });
 

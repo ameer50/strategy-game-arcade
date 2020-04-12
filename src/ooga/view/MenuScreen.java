@@ -138,7 +138,7 @@ public class MenuScreen {
         int i = 0;
         int colIndex = 0;
         for(String s: List.of("CheckersIcon", "ChessIcon", "OthelloIcon" )){
-            ImageView picture = new ImageView(new Image(res.getString(s), dimensions[i++], dimensions[i++], false, false));
+            ImageView picture = new ImageView(new Image(res.getString(s), dimensions[i++], dimensions[i++], false, true));
             gridPane.add(picture, colIndex, 0);
             colIndex+=2;
         }
