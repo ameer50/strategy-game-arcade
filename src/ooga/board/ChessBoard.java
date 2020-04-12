@@ -26,9 +26,11 @@ public class ChessBoard extends Board {
   @Override
   public List<Point2D> getValidMoves(int i, int j, String color) {
     Piece piece = getPieceAt(i, j);
+
     if (piece == null) {
       return null;
     }
+    color = piece.getColor();
     if (pieceColorMap.get(color).contains(piece)) {
       String movePattern = piece.getMovePattern();
       String moveType = movePattern.split(" ")[0].toLowerCase();
@@ -191,6 +193,7 @@ public class ChessBoard extends Board {
       String targetColor, boolean ignoreTheirKing) {
     List<Point2D> allPossibleMoves = new ArrayList<>();
     List<Point2D> checkPieces = new ArrayList<>();
+    List<Point2D> pawnList = new ArrayList<>();
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     Piece storedKing = getPieceAt(kingI, kingJ);
     System.out.println("storedKing = " + storedKing);
@@ -206,18 +209,36 @@ public class ChessBoard extends Board {
             KING))) {
           continue;
         }
-        if (thisPieceMoves.contains(kingPoint)) {
-          checkPieces.add(new Point2D.Double(i, j));
+        if(thisPiece.toString().equals(PAWN)){
+          pawnList.add(new Point2D.Double(i, j));
         }
-        allPossibleMoves.addAll(thisPieceMoves);
+        else {
+          if (thisPieceMoves.contains(kingPoint)) {
+            checkPieces.add(new Point2D.Double(i, j));
+          }
+          allPossibleMoves.addAll(thisPieceMoves);
+        }
       }
     }
     if (ignoreTheirKing) {
       pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
     }
-    if (allPossibleMoves.size() == 0 && checkPieces.size() == 0) {
-      return null;
+    for(Point2D pawn: pawnList){
+      int i = (int) pawn.getX();
+      int j = (int) pawn.getY();
+      Piece piece = getPieceAt(i, j);
+      int inc = getPawnInc(piece);
+      int newI = i + inc;
+      List<Point2D> thisPieceMoves = getPawnDiags(newI, j, piece, true);
+      if(!ignoreTheirKing){
+        thisPieceMoves.addAll(getPawnStraights(newI, j, piece, inc));
+      }
+      if(thisPieceMoves.contains(kingPoint)){
+        checkPieces.add(new Point2D.Double(i, j));
+      }
+      allPossibleMoves.addAll(thisPieceMoves);
     }
+
     Pair<List<Point2D>, List<Point2D>> ret = new Pair<>(allPossibleMoves, checkPieces);
     return ret;
   }
@@ -238,17 +259,30 @@ public class ChessBoard extends Board {
     Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
     Piece storedPiece = getPieceAt(potentialI, potentialJ);
     Piece storedKing = getPieceAt(kingI, kingJ);
-    if (storedPiece == null) {
+    String color = storedKing.getColor();
+    /*if (storedPiece == null) {
       return false;
-    }
+    }*/
     pieceLocationBiMap.forcePut(new Double(kingI, kingJ), null);
     pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), null);
     System.out.println("Potentials: " + potentialI + ", " + potentialJ);
+
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         Piece thisPiece = getPieceAt(i, j);
-        List<Point2D> thisPieceMoves = getValidMoves(i, j, thisPiece.getColor());
-        if ((i == potentialI && j == potentialJ) || thisPiece == null || !storedPiece.getColor()
+        if(thisPiece == null){
+          continue;
+        }
+        List<Point2D> thisPieceMoves;
+        boolean pawn = thisPiece.toString().equals(PAWN);
+        if(pawn){
+          int inc = getPawnInc(thisPiece);
+          thisPieceMoves = getPawnDiags(i + inc, j, thisPiece,  false);
+        }
+        else{
+          thisPieceMoves = getValidMoves(i, j, null);
+        }
+        if ((i == potentialI && j == potentialJ) || color
             .equals(thisPiece.getColor())) {
           continue;
         }
@@ -319,21 +353,36 @@ public class ChessBoard extends Board {
 
   private List<Point2D> pawn(int i, int j, int dist, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
+    int inc = getPawnInc(piece);
+    int newI = i + inc;
+    ret.addAll(getPawnDiags(newI, j, piece, true));
+    ret.addAll(getPawnStraights(newI, j, piece, inc));
+    return ret;
+  }
+  private int getPawnInc(Piece piece){
     int inc;
     if (piece.getColor().equals(bottomColor)) {
       inc = -1;
     } else {
       inc = 1;
     }
+    return inc;
+  }
+  private List<Point2D> getPawnDiags(int newI, int j, Piece piece, boolean check){
+    List<Point2D> ret = new ArrayList<>();
     int[] diagJ = {-1, 1};
-    int newI = i + inc;
     for (int jInc : diagJ) {
       int potJ = j + jInc;
       Point2D newPoint = checkPoint(newI, potJ, piece);
-      if (newPoint != null && getPieceAt(newI, potJ) != null) {
+      if (newPoint != null && (!check || getPieceAt(newI, potJ) != null)) {
         ret.add(newPoint);
       }
     }
+    return ret;
+  }
+
+  private  List<Point2D> getPawnStraights(int newI, int j, Piece piece, int inc){
+    List<Point2D> ret = new ArrayList<>();
     Point2D newPoint = checkPoint(newI, j, piece);
     if (getPieceAt(newI, j) == null && newPoint != null) {
       ret.add(newPoint);
@@ -428,7 +477,6 @@ public class ChessBoard extends Board {
 
   private Point2D checkPoint (int x, int y, Piece thisPiece) {
       Point2D ret;
-    System.out.println("x + \",\" + y = " + x + "," + y);
       if (!isCellInBounds(x, y)) {
         return null;
       }

@@ -43,7 +43,7 @@ public class Controller {
     private BoardView boardView;
     private StrategyAI CPU;
     private boolean toggleMoves = true;
-    private boolean isAIOpponent = true;
+    private boolean isAIOpponent = false;
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -106,7 +106,7 @@ public class Controller {
         boardView.setOnPieceClicked((int x, int y) -> {
             boardView.setSelectedLocation(x, y);
             // TODO: change "White" to whatever the user chose.
-            System.out.println("Valid moves " + board.getValidMoves(x, y, "White"));
+            //System.out.println("Valid moves " + board.getValidMoves(x, y, "White"));
             boardView.highlightValidMoves(board.getValidMoves(x, y, "White"));
         });
 
@@ -117,11 +117,12 @@ public class Controller {
             int fromY = (int) indices.getY();
             board.doMove(fromX, fromY, toX, toY);
             boardView.movePiece(fromX, fromY, toX, toY);
-            printMessageAndTime("Did user's move.");
+            //printMessageAndTime("Did user's move.");
             if (isAIOpponent) {
                 doAIMove();
                 printMessageAndTime("Did CPU's move.");
             }
+            board.checkWon();
             // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
     }
