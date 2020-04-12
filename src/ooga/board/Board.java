@@ -123,5 +123,5 @@ public abstract class Board{
    **/
   public abstract double doMove(int startX, int startY, int endX, int endY);
 
-  public abstract List<Point2D> getValidMoves(int i, int j, String color);
+  public abstract List<Point2D> getValidMoves(int i, int j);
 }
