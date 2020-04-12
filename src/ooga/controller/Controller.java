@@ -90,6 +90,7 @@ public class Controller {
         playerTwo = new HumanPlayer("b", Color.BLACK, board);
         gameScreen.getRightView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
+        gameScreen.getRightView().setActivePlayerText(activePlayer);
 
         if (isAIOpponent) {
             setUpAI();
@@ -132,6 +133,7 @@ public class Controller {
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
+        gameScreen.getRightView().setActivePlayerText(activePlayer);
     }
 
     private void doAIMove() {
