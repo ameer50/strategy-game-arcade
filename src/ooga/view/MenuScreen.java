@@ -75,10 +75,6 @@ public class MenuScreen {
         }
     }
 
-    public String getFileType(){
-        return fileName;
-    }
-
     private void setAsScene(Scene scene) {
         this.scene = scene;
     }
@@ -173,5 +169,9 @@ public class MenuScreen {
 
     public String getGameSelected() {
         return gameSelected;
+    }
+
+    public String getFileName(){
+        return fileName;
     }
 }

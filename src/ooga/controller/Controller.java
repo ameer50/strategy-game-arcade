@@ -59,14 +59,14 @@ public class Controller {
         printMessageAndTime("Setup Menu Screen.");
 
         menuScreen.buttonListener(e -> {
-            setUpGameScreen(stage, menuScreen.getGameSelected());
+            setUpGameScreen(stage, menuScreen.getGameSelected(),menuScreen.getFileName());
         });
         printMessageAndTime("Setup listener.");
     }
 
-    private void setUpGameScreen(Stage stage, String typeString) {
+    private void setUpGameScreen(Stage stage, String typeString, String fileName) {
         GameType gameType = GameType.valueOf(typeString.toUpperCase());
-        String gameXML = String.format("resources/Chess/defaultBlack.xml");
+        String gameXML = String.format(fileName);
         XMLParser p = new XMLParser();
         p.parse(gameXML);
         printMessageAndTime("XML parsed.");
