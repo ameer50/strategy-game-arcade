@@ -12,7 +12,6 @@ public class PieceView {
 
     public PieceView(String name) {
         pieceName = name;
-        System.out.println("name " + name);
         pieceImage = new ImageView(name);
         color = Color.getColor(name.split("_")[0].toUpperCase());
     }

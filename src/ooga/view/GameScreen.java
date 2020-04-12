@@ -1,7 +1,10 @@
 package ooga.view;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -10,6 +13,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import ooga.board.Board;
+import org.w3c.dom.Text;
 
 public class GameScreen {
 
@@ -20,6 +24,7 @@ public class GameScreen {
     private Stage stage;
     private Scene scene;
     private BoardView boardView;
+    private RightView rightView;
 
     public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
@@ -41,6 +46,9 @@ public class GameScreen {
         boardView = new BoardView(width, height, "Black", locations);
         canvas.getChildren().addAll(boardView.getCells());
         root.getChildren().addAll(canvas);
+
+        rightView = new RightView();
+        root.getChildren().add(rightView.getConsole());
     }
 
     public BoardView getBoardView() {
