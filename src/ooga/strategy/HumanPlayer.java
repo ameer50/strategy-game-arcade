@@ -19,7 +19,7 @@ public class HumanPlayer implements Player {
     }
 
     public void doMove(int startX, int startY, int endX, int endY) {
-        myBoard.doMove(startX, startY, endX, endY);
+        score += myBoard.doMove(startX, startY, endX, endY);
     }
 
     @Override

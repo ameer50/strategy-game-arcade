@@ -72,7 +72,7 @@ public class Controller {
             if (activePlayer.isCPU()) {
                 List<Integer> AIMove = myAI.generateMove();
                 myBoardView.setSelectedLocation(AIMove.get(2), AIMove.get(3));
-                activePlayer.doMove(AIMove.get(0), AIMove.get(1), AIMove.get(2), AIMove.get(3));
+                activePlayer.doMove(AIMove.get(2), AIMove.get(3), AIMove.get(0), AIMove.get(1));
                 myBoardView.movePiece(AIMove.get(0), AIMove.get(1));
                 toggleActivePlayer();
             }
