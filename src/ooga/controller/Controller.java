@@ -77,7 +77,7 @@ public class Controller {
                 board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
         }
         printMessageAndTime("Setup Board.");
-        gameScreen = new GameScreen(stage, board, p.getInitialPieceLocations()); // ***
+        gameScreen = new GameScreen(stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
         printMessageAndTime("Setup Game Screen.");
         boardView = gameScreen.getBoardView();
         // replace with AI if AI, but player 1 is always white since they start

@@ -1,7 +1,6 @@
 package ooga.view;
 
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import ooga.CellClickedInterface;
 
 import java.awt.geom.Point2D;
@@ -13,11 +12,9 @@ public interface BoardViewInterface {
 
     void checkeredColor();
 
-    HBox[] getCells();
+    StackPane[] getCells();
 
-    CellView getCell(int x, int y);
-
-    ImageView[] getPieces();
+    CellView getCellAt(int x, int y);
 
     void highlightValidMoves(List<Point2D> validMoves);
 

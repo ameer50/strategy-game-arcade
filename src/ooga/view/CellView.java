@@ -1,30 +1,31 @@
 package ooga.view;
 
-import javafx.scene.layout.HBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import ooga.CellClickedInterface;
 
-public class CellView extends HBox {
+public class CellView extends StackPane {
 
     private boolean isYellow;
     private boolean isRed;
-    private double xpos;
-    private double ypos;
+    private double xPos;
+    private double yPos;
     private double width;
     private double height;
     private String style;
-    private int xindex;
-    private int yindex;
+    private int xIndex;
+    private int yIndex;
     private CellClickedInterface clickPieceFunction;
     private CellClickedInterface noBorderFunction;
     private CellClickedInterface movePieceFunction;
     private PieceView piece;
 
     public CellView(int xindex, int yindex, double xpos, double ypos, double width, double height, String cellColorStyle){
-        this.xindex = xindex;
-        this.yindex = yindex;
-        this.xpos = xpos;
-        this.ypos = ypos;
+        this.xIndex = xindex;
+        this.yIndex = yindex;
+        this.xPos = xpos;
+        this.yPos = ypos;
         this.width = width;
         this.height = height;
         this.style = cellColorStyle;
@@ -32,22 +33,42 @@ public class CellView extends HBox {
         isRed = false;
         isYellow = false;
         piece = null;
-        this.lightUpCells();
+        this.setOnClickFunctions();
     }
 
     private void initialize(){
         Rectangle rectangle = new Rectangle(width,height);
         rectangle.getStyleClass().add(style); // cellcolor1
         this.getChildren().addAll(rectangle);
-        this.setLayoutX(xpos);
-        this.setLayoutY(ypos);
+        this.setLayoutX(xPos);
+        this.setLayoutY(yPos);
 
         toggleNoBorder();
-        lightUpCells();
+        setOnClickFunctions();
     }
 
     public void setPiece(PieceView piece) {
+        // remove original piece if it exists
+        if (this.piece != null) {
+            this.getChildren().remove(this.piece.getImage());
+        }
+        // set new piece
         this.piece = piece;
+        // if we want to set it to null, return since we don't want to put an image there
+        if (piece == null) return;
+        ImageView pieceImage = piece.getImage();
+        pieceImage.setFitHeight(0.95 * height);
+        pieceImage.setPreserveRatio(true);
+        pieceImage.setLayoutX(width / 2 - pieceImage.getBoundsInLocal().getWidth() / 2);
+        this.getChildren().add(pieceImage);
+    }
+
+    public double getWidthOfCell() {
+        return width;
+    }
+
+    public double getHeightOfCell() {
+        return height;
     }
 
     public PieceView getPiece() {
@@ -77,22 +98,26 @@ public class CellView extends HBox {
     }
 
 
-    public void lightUpCells(){
+    public void setOnClickFunctions(){
         this.setOnMouseClicked(e -> {
+            // unhighlight everything if a box is clicked that has nothing there
             if (piece == null && !isYellow){
-                noBorderFunction.clickCell(xindex, yindex);
+                noBorderFunction.clickCell(xIndex, yIndex);
                 return;
             }
-
+            // if a piece is there, and it is not highlighted, trigger lambdas to highlight it red and its valid moves yellow
+            // also unhighlight everything
             if (!isRed && !isYellow){
-                noBorderFunction.clickCell(xindex, yindex);
+                noBorderFunction.clickCell(xIndex, yIndex);
                 toggleRed();
-                clickPieceFunction.clickCell(xindex, yindex);
-            } else if(isYellow){
-                movePieceFunction.clickCell(xindex, yindex);
-                noBorderFunction.clickCell(xindex, yindex);
-            } else{
-                noBorderFunction.clickCell(xindex, yindex);
+                clickPieceFunction.clickCell(xIndex, yIndex);
+            // if a cell is yellow and clicked, trigger lambda to move the piece, unhighlight everything
+            } else if (isYellow) {
+                movePieceFunction.clickCell(xIndex, yIndex);
+                noBorderFunction.clickCell(xIndex, yIndex);
+            // if other, just unhighlight all cells
+            } else {
+                noBorderFunction.clickCell(xIndex, yIndex);
             }
         });
     }
@@ -104,7 +129,7 @@ public class CellView extends HBox {
     }
 
     public String toString(){
-        return "[ " + xindex + " , " + yindex + " ] at x = " + xpos + " , y = " + ypos;
+        return "[ " + xIndex + " , " + yIndex + " ] at x = " + xPos + " , y = " + yPos;
     }
 
     public void setPieceClicked(CellClickedInterface clicked){

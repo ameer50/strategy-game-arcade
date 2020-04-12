@@ -16,15 +16,11 @@ public class ButtonGroup {
     private static ResourceBundle myResources =
             ResourceBundle.getBundle("resources", Locale.getDefault());
     private List<Button> buttons;
-    //private List<String> buttonNames;
     private double width;
     private double height;
 
     public ButtonGroup(List<String> buttonNames, double width, double height) {
-//        vbox = new VBox();
-//        vbox.getStyleClass().add("buttonvbox");
         buttons = new ArrayList<>();
-        //this.buttonNames = buttonNames;
         this.width = width;
         this.height = height;
         createButtons(buttonNames, width, height);

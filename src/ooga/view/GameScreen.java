@@ -19,25 +19,15 @@ public class GameScreen {
     private BorderPane root;
     private Stage stage;
     private Scene scene;
-    private int width;
-    private int height;
-    private Map<Point2D, String> pieceLocations;
     private BoardView boardView;
-    private Board board;
 
-
-    public GameScreen(Stage stage, Board board, Map<Point2D, String> locations) {
-        // Map<String, String> nameDim, Map<Point2D, String> pieceLocations
-        this.board = board;
+    public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
-        this.height = board.getHeight();
-        this.width = board.getWidth();
-        this.pieceLocations = locations;
-        initializeView();
+        initializeView(width, height, locations);
         stage.show();
     }
 
-    private void initializeView(){
+    private void initializeView(int width, int height, Map<Point2D, String> locations){
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
         root = new BorderPane();
@@ -45,13 +35,12 @@ public class GameScreen {
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
         stage.setScene(scene);
         stage.setTitle(res.getString("GameStageTitle"));
+        scene.getStylesheets().add(res.getString("GameStyleSheet"));
 
-        Pane boardArea = new Pane();
-        boardView = new BoardView(width, height, "Black", pieceLocations, root);
-        // TODO: 'root' shouldn't have to be passed
-        boardArea.getChildren().addAll(boardView.getCells());
-        root.getChildren().add(boardArea);
-        root.getChildren().addAll(boardView.getPieces());
+        Pane canvas = new Pane();
+        boardView = new BoardView(width, height, "Black", locations);
+        canvas.getChildren().addAll(boardView.getCells());
+        root.getChildren().addAll(canvas);
     }
 
     public BoardView getBoardView() {
