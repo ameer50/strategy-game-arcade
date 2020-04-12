@@ -11,7 +11,7 @@ import ooga.CellClickedInterface;
 import java.awt.geom.Point2D;
 import java.util.*;
 
-public class BoardView implements BoardViewInterface {
+public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     private CellView[][] cellArray;
     private StackPane[] cellList;
@@ -55,9 +55,13 @@ public class BoardView implements BoardViewInterface {
         setUpPieces();
     }
 
+    public CellView getCellAt(int x, int y) {
+        return cellArray[x][y];
+    }
+
     public void checkeredColor() {
         colorSequence1 = new ArrayList<>();
-        for (int i=0; i<rowNum; i++){
+        for (int i = 0; i < rowNum; i++){
             if (i % 2 == 0) colorSequence1.add("cellcolor1");
             else colorSequence1.add("cellcolor2");
         }
@@ -90,7 +94,7 @@ public class BoardView implements BoardViewInterface {
         for (Point2D point : pieceLocations.keySet()) {
             int x = (int) point.getX();
             int y = (int) point.getY();
-            cellArray[x][y].setPiece(new PieceView(res.getString(pieceLocations.get(point))));
+            this.getCellAt(x, y).setPiece(new PieceView(res.getString(pieceLocations.get(point))));
         }
     }
 
@@ -105,15 +109,15 @@ public class BoardView implements BoardViewInterface {
         for (Point2D point : validMoves) {
             int x = (int) point.getX();
             int y = (int) point.getY();
-            getCell(x,y).toggleYellow();
+            this.getCellAt(x,y).toggleYellow();
         }
     }
 
     public void movePiece(int finalX, int finalY) {
         int initX = (int) selectedLocation.getX();
         int initY = (int) selectedLocation.getY();
-        CellView initCell = getCell(initX, initY);
-        CellView finalCell = getCell(finalX, finalY);
+        CellView initCell = this.getCellAt(initX, initY);
+        CellView finalCell = this.getCellAt(finalX, finalY);
         PieceView piece = initCell.getPiece();
         finalCell.setPiece(piece);
 
@@ -130,7 +134,7 @@ public class BoardView implements BoardViewInterface {
     public void setOnPieceClicked(CellClickedInterface clicked) {
         for (int i = 0; i < rowNum; i++){
             for (int j = 0; j < colNum; j++){
-                getCell(i, j).setPieceClicked(clicked);
+                this.getCellAt(i, j).setPieceClicked(clicked);
             }
         }
     }
@@ -138,12 +142,10 @@ public class BoardView implements BoardViewInterface {
     public void setOnMoveClicked(CellClickedInterface clicked) {
         for (int i = 0; i < rowNum; i++) {
             for (int j = 0; j < colNum; j++) {
-                this.getCell(i, j).setMoveClicked(clicked);
+                this.getCellAt(i, j).setMoveClicked(clicked);
             }
         }
     }
-
-    public CellView getCell(int row, int col){ return cellArray[row][col]; }
 
     public int getRowNum(){ return rowNum; }
 
@@ -154,4 +156,30 @@ public class BoardView implements BoardViewInterface {
     public void setSelectedLocation(int x, int y) { selectedLocation = new Point2D.Double(x, y); }
 
     public Point2D getSelectedLocation() { return selectedLocation; }
+
+    @Override
+    public Iterator<CellView> iterator() {
+        return new Iterator<>() {
+            private int i = 0;
+            private int j = 0;
+
+            @Override
+            public boolean hasNext() {
+                return !(i == cellArray.length - 1 && j == cellArray[i].length - 1);
+            }
+
+            @Override
+            public CellView next() {
+                if (j <= cellArray[i].length - 1) return cellArray[i][j++];
+                i++;
+                j = 0;
+                return cellArray[i][j];
+            }
+
+            @Override
+            public void remove() {
+                throw new UnsupportedOperationException("Cannot remove cell from board.");
+            }
+        };
+    }
 }

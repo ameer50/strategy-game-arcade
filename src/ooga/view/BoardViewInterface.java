@@ -14,7 +14,7 @@ public interface BoardViewInterface {
 
     StackPane[] getCells();
 
-    CellView getCell(int x, int y);
+    CellView getCellAt(int x, int y);
 
     void highlightValidMoves(List<Point2D> validMoves);
 
