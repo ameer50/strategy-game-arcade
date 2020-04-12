@@ -18,6 +18,23 @@ public class CheckersBoard extends Board {
 
     @Override
     public boolean checkWon() {
+        int numWhite = 0;
+        int numBlack = 0;
+
+        for(int i = 0; i<myGrid[0].length;i++){
+            for(int j = 0; j<myGrid.length; j++){
+                if(getPieceAt(i,j).getColor().equals("white")){
+                    numWhite++;
+                }
+                else if(getPieceAt(i,j).getColor().equals("black")){
+                    numBlack++;
+                }
+            }
+        }
+
+        if(numBlack==0 || numWhite==0){
+            return true;
+        }
         return false;
     }
 
