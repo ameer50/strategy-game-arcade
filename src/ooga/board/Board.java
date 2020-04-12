@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javafx.beans.property.DoubleProperty;
 import javafx.util.Pair;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
