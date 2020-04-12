@@ -86,7 +86,8 @@ public class Controller {
         /* X and Y are the indices of the cell clicked to move FROM */
         boardView.setOnPieceClicked((int x, int y) -> {
             boardView.setSelectedLocation(x, y);
-            boardView.highlightValidMoves(board.getValidMoves(x, y));
+            // TODO: change "White" to whatever the user chose.
+            boardView.highlightValidMoves(board.getValidMoves(x, y, "White"));
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
@@ -106,7 +107,7 @@ public class Controller {
     }
 
     private void doAIMove() {
-        List<Integer> AIMove = CPU.generateMove();
+        List<Integer> AIMove = CPU.generateMove("Black");
         int fromX = AIMove.get(0);
         int fromY = AIMove.get(1);
         int toX = AIMove.get(2);

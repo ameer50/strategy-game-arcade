@@ -22,13 +22,16 @@ public class CheckersBoard extends Board {
     }
 
     @Override
-    public List<Point2D> getValidMoves(int x, int y) {
-        Piece currPiece = getPieceAt(x,y);
-        if(currPiece==null){return null;}
-        validMoves = new ArrayList<Point2D>();
-        checkRight(x, y, currPiece);
-        checkLeft(x, y, currPiece);
-        return validMoves;
+    public List<Point2D> getValidMoves(int x, int y, String color) {
+        Piece piece = getPieceAt(x,y);
+        if (piece == null) { return null; }
+        if (pieceColorMap.get(color).contains(piece)) {
+            validMoves = new ArrayList<Point2D>();
+            checkRight(x, y, piece);
+            checkLeft(x, y, piece);
+            return validMoves;
+        }
+        return null;
     }
 
     public boolean checkRight(int x, int y, Piece currPiece) {

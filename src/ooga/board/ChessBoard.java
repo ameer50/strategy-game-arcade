@@ -20,6 +20,43 @@ public class ChessBoard extends Board{
   }
 
   @Override
+  public List<Point2D> getValidMoves(int i, int j, String color) {
+    Piece piece = getPieceAt(i, j);
+    if (piece == null) {
+      return null;
+    }
+    if (pieceColorMap.get(color).contains(piece)) {
+      String movePattern = piece.getMovePattern();
+      String moveType = movePattern.split(" ")[0].toLowerCase();
+      int moveDistance = Integer.parseInt(movePattern.split(" ")[1]);
+      try {
+        Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
+            piece.getClass());
+        Object ret = moveMethod.invoke(this, i, j, moveDistance, piece);
+        return (List<Point2D>) ret;
+      } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+        System.out.println("Error: " + moveType);
+      }
+    }
+    return null;
+  }
+
+  @Override
+  public double doMove(int startX, int startY, int endX, int endY) {
+    Piece currPiece = getPieceAt(startX, startY);
+    Piece hitPiece = getPieceAt(endX, endY);
+    double score = 0;
+    if (hitPiece != null) {
+      score = hitPiece.getValue();
+      // TODO: In the future, will we do more than just returning the score?
+    }
+
+    pieceGrid[startX][startY] = null;
+    pieceGrid[endX][endY] = currPiece;
+    return score;
+  }
+
+  @Override
   public boolean checkWon() {
     // a) If not in check return 'null'. If not in check, checkPieces.size() is 0.
     // b) Move king. Does king.validMoves have point not in allPossibleMoves. If yes, return FALSE. If not, keep going.
@@ -53,7 +90,7 @@ public class ChessBoard extends Board{
     }
     //b) safe moves
     List<Point2D> opponentMoves = blackMoves.getKey();
-    List<Point2D> kingMoves = getValidMoves(whiteKingI, whiteKingJ);
+    List<Point2D> kingMoves = getValidMoves(whiteKingI, whiteKingJ, "White");
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
 
     //c) in safe spots, check if there is currently a piece here. if so, check if the spot is newly accessible by opposing team. if so, remove the spot.
@@ -81,7 +118,7 @@ public class ChessBoard extends Board{
     System.out.println("Past safe moves");
     //at this point the king can't move anywhere.
     //d) if there are multiple pieces holding king in check, it's dead
-    if(checkPieces.size() > 1){
+    if (checkPieces.size() > 1){
       System.out.println("Dead, multiple checkers and no safe moves");
       return true;
     }
@@ -120,8 +157,8 @@ public class ChessBoard extends Board{
     Integer blackKingJ = null;
     Integer whiteKingI = null;
     Integer whiteKingJ = null;
-    for(int i = 0; i < myHeight; i++){
-      for(int j = 0; j < myWidth; j++){
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < width; j++){
         Piece p = getPieceAt(i, j);
         if(p == null){
           continue;
@@ -151,10 +188,10 @@ public class ChessBoard extends Board{
     if(ignoreTheirKing) {
       pieceGrid[kingI][kingJ] = null;
     }
-    for(int i = 0; i < myHeight; i++){
-      for(int j = 0; j < myWidth; j++){
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < width; j++){
         Piece thisPiece = getPieceAt(i, j);
-        List<Point2D> thisPieceMoves = getValidMoves(i, j);
+        List<Point2D> thisPieceMoves = getValidMoves(i, j, thisPiece.getColor());
         if((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor().equals(targetColor) || (!ignoreTheirKing && thisPiece.toString().equals(
             KING))){
           continue;
@@ -197,10 +234,10 @@ public class ChessBoard extends Board{
     pieceGrid[kingI][kingJ] = null;
     pieceGrid[potentialI][potentialJ] = null;
     System.out.println("Potentials: " + potentialI + ", " + potentialJ);
-    for(int i = 0; i < myHeight; i++){
-      for(int j = 0; j < myWidth; j++){
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < width; j++){
         Piece thisPiece = getPieceAt(i, j);
-        List<Point2D> thisPieceMoves = getValidMoves(i, j);
+        List<Point2D> thisPieceMoves = getValidMoves(i, j, thisPiece.getColor());
         if((i == potentialI && j == potentialJ) || thisPiece == null || !storedPiece.getColor().equals(thisPiece.getColor())){
           continue;
         }
@@ -255,41 +292,6 @@ public class ChessBoard extends Board{
     }
     //add diagonals
     return null;
-  }
-
-  @Override
-  public List<Point2D> getValidMoves(int x, int y) {
-    Piece piece = getPieceAt(x, y);
-    if (piece == null){
-      return null;
-    }
-    String movePattern = piece.getMovePattern();
-    String moveType = movePattern.split(" ")[0].toLowerCase();
-    int moveDistance = Integer.parseInt(movePattern.split(" ")[1]);
-    try {
-      Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
-          piece.getClass());
-      Object ret = moveMethod.invoke(this, x, y, moveDistance, piece);
-      return (List<Point2D>) ret;
-    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      System.out.println("Error: " + moveType);
-    }
-    return null;
-  }
-
-  @Override
-  public double doMove(int startX, int startY, int endX, int endY) {
-    Piece currPiece = getPieceAt(startX, startY);
-    Piece hitPiece = getPieceAt(endX, endY);
-    double score = 0;
-    if (hitPiece != null) {
-      score = hitPiece.getValue();
-      // TODO: In the future, will we do more than just returning the score?
-    }
-
-    pieceGrid[startX][startY] = null;
-    pieceGrid[endX][endY] = currPiece;
-    return score;
   }
 
   private List<Point2D> lateral(int x, int y, int dist, Piece piece) {

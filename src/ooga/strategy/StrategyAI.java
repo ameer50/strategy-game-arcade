@@ -18,30 +18,30 @@ public class StrategyAI {
     moveTimes = new ArrayList<>();
   }
 
-  public List<Integer> generateMove() {
+  public List<Integer> generateMove(String color) {
     long startTime = System.currentTimeMillis();
     List<Integer> moveCoordinates;
     switch (strategy) {
       case TRIVIAL:
-        moveCoordinates = generateTrivialMove();
+        moveCoordinates = generateTrivialMove(color);
       case RANDOM:
-        moveCoordinates =  generateRandomMove();
+        moveCoordinates =  generateRandomMove(color);
       case BRUTE_FORCE:
-        moveCoordinates = generateBruteForceMove();
+        moveCoordinates = generateBruteForceMove(color);
       case ALPHA_BETA:
-        moveCoordinates = generateAlphaBetaMove();
+        moveCoordinates = generateAlphaBetaMove(color);
       default:
-        moveCoordinates = generateTrivialMove();
+        moveCoordinates = generateTrivialMove(color);
     }
     long endTime = System.currentTimeMillis();
     moveTimes.add((double) startTime - endTime);
     return moveCoordinates;
   }
 
-  public List<Integer> generateTrivialMove() {
-    for (int i=0; i< board.getWidth(); i++) {
-      for (int j=0; j< board.getHeight(); j++) {
-        List<Point2D> validMoves = board.getValidMoves(i, j);
+  public List<Integer> generateTrivialMove(String color) {
+    for (int i=0; i<board.getWidth(); i++) {
+      for (int j=0; j<board.getHeight(); j++) {
+        List<Point2D> validMoves = board.getValidMoves(i, j, color);
         if (validMoves != null) {
           if (validMoves.size() != 0) {
             Point2D moveTo = validMoves.get(0);
@@ -54,15 +54,15 @@ public class StrategyAI {
     System.out.println("AI could not find a piece");
     return new ArrayList<>();
   }
-  public List<Integer> generateRandomMove() {
+  public List<Integer> generateRandomMove(String color) {
     return null;
     // TODO: implement method
   }
-  public List<Integer> generateBruteForceMove() {
+  public List<Integer> generateBruteForceMove(String color) {
     return null;
     // TODO: implement method
   }
-  public List<Integer> generateAlphaBetaMove() {
+  public List<Integer> generateAlphaBetaMove(String color) {
     return null;
     // TODO: implement method
   }
