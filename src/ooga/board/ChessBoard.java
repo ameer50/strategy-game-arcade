@@ -20,6 +20,7 @@ public class ChessBoard extends Board {
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
       Pair<String, java.lang.Double>> pieces) {
     super(settings, locations, pieces);
+    System.out.println(pieceColorMap);
   }
 
   @Override
@@ -49,6 +50,7 @@ public class ChessBoard extends Board {
   public double doMove(int startX, int startY, int endX, int endY) {
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
+    currPiece.move();
     double score = 0;
     if (hitPiece != null) {
       score = hitPiece.getValue();
@@ -404,28 +406,29 @@ public class ChessBoard extends Board {
       return ret;
     }
 
-    private List<Point2D> left(int x, int y, int distance, Piece piece) {
-      List<Point2D> ret = new ArrayList<>();
-      int squares = 1;
-      while (squares <= distance || distance < 0) {
-        int newY = y - distance;
-        Point2D newPoint = checkPoint(x, newY, piece);
-        if (newPoint != null) {
-          ret.add(newPoint);
-          if (getPieceAt(x, newY) != null) {
-            break;
-          }
-        } else {
+  private List<Point2D> left(int x, int y, int distance, Piece piece) {
+    List<Point2D> ret = new ArrayList<>();
+    int squares = 1;
+    while (squares <= distance || distance < 0) {
+      int newY = y - squares;
+      Point2D newPoint = checkPoint(x, newY, piece);
+      if (newPoint != null) {
+        ret.add(newPoint);
+        if (getPieceAt(x, newY) != null) {
           break;
         }
-        // FIXME: is else break necessary?
-        squares++;
+      } else {
+        break;
       }
-      return ret;
+      squares++;
     }
+    return ret;
+  }
 
-    private Point2D checkPoint (int x, int y, Piece thisPiece) {
+
+  private Point2D checkPoint (int x, int y, Piece thisPiece) {
       Point2D ret;
+    System.out.println("x + \",\" + y = " + x + "," + y);
       if (!isCellInBounds(x, y)) {
         return null;
       }

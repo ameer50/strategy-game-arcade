@@ -58,9 +58,9 @@ public abstract class Board{
     String color = piece.getColor();
     if (!pieceColorMap.keySet().contains(color)) {
       pieceColorMap.put(color, new ArrayList<>());
-    } else {
-      pieceColorMap.get(color).add(piece);
     }
+      pieceColorMap.get(color).add(piece);
+
   }
   /**
    Check the board to see if the game has been completed and a winner has been found.

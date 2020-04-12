@@ -6,6 +6,7 @@
         </name>
         <width>8</width>
         <height>8</height>
+        <bottomColor>Black</bottomColor>
 
     </settings>
     <locations>
@@ -37,7 +38,7 @@
     </locations>
     <pieces>
         <item>
-            Black_Pawn:UP 2:1
+            Black_Pawn:PAWN 2:1
         </item>
         <item>
             Black_King:LATERAL 1:10
@@ -52,7 +53,7 @@
             White_Rook:LATERAL -1:5
         </item>
         <item>
-            White_Pawn:DOWN 2:1
+            White_Pawn:PAWN 2:1
         </item>
     </pieces>
 </game_config>
