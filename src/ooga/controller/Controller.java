@@ -93,7 +93,7 @@ public class Controller {
 
     private void setUpAI() {
         // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new StrategyAI(StrategyType.TRIVIAL, board);
+        CPU = new StrategyAI(StrategyType.RANDOM, board);
     }
 
     private void setListeners() {

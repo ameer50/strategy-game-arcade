@@ -4,6 +4,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import ooga.board.Board;
 import ooga.controller.Controller.StrategyType;
 
@@ -45,6 +46,8 @@ public class StrategyAI {
         if (validMoves != null) {
           if (validMoves.size() != 0) {
             Point2D moveTo = validMoves.get(0);
+            System.out.println(String.format("Generated TRIVIAL move: (%.1f, %.1f), (%.1f, %.1f)",
+                (float) i, (float) j, (float) moveTo.getX(), (float) moveTo.getY()));
             return Arrays.asList(i, j, (int) moveTo.getX(), (int) moveTo.getY());
           }
         }
@@ -52,12 +55,41 @@ public class StrategyAI {
     }
     // TODO: replace with an exception.
     System.out.println("AI could not find a piece");
-    return new ArrayList<>();
-  }
-  public List<Integer> generateRandomMove(String color) {
     return null;
-    // TODO: implement method
   }
+
+  public List<Integer> generateRandomMove(String color) {
+    Random rng = new Random();
+    List<List<Integer>> moves = new ArrayList<>();
+    for (int i = 0; i < board.getWidth(); i++) {
+      for (int j = 0; j < board.getHeight(); j++) {
+        List<Point2D> pieceMoves = board.getValidMoves(i, j, color);
+        if (pieceMoves != null) {
+          if (pieceMoves.size() != 0) {
+            addAllPieceMoves(moves, pieceMoves, i, j);
+          }
+        }
+      }
+    }
+    if (moves.size() == 0) {
+      System.out.println("AI could not find a piece");
+      return null;
+    } else {
+      int index = rng.nextInt(moves.size());
+      List<Integer> move = moves.get(index);
+      System.out.println(String.format("Generated RANDOM move: (%.1f, %.1f), (%.1f, %.1f)", (float) move.get(0),
+          (float) move.get(1), (float) move.get(2), (float) move.get(3)));
+      return moves.get(index);
+    }
+  }
+
+  private void addAllPieceMoves(List<List<Integer>> moves, List<Point2D> pieceMoves, int i, int j) {
+      for (Point2D moveTo: pieceMoves) {
+        List<Integer> move = Arrays.asList(i, j, (int) moveTo.getX(), (int) moveTo.getY());
+        moves.add(move);
+      }
+    }
+
   public List<Integer> generateBruteForceMove(String color) {
     return null;
     // TODO: implement method

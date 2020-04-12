@@ -43,7 +43,7 @@ public class CheckersBoard extends Board {
         Piece piece = getPieceAt(x,y);
         if (piece == null) { return null; }
         if (pieceColorMap.get(color).contains(piece)) {
-            validMoves = new ArrayList<Point2D>();
+            validMoves = new ArrayList<>();
             checkRight(x, y, piece);
             checkLeft(x, y, piece);
             return validMoves;
@@ -51,32 +51,26 @@ public class CheckersBoard extends Board {
         return null;
     }
 
-    public boolean checkRight(int x, int y, Piece currPiece) {
-        if (!isCellInBounds(x + 1, y + 1) || !isCellInBounds(x + 2, y + 2)) {
+    public boolean checkRight(int x, int y, Piece piece) {
+        if (!isCellInBounds(x+1, y+1) || !isCellInBounds(x+2, y+2)) {
             return false;
         }
-
-        Piece temp = getPieceAt(x + 1, y + 1);
-
-        if (!(temp.getColor().equals(currPiece.getColor())) && (getPieceAt(x + 2, y + 2) == null)) {
-            validMoves.add(new Point2D.Double(x + 2, y + 2));
+        Piece temp = getPieceAt(x+1, y+1);
+        if (!(temp.getColor().equals(piece.getColor())) && (getPieceAt(x+2, y+2) == null)) {
+            validMoves.add(new Point2D.Double(x+2, y+2));
         }
         return true;
     }
 
-    public boolean checkLeft(int x, int y, Piece currPiece){
-        if(!isCellInBounds(x-1, y-1) || !isCellInBounds(x-2, y-2)){
+    public boolean checkLeft(int x, int y, Piece piece){
+        if (!isCellInBounds(x-1, y-1) || !isCellInBounds(x-2, y-2)){
             return false;
         }
-
         Piece temp = getPieceAt(x-1, y-1);
-
-        if(!(temp.getColor().equals(currPiece.getColor())) && (getPieceAt(x-2, y-2) == null)){
+        if (!(temp.getColor().equals(piece.getColor())) && (getPieceAt(x-2, y-2) == null)) {
             validMoves.add(new Point2D.Double(x-2, y-2));
         }
-
         return true;
-
     }
 
     public double doMove(int x_i, int y_i, int x_f, int y_f) {
