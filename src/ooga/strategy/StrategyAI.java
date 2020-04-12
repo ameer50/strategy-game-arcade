@@ -10,10 +10,7 @@ import ooga.controller.Controller.StrategyType;
 
 public class StrategyAI extends Player {
   private StrategyType strategy;
-  private Board board;
   private List<Double> moveTimes;
-  private Color color;
-  private double score;
 
   public StrategyAI(String name, Color color, Board board, StrategyType strategy) {
     super(name, color, board);
@@ -42,6 +39,7 @@ public class StrategyAI extends Player {
   }
 
   public List<Integer> generateTrivialMove(String color) {
+    Board board = this.getBoard();
     for (int i=0; i<board.getWidth(); i++) {
       for (int j=0; j<board.getHeight(); j++) {
         List<Point2D> validMoves = board.getValidMoves(i, j, color);
