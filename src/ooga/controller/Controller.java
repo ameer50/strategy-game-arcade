@@ -98,16 +98,16 @@ public class Controller {
 
     private void setUpAI() {
         // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new StrategyAI(StrategyType.TRIVIAL, board);
+        CPU = new StrategyAI("AI", Color.BLACK, board, StrategyType.TRIVIAL);
     }
 
     private void setListeners() {
         /* X and Y are the indices of the cell clicked to move FROM */
         boardView.setOnPieceClicked((int x, int y) -> {
+            System.out.println(boardView.getCellAt(x, y).getPiece().getColor());
+            if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) return;
             boardView.setSelectedLocation(x, y);
-            // TODO: change "White" to whatever the user chose.
-            //System.out.println("Valid moves " + board.getValidMoves(x, y, "White"));
-            boardView.highlightValidMoves(board.getValidMoves(x, y, "White"));
+            boardView.highlightValidMoves(board.getValidMoves(x, y));
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
@@ -115,13 +115,15 @@ public class Controller {
             Point2D indices = boardView.getSelectedLocation();
             int fromX = (int) indices.getX();
             int fromY = (int) indices.getY();
-            board.doMove(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY);
             boardView.movePiece(fromX, fromY, toX, toY);
-            //printMessageAndTime("Did user's move.");
-            if (isAIOpponent) {
+
+            printMessageAndTime("Did user's move.");
+            if (activePlayer.isCPU()) {
                 doAIMove();
                 printMessageAndTime("Did CPU's move.");
             }
+            toggleActivePlayer();
             board.checkWon();
             // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
@@ -137,7 +139,7 @@ public class Controller {
         int fromY = AIMove.get(1);
         int toX = AIMove.get(2);
         int toY = AIMove.get(3);
-        board.doMove(fromX, fromY, toX, toY);
+        activePlayer.doMove(fromX, fromY, toX, toY);
         // stall(STALL_TIME);
         boardView.movePiece(fromX, fromY, toX, toY);
     }

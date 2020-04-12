@@ -52,11 +52,10 @@ public class CheckersBoard extends Board {
     }
 
     @Override
-    public List<Point2D> getValidMoves(int x, int y, String color) {
+    public List<Point2D> getValidMoves(int x, int y) {
         Piece piece = getPieceAt(x,y);
         if (piece == null) { return null; }
-        System.out.println("Problem color " + color + " |  Problem piece" + piece + " | X, Y " + x + " " + y);
-        System.out.println("problem map " + pieceColorMap);
+        String color = piece.getColor();
         if (pieceColorMap.get(color).contains(piece)) {
             validMoves = new ArrayList<Point2D>();
             checkRight(x, y, piece);

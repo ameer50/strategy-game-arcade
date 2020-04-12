@@ -24,13 +24,13 @@ public class ChessBoard extends Board {
   }
 
   @Override
-  public List<Point2D> getValidMoves(int i, int j, String color) {
+  public List<Point2D> getValidMoves(int i, int j) {
     Piece piece = getPieceAt(i, j);
 
     if (piece == null) {
       return null;
     }
-    color = piece.getColor();
+    String color = piece.getColor();
     if (pieceColorMap.get(color).contains(piece)) {
       String movePattern = piece.getMovePattern();
       String moveType = movePattern.split(" ")[0].toLowerCase();
@@ -101,7 +101,7 @@ public class ChessBoard extends Board {
     }
     //b) safe moves
     List<Point2D> opponentMoves = blackMoves.getKey();
-    List<Point2D> kingMoves = getValidMoves(whiteKingI, whiteKingJ, "White");
+    List<Point2D> kingMoves = getValidMoves(whiteKingI, whiteKingJ);
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
 
     //c) in safe spots, check if there is currently a piece here. if so, check if the spot is newly accessible by opposing team. if so, remove the spot.
@@ -203,7 +203,7 @@ public class ChessBoard extends Board {
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         Piece thisPiece = getPieceAt(i, j);
-        List<Point2D> thisPieceMoves = getValidMoves(i, j, "White");
+        List<Point2D> thisPieceMoves = getValidMoves(i, j);
         if ((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor()
             .equals(targetColor) || (!ignoreTheirKing && thisPiece.toString().equals(
             KING))) {
@@ -280,7 +280,7 @@ public class ChessBoard extends Board {
           thisPieceMoves = getPawnDiags(i + inc, j, thisPiece,  false);
         }
         else{
-          thisPieceMoves = getValidMoves(i, j, null);
+          thisPieceMoves = getValidMoves(i, j);
         }
         if ((i == potentialI && j == potentialJ) || color
             .equals(thisPiece.getColor())) {

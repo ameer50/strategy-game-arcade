@@ -36,7 +36,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         unitHeight = cols;
         cellArray = new CellView[rows][cols];
         cellList = new CellView[rows * cols];
-        //FIXME: is this data duplication?
+
         cellSize = (BOARD_WIDTH) / rows;
         cellSpan = cellSize + PIECE_SPACE;
 
@@ -89,7 +89,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         for (Point2D point : pieceLocations.keySet()) {
             int x = (int) point.getX();
             int y = (int) point.getY();
-            this.getCellAt(x, y).setPiece(new PieceView(res.getString(pieceLocations.get(point))));
+            this.getCellAt(x, y).setPiece(new PieceView(pieceLocations.get(point)));
         }
     }
 
@@ -142,7 +142,10 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     public double getCellSpan(){ return cellSpan; }
 
-    public void setSelectedLocation(int x, int y) { selectedLocation = new Point2D.Double(x, y); }
+    public void setSelectedLocation(int x, int y) {
+        selectedLocation = new Point2D.Double(x, y);
+        this.getCellAt(x, y).toggleRed();
+    }
 
     public Point2D getSelectedLocation() { return selectedLocation; }
 
