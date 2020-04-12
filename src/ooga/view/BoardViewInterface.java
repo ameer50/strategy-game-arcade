@@ -21,7 +21,7 @@ public interface BoardViewInterface {
 
     void highlightValidMoves(List<Point2D> validMoves);
 
-    void movePiece(int x, int y);
+    void movePiece(int fromX, int fromY, int toX, int toY);
 
     void setOnPieceClicked(CellClickedInterface clicked);
 

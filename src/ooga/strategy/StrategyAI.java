@@ -8,20 +8,20 @@ import ooga.board.Board;
 import ooga.controller.Controller.StrategyType;
 
 public class StrategyAI {
-  private StrategyType myStrategy;
-  private Board myBoard;
+  private StrategyType strategy;
+  private Board board;
   private List<Double> moveTimes;
 
   public StrategyAI(StrategyType strategy, Board board) {
-    myStrategy = strategy;
-    myBoard = board;
+    this.strategy = strategy;
+    this.board = board;
     moveTimes = new ArrayList<>();
   }
 
   public List<Integer> generateMove() {
     long startTime = System.currentTimeMillis();
     List<Integer> moveCoordinates;
-    switch (myStrategy) {
+    switch (strategy) {
       case TRIVIAL:
         moveCoordinates = generateTrivialMove();
       case RANDOM:
@@ -39,12 +39,13 @@ public class StrategyAI {
   }
 
   public List<Integer> generateTrivialMove() {
-    for (int i=0; i<myBoard.getWidth(); i++) {
-      for (int j=0; j<myBoard.getHeight(); j++) {
-        if (myBoard.getValidMoves(i, j) != null) {
-          if (myBoard.getValidMoves(i, j).size() != 0) {
-            Point2D moveTo = myBoard.getValidMoves(i, j).get(0);
-            return Arrays.asList((int) moveTo.getX(), (int) moveTo.getY(), i, j);
+    for (int i=0; i< board.getWidth(); i++) {
+      for (int j=0; j< board.getHeight(); j++) {
+        List<Point2D> validMoves = board.getValidMoves(i, j);
+        if (validMoves != null) {
+          if (validMoves.size() != 0) {
+            Point2D moveTo = validMoves.get(0);
+            return Arrays.asList(i, j, (int) moveTo.getX(), (int) moveTo.getY());
           }
         }
       }

@@ -32,7 +32,7 @@ public class CheckersBoard extends Board {
     }
 
     public boolean checkRight(int x, int y, Piece currPiece) {
-        if (!isValidCell(x + 1, y + 1) || !isValidCell(x + 2, y + 2)) {
+        if (!isCellInBounds(x + 1, y + 1) || !isCellInBounds(x + 2, y + 2)) {
             return false;
         }
 
@@ -45,7 +45,7 @@ public class CheckersBoard extends Board {
     }
 
     public boolean checkLeft(int x, int y, Piece currPiece){
-        if(!isValidCell(x-1, y-1) || !isValidCell(x-2, y-2)){
+        if(!isCellInBounds(x-1, y-1) || !isCellInBounds(x-2, y-2)){
             return false;
         }
 
@@ -62,8 +62,8 @@ public class CheckersBoard extends Board {
     public double doMove(int x_i, int y_i, int x_f, int y_f) {
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);
-        updateCell(x_i, y_i, null);
-        updateCell(x_f, y_f, currPiece);
+        placePiece(x_i, y_i, null);
+        placePiece(x_f, y_f, currPiece);
         if(oppPiece == null){
             return 0;
         }
