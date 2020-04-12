@@ -34,7 +34,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private Point2D selectedLocation;
     private static final int ANIM_DURATION = 20;
 
-    public BoardView (int rows, int cols, String playerChoice, Map<Point2D, String> locs, BorderPane root) {
+    public BoardView (int rows, int cols, String playerChoice, Map<Point2D, String> locs) {
         rowNum = rows;
         colNum = cols;
         cellArray = new CellView[rows][cols];
@@ -80,10 +80,8 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
                 cellList[index] = cellArray[i][j];
                 index++;
                 cellArray[i][j].setNoBorderFunction((a, b) -> {
-                    for (int x = 0; x < rowNum; x++) {
-                        for (int y = 0; y < colNum; y++) {
-                            cellArray[x][y].toggleNoBorder();
-                        }
+                    for (CellView c: this) {
+                        c.toggleNoBorder();
                     }
                 });
             }
@@ -132,18 +130,14 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     }
 
     public void setOnPieceClicked(CellClickedInterface clicked) {
-        for (int i = 0; i < rowNum; i++){
-            for (int j = 0; j < colNum; j++){
-                this.getCellAt(i, j).setPieceClicked(clicked);
-            }
+        for (CellView cell: this) {
+            cell.setPieceClicked(clicked);
         }
     }
 
     public void setOnMoveClicked(CellClickedInterface clicked) {
-        for (int i = 0; i < rowNum; i++) {
-            for (int j = 0; j < colNum; j++) {
-                this.getCellAt(i, j).setMoveClicked(clicked);
-            }
+        for (CellView cell: this) {
+            cell.setMoveClicked(clicked);
         }
     }
 
@@ -165,7 +159,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
             @Override
             public boolean hasNext() {
-                return !(i == cellArray.length - 1 && j == cellArray[i].length - 1);
+                return !(i == cellArray.length - 1 && j == cellArray[i].length);
             }
 
             @Override

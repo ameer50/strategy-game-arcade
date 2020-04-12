@@ -43,7 +43,7 @@ public class GameScreen {
 
         Pane canvas = new Pane();
         board = new BoardView(Integer.parseInt(nameDim.get("width")), Integer.parseInt(nameDim.get("height")),
-                "Black", pieceLocations, root);
+                "Black", pieceLocations);
         canvas.getChildren().addAll(board.getCells());
         root.getChildren().addAll(canvas);
     }
