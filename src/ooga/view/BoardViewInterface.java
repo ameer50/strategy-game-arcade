@@ -1,7 +1,5 @@
 package ooga.view;
 
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import ooga.CellClickedInterface;
 
@@ -17,8 +15,6 @@ public interface BoardViewInterface {
     StackPane[] getCells();
 
     CellView getCell(int x, int y);
-
-    ImageView[] getPieces();
 
     void highlightValidMoves(List<Point2D> validMoves);
 

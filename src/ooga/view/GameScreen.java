@@ -46,8 +46,6 @@ public class GameScreen {
                 "Black", pieceLocations, root);
         canvas.getChildren().addAll(board.getCells());
         root.getChildren().addAll(canvas);
-
-        //root.getChildren().addAll(board.getPieces());
     }
 
     private void setAsScene(Scene scene) {

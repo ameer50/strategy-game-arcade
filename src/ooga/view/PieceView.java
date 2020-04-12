@@ -1,53 +1,22 @@
 package ooga.view;
 
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import java.awt.*;
 
 public class PieceView {
 
-    private ImageView imgview;
+    private ImageView pieceImage;
+    private Color color;
 
-    public PieceView(double xpos, double ypos, double width, double height, String name){
-        imgview = new ImageView(name);
-
-        setX(xpos);
-        setY(ypos);
-        setHeight(height);
-        setWidth(width);
-
+    public PieceView (String name){
+        pieceImage = new ImageView(name);
     }
 
-    public void setHeight(double new_height){
-        this.imgview.setFitHeight(new_height);
+    //TODO: set color
+    public void setColor(Color color) {
+        this.color = color;
     }
 
-    public void setWidth(double new_width){
-        this.imgview.setFitWidth(new_width);
-    }
-
-    public double getHeight(){
-        return this.imgview.getFitHeight();
-    }
-
-    public double getWidth(){
-        return this.imgview.getFitWidth();
-    }
-
-    public ImageView getImage() { return this.imgview; }
-
-    public void setX(double new_x){
-        this.imgview.setX(new_x);
-    }
-
-    public void setY(double new_y){
-        this.imgview.setY(new_y);
-    }
-
-    public double getX(){
-        return this.imgview.getX();
-    }
-
-    public double getY(){
-        return this.imgview.getY();
-    }
+    public ImageView getImage() { return this.pieceImage; }
 }

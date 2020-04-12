@@ -27,44 +27,24 @@ public class BoardView implements BoardViewInterface {
 
     private double cellSize;
     private double cellSpan;
-    //TODO: what are the differences b/w these?
-    public static final double CELL_YOFFSET = 0.05;
-    public static final int CELL_XOFFSET = 4;
-    //TODO: are these too necessary?
-    private static final double PIECE_WIDTH_RATIO = 0.5;
-    private double PIECE_DELTAX;
-    private double PIECE_DELTAY;
-    private double PIECE_XOFFSET;
-    private double PIECE_YOFFSET;
-    private List<ImageView> pieceImages;
+
     private String playerChoice;
-    private double pieceWidth;
-    private double pieceHeight;
     private Map<Point2D, String> pieceLocations;
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-    private BorderPane root;
     private Point2D selectedLocation;
     private static final int ANIM_DURATION = 20;
 
-    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locs,
-        BorderPane root){
+    public BoardView (int rows, int cols, String playerChoice, Map<Point2D, String> locs, BorderPane root) {
         rowNum = rows;
         colNum = cols;
         cellArray = new CellView[rows][cols];
-        cellList = new CellView[rows*cols];
+        cellList = new CellView[rows * cols];
         //FIXME: is this data duplication?
-        cellSize = (BOARD_WIDTH)/rows;
+        cellSize = (BOARD_WIDTH) / rows;
         cellSpan = cellSize + PIECE_SPACE;
-        pieceImages = new ArrayList<>();
-        this.pieceWidth = cellSpan*PIECE_WIDTH_RATIO;
-        this.pieceHeight = cellSpan;
-        PIECE_XOFFSET = BOARD_XOFFSET+((cellSpan)/CELL_XOFFSET);
-        PIECE_YOFFSET = BOARD_YOFFSET+cellSpan*CELL_YOFFSET;
 
         this.playerChoice = playerChoice;
-        PIECE_DELTAX = PIECE_DELTAY = cellSpan;
         this.pieceLocations = locs;
-        this.root = root;
 
         initialize();
     }
@@ -87,14 +67,9 @@ public class BoardView implements BoardViewInterface {
 
     private void fillCellStructures() {
         int index = 0;
-        for (int i=0; i<rowNum; i++) {
-            for(int j=0; j<colNum; j++) {
-                String color;
-                if (i % 2 == 0) {
-                    color = colorSequence2.get(j);
-                } else {
-                    color = colorSequence1.get(j);
-                }
+        for (int i = 0; i < rowNum; i++) {
+            for(int j = 0; j < colNum; j++) {
+                String color = (i % 2 == 0) ? colorSequence2.get(j) : colorSequence1.get(j);
                 cellArray[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSpan * j)),
                     (BOARD_YOFFSET + (cellSpan * i)),
                     cellSize, cellSize, color);
@@ -115,15 +90,7 @@ public class BoardView implements BoardViewInterface {
         for (Point2D point : pieceLocations.keySet()) {
             int x = (int) point.getX();
             int y = (int) point.getY();
-            cellArray[x][y].setPiece(new PieceView(PIECE_XOFFSET+PIECE_DELTAX*y,
-                PIECE_YOFFSET+PIECE_DELTAY*x, pieceWidth, pieceHeight,
-                res.getString(pieceLocations.get(point))));
-            //ImageView pieceImage = cellArray[x][y].getPiece().getImage();
-//            pieceImage.setFitHeight(0.8 * cellArray[x][y].getHeightOfCell());
-//            pieceImage.setPreserveRatio(true);
-//            pieceImage.setLayoutX(0);
-            //pieceImage.setX(cellArray[x][y].getWidthOfCell() / 2 - pieceImage.getBoundsInLocal().getWidth() / 2);
-            //pieceImages.add(cellArray[x][y].getPiece().getImage());
+            cellArray[x][y].setPiece(new PieceView(res.getString(pieceLocations.get(point))));
         }
     }
 
@@ -148,11 +115,6 @@ public class BoardView implements BoardViewInterface {
         CellView initCell = getCell(initX, initY);
         CellView finalCell = getCell(finalX, finalY);
         PieceView piece = initCell.getPiece();
-//        if (finalCell.getPiece() != null) {
-//            //root.getChildren().remove(finalCell.getPiece().getImage());
-//            finalCell.getChildren().remove(finalCell.getPiece());
-//            // FIXME: A long chain of calls here...
-//        }
         finalCell.setPiece(piece);
 
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
@@ -162,46 +124,34 @@ public class BoardView implements BoardViewInterface {
 //        tr.setByY(getDeltaY()*(finalX-initX));
 //        tr.play();
 
-//        ImageView image = piece.getImage();
-//        image.setX(image.getX() + getDeltaX()*(finalY-initY));
-//        image.setY(image.getY() + getDeltaY()*(finalX-initX));
-
         initCell.setPiece(null);
     }
 
     public void setOnPieceClicked(CellClickedInterface clicked) {
-        for (int i=0; i<rowNum; i++){
-            for (int j=0; j<colNum; j++){
+        for (int i = 0; i < rowNum; i++){
+            for (int j = 0; j < colNum; j++){
                 getCell(i, j).setPieceClicked(clicked);
             }
         }
     }
 
     public void setOnMoveClicked(CellClickedInterface clicked) {
-        for (int i=0; i<rowNum; i++) {
-            for (int j=0; j<colNum; j++) {
+        for (int i = 0; i < rowNum; i++) {
+            for (int j = 0; j < colNum; j++) {
                 this.getCell(i, j).setMoveClicked(clicked);
             }
         }
     }
 
     public CellView getCell(int row, int col){ return cellArray[row][col]; }
-    public ImageView[] getPieces() { return pieceImages.toArray(new ImageView[0]); }
+
     public int getRowNum(){ return rowNum; }
+
     public int getColNum(){ return colNum; }
+
     public double getCellSpan(){ return cellSpan; }
+
     public void setSelectedLocation(int x, int y) { selectedLocation = new Point2D.Double(x, y); }
+
     public Point2D getSelectedLocation() { return selectedLocation; }
-    public double getPieceOffsetX() {
-        return PIECE_XOFFSET;
-    }
-    public double getPieceOffsetY() {
-        return PIECE_YOFFSET;
-    }
-    public double getDeltaX() {
-        return PIECE_DELTAX;
-    }
-    public double getDeltaY() {
-        return PIECE_DELTAY;
-    }
 }
