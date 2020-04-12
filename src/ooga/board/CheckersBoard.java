@@ -30,7 +30,7 @@ public class CheckersBoard extends Board {
     }
 
     @Override
-    public boolean checkWon() {
+    public String checkWon() {
         int numWhite = 0;
         int numBlack = 0;
 
@@ -46,9 +46,10 @@ public class CheckersBoard extends Board {
         }
 
         if(numBlack==0 || numWhite==0){
-            return true;
+            //return true;
         }
-        return false;
+        //return false;
+        return null;
     }
 
     @Override
