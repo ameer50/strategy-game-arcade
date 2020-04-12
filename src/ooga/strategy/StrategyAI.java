@@ -1,5 +1,6 @@
 package ooga.strategy;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,14 +8,16 @@ import java.util.List;
 import ooga.board.Board;
 import ooga.controller.Controller.StrategyType;
 
-public class StrategyAI {
+public class StrategyAI extends Player {
   private StrategyType strategy;
   private Board board;
   private List<Double> moveTimes;
+  private Color color;
+  private double score;
 
-  public StrategyAI(StrategyType strategy, Board board) {
+  public StrategyAI(String name, Color color, Board board, StrategyType strategy) {
+    super(name, color, board);
     this.strategy = strategy;
-    this.board = board;
     moveTimes = new ArrayList<>();
   }
 
@@ -68,5 +71,10 @@ public class StrategyAI {
   }
   public double getRecentMoveTime() {
     return moveTimes.get(moveTimes.size()-1);
+  }
+
+  @Override
+  public boolean isCPU() {
+    return true;
   }
 }
