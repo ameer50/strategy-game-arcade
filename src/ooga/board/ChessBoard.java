@@ -488,6 +488,33 @@ public class ChessBoard extends Board {
     return ret;
   }
 
+  private List<Point2D> diagonal(int x, int y, int distance, Piece piece){
+    List<Point2D> ret = new ArrayList<>();
+    int inc = 1;
+    int[] iShift = {1, 1, -1, -1};
+    int[] jShift = {1, -1, 1, -1};
+
+    for(int i = 0; i < iShift.length; i++){
+      int iInc = iShift[i];
+      int jInc = jShift[i];
+      while(inc <= distance || distance < 0){
+        int newI = x + iInc;
+        int newJ = y + jInc;
+        Point2D newPoint = checkPoint(newI, newJ, piece);
+        if (newPoint != null) {
+          ret.add(newPoint);
+          if (getPieceAt(newI, newJ) != null) {
+            break;
+          }
+        } else {
+          break;
+        }
+        iInc += iShift[i];
+        jInc += jShift[i];
+      }
+    }
+    return ret;
+  }
 
   private Point2D checkPoint (int x, int y, Piece thisPiece) {
       Point2D ret;

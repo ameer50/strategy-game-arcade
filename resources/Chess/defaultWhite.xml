@@ -33,9 +33,13 @@
         <item>7,0,White_Rook</item>
         <item>7,3,White_King</item>
         <item>7,7,White_Rook</item>
+        <item>4,4,White_Bishop</item>
 
     </locations>
     <pieces>
+        <item>
+            White_Bishop:DIAGONAL -1:5
+        </item>
         <item>
             White_Pawn:PAWN -1:1
         </item>
