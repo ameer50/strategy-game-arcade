@@ -46,4 +46,8 @@ public class Piece {
     this.myPattern = pattern;
   }
 
+  public void setName(String name){
+    this.myName = name;
+  }
+
 }
