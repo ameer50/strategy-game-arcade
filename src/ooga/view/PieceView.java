@@ -17,6 +17,7 @@ public class PieceView {
 
     public PieceView(String name) {
         pieceName = name;
+
         System.out.println("name " + name);
         pieceImage = new ImageView(res.getString(name));
         try {

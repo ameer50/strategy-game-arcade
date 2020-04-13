@@ -9,7 +9,6 @@ import java.awt.geom.Point2D;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import ooga.board.Board;
 
 public class GameScreen {
 
@@ -20,6 +19,7 @@ public class GameScreen {
     private Stage stage;
     private Scene scene;
     private BoardView boardView;
+    private RightView rightView;
 
     public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
@@ -41,9 +41,14 @@ public class GameScreen {
         boardView = new BoardView(width, height, "Black", locations);
         canvas.getChildren().addAll(boardView.getCells());
         root.getChildren().addAll(canvas);
+
+        rightView = new RightView();
+        root.getChildren().add(rightView.getDisplay());
     }
 
     public BoardView getBoardView() {
         return boardView;
     }
+
+    public RightView getRightView(){ return rightView;}
 }

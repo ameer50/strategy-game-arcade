@@ -43,7 +43,7 @@ public class Controller {
     private BoardView boardView;
     private StrategyAI CPU;
     private boolean toggleMoves = true;
-    private boolean isAIOpponent = true;
+    private boolean isAIOpponent = false;
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -88,7 +88,9 @@ public class Controller {
         // replace with AI if AI, but player 1 is always white since they start
         playerOne = new HumanPlayer("a", Color.WHITE, board);
         playerTwo = new HumanPlayer("b", Color.BLACK, board);
+        gameScreen.getRightView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
+        gameScreen.getRightView().setActivePlayerText(activePlayer);
 
         if (isAIOpponent) {
             setUpAI();
@@ -107,9 +109,7 @@ public class Controller {
             System.out.println(boardView.getCellAt(x, y).getPiece().getColor());
             if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) return;
             boardView.setSelectedLocation(x, y);
-            // TODO: remove String parameter from getValidMoves
-            //System.out.println("Valid moves " + board.getValidMoves(x, y, activePlayer.getColor().toString()));
-            boardView.highlightValidMoves(board.getValidMoves(x, y, "White"));
+            boardView.highlightValidMoves(board.getValidMoves(x, y));
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
@@ -119,18 +119,21 @@ public class Controller {
             int fromY = (int) indices.getY();
             activePlayer.doMove(fromX, fromY, toX, toY);
             boardView.movePiece(fromX, fromY, toX, toY);
+
             printMessageAndTime("Did user's move.");
             if (activePlayer.isCPU()) {
                 doAIMove();
                 printMessageAndTime("Did CPU's move.");
             }
             toggleActivePlayer();
+            board.checkWon();
             // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
     }
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
+        gameScreen.getRightView().setActivePlayerText(activePlayer);
     }
 
     private void doAIMove() {

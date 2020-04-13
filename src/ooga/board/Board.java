@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javafx.beans.property.DoubleProperty;
 import javafx.util.Pair;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
@@ -111,7 +113,7 @@ public abstract class Board{
 
   public int getWidth() { return width; }
 
-  public abstract boolean checkWon();
+  public abstract String checkWon();
 
   /**
    Execute the desired move
@@ -121,5 +123,5 @@ public abstract class Board{
    **/
   public abstract double doMove(int startX, int startY, int endX, int endY);
 
-  public abstract List<Point2D> getValidMoves(int i, int j, String color);
+  public abstract List<Point2D> getValidMoves(int i, int j);
 }

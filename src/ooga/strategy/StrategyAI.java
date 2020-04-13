@@ -42,7 +42,7 @@ public class StrategyAI extends Player {
     Board board = this.getBoard();
     for (int i=0; i<board.getWidth(); i++) {
       for (int j=0; j<board.getHeight(); j++) {
-        List<Point2D> validMoves = board.getValidMoves(i, j, color);
+        List<Point2D> validMoves = board.getValidMoves(i, j);
         if (validMoves != null) {
           if (validMoves.size() != 0) {
             Point2D moveTo = validMoves.get(0);

@@ -36,7 +36,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         unitHeight = cols;
         cellArray = new CellView[rows][cols];
         cellList = new CellView[rows * cols];
-        //FIXME: is this data duplication?
+
         cellSize = (BOARD_WIDTH) / rows;
         cellSpan = cellSize + PIECE_SPACE;
 
