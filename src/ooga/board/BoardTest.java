@@ -11,6 +11,7 @@ public class BoardTest {
     Map<String, String> settings = new HashMap<>();
     settings.put("height", "5");
     settings.put("width", "5");
+    settings.put("bottomColor", "white");
 
     Map<Point2D, String> locs = new HashMap<>();
     Point2D.Double p1 = new Point2D.Double(0, 1);
