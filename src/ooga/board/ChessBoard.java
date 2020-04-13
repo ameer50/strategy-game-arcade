@@ -61,8 +61,8 @@ public class ChessBoard extends Board {
       removePiece(hitPiece);
       // TODO: In the future, will we do more than just returning the score?
     }
-    promote(currPiece, endX, endY);
     pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
+    promote(currPiece, endX, endY);
     return (int) score;
   }
 

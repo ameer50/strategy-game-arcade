@@ -116,6 +116,7 @@ public class Controller {
 
         /* X and Y are the indices of the cell clicked to move TO */
         boardView.setOnMoveClicked((int toX, int toY) -> {
+            System.out.println("MOVE LAMBDA CALLED");
             Point2D indices = boardView.getSelectedLocation();
             int fromX = (int) indices.getX();
             int fromY = (int) indices.getY();
@@ -134,6 +135,7 @@ public class Controller {
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
+            System.out.println("PROMOTE LAMBDA CALLED");
             String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).toString();
             boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
