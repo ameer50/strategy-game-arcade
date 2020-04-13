@@ -20,6 +20,7 @@ public class GameScreen {
     private Scene scene;
     private BoardView boardView;
     private RightView rightView;
+    private int[] recentLocs;
 
     public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
@@ -51,4 +52,12 @@ public class GameScreen {
     }
 
     public RightView getRightView(){ return rightView;}
+
+    public void setRecentLocation(int fromX, int fromY, int toX, int toY){
+        recentLocs = new int[]{fromX, fromY, toX, toY};
+    }
+
+    public void getUndoState(){
+        rightView.getUndoState();
+    }
 }
