@@ -55,10 +55,10 @@
             White_Pawn:PAWN -1:1
         </item>
         <item>
-            White_King:LATERAL 1:10
+            White_King:ANY 1:10
         </item>
         <item>
-            Black_King:LATERAL 1:10
+            Black_King:ANY 1:10
         </item>
         <item>
             White_Rook:LATERAL -1:5

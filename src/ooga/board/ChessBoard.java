@@ -530,7 +530,7 @@ public class ChessBoard extends Board {
     for(int i = 0; i < iShift.length; i++){
       int iInc = iShift[i];
       int jInc = jShift[i];
-      while(inc <= distance || distance < 0){
+      while(Math.abs(iInc) <= distance || distance < 0){
         int newI = x + iInc;
         int newJ = y + jInc;
         Point2D newPoint = checkPoint(newI, newJ, piece);
