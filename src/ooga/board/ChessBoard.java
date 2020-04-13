@@ -379,7 +379,13 @@ public class ChessBoard extends Board {
   }
 
 
-
+  private List<Point2D> any(int x, int y, int dist, Piece piece){
+    List<Point2D> lat = lateral(x, y, dist, piece);
+    List<Point2D> diag = diagonal(x, y, dist, piece);
+    List<Point2D> combined = new ArrayList<>(lat);
+    combined.addAll(diag);
+    return  combined;
+  }
   private List<Point2D> lateral(int x, int y, int dist, Piece piece) {
     List<Point2D> up = up(x, y, dist, piece);
     List<Point2D> down = down(x, y, dist, piece);
