@@ -18,11 +18,13 @@ public class ButtonGroup {
     private List<Button> buttons;
     private double width;
     private double height;
+    private String style;
 
-    public ButtonGroup(List<String> buttonNames, double width, double height) {
+    public ButtonGroup(List<String> buttonNames, double width, double height, String style) {
         buttons = new ArrayList<>();
         this.width = width;
         this.height = height;
+        this.style = style;
         createButtons(buttonNames, width, height);
     }
 
@@ -31,6 +33,7 @@ public class ButtonGroup {
             Button button = new Button(buttonName);
             button.setMinHeight(height);
             button.setMinWidth(width);
+            button.getStyleClass().add(style);
             buttons.add(button);
         }
     }

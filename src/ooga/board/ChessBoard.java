@@ -51,7 +51,7 @@ public class ChessBoard extends Board {
   }
 
   @Override
-  public double doMove(int startX, int startY, int endX, int endY) {
+  public int doMove(int startX, int startY, int endX, int endY) {
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
     currPiece.move();
@@ -62,7 +62,7 @@ public class ChessBoard extends Board {
       // TODO: In the future, will we do more than just returning the score?
     }
     pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
-    return score;
+    return (int) score;
   }
 
   private void removePiece(Piece piece) {

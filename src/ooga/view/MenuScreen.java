@@ -14,7 +14,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.lang.reflect.Array;
@@ -50,7 +49,7 @@ public class MenuScreen {
         stage.setTitle(res.getString("MenuStageTitle"));
         scene.getStylesheets().add(res.getString("MenuStyleSheet"));
 
-        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"), 250, 60);
+        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"), 250, 60, "button");
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
             vbox.getChildren().add(b);
@@ -94,7 +93,7 @@ public class MenuScreen {
     private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {
 
         GridPane pane = new GridPane();
-        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black", "Default Game", "Load XML File"), 20, 40);
+        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black", "Default Game", "Load XML File"), 20, 40, res.getString("SettingsButtons"));
 
         int[] position = {0, 0, 2, 0, 0, 1, 2, 1};
         int i = 0;
@@ -111,8 +110,6 @@ public class MenuScreen {
                 });
 
             }
-            b.getStyleClass().add(res.getString("SettingsButtons"));
-
             pane.add(b, position[i++], position[i++]);
             GridPane.setHalignment(b, HPos.CENTER);
             GridPane.setValignment(b, VPos.CENTER);

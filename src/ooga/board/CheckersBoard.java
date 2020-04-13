@@ -94,7 +94,7 @@ public class CheckersBoard extends Board {
 
     }
 
-    public double doMove(int x_i, int y_i, int x_f, int y_f) {
+    public int doMove(int x_i, int y_i, int x_f, int y_f) {
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);
         placePiece(x_i, y_i, null);
@@ -103,7 +103,7 @@ public class CheckersBoard extends Board {
             return 0;
         }
         else{
-            return oppPiece.getValue();
+            return (int) oppPiece.getValue();
         }
     }
 

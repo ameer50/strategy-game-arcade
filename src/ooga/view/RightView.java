@@ -1,12 +1,14 @@
 package ooga.view;
 
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import javafx.geometry.HPos;
+import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import ooga.strategy.HumanPlayer;
@@ -18,10 +20,10 @@ public class RightView {
 
 
     private VBox display;
-    private DoubleProperty whiteScore;
-    private DoubleProperty blackScore;
-    private VBox scores;
-    private HBox auxiliaryButtons;
+    private IntegerProperty whiteScore;
+    private IntegerProperty blackScore;
+    private HBox scores;
+    private GridPane auxiliaryButtons;
     private HBox bottom;
     private Text activePlayerText;
 
@@ -33,12 +35,12 @@ public class RightView {
         createAuxiliaryButtons();
         createBottom();
 
-        display.getChildren().addAll(scores, auxiliaryButtons, bottom);
+        display.getChildren().addAll(scores, bottom, auxiliaryButtons);
     }
 
     private void createDisplay(){
-        display.setLayoutX(800);
-        display.setLayoutY(100);
+        display.setLayoutX(900);
+        display.setLayoutY(600);
         display.setMinHeight(650);
         display.setMinWidth(200);
         display.getStyleClass().add("display");
@@ -51,8 +53,8 @@ public class RightView {
         Text whiteText = new Text("White: ");
         Text blackText = new Text("Black: ");
 
-        whiteScore = new SimpleDoubleProperty();
-        blackScore  = new SimpleDoubleProperty();
+        whiteScore = new SimpleIntegerProperty();
+        blackScore  = new SimpleIntegerProperty();
         Text whiteScoreText = new Text(whiteScore.toString());
         whiteScoreText.textProperty().bind(whiteScore.asString());
         Text blackScoreText = new Text(blackScore.toString());
@@ -61,8 +63,9 @@ public class RightView {
         whiteScoreBox.getChildren().addAll(whiteText, whiteScoreText);
         blackScoreBox.getChildren().addAll(blackText, blackScoreText);
 
-        scores = new VBox();
+        scores = new HBox();
         scores.getChildren().addAll(whiteScoreBox, blackScoreBox);
+        applyStyle(scores, "scoreshbox");
     }
 
     public void bindScores(Player white, Player black){
@@ -71,18 +74,31 @@ public class RightView {
     }
 
     private void createAuxiliaryButtons() {
-        auxiliaryButtons = new HBox();
-        ButtonGroup buttons = new ButtonGroup(List.of("Save Game", "Load Game", "Undo Move", "Redo Move"), 20, 50);
-        auxiliaryButtons.getChildren().addAll(buttons.getButtons());
+        auxiliaryButtons = new GridPane();
+        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Load Game", "Quit"), 115, 35, "auxbuttons");
+        HBox buttonBox = new HBox();
+        buttonBox.getChildren().addAll(buttons.getButtons());
+
+        int[] position = {0, 0, 2, 0, 0, 1, 2, 1, 1, 2};
+        int i = 0;
+        for(Button b: buttons.getButtons()){
+            addGPaneElement(b, position[i++], position[i++]);
+        }
+        auxiliaryButtons.getStyleClass().add("gpane");
+        auxiliaryButtons.setLayoutX(750);
+        auxiliaryButtons.setLayoutY(750);
+
     }
 
     private void createBottom() {
         bottom = new HBox();
         Text turnText = new Text("Turn: ");
         activePlayerText = new Text();
-        Button quitButton = new Button("Quit");
-        bottom.getChildren().addAll(turnText, activePlayerText, quitButton);
+        bottom.getChildren().addAll(turnText, activePlayerText);
+        //addGPaneElement(bottom, 0, 2);
+        bottom.getStyleClass().add("scoreshbox");
     }
+
 
     public void setActivePlayerText(Player activePlayer) {
         this.activePlayerText.setText(activePlayer.getName());
@@ -90,5 +106,17 @@ public class RightView {
 
     public VBox getDisplay(){
         return display;
+    }
+
+    private void addGPaneElement(Node b, int col, int row){
+        auxiliaryButtons.add(b, col, row);
+        GridPane.setHalignment(b, HPos.LEFT);
+        GridPane.setValignment(b, VPos.CENTER);
+    }
+
+    private void applyStyle(Pane p, String style){
+        for(Node a: p.getChildren()){
+            a.getStyleClass().add(style);
+        }
     }
 }
