@@ -56,7 +56,9 @@ public class CellView extends StackPane {
         this.piece = piece;
         // if we want to set it to null, return since we don't want to put an image there
         if (piece == null) return;
+
         ImageView pieceImage = piece.getImage();
+        System.out.println(pieceImage);
         pieceImage.setFitHeight(0.95 * height);
         pieceImage.setPreserveRatio(true);
         pieceImage.setLayoutX(width / 2 - pieceImage.getBoundsInLocal().getWidth() / 2);

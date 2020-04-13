@@ -116,13 +116,14 @@ public class Controller {
 
         /* X and Y are the indices of the cell clicked to move TO */
         boardView.setOnMoveClicked((int toX, int toY) -> {
-            System.out.println("MOVE LAMBDA CALLED");
             Point2D indices = boardView.getSelectedLocation();
             int fromX = (int) indices.getX();
             int fromY = (int) indices.getY();
             System.out.println(activePlayer);
-            activePlayer.doMove(fromX, fromY, toX, toY);
+
             boardView.movePiece(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY);
+
             printMessageAndTime("Did user's move.");
             if (activePlayer.isCPU()) {
                 doAIMove();
@@ -135,7 +136,6 @@ public class Controller {
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
-            System.out.println("PROMOTE LAMBDA CALLED");
             String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).toString();
             boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
