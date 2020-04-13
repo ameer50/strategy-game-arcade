@@ -121,7 +121,7 @@ public abstract class Board{
    @param endY new y position
    @return score from completing this move
    **/
-  public abstract double doMove(int startX, int startY, int endX, int endY);
+  public abstract int doMove(int startX, int startY, int endX, int endY);
 
   public abstract List<Point2D> getValidMoves(int i, int j);
 }

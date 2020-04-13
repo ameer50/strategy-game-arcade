@@ -86,8 +86,8 @@ public class Controller {
         printMessageAndTime("Setup Game Screen.");
         boardView = gameScreen.getBoardView();
         // replace with AI if AI, but player 1 is always white since they start
-        playerOne = new HumanPlayer("a", Color.WHITE, board);
-        playerTwo = new HumanPlayer("b", Color.BLACK, board);
+        playerOne = new HumanPlayer("Player1", Color.WHITE, board);
+        playerTwo = new HumanPlayer("Player2", Color.BLACK, board);
         gameScreen.getRightView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
         gameScreen.getRightView().setActivePlayerText(activePlayer);

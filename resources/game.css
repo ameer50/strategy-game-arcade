@@ -36,7 +36,7 @@
 
 .vbox {
     -fx-alignment: center;
-    -fx-spacing: 30;
+    -fx-spacing: 25;
     -fx-padding: 10;
 }
 
@@ -114,10 +114,59 @@
     -fx-border-color: black;
 }
 
+
 .cellcolor1 {
     -fx-fill: #fad2a0;
 }
 
 .cellcolor2 {
     -fx-fill: #be641e;
+}
+
+.auxbuttons {
+    -fx-background-color:
+            linear-gradient(#ffd65b, #e68400),
+            linear-gradient(#ffef84, #f2ba44),
+            linear-gradient(#ffea6a, #efaa22),
+            linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
+            linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 15;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: DARKGREEN;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-font-family: Avant Garde;
+
+}
+
+.button:hover {
+    -fx-background-color: #D2691E;
+}
+
+.gpane {
+    -fx-padding: 10;
+    -fx-spacing: 25;
+    -fx-alignment: center;
+    -fx-vgap: 5;
+    -fx-hgap: 5;
+}
+
+.stats {
+    -fx-font-smoothing-type: lcd;
+    -fx-fill: white;
+    -fx-font-size: 13pt;
+    -fx-font-family: Avant Garde;
+}
+
+.scoreshbox {
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-border-width: 4px;
+    -fx-border-color: BLACK;
+    -fx-background-color: #FFFAF0;
+    -fx-padding: 5 10 5 10;
+    -fx-fill: white;
+    -fx-font-size: 20pt;
+    -fx-font-family: Avant Garde;
+
 }

@@ -1,16 +1,13 @@
 package ooga.strategy;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import ooga.board.Board;
 
 import java.awt.*;
 
 public abstract class Player {
 
-    private DoubleProperty score;
+    private IntegerProperty score;
     private String name;
     private Color color;
     private Board board;
@@ -19,7 +16,7 @@ public abstract class Player {
         this.name = name;
         this.color = color;
         this.board = board;
-        this.score = new SimpleDoubleProperty(0);
+        this.score = new SimpleIntegerProperty(0);
     }
 
     public abstract boolean isCPU();
@@ -28,7 +25,7 @@ public abstract class Player {
         score.setValue(score.getValue() + board.doMove(startX, startY, endX, endY)) ;
     }
 
-    public DoubleProperty getScore() {
+    public IntegerProperty getScore() {
         return score;
     }
 
