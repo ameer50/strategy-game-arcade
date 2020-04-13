@@ -3,7 +3,7 @@ package ooga.view;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import ooga.CellClickedInterface;
+import ooga.ProcessCoordinateInterface;
 
 public class CellView extends StackPane {
 
@@ -16,9 +16,9 @@ public class CellView extends StackPane {
     private String style;
     private int xIndex;
     private int yIndex;
-    private CellClickedInterface clickPieceFunction;
-    private CellClickedInterface noBorderFunction;
-    private CellClickedInterface movePieceFunction;
+    private ProcessCoordinateInterface clickPieceFunction;
+    private ProcessCoordinateInterface noBorderFunction;
+    private ProcessCoordinateInterface movePieceFunction;
     private PieceView piece;
 
     public CellView(int xindex, int yindex, double xpos, double ypos, double width, double height, String cellColorStyle){
@@ -102,22 +102,22 @@ public class CellView extends StackPane {
         this.setOnMouseClicked(e -> {
             // unhighlight everything if a box is clicked that has nothing there
             if (piece == null && !isYellow){
-                noBorderFunction.clickCell(xIndex, yIndex);
+                noBorderFunction.process(xIndex, yIndex);
                 return;
             }
             // if a piece is there, and it is not highlighted, trigger lambdas to highlight it red and its valid moves yellow
             // also unhighlight everything
             if (!isRed && !isYellow){
-                noBorderFunction.clickCell(xIndex, yIndex);
+                noBorderFunction.process(xIndex, yIndex);
                 //toggleRed();
-                clickPieceFunction.clickCell(xIndex, yIndex);
+                clickPieceFunction.process(xIndex, yIndex);
             // if a cell is yellow and clicked, trigger lambda to move the piece, unhighlight everything
             } else if (isYellow) {
-                movePieceFunction.clickCell(xIndex, yIndex);
-                noBorderFunction.clickCell(xIndex, yIndex);
+                movePieceFunction.process(xIndex, yIndex);
+                noBorderFunction.process(xIndex, yIndex);
             // if other, just unhighlight all cells
             } else {
-                noBorderFunction.clickCell(xIndex, yIndex);
+                noBorderFunction.process(xIndex, yIndex);
             }
         });
     }
@@ -132,15 +132,15 @@ public class CellView extends StackPane {
         return "[ " + xIndex + " , " + yIndex + " ] at x = " + xPos + " , y = " + yPos;
     }
 
-    public void setPieceClicked(CellClickedInterface clicked){
+    public void setPieceClicked(ProcessCoordinateInterface clicked){
         this.clickPieceFunction = clicked;
     }
 
-    public void setMoveClicked(CellClickedInterface clicked) {
+    public void setMoveClicked(ProcessCoordinateInterface clicked) {
         this.movePieceFunction = clicked;
     }
 
-    public void setNoBorderFunction(CellClickedInterface clicked){
+    public void setNoBorderFunction(ProcessCoordinateInterface clicked){
         this.noBorderFunction = clicked;
     }
 

@@ -10,6 +10,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.util.Pair;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import ooga.ProcessCoordinateInterface;
 
 public abstract class Board{
   public static final String HEIGHT = "height";
@@ -21,6 +22,7 @@ public abstract class Board{
   protected BiMap<Point2D, Piece> pieceLocationBiMap;
   protected int height;
   protected int width;
+  protected ProcessCoordinateInterface promoteAction;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
       Map<String, Pair<String, java.lang.Double>> pieceTypeMap) {
@@ -124,4 +126,8 @@ public abstract class Board{
   public abstract int doMove(int startX, int startY, int endX, int endY);
 
   public abstract List<Point2D> getValidMoves(int i, int j);
+
+  public void setOnPiecePromoted(ProcessCoordinateInterface promoteAction) {
+    this.promoteAction = promoteAction;
+  }
 }
