@@ -61,10 +61,21 @@ public class ChessBoard extends Board {
       removePiece(hitPiece);
       // TODO: In the future, will we do more than just returning the score?
     }
+    promote(currPiece, endX);
     pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
     return (int) score;
   }
 
+  private void promote(Piece piece, int endI){
+    if(!piece.toString().equals(PAWN)){
+      return;
+    }
+    int inc = getPawnInc(piece);
+    if((inc == -1 && endI == 0) || (inc == 1 && endI == height - 1)){
+      piece.setName("Queen");
+      piece.setMovePattern("Any -1");
+    }
+  }
   private void removePiece(Piece piece) {
     pieceColorMap.get(piece.getColor()).remove(piece);
   }

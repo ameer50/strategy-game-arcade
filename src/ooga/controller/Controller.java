@@ -10,6 +10,7 @@ import ooga.strategy.StrategyAI;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
+import ooga.view.PieceView;
 import ooga.xml.XMLParser;
 
 import java.awt.*;
@@ -119,7 +120,8 @@ public class Controller {
             int fromY = (int) indices.getY();
             activePlayer.doMove(fromX, fromY, toX, toY);
             boardView.movePiece(fromX, fromY, toX, toY);
-
+            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).toString();
+            boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
             printMessageAndTime("Did user's move.");
             if (activePlayer.isCPU()) {
                 doAIMove();
