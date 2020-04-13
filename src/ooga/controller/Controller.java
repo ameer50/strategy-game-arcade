@@ -128,6 +128,7 @@ public class Controller {
             }
             toggleActivePlayer();
             board.checkWon();
+            //gameScreen.setRecentLocation(fromX, fromY, toX, toY);
             // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
     }
