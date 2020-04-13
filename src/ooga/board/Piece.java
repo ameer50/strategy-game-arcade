@@ -42,4 +42,8 @@ public class Piece {
     return this.myColor;
   }
 
+  public void setMovePattern(String pattern){
+    this.myPattern = pattern;
+  }
+
 }
