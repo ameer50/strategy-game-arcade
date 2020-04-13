@@ -317,41 +317,68 @@ public class ChessBoard extends Board {
     List<Point2D> path = new ArrayList<>();
     //lateral movement in same row
     if (threatI == kingI) {
-      if (threatJ < kingJ) {
-        for (int j = threatJ; j < kingJ; j++) {
-          Point2D pointOnPath = new Point2D.Double(threatI, j);
-          path.add(pointOnPath);
-        }
-        return path;
-      }
-      if (threatJ > kingJ) {
-        for (int j = kingJ; j < threatJ; j++) {
-          Point2D pointOnPath = new Point2D.Double(threatI, j);
-          path.add(pointOnPath);
-        }
-        return path;
-      }
+      return getPathSameRowRook(threatI, threatJ, kingJ);
     }
     //lateral movement in same column
     if (threatJ == kingJ) {
-      if (threatI < kingI) {
-        for (int i = threatI; i < kingI; i++) {
-          Point2D pointOnPath = new Point2D.Double(i, threatJ);
-          path.add(pointOnPath);
-        }
-        return path;
-      }
-      if (threatI > kingI) {
-        for (int i = kingI; i < threatI; i++) {
-          Point2D pointOnPath = new Point2D.Double(i, threatJ);
-          path.add(pointOnPath);
-        }
-        return path;
-      }
+      return getPathSameColRook(threatJ, threatI, kingI);
     }
-    //add diagonals
+    //diagonal
+    if(isDiagonal(threatI, threatJ, kingI, kingJ)){
+      return getPathDiagonal(threatI, threatJ, kingI, kingJ);
+    }
     return null;
   }
+  private List<Point2D> getPathSameRowRook(int i, int threatJ, int kingJ){
+    List<Point2D> path = new ArrayList<>();
+
+    int greaterJ = Math.max(threatJ, kingJ);
+    int smallerJ = Math.min(threatJ, kingJ);
+
+    for(int j = smallerJ + 1; j < greaterJ; j++){
+      Point2D pointOnPath = new Point2D.Double(i, j);
+      path.add(pointOnPath);
+    }
+    return path;
+  }
+  private List<Point2D> getPathSameColRook(int j, int threatI, int kingI){
+    List<Point2D> path = new ArrayList<>();
+
+    int greaterI = Math.max(threatI, kingI);
+    int smallerI = Math.min(threatI, kingI);
+
+    for(int i = smallerI + 1; i < greaterI; i++){
+      Point2D pointOnPath = new Point2D.Double(i, j);
+      path.add(pointOnPath);
+    }
+    return path;
+  }
+  private List<Point2D> getPathDiagonal(int threatI, int threatJ, int kingI, int kingJ){
+    List<Point2D> path = new ArrayList<>();
+
+    int greaterI = Math.max(threatI, kingI);
+    int smallerI = Math.min(threatI, kingI);
+    int smallerJ = Math.min(threatJ, kingJ);
+    int greaterJ = Math.max(threatJ, kingJ);
+
+    for(int inc = 1; inc < greaterI - smallerI; inc++){
+      int newJ;
+      if((threatI < kingI && threatJ > kingJ) || (kingI < threatI && kingJ > threatJ)){
+        newJ = greaterJ - inc;
+      }
+      else{
+        newJ = smallerJ + inc;
+      }
+      Point2D pointOnPath = new Point2D.Double(smallerI + inc, newJ);
+      path.add(pointOnPath);
+    }
+    return path;
+  }
+  private boolean isDiagonal(int threatI, int threatJ, int kingI, int kingJ){
+    return Math.abs(kingJ - threatJ) == Math.abs(kingI - threatI);
+  }
+
+
 
   private List<Point2D> lateral(int x, int y, int dist, Piece piece) {
     List<Point2D> up = up(x, y, dist, piece);
