@@ -26,9 +26,11 @@ public class RightView {
     private GridPane auxiliaryButtons;
     private HBox bottom;
     private Text activePlayerText;
+    boolean undoState;
 
     public RightView(){
         display = new VBox();
+        undoState = false;
 
         createDisplay();
         createScoreBoxes();
@@ -83,10 +85,16 @@ public class RightView {
         int i = 0;
         for(Button b: buttons.getButtons()){
             addGPaneElement(b, position[i++], position[i++]);
+            b.setOnAction((newEvent) -> {
+                setUndo(true);
+                b.setDisable(true);
+            });
         }
         auxiliaryButtons.getStyleClass().add("gpane");
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
+
+
 
     }
 
@@ -118,5 +126,12 @@ public class RightView {
         for(Node a: p.getChildren()){
             a.getStyleClass().add(style);
         }
+    }
+
+    private void setUndo(boolean state){
+        undoState = state;
+    }
+    public boolean getUndoState(){
+        return undoState;
     }
 }

@@ -457,63 +457,63 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-    // FIXME: these have a ton of duplication; could be made into much simpler methods
-    private List<Point2D> up (int x, int y, int distance, Piece piece) {
-      List<Point2D> ret = new ArrayList<>();
-      int squares = 1;
-      while (squares <= distance || distance < 0) {
-        int newX = x - squares;
-        Point2D newPoint = checkPoint(newX, y, piece); // ***
-        if (newPoint != null) {
-          ret.add(newPoint);
-          if (getPieceAt(newX, y) != null) {
-            break;
-          }
-        } else {
+  // FIXME: these have a ton of duplication; could be made into much simpler methods
+  private List<Point2D> up (int x, int y, int distance, Piece piece) {
+    List<Point2D> ret = new ArrayList<>();
+    int squares = 1;
+    while (squares <= distance || distance < 0) {
+      int newX = x - squares;
+      Point2D newPoint = checkPoint(newX, y, piece); // ***
+      if (newPoint != null) {
+        ret.add(newPoint);
+        if (getPieceAt(newX, y) != null) {
           break;
         }
-        squares++;
+      } else {
+        break;
       }
-      return ret;
+      squares++;
     }
+    return ret;
+  }
 
-    private List<Point2D> down ( int x, int y, int distance, Piece piece) {
-      List<Point2D> ret = new ArrayList<>();
-      int squares = 1;
-      while (squares <= distance || distance < 0) {
-        int newX = x + squares;
-        Point2D newPoint = checkPoint(newX, y, piece); //***
-        if (newPoint != null) {
-          ret.add(newPoint);
-          if (getPieceAt(newX, y) != null) {
-            break;
-          }
-        } else {
+  private List<Point2D> down ( int x, int y, int distance, Piece piece) {
+    List<Point2D> ret = new ArrayList<>();
+    int squares = 1;
+    while (squares <= distance || distance < 0) {
+      int newX = x + squares;
+      Point2D newPoint = checkPoint(newX, y, piece); //***
+      if (newPoint != null) {
+        ret.add(newPoint);
+        if (getPieceAt(newX, y) != null) {
           break;
         }
-        squares++;
+      } else {
+        break;
       }
-      return ret;
+      squares++;
     }
+    return ret;
+  }
 
-    private List<Point2D> right (int x, int y, int distance, Piece piece) {
-      List<Point2D> ret = new ArrayList<>();
-      int squares = 1;
-      while (squares <= distance || distance < 0) {
-        int newY = y + squares;
-        Point2D newPoint = checkPoint(x, newY, piece);
-        if (newPoint != null) {
-          ret.add(newPoint);
-          if (getPieceAt(x, newY) != null) {
-            break;
-          }
-        } else {
+  private List<Point2D> right (int x, int y, int distance, Piece piece) {
+    List<Point2D> ret = new ArrayList<>();
+    int squares = 1;
+    while (squares <= distance || distance < 0) {
+      int newY = y + squares;
+      Point2D newPoint = checkPoint(x, newY, piece);
+      if (newPoint != null) {
+        ret.add(newPoint);
+        if (getPieceAt(x, newY) != null) {
           break;
         }
-        squares++;
+      } else {
+        break;
       }
-      return ret;
+      squares++;
     }
+    return ret;
+  }
 
   private List<Point2D> left(int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
@@ -563,15 +563,15 @@ public class ChessBoard extends Board {
   }
 
   private Point2D checkPoint (int x, int y, Piece thisPiece) {
-      Point2D ret;
-      if (!isCellInBounds(x, y)) {
-        return null;
-      }
-      Piece thatPiece = getPieceAt(x, y);
-      if (thatPiece != null && thisPiece.isOnSameTeam(thatPiece)) {
-        return null;
-      }
-      ret = new Point2D.Double(x, y);
-      return ret;
+    Point2D ret;
+    if (!isCellInBounds(x, y)) {
+      return null;
     }
+    Piece thatPiece = getPieceAt(x, y);
+    if (thatPiece != null && thisPiece.isOnSameTeam(thatPiece)) {
+      return null;
+    }
+    ret = new Point2D.Double(x, y);
+    return ret;
+  }
 }

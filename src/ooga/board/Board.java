@@ -130,3 +130,4 @@ public abstract class Board{
     this.promoteAction = promoteAction;
   }
 }
+
