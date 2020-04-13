@@ -1,10 +1,7 @@
 package ooga.view;
 
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
-import ooga.CellClickedInterface;
+import ooga.ProcessCoordinateInterface;
 import java.awt.geom.Point2D;
 import java.util.*;
 
@@ -124,13 +121,13 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         initCell.setPiece(null);
     }
 
-    public void setOnPieceClicked(CellClickedInterface clicked) {
+    public void setOnPieceClicked(ProcessCoordinateInterface clicked) {
         for (CellView cell: this) {
             cell.setPieceClicked(clicked);
         }
     }
 
-    public void setOnMoveClicked(CellClickedInterface clicked) {
+    public void setOnMoveClicked(ProcessCoordinateInterface clicked) {
         for (CellView cell: this) {
             cell.setMoveClicked(clicked);
         }

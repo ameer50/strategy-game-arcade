@@ -1,7 +1,7 @@
 package ooga.view;
 
 import javafx.scene.layout.StackPane;
-import ooga.CellClickedInterface;
+import ooga.ProcessCoordinateInterface;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -20,9 +20,9 @@ public interface BoardViewInterface {
 
     void movePiece(int fromX, int fromY, int toX, int toY);
 
-    void setOnPieceClicked(CellClickedInterface clicked);
+    void setOnPieceClicked(ProcessCoordinateInterface clicked);
 
-    void setOnMoveClicked(CellClickedInterface clicked);
+    void setOnMoveClicked(ProcessCoordinateInterface clicked);
 
     void setSelectedLocation(int x, int y);
 }

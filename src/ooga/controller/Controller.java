@@ -121,8 +121,6 @@ public class Controller {
             int fromY = (int) indices.getY();
             activePlayer.doMove(fromX, fromY, toX, toY);
             boardView.movePiece(fromX, fromY, toX, toY);
-            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).toString();
-            boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
             printMessageAndTime("Did user's move.");
             if (activePlayer.isCPU()) {
                 doAIMove();
@@ -132,6 +130,11 @@ public class Controller {
             board.checkWon();
             //gameScreen.setRecentLocation(fromX, fromY, toX, toY);
             // TODO: we need to make the method much more efficient and robust before uncommenting...
+        });
+
+        board.setOnPiecePromoted((int toX, int toY) -> {
+            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).toString();
+            boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
     }
 
