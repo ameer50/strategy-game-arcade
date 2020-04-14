@@ -21,8 +21,8 @@ public abstract class Player {
 
     public abstract boolean isCPU();
 
-    public void doMove(int startX, int startY, int endX, int endY) {
-        int pointsScored = board.doMove(startX, startY, endX, endY, false);
+    public void doMove(int startX, int startY, int endX, int endY, boolean undo) {
+        int pointsScored = board.doMove(startX, startY, endX, endY, undo);
         addToScore(pointsScored);
     }
 

@@ -135,7 +135,7 @@ public class Controller {
             Piece capturedPiece = board.getPieceAt(toX, toY);
 
             boardView.movePiece(fromX, fromY, toX, toY);
-            activePlayer.doMove(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY, false);
 
             Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint, capturedPiece);
             history.addNewMove(m);
@@ -165,7 +165,7 @@ public class Controller {
             int toY = (int) endLoc.getY();
 
             boardView.movePiece(fromX, fromY, toX, toY);
-            activePlayer.doMove(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY, true);
             toggleActivePlayer();
 
             if (prevMove.getCapturedPiece() != null) {
@@ -190,7 +190,7 @@ public class Controller {
             int toY = (int) endLoc.getY();
 
             boardView.movePiece(fromX, fromY, toX, toY);
-            activePlayer.doMove(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY, false);
             toggleActivePlayer();
         });
 
@@ -212,7 +212,7 @@ public class Controller {
         int fromY = AIMove.get(1);
         int toX = AIMove.get(2);
         int toY = AIMove.get(3);
-        activePlayer.doMove(fromX, fromY, toX, toY);
+        activePlayer.doMove(fromX, fromY, toX, toY, false);
         // stall(STALL_TIME);
         boardView.movePiece(fromX, fromY, toX, toY);
     }
