@@ -6,10 +6,10 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import ooga.strategy.HumanPlayer;
 import ooga.strategy.Player;
@@ -37,15 +37,29 @@ public class RightView {
         createAuxiliaryButtons();
         createBottom();
 
-        display.getChildren().addAll(scores, bottom, auxiliaryButtons);
+        ListView listView = new ListView();
+
+        listView.getItems().add("Item 1");
+        listView.getItems().add("Item 2");
+        listView.getItems().add("Item 3");
+
+
+        listView.getStyleClass().add("listview");
+        listView.setMinHeight(400);
+        listView.setMinWidth(300);
+        HBox hbox = new HBox();
+        hbox.getChildren().add(listView);
+        hbox.getStyleClass().add("hboxlist");
+
+        display.getChildren().addAll(scores, hbox,  bottom, auxiliaryButtons);
+        display.getStyleClass().add("display");
+
     }
 
     private void createDisplay(){
         display.setLayoutX(900);
-        display.setLayoutY(600);
-        display.setMinHeight(650);
-        display.setMinWidth(200);
-        display.getStyleClass().add("display");
+        display.setLayoutY(400);
+
 
     }
 
@@ -77,11 +91,11 @@ public class RightView {
 
     private void createAuxiliaryButtons() {
         auxiliaryButtons = new GridPane();
-        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Load Game", "Quit"), 115, 35, "auxbuttons");
+        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit"), 115, 35, "auxbuttons");
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(buttons.getButtons());
 
-        int[] position = {0, 0, 2, 0, 0, 1, 2, 1, 1, 2};
+        int[] position = {0, 0, 1, 0, 0, 1, 1, 1};
         int i = 0;
         for(Button b: buttons.getButtons()){
             addGPaneElement(b, position[i++], position[i++]);
@@ -93,6 +107,9 @@ public class RightView {
         auxiliaryButtons.getStyleClass().add("gpane");
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
+
+
+
 
 
 
