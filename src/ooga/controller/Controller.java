@@ -84,8 +84,8 @@ public class Controller {
         switch (gameType) {
             default:
                 board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
-//            case CHECKERS:
-//                board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+            case CHECKERS:
+                board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 
         }
         printMessageAndTime("Setup Board.");
@@ -120,8 +120,8 @@ public class Controller {
             System.out.println(boardView.getCellAt(x, y).getPiece().getColor());
             if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) return;
             boardView.setSelectedLocation(x, y);
-            System.out.println("Get valid " + board.getValidMoves(x, y));
             boardView.highlightValidMoves(board.getValidMoves(x, y));
+            System.out.println("Repeated");
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
