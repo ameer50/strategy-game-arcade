@@ -1,6 +1,11 @@
 package ooga.board;
 
 import java.awt.geom.Point2D;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +38,6 @@ public abstract class Board implements Serializable {
 
     pieceLocationBiMap = HashBiMap.create();
     this.pieceTypeMap = pieceTypeMap;
-    pieceColorMap = new HashMap<>();
     initializePieces(locations);
   }
 
@@ -54,23 +58,9 @@ public abstract class Board implements Serializable {
       int score = pieceInfo.getValue();
       Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
 
-      updatePieceColorMap(piece);
       pieceLocationBiMap.put(new Point2D.Double(x, y), piece);
     }
   }
-
-  private void updatePieceColorMap(Piece piece) {
-    String color = piece.getColor();
-    if (!pieceColorMap.keySet().contains(color)) {
-      pieceColorMap.put(color, new ArrayList<>());
-    }
-    pieceColorMap.get(color).add(piece);
-
-  }
-  /**
-   Check the board to see if the game has been completed and a winner has been found.
-   @return true if there was a winner.
-   **/
 
   public void print() {
     for(int i=0; i< height; i++){
@@ -100,16 +90,18 @@ public abstract class Board implements Serializable {
   public void putPieceAt(int i, int j, Piece input) {
     if (isCellInBounds(i, j)) {
       pieceLocationBiMap.forcePut(new Point2D.Double(i, j), input);
-      updatePieceColorMap(input);
     }
   }
 
-  public List<Piece> getPiecesOfColor(String color) {
-    if (pieceColorMap.keySet().contains(color)) {
-      return List.copyOf(pieceColorMap.get(color));
-    } else {
-      return null;
+  public List<Point2D> getPiecesOfColor(String color) {
+    List pieceList = new ArrayList<>();
+    for (Point2D point: pieceLocationBiMap.keySet()) {
+      Piece piece = pieceLocationBiMap.get(point);
+      if (piece.getColor().equals(color)) {
+        pieceList.add(point);
+      }
     }
+    return pieceList;
   }
 
   public void placePiece(int i, int j, Piece piece) {
@@ -127,6 +119,14 @@ public abstract class Board implements Serializable {
 
   public int getWidth() { return width; }
 
+  public void setOnPiecePromoted(ProcessCoordinateInterface promoteAction) {
+    this.promoteAction = promoteAction;
+  }
+
+  /**
+   Check the board to see if the game has been completed and a winner has been found.
+   @return true if there was a winner.
+   **/
   public abstract String checkWon();
 
   /**
@@ -139,8 +139,19 @@ public abstract class Board implements Serializable {
 
   public abstract List<Point2D> getValidMoves(int i, int j);
 
-  public void setOnPiecePromoted(ProcessCoordinateInterface promoteAction) {
-    this.promoteAction = promoteAction;
+  @Deprecated
+  public Board getCopy() {
+    try {
+      ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+      ObjectOutputStream objOutputStream = new ObjectOutputStream(outputStream);
+      objOutputStream.writeObject(this);
+      ByteArrayInputStream inputStream = new ByteArrayInputStream(outputStream.toByteArray());
+      ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
+      return (Board) objInputStream.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      e.printStackTrace();
+    }
+    return null;
   }
 }
 

@@ -7,8 +7,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javafx.beans.property.DoubleProperty;
 import javafx.util.Pair;
 
 public class ChessBoard extends Board {
@@ -86,19 +84,19 @@ public class ChessBoard extends Board {
 
   @Override
   public String checkWon() {
-    // a) If not in check return 'null'. If not in check, checkPieces.size() is 0.
-    // b) Move king. Does king.validMoves have point not in allPossibleMoves. If yes, return FALSE. If not, keep going.
-    // c) If, when the king moves, it kills an opposing piece, we need to make sure that the new square isn't newly
-    // accessible to opposing pieces. If we have a safe move return FALSE.
-    // d) At this point, if there are multiple checking pieces, return color.
-    // e) Kill threatening piece. Is piece.xy in valid moves of our team?
-    // f) Knights and Pawns cannot be blocked.
-    // g) Block threatening piece. What is the path from threatening to king?
-    // If same x and higher y, it is moving upwards. If lower y, moving downwards.
-    // If same y and higher x, it is moving left. Otherwise moving right.
-    // If different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
-    // If diff x and y and those differences aren't the same, it's a knight and we can't block.
-    // I need every move the other team can make and every piece holding in check.
+   /* a) If not in check return 'null'. If not in check, checkPieces.size() is 0.
+    b) Move king. Does king.validMoves have point not in allPossibleMoves. If yes, return FALSE. If not, keep going.
+    c) If, when the king moves, it kills an opposing piece, we need to make sure that the new square isn't newly
+    accessible to opposing pieces. If we have a safe move return FALSE.
+    d) At this point, if there are multiple checking pieces, return color.
+    e) Kill threatening piece. Is piece.xy in valid moves of our team?
+    f) Knights and Pawns cannot be blocked.
+    g) Block threatening piece. What is the path from threatening to king?
+    If same x and higher y, it is moving upwards. If lower y, moving downwards.
+    If same y and higher x, it is moving left. Otherwise moving right.
+    If different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
+    If diff x and y and those differences aren't the same, it's a knight and we can't block.
+    I need every move the other team can make and every piece holding in check. */
     Integer[] coords = locateKings();
     Integer blackI = coords[0];
     Integer blackJ = coords[1];
@@ -282,8 +280,8 @@ public class ChessBoard extends Board {
     return safePoints;
   }
 
-  // Used to see if killing a piece could keep king in check.
-  // Ignore current position of king.
+  /* Used to see if killing a piece could keep king in check.
+  Ignore current position of king. */
   private boolean isSpotInDanger(int potentialI, int potentialJ, int kingI, int kingJ) {
     Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
     Piece storedPiece = getPieceAt(potentialI, potentialJ);
@@ -344,6 +342,7 @@ public class ChessBoard extends Board {
     }
     return null;
   }
+
   private List<Point2D> getPathSameRowRook(int i, int threatJ, int kingJ){
     List<Point2D> path = new ArrayList<>();
 
@@ -356,6 +355,7 @@ public class ChessBoard extends Board {
     }
     return path;
   }
+
   private List<Point2D> getPathSameColRook(int j, int threatI, int kingI){
     List<Point2D> path = new ArrayList<>();
 
@@ -368,6 +368,7 @@ public class ChessBoard extends Board {
     }
     return path;
   }
+
   private List<Point2D> getPathDiagonal(int threatI, int threatJ, int kingI, int kingJ){
     List<Point2D> path = new ArrayList<>();
 
@@ -393,7 +394,6 @@ public class ChessBoard extends Board {
     return Math.abs(kingJ - threatJ) == Math.abs(kingI - threatI);
   }
 
-
   private List<Point2D> any(int x, int y, int dist, Piece piece){
     List<Point2D> lat = lateral(x, y, dist, piece);
     List<Point2D> diag = diagonal(x, y, dist, piece);
@@ -401,6 +401,7 @@ public class ChessBoard extends Board {
     combined.addAll(diag);
     return  combined;
   }
+
   private List<Point2D> lateral(int x, int y, int dist, Piece piece) {
     List<Point2D> up = up(x, y, dist, piece);
     List<Point2D> down = down(x, y, dist, piece);
@@ -421,6 +422,7 @@ public class ChessBoard extends Board {
     ret.addAll(getPawnStraights(newI, j, piece, inc));
     return ret;
   }
+
   private int getPawnInc(Piece piece){
     int inc;
     if (piece.getColor().equals(bottomColor)) {
@@ -430,6 +432,7 @@ public class ChessBoard extends Board {
     }
     return inc;
   }
+
   private List<Point2D> getPawnDiags(int newI, int j, Piece piece, boolean check){
     List<Point2D> ret = new ArrayList<>();
     int[] diagJ = {-1, 1};
@@ -460,7 +463,7 @@ public class ChessBoard extends Board {
   }
 
   // FIXME: these have a ton of duplication; could be made into much simpler methods
-  private List<Point2D> up (int x, int y, int distance, Piece piece) {
+  private List<Point2D> up(int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int squares = 1;
     while (squares <= distance || distance < 0) {
@@ -479,7 +482,7 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private List<Point2D> down ( int x, int y, int distance, Piece piece) {
+  private List<Point2D> down(int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int squares = 1;
     while (squares <= distance || distance < 0) {
@@ -498,7 +501,7 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private List<Point2D> right (int x, int y, int distance, Piece piece) {
+  private List<Point2D> right(int x, int y, int distance, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int squares = 1;
     while (squares <= distance || distance < 0) {
@@ -564,7 +567,7 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private Point2D checkPoint (int x, int y, Piece thisPiece) {
+  private Point2D checkPoint(int x, int y, Piece thisPiece) {
     Point2D ret;
     if (!isCellInBounds(x, y)) {
       return null;
@@ -576,6 +579,4 @@ public class ChessBoard extends Board {
     ret = new Point2D.Double(x, y);
     return ret;
   }
-
-
 }

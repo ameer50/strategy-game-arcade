@@ -23,6 +23,7 @@ public class StrategyAI extends Player {
     this.strategy = strategy;
     this.board = board;
     this.color = color;
+
     moveTimes = new ArrayList<>();
     utility = new StringUtility();
   }

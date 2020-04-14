@@ -1,13 +1,15 @@
 package ooga.board;
 
-public class Piece {
+import java.io.Serializable;
+
+public class Piece implements Serializable {
   private String myName;
   private String myPattern;
   private int myScore;
   private String myColor;
   private int moves;
 
-  public Piece(String name, String pattern, int score, String color){
+  public Piece (String name, String pattern, int score, String color) {
     this.myName = name;
     this.myPattern = pattern;
     this.myScore = score;

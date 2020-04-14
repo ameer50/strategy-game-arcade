@@ -14,7 +14,7 @@ public class CheckersBoard extends Board {
     public List<Point2D> validKillMoves = new ArrayList<Point2D>();
     public List<Point2D> validNonKillMoves = new ArrayList<Point2D>();
 
-    /*To-DO Items
+    /* TO-DO Items
     Two move types: Coin and King; Coin allows restricted diagonal movement, King allows diagonal movement in all directions.
     Both can only move one cell or two cells
     1) Add support for both colors Red and Black (Top color can only move down initially, bottom color can only move up initially)
@@ -90,14 +90,14 @@ public class CheckersBoard extends Board {
         validNonKillMoves.addAll(validKillMoves);
         System.out.println("FINAL ENDD VNK: " + validNonKillMoves);
         return validNonKillMoves;
-        /*if (piece == null) { return null; }
+        /* if (piece == null) { return null; }
         System.out.println("Problem color " + color + " |  Problem piece" + piece + " | X, Y " + x + " " + y);
         System.out.println("problem map " + pieceColorMap);
         if (pieceColorMape.get(color).contains(piece)) {
             validMoves = new ArrayList<Point2D>();
             //checkRight(x, y, piece);
             //checkLeft(x, y, piece);
-         */
+         } */
     }
 
     public int doMove(int x_i, int y_i, int x_f, int y_f, boolean undo) {
@@ -123,7 +123,7 @@ public class CheckersBoard extends Board {
         }
     }
 
-    //********START: Eight elements that make up the three possible move patterns of the pieces in the game.********
+    /* START: Eight elements that make up the three possible move patterns of the pieces in the game. */
     public boolean up_left (int x, int y) {
         if (isCellInBounds(x - 1, y - 1) && (getPieceAt(x - 1, y - 1) == null)) {
             validNonKillMoves.add(new Point2D.Double(x - 1, y - 1));
