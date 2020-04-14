@@ -22,7 +22,12 @@ public abstract class Player {
     public abstract boolean isCPU();
 
     public void doMove(int startX, int startY, int endX, int endY) {
-        score.setValue(score.getValue() + board.doMove(startX, startY, endX, endY)) ;
+        int pointsScored = board.doMove(startX, startY, endX, endY);
+        addToScore(pointsScored);
+    }
+
+    public void addToScore(int amount) {
+        score.setValue(score.getValue() + amount);
     }
 
     public IntegerProperty getScore() {

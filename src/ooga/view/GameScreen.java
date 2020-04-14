@@ -19,7 +19,7 @@ public class GameScreen {
     private Stage stage;
     private Scene scene;
     private BoardView boardView;
-    private RightView rightView;
+    private DashboardView dashboardView;
     private int[] recentLocs;
 
     public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
@@ -43,22 +43,22 @@ public class GameScreen {
         canvas.getChildren().addAll(boardView.getCells());
         root.getChildren().addAll(canvas);
 
-        rightView = new RightView();
-        root.getChildren().add(rightView.getDisplay());
+        dashboardView = new DashboardView();
+        root.getChildren().add(dashboardView.getDisplay());
     }
 
     public BoardView getBoardView() {
         return boardView;
     }
 
-    public RightView getRightView(){ return rightView;}
+    public DashboardView getDashboardView(){ return dashboardView;}
 
     public void setRecentLocation(int fromX, int fromY, int toX, int toY){
         recentLocs = new int[]{fromX, fromY, toX, toY};
     }
 
     public void getUndoState(){
-        rightView.getUndoState();
+        dashboardView.getUndoState();
     }
 
 

@@ -15,7 +15,7 @@ import ooga.strategy.Player;
 
 import java.util.List;
 
-public class RightView {
+public class DashboardView {
 
 
     private VBox display;
@@ -30,7 +30,7 @@ public class RightView {
     private EventHandler<ActionEvent> undoMoveFunction;
     private EventHandler<ActionEvent> redoMoveFunction;
 
-    public RightView(){
+    public DashboardView(){
         display = new VBox();
         undoState = false;
 

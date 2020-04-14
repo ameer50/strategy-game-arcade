@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
-import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
 import ooga.board.Piece;
 import ooga.history.History;
@@ -96,13 +95,13 @@ public class Controller {
         // replace with AI if AI, but player 1 is always white since they start
         playerOne = new HumanPlayer("Player1", Color.WHITE, board);
         playerTwo = new HumanPlayer("Player2", Color.BLACK, board);
-        gameScreen.getRightView().bindScores(playerOne, playerTwo);
+        gameScreen.getDashboardView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
-        gameScreen.getRightView().setActivePlayerText(activePlayer);
+        gameScreen.getDashboardView().setActivePlayerText(activePlayer);
 
         history = new History();
         historyList = FXCollections.observableArrayList();
-        gameScreen.getRightView().getHistory().setItems(historyList);
+        gameScreen.getDashboardView().getHistory().setItems(historyList);
 
         if (isAIOpponent) {
             setUpAI();
@@ -136,7 +135,7 @@ public class Controller {
             boardView.movePiece(fromX, fromY, toX, toY);
             activePlayer.doMove(fromX, fromY, toX, toY);
 
-            Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint,  capturedPiece);
+            Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint, capturedPiece);
             history.addNewMove(m);
             historyList.add(m);
 
@@ -151,7 +150,7 @@ public class Controller {
             // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
 
-        gameScreen.getRightView().setUndoMoveClicked((e) -> {
+        gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
             Move prevMove = history.undo();
             historyList.remove(historyList.size() - 1);
             Point2D startLoc = prevMove.getEndLocation();
@@ -164,16 +163,19 @@ public class Controller {
 
             boardView.movePiece(fromX, fromY, toX, toY);
             activePlayer.doMove(fromX, fromY, toX, toY);
-
-            if (prevMove.getCapturedPiece() != null){
-                board.putPieceAt(fromX, fromY, prevMove.getCapturedPiece());
-                PieceView capturedPieceView = new PieceView(prevMove.getCapturedPiece().getFullName());
-                boardView.getCellAt(fromX, fromY).setPiece(capturedPieceView);
-            }
             toggleActivePlayer();
+
+            if (prevMove.getCapturedPiece() != null) {
+                Piece capturedPiece = prevMove.getCapturedPiece();
+                board.putPieceAt(fromX, fromY, capturedPiece);
+                activePlayer.addToScore((int) -capturedPiece.getValue());
+                PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
+                boardView.getCellAt(fromX, fromY).setPiece(capturedPieceView);
+                //TODO: another backend call that can take care of resetting pawns to their first move pattern
+            }
         });
 
-        gameScreen.getRightView().setRedoMoveClicked((e) -> {
+        gameScreen.getDashboardView().setRedoMoveClicked((e) -> {
             Move prevMove = history.redo();
             historyList.add(prevMove);
             Point2D startLoc = prevMove.getStartLocation();
@@ -198,7 +200,7 @@ public class Controller {
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
-        gameScreen.getRightView().setActivePlayerText(activePlayer);
+        gameScreen.getDashboardView().setActivePlayerText(activePlayer);
     }
 
     private void doAIMove() {
