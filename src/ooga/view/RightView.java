@@ -28,7 +28,7 @@ public class RightView {
     boolean undoState;
     private ListView<Move> history;
     private EventHandler<ActionEvent> undoMoveFunction;
-    private EventHandler<ActionEvent>  redoMoveFunction;
+    private EventHandler<ActionEvent> redoMoveFunction;
 
     public RightView(){
         display = new VBox();
@@ -101,15 +101,12 @@ public class RightView {
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
 
-
-        buttons.getButtons().get(0).setOnAction((e) -> {
+        buttons.getButtons().get(0).setOnAction(e -> {
             undoMoveFunction.handle(e);
-        } );
-//        buttons.getButtons().get(0).setOnMouseClicked((e) -> {
-//            undoMoveFunction.changeMoveEvent(e);
-//        });
-
-
+        });
+        buttons.getButtons().get(1).setOnAction(e -> {
+            redoMoveFunction.handle(e);
+        });
     }
 
     private void createBottom() {
@@ -157,5 +154,7 @@ public class RightView {
         undoMoveFunction = move;
     }
 
-
+    public void setRedoMoveClicked(EventHandler<ActionEvent> move) {
+        redoMoveFunction = move;
+    }
 }

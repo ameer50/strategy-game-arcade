@@ -162,7 +162,6 @@ public class Controller {
             int toX = (int) endLoc.getX();
             int toY = (int) endLoc.getY();
 
-
             boardView.movePiece(fromX, fromY, toX, toY);
             activePlayer.doMove(fromX, fromY, toX, toY);
 
@@ -172,7 +171,22 @@ public class Controller {
                 boardView.getCellAt(fromX, fromY).setPiece(capturedPieceView);
             }
             toggleActivePlayer();
+        });
 
+        gameScreen.getRightView().setRedoMoveClicked((e) -> {
+            Move prevMove = history.redo();
+            historyList.add(prevMove);
+            Point2D startLoc = prevMove.getStartLocation();
+            Point2D endLoc = prevMove.getEndLocation();
+
+            int fromX = (int) startLoc.getX();
+            int fromY = (int) startLoc.getY();
+            int toX = (int) endLoc.getX();
+            int toY = (int) endLoc.getY();
+
+            boardView.movePiece(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY);
+            toggleActivePlayer();
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {

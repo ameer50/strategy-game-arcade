@@ -29,9 +29,9 @@ public class History {
     }
 
     public Move redo() throws IndexOutOfBoundsException {
-        if (movePointer < 0) throw new IndexOutOfBoundsException();
+        if (movePointer >= moveHistory.size() - 1) throw new IndexOutOfBoundsException();
         disableUndoOrRedo();
-        return moveHistory.get(movePointer++);
+        return moveHistory.get(++movePointer);
     }
 
     private void disableUndoOrRedo() {
