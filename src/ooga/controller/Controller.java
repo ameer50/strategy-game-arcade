@@ -128,16 +128,12 @@ public class Controller {
 
         /* X and Y are the indices of the cell clicked to move TO */
         boardView.setOnMoveClicked((int toX, int toY) -> {
-            Point2D initPoint = boardView.getSelectedLocation();
-            Point2D finalPoint = new Point2D.Double(toX, toY);
-            int fromX = (int) initPoint.getX();
-            int fromY = (int) initPoint.getY();
+            Point2D startLoc = boardView.getSelectedLocation();
+            Point2D endLoc = new Point2D.Double(toX, toY);
             Piece capturedPiece = board.getPieceAt(toX, toY);
 
-            boardView.movePiece(fromX, fromY, toX, toY);
-            activePlayer.doMove(fromX, fromY, toX, toY, false);
-
-            Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint, capturedPiece);
+            movePieceController(startLoc, endLoc, false);
+            Move m = new Move(board.getPieceAt(toX, toY), startLoc, endLoc, capturedPiece);
             history.addNewMove(m);
             historyList.add(m);
 
@@ -159,16 +155,12 @@ public class Controller {
             Point2D startLoc = prevMove.getEndLocation();
             Point2D endLoc = prevMove.getStartLocation();
 
-            int fromX = (int) startLoc.getX();
-            int fromY = (int) startLoc.getY();
-            int toX = (int) endLoc.getX();
-            int toY = (int) endLoc.getY();
-
-            boardView.movePiece(fromX, fromY, toX, toY);
-            activePlayer.doMove(fromX, fromY, toX, toY, true);
+            movePieceController(startLoc, endLoc, true);
             toggleActivePlayer();
 
             if (prevMove.getCapturedPiece() != null) {
+                int fromX = (int) startLoc.getX();
+                int fromY = (int) startLoc.getY();
                 Piece capturedPiece = prevMove.getCapturedPiece();
                 board.putPieceAt(fromX, fromY, capturedPiece);
                 activePlayer.addToScore((int) -capturedPiece.getValue());
@@ -183,14 +175,7 @@ public class Controller {
             historyList.add(prevMove);
             Point2D startLoc = prevMove.getStartLocation();
             Point2D endLoc = prevMove.getEndLocation();
-
-            int fromX = (int) startLoc.getX();
-            int fromY = (int) startLoc.getY();
-            int toX = (int) endLoc.getX();
-            int toY = (int) endLoc.getY();
-
-            boardView.movePiece(fromX, fromY, toX, toY);
-            activePlayer.doMove(fromX, fromY, toX, toY, false);
+            movePieceController(startLoc, endLoc, false);
             toggleActivePlayer();
         });
 
@@ -229,5 +214,15 @@ public class Controller {
         while (elapsed < millis) {
             elapsed = System.currentTimeMillis() - initial;
         }
+    }
+
+    private void movePieceController(Point2D start, Point2D end, boolean undo){
+        int fromX = (int) start.getX();
+        int fromY = (int) start.getY();
+        int toX = (int) end.getX();
+        int toY = (int) end.getY();
+
+        boardView.movePiece(fromX, fromY, toX, toY);
+        activePlayer.doMove(fromX, fromY, toX, toY, undo);
     }
 }
