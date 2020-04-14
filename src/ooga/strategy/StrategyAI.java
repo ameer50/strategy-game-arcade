@@ -12,7 +12,7 @@ public class StrategyAI extends Player {
   private StrategyType strategy;
   private List<Double> moveTimes;
 
-  public StrategyAI(String name, Color color, Board board, StrategyType strategy) {
+  public StrategyAI(String name, String color, Board board, StrategyType strategy) {
     super(name, color, board);
     this.strategy = strategy;
     moveTimes = new ArrayList<>();
