@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 public class PieceView {
 
     private ImageView pieceImage;
-    private Color color;
+    private String color;
     private String pieceName;
 
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
@@ -20,16 +20,16 @@ public class PieceView {
 
         System.out.println("name " + name);
         pieceImage = new ImageView(res.getString(name));
-        try {
-            Field field = Color.class.getField(name.split("_")[0].toLowerCase());
-            color = (Color) field.get(null);
-        } catch (Exception e) {
-            System.out.println("undefined color");
-        }
-        //color = Color.getColor(name.split("_")[0].toLowerCase());
+//        try {
+//            Field field = Color.class.getField(name.split("_")[0].toLowerCase());
+//            color = (Color) field.get(null);
+//        } catch (Exception e) {
+//            System.out.println("undefined color");
+//        }
+        color = name.split("_")[0];
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 
