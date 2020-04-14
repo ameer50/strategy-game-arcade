@@ -58,7 +58,7 @@ public class CheckersBoard extends Board {
         System.out.println("X" + x);
         System.out.println("Y" + y);
         Piece piece = getPieceAt(x,y);
-        if(piece == null){
+        if (piece == null) {
             return null;
         }
         String color = piece.getColor();
@@ -97,10 +97,8 @@ public class CheckersBoard extends Board {
             validMoves = new ArrayList<Point2D>();
             //checkRight(x, y, piece);
             //checkLeft(x, y, piece);
-            return validMoves;
-        }*/
+         */
     }
-
 
     public int doMove(int x_i, int y_i, int x_f, int y_f, boolean undo) {
         System.out.println("Initial: " + x_i + "Initial: " + y_i);
@@ -111,7 +109,7 @@ public class CheckersBoard extends Board {
         placePiece(x_f, y_f, currPiece);
         boolean isKill = false;
         System.out.println("Distance: " + distance(x_i,y_i,x_f,y_f));
-        if(distance(x_i,y_i,x_f,y_f)>2.0){
+        if (distance(x_i,y_i,x_f,y_f)>2.0) {
             System.out.println("X to be removed: " + Math.abs(x_f+x_i)/2 + "  Y To be removed: " + Math.abs(y_f+y_i)/2);
             removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
             //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
@@ -126,9 +124,9 @@ public class CheckersBoard extends Board {
     }
 
     //********START: Eight elements that make up the three possible move patterns of the pieces in the game.********
-    public boolean up_left(int x, int y){
-        if(isCellInBounds(x-1, y-1) && (getPieceAt(x-1, y-1)==null)){
-            validNonKillMoves.add(new Point2D.Double(x-1, y-1));
+    public boolean up_left (int x, int y) {
+        if (isCellInBounds(x - 1, y - 1) && (getPieceAt(x - 1, y - 1) == null)) {
+            validNonKillMoves.add(new Point2D.Double(x - 1, y - 1));
             return true;
         }
         return false;
@@ -147,7 +145,7 @@ public class CheckersBoard extends Board {
         }
     }
 
-    public boolean up_right(int x, int y){
+    public boolean up_right(int x, int y) {
         if(isCellInBounds(x-1, y+1) && (getPieceAt(x-1, y+1)==null)){
             validNonKillMoves.add(new Point2D.Double(x-1, y+1));
             return true;
@@ -155,67 +153,61 @@ public class CheckersBoard extends Board {
         return false;
     }
 
-    public boolean up_right_kill(int x, int y){
+    public boolean up_right_kill(int x, int y) {
         Piece temp1 = getPieceAt(x-1, y+1);
         Piece temp2 = getPieceAt(x-2, y+2);
         boolean killConditions = isCellInBounds(x-1, y+1) && isCellInBounds(x-2, y+2) && temp1!=null && temp2==null && isOppColor(getPieceAt(x, y), temp1);
-        if(!killConditions){
+        if (!killConditions) {
             return false;
-        }
-        else{
+        } else {
             validKillMoves.add(new Point2D.Double(x-2, y+2));
             return true;
         }
     }
 
     public boolean down_left(int x, int y){
-        if(isCellInBounds(x+1, y-1) && (getPieceAt(x+1, y-1)==null)){
+        if (isCellInBounds(x+1, y-1) && (getPieceAt(x+1, y-1)==null)) {
             validNonKillMoves.add(new Point2D.Double(x+1, y-1));
             return true;
         }
         return false;
     }
 
-    public boolean down_left_kill(int x, int y){
+    public boolean down_left_kill(int x, int y) {
         Piece temp1 = getPieceAt(x+1, y-1);
         Piece temp2 = getPieceAt(x+2, y-2);
         boolean killConditions = isCellInBounds(x+1, y-1) && isCellInBounds(x+2, y-2) && temp1!=null && temp2==null && isOppColor(getPieceAt(x, y), temp1);
-        if(!killConditions){
+        if (!killConditions) {
             return false;
-        }
-        else{
+        } else {
             validKillMoves.add(new Point2D.Double(x+2, y-2));
             return true;
         }
     }
 
     public boolean down_right(int x, int y){
-        if(isCellInBounds(x+1, y+1) && (getPieceAt(x+1, y+1)==null)){
+        if (isCellInBounds(x+1, y+1) && (getPieceAt(x+1, y+1)==null)) {
             validNonKillMoves.add(new Point2D.Double(x+1, y+1));
             return true;
         }
         return false;
     }
 
-    public boolean down_right_kill(int x, int y){
+    public boolean down_right_kill (int x, int y) {
         Piece temp1 = getPieceAt(x+1, y+1);
         Piece temp2 = getPieceAt(x+2, y+2);
         boolean killConditions = isCellInBounds(x+1, y+1) && isCellInBounds(x+2, y+2) && temp1!=null && temp2==null && isOppColor(getPieceAt(x, y), temp1);
-        if(!killConditions){
+        if (!killConditions) {
             return false;
-        }
-        else{
+        } else {
             validKillMoves.add(new Point2D.Double(x+2, y+2));
             return true;
         }
     }
 
-
-
-    //********END: Eight elements that make up the three possible move patterns of the pieces in the game.********
-
-    //START: Three possible move patterns, one for player 1 (black checkers), one for player 2 (red checkers), and one for king checkers.
-
+    /* ***END: Eight elements that make up the three possible move patterns of the pieces in the game.***
+    START: Three possible move patterns, one for player 1 (black checkers), one for player 2 (red checkers),
+    and one for king checkers. */
     private void p1(int x, int y){
         up_left(x, y);
         up_right(x, y);
@@ -248,7 +240,7 @@ public class CheckersBoard extends Board {
         int sizeDiff = -1;
         while(sizeDiff != 0){
             int before_size = validKillMoves.size();
-            for(Point2D point: validKillMoves){
+            for (Point2D point: validKillMoves) {
                 int i = (int)point.getX();
                 int j = (int)point.getY();
                 down_left_kill(i, j);
@@ -260,7 +252,7 @@ public class CheckersBoard extends Board {
         System.out.println("END VK: " + validKillMoves);
     }
 
-    private void king(int x, int y){
+    private void king(int x, int y) {
         up_left(x, y);
         up_right(x, y);
         up_left_kill(x, y);
@@ -271,7 +263,7 @@ public class CheckersBoard extends Board {
         down_right_kill(x, y);
 
         int sizeDiff = -1;
-        while(sizeDiff != 0){
+        while(sizeDiff != 0) {
             int before_size = validKillMoves.size();
             for(Point2D point: validKillMoves){
                 int i = (int)point.getX();
@@ -285,11 +277,11 @@ public class CheckersBoard extends Board {
         }
     }
 
-    public boolean isOppColor(Piece currPiece, Piece oppPiece){
+    public boolean isOppColor(Piece currPiece, Piece oppPiece) {
         return !(oppPiece.getColor().equals(currPiece.getColor()));
     }
 
-    public double distance(int x_i, int y_i, int x_f, int y_f){
+    public double distance(int x_i, int y_i, int x_f, int y_f) {
         return Math.sqrt(Math.pow(x_f-x_i, 2)+Math.pow(y_f-y_i, 2));
     }
 
@@ -299,7 +291,4 @@ public class CheckersBoard extends Board {
         pieceLocationBiMap.forcePut(new Point2D.Double(i, j), null);*/
         putPieceAt(i, j, null);
     }
-
-
-
 }

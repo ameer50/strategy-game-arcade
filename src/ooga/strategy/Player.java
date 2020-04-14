@@ -9,10 +9,10 @@ public abstract class Player {
 
     private IntegerProperty score;
     private String name;
-    private Color color;
+    private String color;
     private Board board;
 
-    public Player(String name, Color color, Board board) {
+    public Player(String name, String color, Board board) {
         this.name = name;
         this.color = color;
         this.board = board;
@@ -38,7 +38,7 @@ public abstract class Player {
         return name;
     }
 
-    public Color getColor() {
+    public String getColor() {
         return color;
     }
 

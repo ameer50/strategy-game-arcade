@@ -81,49 +81,54 @@ public class Controller {
         p.parse(gameXML);
         printMessageAndTime("XML parsed.");
 
-        // TODO: set this up for checkers, etc.
         switch (gameType) {
             case CHESS:
                 board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
                 break;
             case CHECKERS:
                 board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+        } printMessageAndTime("Setup Board.");
 
-        }
-        printMessageAndTime("Setup Board.");
         gameScreen = new GameScreen(stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
         printMessageAndTime("Setup Game Screen.");
+
         boardView = gameScreen.getBoardView();
-        // replace with AI if AI, but player 1 is always white since they start
-        playerOne = new HumanPlayer("Player1", Color.WHITE, board);
-        playerTwo = new HumanPlayer("Player2", Color.BLACK, board);
+        setUpPlayers();
+        setUpHistory();
+        if (isAIOpponent) setUpAI();
+        setListeners();
+    }
+
+    private void setUpPlayers() {
+        // TODO: replace with AI, if AI
+        playerOne = new HumanPlayer("Player1", "WHITE", board);
+        playerTwo = new HumanPlayer("Player2", "BLACK", board);
         gameScreen.getDashboardView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
         gameScreen.getDashboardView().setActivePlayerText(activePlayer);
+    }
 
+    private void setUpHistory() {
         history = new History();
         historyList = FXCollections.observableArrayList();
         gameScreen.getDashboardView().getHistory().setItems(historyList);
-
-        if (isAIOpponent) {
-            setUpAI();
-        }
-        setListeners();
     }
 
     private void setUpAI() {
         // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new StrategyAI("AI", Color.BLACK, board, StrategyType.TRIVIAL);
+        CPU = new StrategyAI("AI", "BLACK", board, StrategyType.TRIVIAL);
     }
 
     private void setListeners() {
         /* X and Y are the indices of the cell clicked to move FROM */
         boardView.setOnPieceClicked((int x, int y) -> {
-            System.out.println(boardView.getCellAt(x, y).getPiece().getColor());
-            if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) return;
+            System.out.println(boardView.getCellAt(x, y).getPiece().getColor()); // ***
+            if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) {
+                return;
+            }
             boardView.setSelectedLocation(x, y);
             boardView.highlightValidMoves(board.getValidMoves(x, y));
-            System.out.println("Repeated");
+            System.out.println("Highlighted moves.");
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
@@ -132,21 +137,21 @@ public class Controller {
             Point2D endLoc = new Point2D.Double(toX, toY);
             Piece capturedPiece = board.getPieceAt(toX, toY);
 
-            movePieceController(startLoc, endLoc, false);
-            Move m = new Move(board.getPieceAt(toX, toY), startLoc, endLoc, capturedPiece);
-            history.addNewMove(m);
-            historyList.add(m);
-
+            doPieceMove(startLoc, endLoc, false);
             printMessageAndTime("Did user's move.");
+
+            Move move = new Move(board.getPieceAt(toX, toY), startLoc, endLoc, capturedPiece);
+            history.addMove(move);
+            historyList.add(move);
+
             if (activePlayer.isCPU()) {
                 doAIMove();
                 printMessageAndTime("Did CPU's move.");
             }
             toggleActivePlayer();
             board.checkWon();
-            board.print();
+            // board.print();
             //gameScreen.setRecentLocation(fromX, fromY, toX, toY);
-            // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
 
         gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
@@ -155,7 +160,7 @@ public class Controller {
             Point2D startLoc = prevMove.getEndLocation();
             Point2D endLoc = prevMove.getStartLocation();
 
-            movePieceController(startLoc, endLoc, true);
+            doPieceMove(startLoc, endLoc, true);
             toggleActivePlayer();
 
             if (prevMove.getCapturedPiece() != null) {
@@ -175,16 +180,16 @@ public class Controller {
             historyList.add(prevMove);
             Point2D startLoc = prevMove.getStartLocation();
             Point2D endLoc = prevMove.getEndLocation();
-            movePieceController(startLoc, endLoc, false);
+            doPieceMove(startLoc, endLoc, false);
             toggleActivePlayer();
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
-            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).getType();
+            Piece piece = board.getPieceAt(toX, toY);
+            String name = String.format("%s_%s", piece.getColor(), piece.getType());
             boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
     }
-
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
@@ -192,7 +197,7 @@ public class Controller {
     }
 
     private void doAIMove() {
-        List<Integer> AIMove = CPU.generateMove("Black");
+        List<Integer> AIMove = CPU.generateMove();
         int fromX = AIMove.get(0);
         int fromY = AIMove.get(1);
         int toX = AIMove.get(2);
@@ -216,7 +221,7 @@ public class Controller {
         }
     }
 
-    private void movePieceController(Point2D start, Point2D end, boolean undo){
+    private void doPieceMove(Point2D start, Point2D end, boolean undo) {
         int fromX = (int) start.getX();
         int fromY = (int) start.getY();
         int toX = (int) end.getX();

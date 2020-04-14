@@ -38,8 +38,7 @@ public class ChessBoard extends Board {
       String moveType = movePattern.split(" ")[0].toLowerCase();
       int moveDistance = Integer.parseInt(movePattern.split(" ")[1]);
       try {
-        Method moveMethod = this.getClass()
-            .getDeclaredMethod(moveType, int.class, int.class, int.class,
+        Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
                 piece.getClass());
         Object ret = moveMethod.invoke(this, i, j, moveDistance, piece);
         return (List<Point2D>) ret;
@@ -54,9 +53,9 @@ public class ChessBoard extends Board {
   public int doMove(int startX, int startY, int endX, int endY, boolean undo) {
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
-    if(!undo){
+    if(!undo) {
       currPiece.move();
-    }else{
+    } else {
       currPiece.unmove();
     }
     int score = 0;

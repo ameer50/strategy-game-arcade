@@ -1,6 +1,7 @@
 package ooga.board;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,7 +12,8 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import ooga.ProcessCoordinateInterface;
 
-public abstract class Board{
+public abstract class Board implements Serializable {
+
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
   public static final String BOTTOM_COLOR = "bottomColor";

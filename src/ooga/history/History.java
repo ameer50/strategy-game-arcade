@@ -11,7 +11,7 @@ public class History {
     private boolean undoDisabled;
     private boolean redoDisabled;
 
-    public void addNewMove(Move m) {
+    public void addMove(Move m) {
         int lastMoveIndex = moveHistory.size() - 1;
         while (movePointer < lastMoveIndex) {
             moveHistory.remove(lastMoveIndex);
