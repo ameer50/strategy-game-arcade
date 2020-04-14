@@ -58,6 +58,14 @@ public class CheckersBoard extends Board {
         System.out.println("X" + x);
         System.out.println("Y" + y);
         Piece piece = getPieceAt(x,y);
+        if(piece == null){
+            return null;
+        }
+        String color = piece.getColor();
+        if (!pieceColorMap.get(color).contains(piece)) {
+            return null;
+        }
+
         String movPat = piece.getMovePattern();
         System.out.println("Move Pattern: " + movPat);
         validKillMoves.clear();
@@ -105,13 +113,14 @@ public class CheckersBoard extends Board {
         System.out.println("Distance: " + distance(x_i,y_i,x_f,y_f));
         if(distance(x_i,y_i,x_f,y_f)>2.0){
             System.out.println("X to be removed: " + Math.abs(x_f+x_i)/2 + "  Y To be removed: " + Math.abs(y_f+y_i)/2);
-            removePiece(getPieceAt(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2));
+            removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
             //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
         }
         if(oppPiece == null){
             return 0;
         }
         else{
+            System.out.println("returning score");
             return (int) oppPiece.getValue();
         }
     }
@@ -284,8 +293,11 @@ public class CheckersBoard extends Board {
         return Math.sqrt(Math.pow(x_f-x_i, 2)+Math.pow(y_f-y_i, 2));
     }
 
-    private void removePiece(Piece piece) {
+    private void removePiece(int i, int j) {
+        /*Piece piece = getPieceAt(i, j);
         pieceColorMap.get(piece.getColor()).remove(piece);
+        pieceLocationBiMap.forcePut(new Point2D.Double(i, j), null);*/
+        putPieceAt(i, j, null);
     }
 
 
