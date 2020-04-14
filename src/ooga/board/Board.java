@@ -16,7 +16,7 @@ public abstract class Board{
   public static final String WIDTH = "width";
   public static final String BOTTOM_COLOR = "bottomColor";
   protected String bottomColor;
-  protected Map<String, Pair<String, Double>> pieceTypeMap;
+  protected Map<String, Pair<String, Integer>> pieceTypeMap;
   protected Map<String, List<Piece>> pieceColorMap;
   protected BiMap<Point2D, Piece> pieceLocationBiMap;
   protected int height;
@@ -24,7 +24,7 @@ public abstract class Board{
   protected ProcessCoordinateInterface promoteAction;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
-      Map<String, Pair<String, java.lang.Double>> pieceTypeMap) {
+      Map<String, Pair<String, Integer>> pieceTypeMap) {
     height = Integer.parseInt(settings.get(HEIGHT));
     width = Integer.parseInt(settings.get(WIDTH));
     bottomColor = settings.get(BOTTOM_COLOR);
@@ -46,10 +46,10 @@ public abstract class Board{
       String pieceId = locations.get(point);
       String pieceColor = pieceId.split("_")[0];
       String pieceName = pieceId.split("_")[1];
-      Pair<String, Double> pieceInfo = pieceTypeMap.get(pieceId);
+      Pair<String, Integer> pieceInfo = pieceTypeMap.get(pieceId);
 
       String movePattern = pieceInfo.getKey();
-      double score = pieceInfo.getValue();
+      int score = pieceInfo.getValue();
       Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
 
       updatePieceColorMap(piece);

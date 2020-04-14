@@ -20,7 +20,7 @@ public class ChessBoard extends Board {
   public static final String WHITE = "White";
 
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
-      Pair<String, java.lang.Double>> pieces) {
+      Pair<String, Integer>> pieces) {
     super(settings, locations, pieces);
     System.out.println(pieceColorMap);
   }
@@ -54,16 +54,19 @@ public class ChessBoard extends Board {
   public int doMove(int startX, int startY, int endX, int endY, boolean undo) {
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
-    currPiece.move();
-    double score = 0;
+    if(!undo){
+      currPiece.move();
+    }else{
+      currPiece.unmove();
+    }
+    int score = 0;
     if (hitPiece != null) {
       score = hitPiece.getValue();
       removePiece(hitPiece);
-      // TODO: In the future, will we do more than just returning the score?
     }
     pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
     promote(currPiece, endX, endY);
-    return (int) score;
+    return score;
   }
 
   private void promote(Piece piece, int endX, int endY){

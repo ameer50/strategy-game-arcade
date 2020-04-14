@@ -27,7 +27,7 @@ public class CheckersBoard extends Board {
     5) Once a piece reaches the first/last row of the board, change the movetype of the piece to 'King'
     */
 
-    public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Double>> pieces){
+    public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Integer>> pieces){
         super(settings, locs, pieces);
     }
 
@@ -102,7 +102,7 @@ public class CheckersBoard extends Board {
     }
 
 
-    public int doMove(int x_i, int y_i, int x_f, int y_f) {
+    public int doMove(int x_i, int y_i, int x_f, int y_f, boolean undo) {
         System.out.println("Initial: " + x_i + "Initial: " + y_i);
         System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);

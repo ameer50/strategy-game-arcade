@@ -3,16 +3,16 @@ package ooga.board;
 public class Piece {
   private String myName;
   private String myPattern;
-  private double myScore;
+  private int myScore;
   private String myColor;
-  private boolean hasMoved;
+  private int moves;
 
-  public Piece(String name, String pattern, double score, String color){
+  public Piece(String name, String pattern, int score, String color){
     this.myName = name;
     this.myPattern = pattern;
     this.myScore = score;
     this.myColor = color;
-    this.hasMoved = false;
+    this.moves = 0;
   }
 
   public boolean isOnSameTeam(Piece that){
@@ -29,17 +29,21 @@ public class Piece {
   }
 
   public boolean hasMoved(){
-    return this.hasMoved;
+    return this.moves != 0;
   }
 
   public void move(){
-    this.hasMoved = true;
+    this.moves++;
+  }
+
+  public void unmove(){
+    this.moves--;
   }
   public String getMovePattern(){
     return this.myPattern;
   }
 
-  public double getValue(){
+  public int getValue(){
     return this.myScore;
   }
 

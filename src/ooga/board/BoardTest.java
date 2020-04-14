@@ -19,9 +19,9 @@ public class BoardTest {
     locs.put(p1, "black_rook");
     locs.put(p2, "white_pawn");
 
-    Map<String, Pair<String, Double>> pieces = new HashMap<>();
-    pieces.put("black_rook", new Pair<String, Double>("lateral -1", 5.0));
-    pieces.put("white_pawn", new Pair<String, Double>("left -1", 1.0));
+    Map<String, Pair<String, Integer>> pieces = new HashMap<>();
+    pieces.put("black_rook", new Pair<>("lateral -1", 5));
+    pieces.put("white_pawn", new Pair<>("left -1", 1));
     Board board = new ChessBoard(settings, locs, pieces);
 
     System.out.println("Starting board config:");

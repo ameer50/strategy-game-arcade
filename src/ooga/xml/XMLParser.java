@@ -17,7 +17,7 @@ public class XMLParser {
 
     private Map<String, String> settings;
     private Map<Point2D, String> initialPieceLocations;
-    private Map<String, Pair<String, Double>> movePatterns;
+    private Map<String, Pair<String, Integer>> movePatterns;
     private final static String ERROR_MESSAGE = "Error parsing XML file.";
 
     public XMLParser() {
@@ -34,7 +34,7 @@ public class XMLParser {
         return initialPieceLocations;
     }
 
-    public Map<String, Pair<String, Double>> getMovePatterns() {
+    public Map<String, Pair<String, Integer>> getMovePatterns() {
         return movePatterns;
     }
 
@@ -109,7 +109,7 @@ public class XMLParser {
             if (node.getNodeType() == Node.ELEMENT_NODE) {
                 String pieceAndPattern = node.getTextContent().strip();
                 String[] arr = pieceAndPattern.split(":");
-                movePatterns.put(arr[0], new Pair<>(arr[1], Double.parseDouble(arr[2])));
+                movePatterns.put(arr[0], new Pair<>(arr[1], Integer.parseInt(arr[2])));
             }
             node = node.getNextSibling();
         }
