@@ -574,4 +574,6 @@ public class ChessBoard extends Board {
     ret = new Point2D.Double(x, y);
     return ret;
   }
+
+
 }

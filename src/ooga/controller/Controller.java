@@ -6,6 +6,7 @@ import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
+import ooga.board.Piece;
 import ooga.history.History;
 import ooga.history.Move;
 import ooga.strategy.HumanPlayer;
@@ -130,12 +131,12 @@ public class Controller {
             Point2D finalPoint = new Point2D.Double(toX, toY);
             int fromX = (int) initPoint.getX();
             int fromY = (int) initPoint.getY();
-            System.out.println(activePlayer);
+            Piece capturedPiece = board.getPieceAt(toX, toY);
 
             boardView.movePiece(fromX, fromY, toX, toY);
             activePlayer.doMove(fromX, fromY, toX, toY);
 
-            Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint);
+            Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint,  capturedPiece);
             history.addNewMove(m);
             historyList.add(m);
 
@@ -148,6 +149,30 @@ public class Controller {
             board.checkWon();
             //gameScreen.setRecentLocation(fromX, fromY, toX, toY);
             // TODO: we need to make the method much more efficient and robust before uncommenting...
+        });
+
+        gameScreen.getRightView().setUndoMoveClicked((e) -> {
+            Move prevMove = history.undo();
+            historyList.remove(historyList.size() - 1);
+            Point2D startLoc = prevMove.getEndLocation();
+            Point2D endLoc = prevMove.getStartLocation();
+
+            int fromX = (int) startLoc.getX();
+            int fromY = (int) startLoc.getY();
+            int toX = (int) endLoc.getX();
+            int toY = (int) endLoc.getY();
+
+
+            boardView.movePiece(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY);
+
+            if (prevMove.getCapturedPiece() != null){
+                board.putPieceAt(fromX, fromY, prevMove.getCapturedPiece());
+                PieceView capturedPieceView = new PieceView(prevMove.getCapturedPiece().getFullName());
+                boardView.getCellAt(fromX, fromY).setPiece(capturedPieceView);
+            }
+            toggleActivePlayer();
+
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {

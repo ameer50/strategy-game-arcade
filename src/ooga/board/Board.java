@@ -91,6 +91,16 @@ public abstract class Board{
     }
   }
 
+  /**
+   Get piece at the specified coordinates.
+   @return the Piece object at x, y; null if nothing in the cell.
+   **/
+  public void putPieceAt(int i, int j, Piece input) {
+    if (isCellInBounds(i, j)) {
+      pieceLocationBiMap.forcePut(new Point2D.Double(i, j), input);
+    }
+  }
+
   public List<Piece> getPiecesOfColor(String color) {
     if (pieceColorMap.keySet().contains(color)) {
       return List.copyOf(pieceColorMap.get(color));

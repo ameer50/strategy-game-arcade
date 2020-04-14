@@ -1,16 +1,16 @@
 package ooga.view;
 
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
-import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import ooga.history.Move;
-import ooga.strategy.HumanPlayer;
 import ooga.strategy.Player;
 
 import java.util.List;
@@ -27,6 +27,8 @@ public class RightView {
     private Text activePlayerText;
     boolean undoState;
     private ListView<Move> history;
+    private EventHandler<ActionEvent> undoMoveFunction;
+    private EventHandler<ActionEvent>  redoMoveFunction;
 
     public RightView(){
         display = new VBox();
@@ -94,14 +96,20 @@ public class RightView {
         int i = 0;
         for(Button b: buttons.getButtons()){
             addGPaneElement(b, position[i++], position[i++]);
-            b.setOnAction((newEvent) -> {
-                setUndo(true);
-                b.setDisable(true);
-            });
         }
         auxiliaryButtons.getStyleClass().add("gpane");
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
+
+
+        buttons.getButtons().get(0).setOnAction((e) -> {
+            undoMoveFunction.handle(e);
+        } );
+//        buttons.getButtons().get(0).setOnMouseClicked((e) -> {
+//            undoMoveFunction.changeMoveEvent(e);
+//        });
+
+
     }
 
     private void createBottom() {
@@ -144,4 +152,10 @@ public class RightView {
     public ListView<Move> getHistory() {
         return history;
     }
+
+    public void setUndoMoveClicked(EventHandler<ActionEvent> move) {
+        undoMoveFunction = move;
+    }
+
+
 }

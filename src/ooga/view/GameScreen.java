@@ -60,4 +60,6 @@ public class GameScreen {
     public void getUndoState(){
         rightView.getUndoState();
     }
+
+
 }

@@ -23,13 +23,13 @@ public class History {
     }
 
     public Move undo() throws IndexOutOfBoundsException {
-        if (movePointer <= 0) throw new IndexOutOfBoundsException();
+        if (movePointer < 0) throw new IndexOutOfBoundsException();
         disableUndoOrRedo();
         return moveHistory.get(movePointer--);
     }
 
     public Move redo() throws IndexOutOfBoundsException {
-        if (movePointer <= 0) throw new IndexOutOfBoundsException();
+        if (movePointer < 0) throw new IndexOutOfBoundsException();
         disableUndoOrRedo();
         return moveHistory.get(movePointer++);
     }

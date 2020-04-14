@@ -55,4 +55,8 @@ public class Piece {
     this.myName = name;
   }
 
+  public String getFullName(){
+    return this.myColor + "_" + this.myName;
+  }
+
 }
