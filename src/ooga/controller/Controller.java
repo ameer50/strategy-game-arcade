@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
+import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
 import ooga.board.Piece;
 import ooga.history.History;
@@ -82,8 +83,9 @@ public class Controller {
 
         // TODO: set this up for checkers, etc.
         switch (gameType) {
-            default:
+            case CHESS:
                 board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+                break;
             case CHECKERS:
                 board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 
