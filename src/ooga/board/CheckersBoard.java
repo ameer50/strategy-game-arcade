@@ -4,6 +4,7 @@ import javafx.util.Pair;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -36,29 +37,44 @@ public class CheckersBoard extends Board {
         int numBlack = 0;
         for(int i = 0; i<width; i++){
             for(int j = 0; j<height; j++){
-                if(getPieceAt(i,j).getColor().equals("Red")){
-                    numWhite++;
-                }
-                else if(getPieceAt(i,j).getColor().equals("Black")){
-                    numBlack++;
+                if(getPieceAt(i, j) != null){
+                    if(getPieceAt(i,j).getColor().equals("White")){
+                        numWhite++;
+                    }
+                    else if(getPieceAt(i,j).getColor().equals("Black")){
+                        numBlack++;
+                    }
                 }
             }
         }
         if(numBlack==0 || numWhite==0){
             return "sdkfjhd";
         }
-        return null;
+        return "Test";
     }
 
     @Override
     public List<Point2D> getValidMoves(int x, int y) {
+        System.out.println("X" + x);
+        System.out.println("Y" + y);
         Piece piece = getPieceAt(x,y);
+        if(piece == null){
+            return null;
+        }
+        String color = piece.getColor();
+        if (!pieceColorMap.get(color).contains(piece)) {
+            return null;
+        }
+
         String movPat = piece.getMovePattern();
-        if(movPat.equals("P1")){
+        System.out.println("Move Pattern: " + movPat);
+        validKillMoves.clear();
+        validNonKillMoves.clear();
+        if(movPat.equals("P1 1")){
             //Employ upper methods
             p1(x,y);
         }
-        else if(movPat.equals("P2")){
+        else if(movPat.equals("P2 1")){
             //Employ down methods
             p2(x,y);
         }
@@ -69,8 +85,10 @@ public class CheckersBoard extends Board {
         else{
             return null;
         }
-
-        validNonKillMoves.addAll(validNonKillMoves);
+        System.out.println("ENDD VNK: " + validNonKillMoves);
+        System.out.println("ENDD VK: " + validKillMoves);
+        validNonKillMoves.addAll(validKillMoves);
+        System.out.println("FINAL ENDD VNK: " + validNonKillMoves);
         return validNonKillMoves;
         /*if (piece == null) { return null; }
         System.out.println("Problem color " + color + " |  Problem piece" + piece + " | X, Y " + x + " " + y);
@@ -85,14 +103,24 @@ public class CheckersBoard extends Board {
 
 
     public int doMove(int x_i, int y_i, int x_f, int y_f) {
+        System.out.println("Initial: " + x_i + "Initial: " + y_i);
+        System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);
         placePiece(x_i, y_i, null);
         placePiece(x_f, y_f, currPiece);
+        boolean isKill = false;
+        System.out.println("Distance: " + distance(x_i,y_i,x_f,y_f));
+        if(distance(x_i,y_i,x_f,y_f)>2.0){
+            System.out.println("X to be removed: " + Math.abs(x_f+x_i)/2 + "  Y To be removed: " + Math.abs(y_f+y_i)/2);
+            removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
+            //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
+        }
         if(oppPiece == null){
             return 0;
         }
         else{
+            System.out.println("returning score");
             return (int) oppPiece.getValue();
         }
     }
@@ -182,6 +210,8 @@ public class CheckersBoard extends Board {
         }
     }
 
+
+
     //********END: Eight elements that make up the three possible move patterns of the pieces in the game.********
 
     //START: Three possible move patterns, one for player 1 (black checkers), one for player 2 (red checkers), and one for king checkers.
@@ -207,9 +237,13 @@ public class CheckersBoard extends Board {
 
     private void p2(int x, int y){
         down_left(x, y);
+        System.out.println("VNK: " + validNonKillMoves);
         down_right(x, y);
+        System.out.println("VNK: " + validNonKillMoves);
         down_left_kill(x, y);
+        System.out.println("VK: " + validKillMoves);
         down_right_kill(x, y);
+        System.out.println("VK: " + validKillMoves);
 
         int sizeDiff = -1;
         while(sizeDiff != 0){
@@ -222,6 +256,8 @@ public class CheckersBoard extends Board {
             }
             sizeDiff = validKillMoves.size()-before_size;
         }
+        System.out.println("END VNK: " + validNonKillMoves);
+        System.out.println("END VK: " + validKillMoves);
     }
 
     private void king(int x, int y){
@@ -252,5 +288,18 @@ public class CheckersBoard extends Board {
     public boolean isOppColor(Piece currPiece, Piece oppPiece){
         return !(oppPiece.getColor().equals(currPiece.getColor()));
     }
+
+    public double distance(int x_i, int y_i, int x_f, int y_f){
+        return Math.sqrt(Math.pow(x_f-x_i, 2)+Math.pow(y_f-y_i, 2));
+    }
+
+    private void removePiece(int i, int j) {
+        /*Piece piece = getPieceAt(i, j);
+        pieceColorMap.get(piece.getColor()).remove(piece);
+        pieceLocationBiMap.forcePut(new Point2D.Double(i, j), null);*/
+        putPieceAt(i, j, null);
+    }
+
+
 
 }

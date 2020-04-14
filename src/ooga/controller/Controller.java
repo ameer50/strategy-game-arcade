@@ -4,6 +4,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
+import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
 import ooga.board.Piece;
 import ooga.history.History;
@@ -82,10 +83,11 @@ public class Controller {
 
         // TODO: set this up for checkers, etc.
         switch (gameType) {
-            default:
+            case CHESS:
                 board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
-//            case CHECKERS:
-//                board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+                break;
+            case CHECKERS:
+                board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
 
         }
         printMessageAndTime("Setup Board.");
@@ -120,8 +122,8 @@ public class Controller {
             System.out.println(boardView.getCellAt(x, y).getPiece().getColor());
             if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) return;
             boardView.setSelectedLocation(x, y);
-            System.out.println("Get valid " + board.getValidMoves(x, y));
             boardView.highlightValidMoves(board.getValidMoves(x, y));
+            System.out.println("Repeated");
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
@@ -146,6 +148,7 @@ public class Controller {
             }
             toggleActivePlayer();
             board.checkWon();
+            board.print();
             //gameScreen.setRecentLocation(fromX, fromY, toX, toY);
             // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
