@@ -2,15 +2,14 @@ package ooga.view;
 
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import ooga.history.Move;
 import ooga.strategy.HumanPlayer;
 import ooga.strategy.Player;
 
@@ -27,6 +26,7 @@ public class RightView {
     private HBox bottom;
     private Text activePlayerText;
     boolean undoState;
+    private ListView<Move> history;
 
     public RightView(){
         display = new VBox();
@@ -37,21 +37,16 @@ public class RightView {
         createAuxiliaryButtons();
         createBottom();
 
-        ListView listView = new ListView();
+        history = new ListView<>();
 
-        listView.getItems().add("Item 1");
-        listView.getItems().add("Item 2");
-        listView.getItems().add("Item 3");
-
-
-        listView.getStyleClass().add("listview");
-        listView.setMinHeight(400);
-        listView.setMinWidth(300);
+        history.getStyleClass().add("listview");
+        history.setMinHeight(400);
+        history.setMinWidth(300);
         HBox hbox = new HBox();
-        hbox.getChildren().add(listView);
+        hbox.getChildren().add(history);
         hbox.getStyleClass().add("hboxlist");
 
-        display.getChildren().addAll(scores, hbox,  bottom, auxiliaryButtons);
+        display.getChildren().addAll(scores, hbox, bottom, auxiliaryButtons);
         display.getStyleClass().add("display");
 
     }
@@ -107,12 +102,6 @@ public class RightView {
         auxiliaryButtons.getStyleClass().add("gpane");
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
-
-
-
-
-
-
     }
 
     private void createBottom() {
@@ -150,5 +139,9 @@ public class RightView {
     }
     public boolean getUndoState(){
         return undoState;
+    }
+
+    public ListView<Move> getHistory() {
+        return history;
     }
 }

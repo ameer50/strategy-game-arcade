@@ -22,16 +22,16 @@ public class History {
         disableUndoOrRedo();
     }
 
-    public void undo() throws IndexOutOfBoundsException {
+    public Move undo() throws IndexOutOfBoundsException {
         if (movePointer <= 0) throw new IndexOutOfBoundsException();
-        movePointer--;
         disableUndoOrRedo();
+        return moveHistory.get(movePointer--);
     }
 
-    public void redo() throws IndexOutOfBoundsException {
+    public Move redo() throws IndexOutOfBoundsException {
         if (movePointer <= 0) throw new IndexOutOfBoundsException();
-        movePointer++;
         disableUndoOrRedo();
+        return moveHistory.get(movePointer++);
     }
 
     private void disableUndoOrRedo() {

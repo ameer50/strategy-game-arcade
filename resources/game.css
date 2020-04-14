@@ -47,8 +47,11 @@
 
 .display {
     -fx-alignment: center;
-    -fx-border-color:  BLACK;
+    -fx-border-color: BLUE;
     -fx-border-width: 4px;
+    -fx-border-insets: 5;
+    -fx-border-style: solid inside;
+    -fx-padding: 10;
     -fx-background-color: BLACK;
 
 }
@@ -200,7 +203,7 @@
 
 .list-cell:even { /* <=== changed to even */
     -fx-background-color: #FFF8DC;
-    -fx-font-style: Avant Garde;
+    -font-style: Avant Garde;
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 
@@ -208,7 +211,7 @@
 
 .list-cell:odd { /* <=== changed to even */
     -fx-background-color: #DEB887;
-    -fx-font-style: Avant Garde;
+    -font-style: Avant Garde;
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }

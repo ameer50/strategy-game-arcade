@@ -26,6 +26,6 @@ public class Move {
 
     @Override
     public String toString() {
-        return String.format("%s from %s to %s", piece, startLocation, endLocation);
+        return String.format("%s from (%d, %d) to (%d, %d)", piece, (int) startLocation.getX(), (int) startLocation.getY(), (int) endLocation.getX(), (int) endLocation.getY());
     }
 }

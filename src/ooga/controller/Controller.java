@@ -1,9 +1,13 @@
 package ooga.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
+import ooga.history.History;
+import ooga.history.Move;
 import ooga.strategy.HumanPlayer;
 import ooga.strategy.Player;
 import ooga.strategy.StrategyAI;
@@ -50,6 +54,8 @@ public class Controller {
     private Player activePlayer;
     private Player playerOne;
     private Player playerTwo;
+    private History history;
+    private ObservableList<Move> historyList;
 
     public Controller (Stage stage) {
         startTime = System.currentTimeMillis();
@@ -93,6 +99,10 @@ public class Controller {
         activePlayer = playerOne;
         gameScreen.getRightView().setActivePlayerText(activePlayer);
 
+        history = new History();
+        historyList = FXCollections.observableArrayList();
+        gameScreen.getRightView().getHistory().setItems(historyList);
+
         if (isAIOpponent) {
             setUpAI();
         }
@@ -116,13 +126,18 @@ public class Controller {
 
         /* X and Y are the indices of the cell clicked to move TO */
         boardView.setOnMoveClicked((int toX, int toY) -> {
-            Point2D indices = boardView.getSelectedLocation();
-            int fromX = (int) indices.getX();
-            int fromY = (int) indices.getY();
+            Point2D initPoint = boardView.getSelectedLocation();
+            Point2D finalPoint = new Point2D.Double(toX, toY);
+            int fromX = (int) initPoint.getX();
+            int fromY = (int) initPoint.getY();
             System.out.println(activePlayer);
 
             boardView.movePiece(fromX, fromY, toX, toY);
             activePlayer.doMove(fromX, fromY, toX, toY);
+
+            Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint);
+            history.addNewMove(m);
+            historyList.add(m);
 
             printMessageAndTime("Did user's move.");
             if (activePlayer.isCPU()) {
@@ -136,7 +151,7 @@ public class Controller {
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
-            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).toString();
+            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).getType();
             boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
     }
