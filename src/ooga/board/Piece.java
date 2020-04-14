@@ -18,9 +18,14 @@ public class Piece {
   public boolean isOnSameTeam(Piece that){
     return(this.getColor().equals(that.getColor()));
   }
+
   @Override
   public String toString(){
-    return this.myName;
+    return String.format("%s %s", this.myColor, this.myName);
+  }
+
+  public String getType() {
+    return myName;
   }
 
   public boolean hasMoved(){
@@ -48,6 +53,10 @@ public class Piece {
 
   public void setName(String name){
     this.myName = name;
+  }
+
+  public String getFullName(){
+    return this.myColor + "_" + this.myName;
   }
 
 }

@@ -1,9 +1,13 @@
 package ooga.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
-import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
+import ooga.board.Piece;
+import ooga.history.History;
+import ooga.history.Move;
 import ooga.strategy.HumanPlayer;
 import ooga.strategy.Player;
 import ooga.strategy.StrategyAI;
@@ -50,6 +54,8 @@ public class Controller {
     private Player activePlayer;
     private Player playerOne;
     private Player playerTwo;
+    private History history;
+    private ObservableList<Move> historyList;
 
     public Controller (Stage stage) {
         startTime = System.currentTimeMillis();
@@ -89,9 +95,13 @@ public class Controller {
         // replace with AI if AI, but player 1 is always white since they start
         playerOne = new HumanPlayer("Player1", Color.WHITE, board);
         playerTwo = new HumanPlayer("Player2", Color.BLACK, board);
-        gameScreen.getRightView().bindScores(playerOne, playerTwo);
+        gameScreen.getDashboardView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
-        gameScreen.getRightView().setActivePlayerText(activePlayer);
+        gameScreen.getDashboardView().setActivePlayerText(activePlayer);
+
+        history = new History();
+        historyList = FXCollections.observableArrayList();
+        gameScreen.getDashboardView().getHistory().setItems(historyList);
 
         if (isAIOpponent) {
             setUpAI();
@@ -116,13 +126,18 @@ public class Controller {
 
         /* X and Y are the indices of the cell clicked to move TO */
         boardView.setOnMoveClicked((int toX, int toY) -> {
-            Point2D indices = boardView.getSelectedLocation();
-            int fromX = (int) indices.getX();
-            int fromY = (int) indices.getY();
-            System.out.println(activePlayer);
+            Point2D initPoint = boardView.getSelectedLocation();
+            Point2D finalPoint = new Point2D.Double(toX, toY);
+            int fromX = (int) initPoint.getX();
+            int fromY = (int) initPoint.getY();
+            Piece capturedPiece = board.getPieceAt(toX, toY);
 
             boardView.movePiece(fromX, fromY, toX, toY);
             activePlayer.doMove(fromX, fromY, toX, toY);
+
+            Move m = new Move(board.getPieceAt(toX, toY), initPoint, finalPoint, capturedPiece);
+            history.addNewMove(m);
+            historyList.add(m);
 
             printMessageAndTime("Did user's move.");
             if (activePlayer.isCPU()) {
@@ -135,8 +150,49 @@ public class Controller {
             // TODO: we need to make the method much more efficient and robust before uncommenting...
         });
 
+        gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
+            Move prevMove = history.undo();
+            historyList.remove(historyList.size() - 1);
+            Point2D startLoc = prevMove.getEndLocation();
+            Point2D endLoc = prevMove.getStartLocation();
+
+            int fromX = (int) startLoc.getX();
+            int fromY = (int) startLoc.getY();
+            int toX = (int) endLoc.getX();
+            int toY = (int) endLoc.getY();
+
+            boardView.movePiece(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY);
+            toggleActivePlayer();
+
+            if (prevMove.getCapturedPiece() != null) {
+                Piece capturedPiece = prevMove.getCapturedPiece();
+                board.putPieceAt(fromX, fromY, capturedPiece);
+                activePlayer.addToScore((int) -capturedPiece.getValue());
+                PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
+                boardView.getCellAt(fromX, fromY).setPiece(capturedPieceView);
+                //TODO: another backend call that can take care of resetting pawns to their first move pattern
+            }
+        });
+
+        gameScreen.getDashboardView().setRedoMoveClicked((e) -> {
+            Move prevMove = history.redo();
+            historyList.add(prevMove);
+            Point2D startLoc = prevMove.getStartLocation();
+            Point2D endLoc = prevMove.getEndLocation();
+
+            int fromX = (int) startLoc.getX();
+            int fromY = (int) startLoc.getY();
+            int toX = (int) endLoc.getX();
+            int toY = (int) endLoc.getY();
+
+            boardView.movePiece(fromX, fromY, toX, toY);
+            activePlayer.doMove(fromX, fromY, toX, toY);
+            toggleActivePlayer();
+        });
+
         board.setOnPiecePromoted((int toX, int toY) -> {
-            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).toString();
+            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).getType();
             boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
     }
@@ -144,7 +200,7 @@ public class Controller {
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
-        gameScreen.getRightView().setActivePlayerText(activePlayer);
+        gameScreen.getDashboardView().setActivePlayerText(activePlayer);
     }
 
     private void doAIMove() {

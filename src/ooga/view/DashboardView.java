@@ -1,22 +1,21 @@
 package ooga.view;
 
-import javafx.beans.binding.StringBinding;
 import javafx.beans.property.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import ooga.strategy.HumanPlayer;
+import ooga.history.Move;
 import ooga.strategy.Player;
 
 import java.util.List;
 
-public class RightView {
+public class DashboardView {
 
 
     private VBox display;
@@ -27,8 +26,11 @@ public class RightView {
     private HBox bottom;
     private Text activePlayerText;
     boolean undoState;
+    private ListView<Move> history;
+    private EventHandler<ActionEvent> undoMoveFunction;
+    private EventHandler<ActionEvent> redoMoveFunction;
 
-    public RightView(){
+    public DashboardView(){
         display = new VBox();
         undoState = false;
 
@@ -37,15 +39,24 @@ public class RightView {
         createAuxiliaryButtons();
         createBottom();
 
-        display.getChildren().addAll(scores, bottom, auxiliaryButtons);
+        history = new ListView<>();
+
+        history.getStyleClass().add("listview");
+        history.setMinHeight(400);
+        history.setMinWidth(300);
+        HBox hbox = new HBox();
+        hbox.getChildren().add(history);
+        hbox.getStyleClass().add("hboxlist");
+
+        display.getChildren().addAll(scores, hbox, bottom, auxiliaryButtons);
+        display.getStyleClass().add("display");
+
     }
 
     private void createDisplay(){
         display.setLayoutX(900);
-        display.setLayoutY(600);
-        display.setMinHeight(650);
-        display.setMinWidth(200);
-        display.getStyleClass().add("display");
+        display.setLayoutY(400);
+
 
     }
 
@@ -77,25 +88,25 @@ public class RightView {
 
     private void createAuxiliaryButtons() {
         auxiliaryButtons = new GridPane();
-        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Load Game", "Quit"), 115, 35, "auxbuttons");
+        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit"), 115, 35, "auxbuttons");
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(buttons.getButtons());
 
-        int[] position = {0, 0, 2, 0, 0, 1, 2, 1, 1, 2};
+        int[] position = {0, 0, 1, 0, 0, 1, 1, 1};
         int i = 0;
         for(Button b: buttons.getButtons()){
             addGPaneElement(b, position[i++], position[i++]);
-            b.setOnAction((newEvent) -> {
-                setUndo(true);
-                b.setDisable(true);
-            });
         }
         auxiliaryButtons.getStyleClass().add("gpane");
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
 
-
-
+        buttons.getButtons().get(0).setOnAction(e -> {
+            undoMoveFunction.handle(e);
+        });
+        buttons.getButtons().get(1).setOnAction(e -> {
+            redoMoveFunction.handle(e);
+        });
     }
 
     private void createBottom() {
@@ -133,5 +144,17 @@ public class RightView {
     }
     public boolean getUndoState(){
         return undoState;
+    }
+
+    public ListView<Move> getHistory() {
+        return history;
+    }
+
+    public void setUndoMoveClicked(EventHandler<ActionEvent> move) {
+        undoMoveFunction = move;
+    }
+
+    public void setRedoMoveClicked(EventHandler<ActionEvent> move) {
+        redoMoveFunction = move;
     }
 }

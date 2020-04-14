@@ -124,7 +124,7 @@ public class ChessBoard extends Board {
         if (p == null) {
           continue;
         }
-        if (p.toString().equals(KING)) {
+        if (p.getType().equals(KING)) {
           if (p.getColor().equals(BLACK)) {
             blackKingI = i;
             blackKingJ = j;
@@ -202,7 +202,7 @@ public class ChessBoard extends Board {
     int i = (int) threatLoc.getX();
     int j = (int) threatLoc.getY();
     Piece threat = getPieceAt(i, j);
-    if (threat.toString().equals(KNIGHT) || threat.toString().equals(PAWN)) {
+    if (threat.getType().equals(KNIGHT) || threat.getType().equals(PAWN)) {
       System.out.println("CANT BLOCK KNIGHT OR PAWN, DEAD");
       return false;
     }
@@ -232,11 +232,11 @@ public class ChessBoard extends Board {
         Piece thisPiece = getPieceAt(i, j);
         List<Point2D> thisPieceMoves = getValidMoves(i, j);
         if ((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor()
-            .equals(targetColor) || (!ignoreTheirKing && thisPiece.toString().equals(
+            .equals(targetColor) || (!ignoreTheirKing && thisPiece.getType().equals(
             KING))) {
           continue;
         }
-        if(thisPiece.toString().equals(PAWN)){
+        if(thisPiece.getType().equals(PAWN)){
           pawnList.add(new Point2D.Double(i, j));
         }
         else {
@@ -301,7 +301,7 @@ public class ChessBoard extends Board {
           continue;
         }
         List<Point2D> thisPieceMoves;
-        boolean pawn = thisPiece.toString().equals(PAWN);
+        boolean pawn = thisPiece.getType().equals(PAWN);
         if(pawn){
           int inc = getPawnInc(thisPiece);
           thisPieceMoves = getPawnDiags(i + inc, j, thisPiece,  false);
@@ -574,4 +574,6 @@ public class ChessBoard extends Board {
     ret = new Point2D.Double(x, y);
     return ret;
   }
+
+
 }
