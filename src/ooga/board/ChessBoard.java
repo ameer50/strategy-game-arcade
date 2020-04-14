@@ -51,7 +51,7 @@ public class ChessBoard extends Board {
   }
 
   @Override
-  public int doMove(int startX, int startY, int endX, int endY) {
+  public int doMove(int startX, int startY, int endX, int endY, boolean undo) {
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
     currPiece.move();

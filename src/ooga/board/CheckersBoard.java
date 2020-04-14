@@ -75,7 +75,7 @@ public class CheckersBoard extends Board {
         /*if (piece == null) { return null; }
         System.out.println("Problem color " + color + " |  Problem piece" + piece + " | X, Y " + x + " " + y);
         System.out.println("problem map " + pieceColorMap);
-        if (pieceColorMap.get(color).contains(piece)) {
+        if (pieceColorMape.get(color).contains(piece)) {
             validMoves = new ArrayList<Point2D>();
             //checkRight(x, y, piece);
             //checkLeft(x, y, piece);
