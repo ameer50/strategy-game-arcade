@@ -17,6 +17,8 @@ import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
 import ooga.view.PieceView;
 import ooga.xml.XMLParser;
+import ooga.xml.XMLWriter;
+
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -55,23 +57,25 @@ public class Controller {
     private Player playerTwo;
     private History history;
     private ObservableList<Move> historyList;
+    private Stage stage;
 
     public Controller (Stage stage) {
         startTime = System.currentTimeMillis();
-        setUpMenu(stage);
+        this.stage = stage;
+        setUpMenu();
     }
 
-    private void setUpMenu(Stage stage) {
-        menuScreen = new MenuScreen(stage);
+    private void setUpMenu() {
+        menuScreen = new MenuScreen(this.stage);
         printMessageAndTime("Setup Menu Screen.");
 
         menuScreen.buttonListener(e -> {
-            setUpGameScreen(stage, menuScreen.getGameSelected(),menuScreen.getFileName());
+            setUpGameScreen(menuScreen.getGameSelected(),menuScreen.getFileName());
         });
         printMessageAndTime("Setup listener.");
     }
 
-    private void setUpGameScreen(Stage stage, String typeString, String fileName) {
+    private void setUpGameScreen(String typeString, String fileName) {
         GameType gameType = GameType.valueOf(typeString.toUpperCase());
         System.out.println("File name" + fileName);
         String gameXML = String.format(fileName);
@@ -79,6 +83,7 @@ public class Controller {
         p.parse(gameXML);
         printMessageAndTime("XML parsed.");
 
+        //TODO: change to reflection
         switch (gameType) {
             case CHESS:
                 board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
@@ -87,7 +92,7 @@ public class Controller {
                 board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
         } printMessageAndTime("Setup Board.");
 
-        gameScreen = new GameScreen(stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
+        gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
         printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
@@ -135,14 +140,13 @@ public class Controller {
 
         /* X and Y are the indices of the cell clicked to move TO */
         boardView.setOnMoveClicked((int toX, int toY) -> {
-            Point2D startLoc = boardView.getSelectedLocation();
-            Point2D endLoc = new Point2D.Double(toX, toY);
-            Piece capturedPiece = board.getPieceAt(toX, toY);
+            Point2D startLocation = boardView.getSelectedLocation();
+            Point2D endLocation = new Point2D.Double(toX, toY);
 
-            doPieceMove(startLoc, endLoc, false);
             printMessageAndTime("Did user's move.");
 
-            Move move = new Move(board.getPieceAt(toX, toY), startLoc, endLoc, capturedPiece);
+            Move move = new Move(startLocation, endLocation);
+            doMove(move);
             history.addMove(move);
             historyList.add(move);
             toggleActivePlayer();
@@ -153,26 +157,26 @@ public class Controller {
                 printMessageAndTime("Did CPU's move.");
             }
             // board.print();
-            //gameScreen.setRecentLocation(fromX, fromY, toX, toY);
         });
 
         gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
             Move prevMove = history.undo();
             historyList.remove(historyList.size() - 1);
-            Point2D startLoc = prevMove.getEndLocation();
-            Point2D endLoc = prevMove.getStartLocation();
+            Point2D startLocation = prevMove.getEndLocation();
+            Point2D endLocation = prevMove.getStartLocation();
+            Move reverseMove = new Move(startLocation, endLocation);
+            reverseMove.setUndoTrue();
 
-            doPieceMove(startLoc, endLoc, true);
+            doMove(reverseMove);
             toggleActivePlayer();
 
             if (prevMove.getCapturedPiece() != null) {
-                int fromX = (int) startLoc.getX();
-                int fromY = (int) startLoc.getY();
                 Piece capturedPiece = prevMove.getCapturedPiece();
-                board.putPieceAt(fromX, fromY, capturedPiece);
-                activePlayer.addToScore((int) -capturedPiece.getValue());
+                Point2D capturedPieceLocation = prevMove.getCapturedPieceLocation();
+                board.putPieceAt(capturedPieceLocation, capturedPiece);
+                activePlayer.addToScore(-capturedPiece.getValue());
                 PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-                boardView.getCellAt(fromX, fromY).setPiece(capturedPieceView);
+                boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
                 //TODO: another backend call that can take care of resetting pawns to their first move pattern
             }
         });
@@ -180,17 +184,24 @@ public class Controller {
         gameScreen.getDashboardView().setRedoMoveClicked((e) -> {
             Move prevMove = history.redo();
             historyList.add(prevMove);
-            Point2D startLoc = prevMove.getStartLocation();
-            Point2D endLoc = prevMove.getEndLocation();
-            doPieceMove(startLoc, endLoc, false);
+
+            doMove(prevMove);
             toggleActivePlayer();
         });
 
+        gameScreen.getDashboardView().setQuitClicked((e) -> {
+            setUpMenu();
+        });
+
+        gameScreen.getDashboardView().setSaveClicked((e) -> {
+            System.out.println("inside");
+            XMLWriter test = new XMLWriter("testing.xml");
+            test.writePresets(board, "new.xml");
+        });
+
+
         board.setOnPiecePromoted((int toX, int toY) -> {
             boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
-//        Piece piece = board.getPieceAt(toX, toY);
-//        String name = String.format("%s_%s", piece.getColor(), piece.getType());
-//        boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
     }
 
@@ -200,14 +211,18 @@ public class Controller {
     }
 
     private void doAIMove() {
+        //TODO: have generateMove return a Move
         List<Integer> AIMove = CPU.generateMove();
         int fromX = AIMove.get(0);
         int fromY = AIMove.get(1);
+        Point2D startLocation = new Point2D.Double(fromX, fromY);
         int toX = AIMove.get(2);
         int toY = AIMove.get(3);
-        activePlayer.doMove(fromX, fromY, toX, toY, false);
-        // stall(STALL_TIME);
-        boardView.movePiece(fromX, fromY, toX, toY);
+        Point2D endLocation = new Point2D.Double(toX, toY);
+        Move m = new Move(startLocation, endLocation);
+
+        activePlayer.doMove(m);
+        boardView.doMove(m);
 
         toggleActivePlayer();
         board.checkWon();
@@ -228,13 +243,8 @@ public class Controller {
         }
     }
 
-    private void doPieceMove(Point2D start, Point2D end, boolean undo) {
-        int fromX = (int) start.getX();
-        int fromY = (int) start.getY();
-        int toX = (int) end.getX();
-        int toY = (int) end.getY();
-
-        boardView.movePiece(fromX, fromY, toX, toY);
-        activePlayer.doMove(fromX, fromY, toX, toY, undo);
+    private void doMove(Move m) {
+        activePlayer.doMove(m);
+        boardView.doMove(m);
     }
 }

@@ -15,6 +15,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import ooga.ProcessCoordinateInterface;
 import ooga.controller.CopyUtility;
+import ooga.history.Move;
 
 public abstract class Board implements Serializable {
 
@@ -87,13 +88,22 @@ public abstract class Board implements Serializable {
     }
   }
 
+  public Piece getPieceAt(Point2D location) {
+    if (isCellInBounds((int) location.getX(), (int) location.getY())) {
+      return pieceBiMap.get(location);
+    } else {
+      return null;
+    }
+  }
+
   /**
    Get piece at the specified coordinates.
    @return the Piece object at x, y; null if nothing in the cell.
    **/
-  public void putPieceAt(int i, int j, Piece input) {
-    if (isCellInBounds(i, j)) {
-      pieceBiMap.forcePut(new Point2D.Double(i, j), input);
+  public void putPieceAt(Point2D location, Piece piece) {
+    if (isCellInBounds(location)) {
+      pieceBiMap.forcePut(location, piece);
+      //updatePieceColorMap(piece);
     }
   }
 
@@ -119,6 +129,10 @@ public abstract class Board implements Serializable {
    **/
   public boolean isCellInBounds(int i, int j) { return i >= 0 && i < height && j >= 0 && j < width; }
 
+  public boolean isCellInBounds(Point2D location) {
+    return isCellInBounds((int) location.getX(), (int) location.getY());
+  }
+
   public int getHeight() { return height; }
 
   public int getWidth() { return width; }
@@ -135,11 +149,10 @@ public abstract class Board implements Serializable {
 
   /**
    Execute the desired move
-   @param endX new x position
-   @param endY new y position
+   @param m Move object which operates on the piece
    @return score from completing this move
    **/
-  public abstract int doMove(int startX, int startY, int endX, int endY, boolean undo);
+  public abstract int doMove(Move m);
 
   public abstract List<Point2D> getValidMoves(int i, int j);
 
@@ -201,6 +214,10 @@ public abstract class Board implements Serializable {
       // FIXME: don't print stack trace
     }
     return null;
+  }
+
+  public BiMap<Point2D, Piece> getPieceBiMap() {
+    return pieceBiMap;
   }
 }
 

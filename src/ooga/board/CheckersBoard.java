@@ -2,10 +2,10 @@ package ooga.board;
 
 import java.io.Serializable;
 import javafx.util.Pair;
+import ooga.history.Move;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +36,6 @@ public class CheckersBoard extends Board implements Serializable {
     public String checkWon() {
 
         String result = checkOneColor();
-
 
 
         return "Test";
@@ -137,7 +136,11 @@ public class CheckersBoard extends Board implements Serializable {
          } */
     }
 
-    public int doMove(int x_i, int y_i, int x_f, int y_f, boolean undo) {
+    public int doMove(Move m) {
+        int x_i = (int) m.getStartLocation().getX();
+        int y_i = (int) m.getStartLocation().getY();
+        int x_f = (int) m.getEndLocation().getX();
+        int y_f = (int) m.getEndLocation().getY();
         System.out.println("Initial: " + x_i + "Initial: " + y_i);
         System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
@@ -145,17 +148,27 @@ public class CheckersBoard extends Board implements Serializable {
         placePiece(x_i, y_i, null);
         placePiece(x_f, y_f, currPiece);
         boolean isKill = false;
+        Point2D.Double capLoc = null;
+        Piece hitPiece = null;
         System.out.println("Distance: " + distance(x_i,y_i,x_f,y_f));
+
         if (distance(x_i,y_i,x_f,y_f)>2.0) {
             System.out.println("X to be removed: " + Math.abs(x_f+x_i)/2 + "  Y To be removed: " + Math.abs(y_f+y_i)/2);
+            capLoc = new Point2D.Double(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
+            hitPiece = getPieceAt(capLoc);
             removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
             //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
-        } if(oppPiece == null) {
-            return 0;
-        } else {
-            System.out.println("returning score");
-            return (int) oppPiece.getValue();
         }
+
+        m.setPiece(currPiece);
+        m.setCapturedPieceAndLocation(hitPiece, capLoc);
+        pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
+
+        int score = 0;
+        if(hitPiece != null) {
+            score =  hitPiece.getValue();
+        }
+        return score;
     }
 
     /* START: Eight elements that make up the three possible move patterns of the pieces in the game. */
@@ -324,6 +337,6 @@ public class CheckersBoard extends Board implements Serializable {
         /*Piece piece = getPieceAt(i, j);
         pieceColorMap.get(piece.getColor()).remove(piece);
         pieceLocationBiMap.forcePut(new Point2D.Double(i, j), null);*/
-        putPieceAt(i, j, null);
+        putPieceAt(new Point2D.Double(i, j), null);
     }
 }

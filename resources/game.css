@@ -203,15 +203,16 @@
 
 .list-cell:even { /* <=== changed to even */
     -fx-background-color: #FFF8DC;
-    -font-style: Avant Garde;
+    -fx-font-famil: "Avant Garde";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
+
 
 }
 
 .list-cell:odd { /* <=== changed to even */
     -fx-background-color: #DEB887;
-    -font-style: Avant Garde;
+    -fx-font-family: "Avant Garde";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }

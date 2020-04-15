@@ -2,6 +2,7 @@ package ooga.view;
 
 import javafx.scene.layout.StackPane;
 import ooga.ProcessCoordinateInterface;
+import ooga.history.Move;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -18,7 +19,7 @@ public interface BoardViewInterface {
 
     void highlightValidMoves(List<Point2D> validMoves);
 
-    void movePiece(int fromX, int fromY, int toX, int toY);
+    void doMove(Move m);
 
     void setOnPieceClicked(ProcessCoordinateInterface clicked);
 
