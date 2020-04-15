@@ -2,6 +2,8 @@ package ooga.view;
 
 import javafx.scene.layout.StackPane;
 import ooga.ProcessCoordinateInterface;
+import ooga.history.Move;
+
 import java.awt.geom.Point2D;
 import java.util.*;
 
@@ -51,6 +53,10 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     public CellView getCellAt(int x, int y) {
         return cellArray[x][y];
+    }
+
+    public CellView getCellAt(Point2D location) {
+        return cellArray[(int) location.getX()][(int) location.getY()];
     }
 
     public void checkeredColor() {
@@ -105,9 +111,9 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         }
     }
 
-    public void movePiece(int fromX, int fromY, int toX, int toY) {
-        CellView initCell = getCellAt(fromX, fromY);
-        CellView finalCell = getCellAt(toX, toY);
+    public void movePiece(Move m) {
+        CellView initCell = getCellAt(m.getStartLocation());
+        CellView finalCell = getCellAt(m.getEndLocation());
         PieceView piece = initCell.getPiece();
 
         finalCell.setPiece(piece);

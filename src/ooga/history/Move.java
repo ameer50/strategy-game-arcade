@@ -34,9 +34,12 @@ public class Move {
         return capturedPiece;
     }
 
-
     public void setCapturedPiece(Piece cap){
         capturedPiece = cap;
+    }
+
+    public Piece getPiece() {
+        return piece;
     }
 
     public void setPiece(Piece piece){
