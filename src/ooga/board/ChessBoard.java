@@ -5,6 +5,7 @@ import java.awt.geom.Point2D.Double;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,19 +21,60 @@ public class ChessBoard extends Board {
   public static final String BLACK = "Black";
   public static final String WHITE = "White";
 
+  private Map<String, Boolean> checkMap;
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
       Pair<String, Integer>> pieces) {
     super(settings, locations, pieces);
+    checkMap = new HashMap<>();
+    checkMap.put(BLACK, false);
+    checkMap.put(WHITE, false);
   }
 
   @Override
   public List<Point2D> getValidMoves(int i, int j) {
     Piece piece = getPieceAt(i, j);
-
     if (piece == null) {
       return null;
     }
     String color = piece.getColor();
+
+    Point2D kingPoint = locateKings(color);
+    int kingI = (int) kingPoint.getX();
+    int kingJ = (int) kingPoint.getY();
+    Pair<List<Point2D>, List<Point2D>> checks = getMovesAndCheckPieces(kingI, kingJ, color, false);
+    List<Point2D> checkPieces = checks.getValue();
+    //not in check, proceed normally
+    if(checkPieces.size() == 0){
+      return getValidMovesIgnoreCheck(i, j);
+    }
+    if(piece.getType().equals(KING)){
+      List<Point2D> kingAllValids = getValidMovesIgnoreCheck(i, j);
+      List<Point2D> safeKings = getSafeKingMoves(kingAllValids, checks.getKey());
+      safeKings = checkDanger(safeKings, kingI, kingJ);
+      return safeKings;
+    }
+    if(checkPieces.size() > 1){
+      return null;
+    }
+
+    Point2D threatLoc = checkPieces.get(0);
+    List<Point2D> threatPath = getPath((int) threatLoc.getX(), (int) threatLoc.getY(), kingI, kingJ);
+    threatPath.add(threatLoc);
+    List<Point2D> thisPieceValidMoves = getValidMovesIgnoreCheck(i, j);
+    thisPieceValidMoves.retainAll(threatPath);
+
+    return thisPieceValidMoves;
+  }
+
+  public List<Point2D> getValidMovesIgnoreCheck(int i, int j) {
+    Piece piece = getPieceAt(i, j);
+    if (piece == null) {
+      return null;
+    }
+    String color = piece.getColor();
+    if(checkMap.get(color)){
+      System.out.println("IN CHECK");
+    }
     if (pieceColorMap.get(color).contains(piece)) {
       String movePattern = piece.getMovePattern();
       String[] movePatternSplit = movePattern.split(" ");
@@ -43,7 +85,7 @@ public class ChessBoard extends Board {
       }
       try {
         Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, List.class,
-                piece.getClass());
+            piece.getClass());
         Object ret = moveMethod.invoke(this, i, j, params, piece);
         return (List<Point2D>) ret;
       } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
@@ -52,7 +94,6 @@ public class ChessBoard extends Board {
     }
     return null;
   }
-
   @Override
   public int doMove(Move m) {
     int startX = (int) m.getStartLocation().getX();
@@ -109,27 +150,22 @@ public class ChessBoard extends Board {
     // If different x and y, and the difference between their x and our x = their y and our y, it is diagonal.
     // If diff x and y and those differences aren't the same, it's a knight and we can't block.
     // I need every move the other team can make and every piece holding in check.
-    Integer[] coords = locateKings();
-    Integer blackI = coords[0];
-    Integer blackJ = coords[1];
-    Integer whiteI = coords[2];
-    Integer whiteJ = coords[3];
-    if(getCheckmate(whiteI, whiteJ, WHITE, BLACK)){
+
+    if(getCheckmate(WHITE, BLACK)){
       System.out.println("Checkmate");
       return WHITE;
     }
-    if(getCheckmate(blackI, blackJ, BLACK, WHITE)){
+    if(getCheckmate(BLACK, WHITE)){
       System.out.println("Checkmate");
       return BLACK;
     }
     return null;
   }
 
-  private Integer[] locateKings() {
-    Integer blackKingI = null;
-    Integer blackKingJ = null;
-    Integer whiteKingI = null;
-    Integer whiteKingJ = null;
+  private Point2D locateKings(String color) {
+    Integer iCoord = null;
+    Integer jCoord = null;
+
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         Piece p = getPieceAt(i, j);
@@ -137,31 +173,39 @@ public class ChessBoard extends Board {
           continue;
         }
         if (p.getType().equals(KING)) {
-          if (p.getColor().equals(BLACK)) {
-            blackKingI = i;
-            blackKingJ = j;
-          } else {
-            whiteKingI = i;
-            whiteKingJ = j;
+          if (p.getColor().equals(color)) {
+            iCoord = i;
+            jCoord = j;
           }
         }
       }
     }
-    Integer[] ret = {blackKingI, blackKingJ, whiteKingI, whiteKingJ};
-    return ret;
+    if(iCoord == null){
+      return null;
+    }
+    Point2D point = new Point2D.Double(iCoord, jCoord);
+    return point;
   }
 
-  private boolean getCheckmate(int kingI, int kingJ, String ourColor, String opponentColor){
+  private boolean getCheckmate(String ourColor, String opponentColor){
+    Point2D kingPoint = locateKings(ourColor);
+    if(kingPoint == null){
+      return true;
+    }
+    int kingI = (int) kingPoint.getX();
+    int kingJ = (int) kingPoint.getY();
+
     Pair<List<Point2D>, List<Point2D>> theirMoves = getMovesAndCheckPieces(kingI, kingJ, ourColor, true);
     List<Point2D> opponentMoves = theirMoves.getKey();
     List<Point2D> checkPieces = theirMoves.getValue();
 
     if (checkPieces.size() == 0) {
-      System.out.println("NO CHECK");
+      checkMap.put(ourColor, false);
       return false;
     }
+    checkMap.put(ourColor, true);
 
-    List<Point2D> kingMoves = getValidMoves(kingI, kingJ);
+    List<Point2D> kingMoves = getValidMovesIgnoreCheck(kingI, kingJ);
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
 
     safeMoves = checkDanger(safeMoves, kingI, kingJ);
@@ -242,7 +286,7 @@ public class ChessBoard extends Board {
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         Piece thisPiece = getPieceAt(i, j);
-        List<Point2D> thisPieceMoves = getValidMoves(i, j);
+        List<Point2D> thisPieceMoves = getValidMovesIgnoreCheck(i, j);
         if ((i == kingI && j == kingJ) || thisPiece == null || thisPiece.getColor()
             .equals(targetColor) || (!ignoreTheirKing && thisPiece.getType().equals(
             KING))) {
@@ -319,7 +363,7 @@ public class ChessBoard extends Board {
           thisPieceMoves = getPawnDiags(i + inc, j, thisPiece,  false);
         }
         else{
-          thisPieceMoves = getValidMoves(i, j);
+          thisPieceMoves = getValidMovesIgnoreCheck(i, j);
         }
         if ((i == potentialI && j == potentialJ) || color
             .equals(thisPiece.getColor())) {
@@ -339,7 +383,6 @@ public class ChessBoard extends Board {
   }
 
   private List<Point2D> getPath(int threatI, int threatJ, int kingI, int kingJ) {
-    List<Point2D> path = new ArrayList<>();
     //lateral movement in same row
     if (threatI == kingI) {
       return getPathSameRowRook(threatI, threatJ, kingJ);
@@ -352,7 +395,7 @@ public class ChessBoard extends Board {
     if(isDiagonal(threatI, threatJ, kingI, kingJ)){
       return getPathDiagonal(threatI, threatJ, kingI, kingJ);
     }
-    return null;
+    return new ArrayList<>();
   }
   private List<Point2D> getPathSameRowRook(int i, int threatJ, int kingJ){
     List<Point2D> path = new ArrayList<>();
