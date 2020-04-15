@@ -124,7 +124,7 @@ public class CheckersBoard extends Board implements Serializable {
          } */
     }
 
-    public int doMove(Move m) {
+    public void doMove(Move m) {
         int x_i = (int) m.getStartLocation().getX();
         int y_i = (int) m.getStartLocation().getY();
         int x_f = (int) m.getEndLocation().getX();
@@ -169,7 +169,7 @@ public class CheckersBoard extends Board implements Serializable {
             promoteAction.process(x_f, y_f);
         }
         
-        return score;
+        //return score;
     }
 
     /* START: Eight elements that make up the three possible move patterns of the pieces in the game. */

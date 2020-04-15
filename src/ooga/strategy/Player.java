@@ -2,6 +2,7 @@ package ooga.strategy;
 
 import javafx.beans.property.*;
 import ooga.board.Board;
+import ooga.board.Piece;
 import ooga.history.Move;
 
 import java.awt.*;
@@ -23,8 +24,10 @@ public abstract class Player {
     public abstract boolean isCPU();
 
     public void doMove(Move m) {
-        int pointsScored = board.doMove(m);
-        addToScore(pointsScored);
+        board.doMove(m);
+        for (Piece capturedPiece: m.getCapturedPiecesAndLocations().keySet()) {
+            addToScore(capturedPiece.getValue());
+        }
     }
 
     public void addToScore(int amount) {

@@ -20,13 +20,9 @@ public class ChessBoard extends Board implements Serializable {
   public static final String BLACK = "Black";
   public static final String WHITE = "White";
 
-  private Map<String, Boolean> checkMap;
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
       Pair<String, Integer>> pieces) {
     super(settings, locations, pieces);
-    checkMap = new HashMap<>();
-    checkMap.put(BLACK, false);
-    checkMap.put(WHITE, false);
   }
 
   @Override
@@ -35,23 +31,21 @@ public class ChessBoard extends Board implements Serializable {
     if (piece == null) {
       return null;
     }
+    List<Point2D> thisPieceValidMoves = getValidMovesIgnoreCheck(i, j);
     String color = piece.getColor();
-
     Point2D kingPoint = locateKings(color);
     int kingI = (int) kingPoint.getX();
     int kingJ = (int) kingPoint.getY();
-    Pair<List<Point2D>, List<Point2D>> checks = getMovesAndCheckPieces(kingI, kingJ, color, false);
+    Pair<List<Point2D>, List<Point2D>> checks = getMovesAndCheckPieces(kingI, kingJ, color, true);
     List<Point2D> checkPieces = checks.getValue();
-    //not in check, proceed normally
+    if (piece.getType().equals(KING)) {
+      List<Point2D> safeKings = getSafeKingMoves(thisPieceValidMoves, checks.getKey());
+      return checkDanger(safeKings, kingI, kingJ);
+    }
     if (checkPieces.size() == 0){
       return getValidMovesIgnoreCheck(i, j);
     }
-    if (piece.getType().equals(KING)) {
-      List<Point2D> kingAllValids = getValidMovesIgnoreCheck(i, j);
-      List<Point2D> safeKings = getSafeKingMoves(kingAllValids, checks.getKey());
-      safeKings = checkDanger(safeKings, kingI, kingJ);
-      return safeKings;
-    }
+
     if (checkPieces.size() > 1) {
       return null;
     }
@@ -59,7 +53,6 @@ public class ChessBoard extends Board implements Serializable {
     Point2D threatLoc = checkPieces.get(0);
     List<Point2D> threatPath = getPath((int) threatLoc.getX(), (int) threatLoc.getY(), kingI, kingJ);
     threatPath.add(threatLoc);
-    List<Point2D> thisPieceValidMoves = getValidMovesIgnoreCheck(i, j);
     thisPieceValidMoves.retainAll(threatPath);
 
     return thisPieceValidMoves;
@@ -69,10 +62,6 @@ public class ChessBoard extends Board implements Serializable {
     Piece piece = getPieceAt(i, j);
     if (piece == null) {
       return null;
-    }
-    String color = piece.getColor();
-    if (checkMap.get(color)) {
-      // System.out.println("In check.");
     }
     String movePattern = piece.getMovePattern();
     String[] movePatternSplit = movePattern.split(" ");
@@ -93,7 +82,7 @@ public class ChessBoard extends Board implements Serializable {
   }
 
   @Override
-  public int doMove(Move m) {
+  public void doMove(Move m) {
     int startX = (int) m.getStartLocation().getX();
     int startY = (int) m.getStartLocation().getY();
     int endX = (int) m.getEndLocation().getX();
@@ -117,7 +106,7 @@ public class ChessBoard extends Board implements Serializable {
       m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
     }
     promote(currPiece, endX, endY);
-    return score;
+    //return score;
   }
 
   private void promote(Piece piece, int endX, int endY){
@@ -197,10 +186,8 @@ public class ChessBoard extends Board implements Serializable {
     List<Point2D> checkPieces = theirMoves.getValue();
 
     if (checkPieces.size() == 0) {
-      checkMap.put(ourColor, false);
       return false;
     }
-    checkMap.put(ourColor, true);
 
     List<Point2D> kingMoves = getValidMovesIgnoreCheck(kingI, kingJ);
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
@@ -234,7 +221,7 @@ public class ChessBoard extends Board implements Serializable {
       safeMoves.remove(p);
     }
     for (Point2D p : safeMoves) {
-      // System.out.println("p = " + p);
+       System.out.println("p = " + p);
     }
     return safeMoves;
   }
