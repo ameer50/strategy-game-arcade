@@ -248,8 +248,7 @@ public class Controller {
     }
 
     private void doMove(Move m) {
-        boardView.doMove(m);
         activePlayer.doMove(m);
-        boardView.captures(m);
+        boardView.doMove(m);
     }
 }

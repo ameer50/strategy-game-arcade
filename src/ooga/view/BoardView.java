@@ -115,11 +115,14 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         CellView initCell = getCellAt(m.getStartLocation());
         CellView finalCell = getCellAt(m.getEndLocation());
         PieceView piece = initCell.getPiece();
-        
+        System.out.println(m.getCapturedPiecesAndLocations());
         for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
+            //if (pieceLocation == null) continue;
             this.getCellAt(pieceLocation).setPiece(null);
         }
-        finalCell.setPiece(piece);
+        if (finalCell.getPiece() == null || !finalCell.getPiece().getColor().equals(piece.getColor())) {
+            finalCell.setPiece(piece);
+        }
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
 //        tr.setFromX(tr.getFromX());
 //        tr.setFromY(tr.getFromY());
@@ -129,16 +132,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
         initCell.setPiece(null);
     }
-    public void captures(Move m){
-        System.out
-            .println("m.getCapturedPiecesAndLocations() = " + m.getCapturedPiecesAndLocations());
-        Point2D endLocation = m.getEndLocation();
-        for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
-            if(pieceLocation != endLocation && pieceLocation != null) {
-                this.getCellAt(pieceLocation).setPiece(null);
-            }
-        }
-    }
+
     public void setOnPieceClicked(ProcessCoordinateInterface clicked) {
         for (CellView cell: this) {
             cell.setPieceClicked(clicked);
