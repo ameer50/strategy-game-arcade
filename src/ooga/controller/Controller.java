@@ -148,6 +148,7 @@ public class Controller {
 
             Move move = new Move(startLocation, endLocation);
             doMove(move);
+
             history.addMove(move);
             historyList.add(move);
             toggleActivePlayer();
@@ -249,5 +250,6 @@ public class Controller {
     private void doMove(Move m) {
         boardView.doMove(m);
         activePlayer.doMove(m);
+        boardView.captures(m);
     }
 }

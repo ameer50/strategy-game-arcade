@@ -113,7 +113,9 @@ public class ChessBoard extends Board implements Serializable {
     pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
 
     m.setPiece(currPiece);
-    m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
+    if(hitPiece != null) {
+      m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
+    }
     promote(currPiece, endX, endY);
     return score;
   }

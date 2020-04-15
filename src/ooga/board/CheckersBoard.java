@@ -141,12 +141,14 @@ public class CheckersBoard extends Board implements Serializable {
         Point2D.Double capLoc = null;
         Piece hitPiece = null;
         System.out.println("Distance: " + distance(x_i,y_i,x_f,y_f));
-
         if (distance(x_i,y_i,x_f,y_f)>2.0) {
             System.out.println("X to be removed: " + Math.abs(x_f+x_i)/2 + "  Y To be removed: " + Math.abs(y_f+y_i)/2);
             capLoc = new Point2D.Double(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
+            System.out.println("capLoc = " + capLoc);
             hitPiece = getPieceAt(capLoc);
+            System.out.println("hitPiece = " + hitPiece);
             removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
+            m.addCapturedPieceAndLocation(hitPiece, capLoc);
             //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
         }
 
@@ -329,7 +331,9 @@ public class CheckersBoard extends Board implements Serializable {
         int sizeDiff = -1;
         while(sizeDiff != 0) {
             int before_size = validKillMoves.size();
-            for(Point2D point: validKillMoves){
+            System.out.println("Before loop VKM: " + validKillMoves);
+            for(int k = 0; k<validKillMoves.size(); k++){
+                Point2D point = validKillMoves.get(k);
                 int i = (int)point.getX();
                 int j = (int)point.getY();
                 up_left_kill(i, j);
@@ -337,6 +341,12 @@ public class CheckersBoard extends Board implements Serializable {
                 down_left_kill(i, j);
                 down_right_kill(i, j);
             }
+            List<Point2D> newList = validKillMoves.stream().distinct().collect(Collectors.toList());
+            validKillMoves.clear();
+            for(Point2D p : newList) {
+                validKillMoves.add((Point2D) p.clone());
+            }
+
             sizeDiff = validKillMoves.size()-before_size;
         }
     }
