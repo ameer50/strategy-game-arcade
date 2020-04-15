@@ -1,5 +1,6 @@
 package ooga.board;
 
+import java.io.Serializable;
 import javafx.util.Pair;
 
 import java.awt.geom.Point2D;
@@ -8,7 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
-public class CheckersBoard extends Board {
+public class CheckersBoard extends Board implements Serializable {
 
 
     public List<Point2D> validKillMoves = new ArrayList<Point2D>();

@@ -2,6 +2,7 @@ package ooga.board;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
 
-public class ChessBoard extends Board {
+public class ChessBoard extends Board implements Serializable {
 
   public static final String KING = "King";
   public static final String PAWN = "Pawn";
@@ -20,29 +21,24 @@ public class ChessBoard extends Board {
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
       Pair<String, Integer>> pieces) {
     super(settings, locations, pieces);
-    System.out.println(pieceColorMap);
   }
 
   @Override
   public List<Point2D> getValidMoves(int i, int j) {
     Piece piece = getPieceAt(i, j);
-
     if (piece == null) {
       return null;
     }
-    String color = piece.getColor();
-    if (pieceColorMap.get(color).contains(piece)) {
-      String movePattern = piece.getMovePattern();
-      String moveType = movePattern.split(" ")[0].toLowerCase();
-      int moveDistance = Integer.parseInt(movePattern.split(" ")[1]);
-      try {
-        Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
-                piece.getClass());
-        Object ret = moveMethod.invoke(this, i, j, moveDistance, piece);
-        return (List<Point2D>) ret;
-      } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-        System.out.println("Error: " + moveType);
-      }
+    String movePattern = piece.getMovePattern();
+    String moveType = movePattern.split(" ")[0].toLowerCase();
+    int moveDistance = Integer.parseInt(movePattern.split(" ")[1]);
+    try {
+      Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
+              piece.getClass());
+      Object ret = moveMethod.invoke(this, i, j, moveDistance, piece);
+      return (List<Point2D>) ret;
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      System.out.println("Error: " + moveType);
     }
     return null;
   }
@@ -59,9 +55,9 @@ public class ChessBoard extends Board {
     int score = 0;
     if (hitPiece != null) {
       score = hitPiece.getValue();
-      removePiece(hitPiece);
+      pieceBiMap.remove(hitPiece); // ***
     }
-    pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
+    pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
     promote(currPiece, endX, endY);
     return score;
   }
@@ -76,10 +72,6 @@ public class ChessBoard extends Board {
       piece.setMovePattern("Any -1");
       this.promoteAction.process(endX, endY);
     }
-  }
-
-  private void removePiece(Piece piece) {
-    pieceColorMap.get(piece.getColor()).remove(piece);
   }
 
   @Override
@@ -225,7 +217,7 @@ public class ChessBoard extends Board {
     Piece storedKing = getPieceAt(kingI, kingJ);
     System.out.println("storedKing = " + storedKing);
     if (ignoreTheirKing) {
-      pieceLocationBiMap.forcePut(new Double(kingI, kingJ), null);
+      pieceBiMap.forcePut(new Double(kingI, kingJ), null);
     }
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -248,7 +240,7 @@ public class ChessBoard extends Board {
       }
     }
     if (ignoreTheirKing) {
-      pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
+      pieceBiMap.forcePut(new Double(kingI, kingJ), storedKing);
     }
     for(Point2D pawn: pawnList){
       int i = (int) pawn.getX();
@@ -290,8 +282,8 @@ public class ChessBoard extends Board {
     /*if (storedPiece == null) {
       return false;
     }*/
-    pieceLocationBiMap.forcePut(new Double(kingI, kingJ), null);
-    pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), null);
+    pieceBiMap.forcePut(new Double(kingI, kingJ), null);
+    pieceBiMap.forcePut(new Double(potentialI, potentialJ), null);
     System.out.println("Potentials: " + potentialI + ", " + potentialJ);
 
     for (int i = 0; i < height; i++) {
@@ -314,15 +306,15 @@ public class ChessBoard extends Board {
           continue;
         }
         if (thisPieceMoves.contains(potentialPoint)) {
-          pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
-          pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
+          pieceBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
+          pieceBiMap.forcePut(new Double(kingI, kingJ), storedKing);
           System.out.println(thisPiece + " at " + i + ", " + j);
           return true;
         }
       }
     }
-    pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
-    pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
+    pieceBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
+    pieceBiMap.forcePut(new Double(kingI, kingJ), storedKing);
     return false;
   }
 

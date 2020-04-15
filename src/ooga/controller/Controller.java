@@ -17,8 +17,6 @@ import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
 import ooga.view.PieceView;
 import ooga.xml.XMLParser;
-
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -49,7 +47,7 @@ public class Controller {
     private BoardView boardView;
     private StrategyAI CPU;
     private boolean toggleMoves = true;
-    private boolean isAIOpponent = false;
+    private boolean isAIOpponent = true; // ***
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -93,16 +91,20 @@ public class Controller {
         printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
+        if (isAIOpponent) setUpAI();
         setUpPlayers();
         setUpHistory();
-        if (isAIOpponent) setUpAI();
         setListeners();
     }
 
     private void setUpPlayers() {
         // TODO: replace with AI, if AI
-        playerOne = new HumanPlayer("Player1", "WHITE", board);
-        playerTwo = new HumanPlayer("Player2", "BLACK", board);
+        playerOne = new HumanPlayer("Player1", "White", board);
+        if (!isAIOpponent) {
+            playerTwo = new HumanPlayer("Player2", "Black", board);
+        } else {
+            playerTwo = CPU;
+        }
         gameScreen.getDashboardView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
         gameScreen.getDashboardView().setActivePlayerText(activePlayer);
@@ -116,7 +118,7 @@ public class Controller {
 
     private void setUpAI() {
         // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new StrategyAI("AI", "BLACK", board, StrategyType.TRIVIAL);
+        CPU = new StrategyAI("AI", "Black", board, StrategyType.ALPHA_BETA);
     }
 
     private void setListeners() {
@@ -143,13 +145,13 @@ public class Controller {
             Move move = new Move(board.getPieceAt(toX, toY), startLoc, endLoc, capturedPiece);
             history.addMove(move);
             historyList.add(move);
+            toggleActivePlayer();
+            board.checkWon();
 
             if (activePlayer.isCPU()) {
                 doAIMove();
                 printMessageAndTime("Did CPU's move.");
             }
-            toggleActivePlayer();
-            board.checkWon();
             // board.print();
             //gameScreen.setRecentLocation(fromX, fromY, toX, toY);
         });
@@ -206,6 +208,9 @@ public class Controller {
         activePlayer.doMove(fromX, fromY, toX, toY, false);
         // stall(STALL_TIME);
         boardView.movePiece(fromX, fromY, toX, toY);
+
+        toggleActivePlayer();
+        board.checkWon();
     }
 
     private void printMessageAndTime (String message) {
