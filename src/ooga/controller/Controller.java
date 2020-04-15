@@ -111,9 +111,10 @@ public class Controller {
         } else {
             playerTwo = CPU;
         }
-        gameScreen.getDashboardView().bindScores(playerOne, playerTwo);
+        gameScreen.getDashboardView().setPlayerNames(playerOne.getName(), playerTwo.getName());
+        gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());
         activePlayer = playerOne;
-        gameScreen.getDashboardView().setActivePlayerText(activePlayer);
+        gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
     private void setUpHistory() {
@@ -207,7 +208,7 @@ public class Controller {
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
-        gameScreen.getDashboardView().setActivePlayerText(activePlayer);
+        gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
     private void doAIMove() {
