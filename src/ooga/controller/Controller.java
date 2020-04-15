@@ -95,8 +95,8 @@ public class Controller {
         printMessageAndTime("Setup Game Screen.");
         boardView = gameScreen.getBoardView();
         // replace with AI if AI, but player 1 is always white since they start
-        playerOne = new HumanPlayer("Player1", Color.WHITE, board);
-        playerTwo = new HumanPlayer("Player2", Color.BLACK, board);
+        playerOne = new HumanPlayer("Player1", "White", board);
+        playerTwo = new HumanPlayer("Player2", "Black", board);
         gameScreen.getDashboardView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
         gameScreen.getDashboardView().setActivePlayerText(activePlayer);
@@ -113,7 +113,7 @@ public class Controller {
 
     private void setUpAI() {
         // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new StrategyAI("AI", Color.BLACK, board, StrategyType.TRIVIAL);
+        CPU = new StrategyAI("AI", "Black", board, StrategyType.TRIVIAL);
     }
 
     private void setListeners() {
@@ -181,8 +181,7 @@ public class Controller {
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
-            String name = board.getPieceAt(toX, toY).getColor() + "_" + board.getPieceAt(toX, toY).getType();
-            boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
+            boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
         });
     }
 
