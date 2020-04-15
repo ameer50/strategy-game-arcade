@@ -196,7 +196,7 @@ public class Controller {
 
         gameScreen.getDashboardView().setSaveClicked((e) -> {
             //TODO: change fileName to be an input
-            processor.write(board, "new.xml");
+            processor.write(board, gameScreen.getDashboardView().getNewFileName());
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {

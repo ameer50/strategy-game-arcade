@@ -4,20 +4,28 @@ import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import ooga.history.Move;
 import ooga.strategy.Player;
 
 import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class DashboardView {
 
 
+    private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private VBox display;
     private IntegerProperty whiteScore;
     private IntegerProperty blackScore;
@@ -31,6 +39,7 @@ public class DashboardView {
     private EventHandler<ActionEvent> redoMoveFunction;
     private EventHandler<ActionEvent> quitFunction;
     private EventHandler<ActionEvent> saveFunction;
+    private String newFileName;
 
     public DashboardView(){
         display = new VBox();
@@ -112,7 +121,8 @@ public class DashboardView {
         });
 
         buttons.getButtons().get(2).setOnAction(e -> {
-            saveFunction.handle(e);
+            textFieldPopUp(saveFunction);
+
         });
 
         buttons.getButtons().get(3).setOnAction(e -> {
@@ -151,9 +161,49 @@ public class DashboardView {
         }
     }
 
+    public void textFieldPopUp(EventHandler<ActionEvent> e) {
+        Stage fileNameStage = new Stage();
+        fileNameStage.setTitle(res.getString("FileEnterTitle"));
+        fileNameStage.setHeight(500);
+        fileNameStage.setWidth(500);
+        Pane fileRoot = new Pane();
+        Scene settingsScene = new Scene(fileRoot);
+        settingsScene.getStylesheets().add(res.getString("PopupStyleSheet"));
+        fileNameStage.setScene(settingsScene);
+        fileNameStage.show();
+        setUpTextFieldPopUp(fileNameStage, fileRoot, e);
+    }
 
-    private void buttonEvent(Button b, EventHandler<ActionEvent> event){
-        b.setOnAction(e -> {
+
+
+
+    private void setUpTextFieldPopUp(Stage settingsStage, Pane fileRoot, EventHandler<ActionEvent> event) {
+
+        Text prefer = new Text();
+        prefer.setText("Enter XML Filename:");
+        prefer.getStyleClass().add("prefer");
+        prefer.setFill(Color.AZURE);
+
+        TextField textField = new TextField();
+        textField.getStyleClass().add("file-text-field");
+        VBox textFieldBox = new VBox();
+
+
+        textFieldBox.getChildren().addAll(prefer, textField);
+        textFieldBox.setLayoutX(125);
+        textFieldBox.setLayoutY(150);
+
+        Button goButton = new Button("Go!");
+        goButton.getStyleClass().add(res.getString("SettingsButtons"));
+        goButton.setLayoutX(220);
+        goButton.setLayoutY(250);
+
+        fileRoot.getChildren().addAll(textFieldBox, goButton);
+
+
+        goButton.setOnAction(e -> {
+            setNewFileName(textField.getText());
+            settingsStage.close();
             event.handle(e);
         });
     }
@@ -180,6 +230,14 @@ public class DashboardView {
 
     public void setSaveClicked(EventHandler<ActionEvent> save) {
         saveFunction = save;
+    }
+
+    public String getNewFileName(){
+        return newFileName;
+    }
+
+    private void setNewFileName(String str){
+        newFileName = "savedXML/" + str + ".xml";
     }
 
 }

@@ -12,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.awt.event.MouseEvent;
@@ -57,12 +59,15 @@ public class MenuScreen {
         root.getChildren().add(vbox);
         System.out.println(vbox.getWidth());
         vbox.setLayoutX(STAGE_WIDTH / 2 - vbox.getWidth() / 2);
-        vbox.setLayoutY(550);
+        vbox.setLayoutY(600);
         vbox.getStyleClass().add("vbox");
 
+        arrangeLogo();
         arrangeMenuImages();
 
     }
+
+
 
     public void buttonListener(EventHandler<ActionEvent> e) {
         for (Button b: buttons.getButtons()) {
@@ -95,6 +100,16 @@ public class MenuScreen {
         GridPane pane = new GridPane();
         ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black", "Default Game", "Load XML File"), 20, 40, res.getString("SettingsButtons"));
 
+        Text prefer = new Text();
+        prefer.setText("Game Preference");
+        prefer.getStyleClass().add("prefer");
+        prefer.setFill(Color.AZURE);
+        HBox preferBox = new HBox();
+        preferBox.getChildren().add(prefer);
+
+        preferBox.setLayoutX(100);
+        preferBox.setLayoutY(0);
+
         int[] position = {0, 0, 2, 0, 0, 1, 2, 1};
         int i = 0;
         for(Button b: colorGroup.getButtons()){
@@ -119,7 +134,8 @@ public class MenuScreen {
         pane.add(goButton, 1,2);
 
         pane.getStyleClass().add("gpane");
-        settingsRoot.getChildren().add(pane);
+
+        settingsRoot.getChildren().addAll(preferBox, pane);
 
 
         goButton.setOnAction(e -> {
@@ -128,8 +144,24 @@ public class MenuScreen {
         });
     }
 
+    private void arrangeLogo() {
+        Text logo = new Text();
+        logo.setText("Strategy Game Arcade");
+        logo.getStyleClass().add("logo");
+        logo.setFill(Color.AZURE);
+        HBox logoBox = new HBox();
+        logoBox.getChildren().add(logo);
+        logoBox.setLayoutX(STAGE_WIDTH/2);
+        logoBox.setLayoutY(150);
+        logoBox.getStyleClass().add("logobox");
+        root.getChildren().add(logoBox);
+    }
     private void arrangeMenuImages() {
+
+
+
         GridPane gridPane = new GridPane();
+
 
         int[] dimensions = {250, 140, 250, 250, 200, 200};
         int i = 0;
@@ -142,7 +174,7 @@ public class MenuScreen {
 
         gridPane.setHgap(40);
         gridPane.setLayoutX(160);
-        gridPane.setLayoutY(190);
+        gridPane.setLayoutY(250);
 
         root.getChildren().add(gridPane);
     }
