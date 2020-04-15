@@ -1,26 +1,36 @@
 package ooga.xml;
 
 import javafx.util.Pair;
+import ooga.board.Board;
+import ooga.board.Piece;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.awt.geom.Point2D;
-import java.io.File;
+import java.io.*;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-public class XMLParser {
+public class XMLProcessor {
 
     private Map<String, String> settings;
     private Map<Point2D, String> initialPieceLocations;
     private Map<String, Pair<String, Integer>> movePatterns;
     private final static String ERROR_MESSAGE = "Error parsing XML file.";
+    private Document doc;
 
-    public XMLParser() {
+    public XMLProcessor() {
         settings = new HashMap<>();
         initialPieceLocations = new HashMap<>();
         movePatterns = new HashMap<>();
@@ -46,7 +56,7 @@ public class XMLParser {
             File xmlFile = new File(filename);
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(xmlFile);
+            doc = builder.parse(xmlFile);
             doc.getDocumentElement().normalize();
 
             Element rootElement = doc.getDocumentElement();
@@ -57,21 +67,45 @@ public class XMLParser {
                     Method parseMethod = this.getClass().getDeclaredMethod(String.format("parse%s",
                         capitalize(nodeString)), Node.class);
                     parseMethod.invoke(this, node);
-//                  Field f = this.getClass().getDeclaredField(node.getTextContent());
-//                  Node childNode = node.getFirstChild();
-//                  while (childNode != null) {
-//                      ((Map<String, String>) f.get(this)).put(childNode.getNodeName(), childNode.getTextContent());
-//                      childNode = childNode.getNextSibling();
-//                  }
                 }
                 node = node.getNextSibling();
             }
         } catch (Exception e) {
             System.out.println(ERROR_MESSAGE);
         }
-        System.out.println(settings);
-        System.out.println(initialPieceLocations);
-        System.out.println(movePatterns);
+
+    }
+
+    public void write(Board board, String fileName){
+
+        Node node = doc.getDocumentElement().getElementsByTagName("locations").item(0);
+        doc.getDocumentElement().removeChild(node);
+
+        Element root = doc.getDocumentElement();
+        Element newList = doc.createElement("locations");
+        for (Point2D location : board.getPieceLocationBiMap().keySet()) {
+            Piece thePiece = board.getPieceLocationBiMap().get(location);
+            Element newItem = doc.createElement("item");
+            newItem.setTextContent(
+                    String.format("%d,%d,%s", (int) location.getX(), (int) location.getY(), thePiece.getFullName()));
+            newList.appendChild(newItem);
+
+        }
+        root.appendChild(newList);
+
+        try {
+            Transformer tf = TransformerFactory.newInstance().newTransformer();
+            tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            tf.setOutputProperty(OutputKeys.INDENT, "yes");
+
+            FileWriter writer = new FileWriter(new File(fileName));
+            StreamResult fileOut = new StreamResult(writer);
+            tf.transform(new DOMSource(doc), fileOut);
+            writer.flush();
+            writer.close();
+
+        } catch (TransformerException | IOException ignored) {
+        }
     }
 
     private String capitalize(String str) {
