@@ -22,13 +22,8 @@ public abstract class Player {
 
     public abstract boolean isCPU();
 
-    public void movePiece(Move m) {
+    public void doMove(Move m) {
         int pointsScored = board.doMove(m);
-        addToScore(pointsScored);
-    }
-
-    public void movePiece(Move m, boolean isUndo) {
-        int pointsScored = board.doMove(m, isUndo);
         addToScore(pointsScored);
     }
 

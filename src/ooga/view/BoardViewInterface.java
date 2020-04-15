@@ -19,7 +19,7 @@ public interface BoardViewInterface {
 
     void highlightValidMoves(List<Point2D> validMoves);
 
-    void movePiece(Move m);
+    void doMove(Move m);
 
     void setOnPieceClicked(ProcessCoordinateInterface clicked);
 

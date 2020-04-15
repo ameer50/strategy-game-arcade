@@ -18,7 +18,6 @@ import ooga.view.MenuScreen;
 import ooga.view.PieceView;
 import ooga.xml.XMLParser;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.List;
 
@@ -102,8 +101,8 @@ public class Controller {
 
     private void setUpPlayers() {
         // TODO: replace with AI, if AI
-        playerOne = new HumanPlayer("Player1", "WHITE", board);
-        playerTwo = new HumanPlayer("Player2", "BLACK", board);
+        playerOne = new HumanPlayer("Player1", "White", board);
+        playerTwo = new HumanPlayer("Player2", "Black", board);
         gameScreen.getDashboardView().bindScores(playerOne, playerTwo);
         activePlayer = playerOne;
         gameScreen.getDashboardView().setActivePlayerText(activePlayer);
@@ -140,7 +139,7 @@ public class Controller {
             printMessageAndTime("Did user's move.");
 
             Move move = new Move(startLocation, endLocation);
-            movePiece(move);
+            doMove(move);
             history.addMove(move);
             historyList.add(move);
 
@@ -159,18 +158,18 @@ public class Controller {
             Point2D startLocation = prevMove.getEndLocation();
             Point2D endLocation = prevMove.getStartLocation();
             Move reverseMove = new Move(startLocation, endLocation);
+            reverseMove.setUndoTrue();
 
-            movePiece(reverseMove, true);
+            doMove(reverseMove);
             toggleActivePlayer();
 
             if (prevMove.getCapturedPiece() != null) {
-                int fromX = (int) startLocation.getX();
-                int fromY = (int) startLocation.getY();
                 Piece capturedPiece = prevMove.getCapturedPiece();
-                board.putPieceAt(fromX, fromY, capturedPiece);
+                Point2D capturedPieceLocation = prevMove.getCapturedPieceLocation();
+                board.putPieceAt(capturedPieceLocation, capturedPiece);
                 activePlayer.addToScore(-capturedPiece.getValue());
                 PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-                boardView.getCellAt(fromX, fromY).setPiece(capturedPieceView);
+                boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
                 //TODO: another backend call that can take care of resetting pawns to their first move pattern
             }
         });
@@ -179,15 +178,12 @@ public class Controller {
             Move prevMove = history.redo();
             historyList.add(prevMove);
 
-            movePiece(prevMove);
+            doMove(prevMove);
             toggleActivePlayer();
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
             boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
-//        Piece piece = board.getPieceAt(toX, toY);
-//        String name = String.format("%s_%s", piece.getColor(), piece.getType());
-//        boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
     }
 
@@ -207,9 +203,9 @@ public class Controller {
         Point2D endLocation = new Point2D.Double(toX, toY);
         Move m = new Move(startLocation, endLocation);
 
-        activePlayer.movePiece(m);
+        activePlayer.doMove(m);
         // stall(STALL_TIME);
-        boardView.movePiece(m);
+        boardView.doMove(m);
     }
 
     private void printMessageAndTime (String message) {
@@ -227,13 +223,8 @@ public class Controller {
         }
     }
 
-    private void movePiece(Move m) {
-        boardView.movePiece(m);
-        activePlayer.movePiece(m);
-    }
-
-    private void movePiece(Move m, boolean isUndo){
-        boardView.movePiece(m);
-        activePlayer.movePiece(m, isUndo);
+    private void doMove(Move m) {
+        activePlayer.doMove(m);
+        boardView.doMove(m);
     }
 }

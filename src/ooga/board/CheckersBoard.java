@@ -1,6 +1,7 @@
 package ooga.board;
 
 import javafx.util.Pair;
+import ooga.history.Move;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -136,7 +137,11 @@ public class CheckersBoard extends Board {
          */
     }
 
-    public int doMove(int x_i, int y_i, int x_f, int y_f, boolean undo) {
+    public int doMove(Move m) {
+        int x_i = (int) m.getStartLocation().getX();
+        int y_i = (int) m.getStartLocation().getY();
+        int x_f = (int) m.getEndLocation().getX();
+        int y_f = (int) m.getEndLocation().getY();
         System.out.println("Initial: " + x_i + "Initial: " + y_i);
         System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
