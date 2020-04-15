@@ -11,6 +11,7 @@ import javafx.util.Pair;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import ooga.ProcessCoordinateInterface;
+import ooga.history.Move;
 
 public abstract class Board implements Serializable {
 
@@ -93,14 +94,29 @@ public abstract class Board implements Serializable {
     }
   }
 
+  public Piece getPieceAt(Point2D location) {
+    if (isCellInBounds((int) location.getX(), (int) location.getY())) {
+      return pieceLocationBiMap.get(location);
+    } else {
+      return null;
+    }
+  }
+
   /**
    Get piece at the specified coordinates.
    @return the Piece object at x, y; null if nothing in the cell.
    **/
-  public void putPieceAt(int i, int j, Piece input) {
+  public void putPieceAt(int i, int j, Piece piece) {
     if (isCellInBounds(i, j)) {
-      pieceLocationBiMap.forcePut(new Point2D.Double(i, j), input);
-      updatePieceColorMap(input);
+      pieceLocationBiMap.forcePut(new Point2D.Double(i, j), piece);
+      updatePieceColorMap(piece);
+    }
+  }
+
+  public void putPieceAt(Point2D location, Piece piece) {
+    if (isCellInBounds(location)) {
+      pieceLocationBiMap.forcePut(location, piece);
+      updatePieceColorMap(piece);
     }
   }
 
@@ -123,6 +139,10 @@ public abstract class Board implements Serializable {
    **/
   public boolean isCellInBounds(int i, int j) { return i >= 0 && i < height && j >= 0 && j < width; }
 
+  public boolean isCellInBounds(Point2D location) {
+    return isCellInBounds((int) location.getX(), (int) location.getY());
+  }
+
   public int getHeight() { return height; }
 
   public int getWidth() { return width; }
@@ -135,7 +155,7 @@ public abstract class Board implements Serializable {
    @param endY new y position
    @return score from completing this move
    **/
-  public abstract int doMove(int startX, int startY, int endX, int endY, boolean undo);
+  public abstract int doMove(Move m);
 
   public abstract List<Point2D> getValidMoves(int i, int j);
 

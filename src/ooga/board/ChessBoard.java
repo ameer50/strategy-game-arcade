@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.util.Pair;
+import ooga.history.Move;
 
 public class ChessBoard extends Board {
 
@@ -50,10 +51,14 @@ public class ChessBoard extends Board {
   }
 
   @Override
-  public int doMove(int startX, int startY, int endX, int endY, boolean undo) {
+  public int doMove(Move m) {
+    int startX = (int) m.getStartLocation().getX();
+    int startY = (int) m.getStartLocation().getY();
+    int endX = (int) m.getEndLocation().getX();
+    int endY = (int) m.getEndLocation().getY();
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
-    if(!undo) {
+    if(!m.isUndo()) {
       currPiece.move();
     } else {
       currPiece.unmove();
