@@ -54,8 +54,10 @@ public class CellView extends StackPane {
         if (this.piece != null) {
             this.getChildren().remove(this.piece.getImage());
         }
+
         // set new piece
         this.piece = piece;
+
 
         // if we want to set it to null, return since we don't want to put an image there
         if (piece == null) return;

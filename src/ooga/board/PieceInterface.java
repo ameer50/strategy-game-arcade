@@ -1,4 +1,5 @@
 package ooga.board;
 
-public interface PieceInterface {
-}
+import java.io.Serializable;
+
+public interface PieceInterface { }

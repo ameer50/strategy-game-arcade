@@ -1,66 +1,74 @@
 package ooga.board;
 
-public class Piece {
-  private String myName;
-  private String myPattern;
-  private int myScore;
-  private String myColor;
-  private int moves;
+import java.io.Serializable;
 
-  public Piece(String name, String pattern, int score, String color){
-    this.myName = name;
-    this.myPattern = pattern;
-    this.myScore = score;
-    this.myColor = color;
+public class Piece implements Serializable {
+  private String type;
+  private String pattern;
+  private int score;
+  private String color;
+  private int moves;
+  private int ID;
+
+  public Piece (String type, String pattern, int score, String color, int uniqueID) {
+    this.type = type;
+    this.pattern = pattern;
+    this.score = score;
+    this.color = color;
     this.moves = 0;
+    this.ID = uniqueID;
   }
 
-  public boolean isOnSameTeam(Piece that){
-    return(this.getColor().equals(that.getColor()));
+  public boolean isSameColor(Piece that){
+    return (this.getColor().equals(that.getColor()));
   }
 
   @Override
   public String toString(){
-    return String.format("%s %s", this.myColor, this.myName);
+    return String.format("%s %s", this.color, this.type);
   }
 
   public String getType() {
-    return myName;
+    return type;
   }
 
   public boolean hasMoved(){
-    return this.moves != 0;
+    return (this.moves != 0);
   }
 
   public void move(){
     this.moves++;
   }
 
-  public void unmove(){
+  public void unMove(){
     this.moves--;
   }
+
   public String getMovePattern(){
-    return this.myPattern;
+    return this.pattern;
   }
 
   public int getValue(){
-    return this.myScore;
+    return this.score;
   }
 
   public String getColor(){
-    return this.myColor;
+    return this.color;
   }
 
   public void setMovePattern(String pattern){
-    this.myPattern = pattern;
+    this.pattern = pattern;
   }
 
-  public void setName(String name){
-    this.myName = name;
+  public void setType(String type){
+    this.type = type;
   }
 
   public String getFullName(){
-    return this.myColor + "_" + this.myName;
+    return String.format("%s_%s", this.color, this.type);
   }
 
+  public int getID(){
+    return this.ID;
+  }
 }
