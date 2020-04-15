@@ -115,8 +115,10 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         CellView initCell = getCellAt(m.getStartLocation());
         CellView finalCell = getCellAt(m.getEndLocation());
         PieceView piece = initCell.getPiece();
-
-        if (m.getCapturedPiece() != null) this.getCellAt(m.getCapturedPieceLocation()).setPiece(null);
+        
+        for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
+            this.getCellAt(pieceLocation).setPiece(null);
+        }
         finalCell.setPiece(piece);
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
 //        tr.setFromX(tr.getFromX());
