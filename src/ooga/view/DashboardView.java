@@ -24,11 +24,7 @@ import java.util.ResourceBundle;
 
 public class DashboardView {
 
-<<<<<<< HEAD
-
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-=======
->>>>>>> 99d4193b2f5dd3e8817233a20e900123dc4ebf89
     private VBox display;
     private Text playerOneName;
     private Text playerTwoName;
@@ -164,8 +160,7 @@ public class DashboardView {
             a.getStyleClass().add(style);
         }
     }
-
-<<<<<<< HEAD
+    
     public void textFieldPopUp(EventHandler<ActionEvent> e) {
         Stage fileNameStage = new Stage();
         fileNameStage.setTitle(res.getString("FileEnterTitle"));
