@@ -20,13 +20,9 @@ public class ChessBoard extends Board implements Serializable {
   public static final String BLACK = "Black";
   public static final String WHITE = "White";
 
-  private Map<String, Boolean> checkMap;
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
       Pair<String, Integer>> pieces) {
     super(settings, locations, pieces);
-    checkMap = new HashMap<>();
-    checkMap.put(BLACK, false);
-    checkMap.put(WHITE, false);
   }
 
   @Override
@@ -69,10 +65,6 @@ public class ChessBoard extends Board implements Serializable {
     Piece piece = getPieceAt(i, j);
     if (piece == null) {
       return null;
-    }
-    String color = piece.getColor();
-    if (checkMap.get(color)) {
-      // System.out.println("In check.");
     }
     String movePattern = piece.getMovePattern();
     String[] movePatternSplit = movePattern.split(" ");
@@ -197,10 +189,8 @@ public class ChessBoard extends Board implements Serializable {
     List<Point2D> checkPieces = theirMoves.getValue();
 
     if (checkPieces.size() == 0) {
-      checkMap.put(ourColor, false);
       return false;
     }
-    checkMap.put(ourColor, true);
 
     List<Point2D> kingMoves = getValidMovesIgnoreCheck(kingI, kingJ);
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
