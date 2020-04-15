@@ -148,12 +148,12 @@ public class CheckersBoard extends Board implements Serializable {
             hitPiece = getPieceAt(capLoc);
             System.out.println("hitPiece = " + hitPiece);
             removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
-            m.addCapturedPieceAndLocation(hitPiece, capLoc);
+            if (hitPiece != null) m.addCapturedPieceAndLocation(hitPiece, capLoc);
             //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
         }
 
         m.setPiece(currPiece);
-        m.addCapturedPieceAndLocation(hitPiece, capLoc);
+        //m.addCapturedPieceAndLocation(hitPiece, capLoc);
         pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
 
         int score = 0;
