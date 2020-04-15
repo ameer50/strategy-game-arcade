@@ -33,14 +33,16 @@ public class StrategyAI extends Player {
     long startTime = System.currentTimeMillis();
     List<Integer> moveCoordinates = null;
 
-    String strategyString = utility.strategyToString(strategy);
-    String methodName = String.format("generate%sMove", strategyString);
-    try { ;
-      Method generator = this.getClass().getDeclaredMethod(methodName, null);
+    String strategyStr = utility.strategyToString(strategy);
+    String generatorName = String.format("generate%sMove", strategyStr);
+    try {
+      Method generator = this.getClass().getDeclaredMethod(generatorName, null);
       Object coordinateList = generator.invoke(this);
       moveCoordinates = (List<Integer>) coordinateList;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      System.out.println("Error: " + methodName);
+      System.out.println("Error: " + generatorName);
+      e.printStackTrace();
+      // FIXME: Don't print stack trace.
     }
 
     moveTimes.add((double) (startTime - System.currentTimeMillis()));

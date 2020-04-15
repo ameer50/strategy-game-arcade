@@ -43,16 +43,16 @@ public class ChessBoard extends Board implements Serializable {
     Pair<List<Point2D>, List<Point2D>> checks = getMovesAndCheckPieces(kingI, kingJ, color, false);
     List<Point2D> checkPieces = checks.getValue();
     //not in check, proceed normally
-    if(checkPieces.size() == 0){
+    if (checkPieces.size() == 0){
       return getValidMovesIgnoreCheck(i, j);
     }
-    if(piece.getType().equals(KING)){
+    if (piece.getType().equals(KING)) {
       List<Point2D> kingAllValids = getValidMovesIgnoreCheck(i, j);
       List<Point2D> safeKings = getSafeKingMoves(kingAllValids, checks.getKey());
       safeKings = checkDanger(safeKings, kingI, kingJ);
       return safeKings;
     }
-    if(checkPieces.size() > 1){
+    if (checkPieces.size() > 1) {
       return null;
     }
 
@@ -71,25 +71,23 @@ public class ChessBoard extends Board implements Serializable {
       return null;
     }
     String color = piece.getColor();
-    if(checkMap.get(color)){
-      System.out.println("IN CHECK");
+    if (checkMap.get(color)) {
+      // System.out.println("In check.");
     }
-    if (pieceColorMap.get(color).contains(piece)) {
-      String movePattern = piece.getMovePattern();
-      String[] movePatternSplit = movePattern.split(" ");
-      String moveType = movePatternSplit[0].toLowerCase();
-      List<Integer> params = new ArrayList<>();
-      for(int inc = 1; inc < movePatternSplit.length; inc++){
-        params.add(Integer.parseInt(movePatternSplit[inc]));
-      }
-      try {
-        Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, List.class,
-            piece.getClass());
-        Object ret = moveMethod.invoke(this, i, j, params, piece);
-        return (List<Point2D>) ret;
-      } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-        System.out.println("Error: " + moveType);
-      }
+    String movePattern = piece.getMovePattern();
+    String[] movePatternSplit = movePattern.split(" ");
+    String moveType = movePatternSplit[0].toLowerCase();
+    List<Integer> params = new ArrayList<>();
+    for(int inc = 1; inc < movePatternSplit.length; inc++){
+      params.add(Integer.parseInt(movePatternSplit[inc]));
+    }
+    try {
+      Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, List.class,
+          piece.getClass());
+      Object ret = moveMethod.invoke(this, i, j, params, piece);
+      return (List<Point2D>) ret;
+    } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+      System.out.println("Error: " + moveType);
     }
     return null;
   }
@@ -149,11 +147,11 @@ public class ChessBoard extends Board implements Serializable {
     // I need every move the other team can make and every piece holding in check.
 
     if (getCheckmate(WHITE, BLACK)) {
-      System.out.println("Checkmate");
+      System.out.println("Checkmate.");
       return WHITE;
     }
     if(getCheckmate(BLACK, WHITE)){
-      System.out.println("Checkmate");
+      System.out.println("Checkmate.");
       return BLACK;
     }
     return null;
@@ -207,12 +205,12 @@ public class ChessBoard extends Board implements Serializable {
 
     safeMoves = checkDanger(safeMoves, kingI, kingJ);
     if (!(safeMoves.size() == 0)) {
-      System.out.println("CHECK BUT SAFE MOVES");
+      // System.out.println("Check but safe moves.");
       return false;
     }
 
     if (checkPieces.size() > 1) {
-      System.out.println("Dead, multiple checkers and no safe moves");
+      // System.out.println("Dead. Multiple checkers and no safe moves");
       return true;
     }
 
@@ -221,7 +219,7 @@ public class ChessBoard extends Board implements Serializable {
 
   private List<Point2D> checkDanger(List<Point2D> safeMoves, int kingI, int kingJ){
     //c) in safe spots, check if there is currently a piece here. if so, check if the spot is newly accessible by opposing team. if so, remove the spot.
-    System.out.println("safe spots");
+    // System.out.println("Safe spots.");
     List<Point2D> hiddenDangerMoves = new ArrayList<>();
     for (Point2D p : safeMoves) {
       int x = (int) p.getX();
@@ -234,7 +232,7 @@ public class ChessBoard extends Board implements Serializable {
       safeMoves.remove(p);
     }
     for (Point2D p : safeMoves) {
-      System.out.println("p = " + p);
+      // System.out.println("p = " + p);
     }
     return safeMoves;
   }
@@ -244,7 +242,7 @@ public class ChessBoard extends Board implements Serializable {
     List<Point2D> ourMoves = ourMoveData.getKey();
 
     if (ourMoves.contains(threatLoc)) {
-      System.out.println("CAN KILL THREAT");
+      // System.out.println("Can kill threat.");
       return true;
     }
 
@@ -256,14 +254,14 @@ public class ChessBoard extends Board implements Serializable {
     int j = (int) threatLoc.getY();
     Piece threat = getPieceAt(i, j);
     if (threat.getType().equals(KNIGHT) || threat.getType().equals(PAWN)) {
-      System.out.println("CANT BLOCK KNIGHT OR PAWN, DEAD");
+      // System.out.println("Can't block knight or pawn. Dead.");
       return false;
     }
 
     List<Point2D> path = getPath(i, j, kingI, kingJ);
     for (Point2D p : path) {
       if (ourMoves.contains(p)) {
-        System.out.println("CAN BLOCK");
+        // System.out.println("Can block.");
         return true;
       }
     }
@@ -276,7 +274,7 @@ public class ChessBoard extends Board implements Serializable {
     List<Point2D> pawnList = new ArrayList<>();
     Point2D kingPoint = new Point2D.Double(kingI, kingJ);
     Piece storedKing = getPieceAt(kingI, kingJ);
-    System.out.println("storedKing = " + storedKing);
+    // System.out.println("storedKing = " + storedKing);
     if (ignoreTheirKing) {
       pieceBiMap.forcePut(new Double(kingI, kingJ), null);
     }
@@ -345,7 +343,7 @@ public class ChessBoard extends Board implements Serializable {
     }*/
     pieceBiMap.forcePut(new Double(kingI, kingJ), null);
     pieceBiMap.forcePut(new Double(potentialI, potentialJ), null);
-    System.out.println("Potentials: " + potentialI + ", " + potentialJ);
+    // System.out.println(String.format("Potentials: %d, $d", potentialI, potentialJ));
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -369,7 +367,7 @@ public class ChessBoard extends Board implements Serializable {
         if (thisPieceMoves.contains(potentialPoint)) {
           pieceBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
           pieceBiMap.forcePut(new Double(kingI, kingJ), storedKing);
-          System.out.println(thisPiece + " at " + i + ", " + j);
+          // System.out.println(String.format("%s at %d , %d", thisPiece, i, j));
           return true;
         }
       }

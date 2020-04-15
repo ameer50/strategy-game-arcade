@@ -159,6 +159,9 @@ public abstract class Board implements Serializable {
   public int getScore(String color) {
     int score = 0;
     for (Piece piece: pieceBiMap.values()) {
+      if (piece == null) {
+        return 0;
+      }
       int value = piece.getValue();
       int multiplier = 0;
       if (piece.getColor().equals(color)) {
