@@ -152,7 +152,7 @@ public abstract class Board implements Serializable {
    @param m Move object which operates on the piece
    @return score from completing this move
    **/
-  public abstract int doMove(Move m);
+  public abstract void doMove(Move m);
 
   public abstract List<Point2D> getValidMoves(int i, int j);
 

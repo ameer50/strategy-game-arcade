@@ -82,7 +82,7 @@ public class ChessBoard extends Board implements Serializable {
   }
 
   @Override
-  public int doMove(Move m) {
+  public void doMove(Move m) {
     int startX = (int) m.getStartLocation().getX();
     int startY = (int) m.getStartLocation().getY();
     int endX = (int) m.getEndLocation().getX();
@@ -106,7 +106,7 @@ public class ChessBoard extends Board implements Serializable {
       m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
     }
     promote(currPiece, endX, endY);
-    return score;
+    //return score;
   }
 
   private void promote(Piece piece, int endX, int endY){
