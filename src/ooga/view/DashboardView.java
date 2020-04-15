@@ -160,7 +160,7 @@ public class DashboardView {
             a.getStyleClass().add(style);
         }
     }
-    
+
     public void textFieldPopUp(EventHandler<ActionEvent> e) {
         Stage fileNameStage = new Stage();
         fileNameStage.setTitle(res.getString("FileEnterTitle"));
