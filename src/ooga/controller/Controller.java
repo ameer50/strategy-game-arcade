@@ -172,9 +172,6 @@ public class Controller {
             doMove(reverseMove);
             toggleActivePlayer();
 
-//            if (prevMove.getCapturedPiecesAndLocations() != null) {
-//            }
-
             Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
             for (Piece capturedPiece: map.keySet()) {
                 Point2D capturedPieceLocation = map.get(capturedPiece);
@@ -198,12 +195,11 @@ public class Controller {
         });
 
         gameScreen.getDashboardView().setSaveClicked((e) -> {
-            System.out.println("inside");
+            //TODO: change fileName to be an input
             processor.write(board, "new.xml");
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
-            System.out.println("Came here!!!!!!!");
             board.getPieceAt(toX, toY);
             boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
         });

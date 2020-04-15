@@ -114,14 +114,15 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     public void doMove(Move m) {
         CellView initCell = getCellAt(m.getStartLocation());
         CellView finalCell = getCellAt(m.getEndLocation());
-        PieceView piece = initCell.getPiece();
-        System.out.println(m.getCapturedPiecesAndLocations());
+        PieceView initCellPiece = initCell.getPiece();
+        PieceView finalCellPiece = finalCell.getPiece();
+
         for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
-            //if (pieceLocation == null) continue;
             this.getCellAt(pieceLocation).setPiece(null);
         }
-        if (finalCell.getPiece() == null || !finalCell.getPiece().getColor().equals(piece.getColor())) {
-            finalCell.setPiece(piece);
+        
+        if (finalCellPiece == null || !finalCellPiece.getColor().equals(initCellPiece.getColor())) {
+            finalCell.setPiece(initCellPiece);
         }
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
 //        tr.setFromX(tr.getFromX());
