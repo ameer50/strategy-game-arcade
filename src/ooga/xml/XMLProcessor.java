@@ -83,8 +83,8 @@ public class XMLProcessor {
 
         Element root = doc.getDocumentElement();
         Element newList = doc.createElement("locations");
-        for (Point2D location : board.getPieceLocationBiMap().keySet()) {
-            Piece thePiece = board.getPieceLocationBiMap().get(location);
+        for (Point2D location : board.getPieceBiMap().keySet()) {
+            Piece thePiece = board.getPieceBiMap().get(location);
             Element newItem = doc.createElement("item");
             newItem.setTextContent(
                     String.format("%d,%d,%s", (int) location.getX(), (int) location.getY(), thePiece.getFullName()));
