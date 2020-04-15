@@ -84,8 +84,8 @@ public class XMLWriter {
         Element newList = doc.createElement("locations");
         newList.setAttribute("item", "List");
         root.appendChild(newList);
-        for (Point2D location : board.getPieceLocationBiMap().keySet()) {
-            Piece thePiece = board.getPieceLocationBiMap().get(location);
+        for (Point2D location : board.getPieceBiMap().keySet()) {
+            Piece thePiece = board.getPieceBiMap().get(location);
             Element newItem = doc.createElement("item");
             newItem.setAttribute("item", "String");
             newItem.setTextContent(

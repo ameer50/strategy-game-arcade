@@ -2,18 +2,17 @@ package ooga.board;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javafx.beans.property.DoubleProperty;
 import javafx.util.Pair;
 import ooga.history.Move;
 
-public class ChessBoard extends Board {
+public class ChessBoard extends Board implements Serializable {
 
   public static final String KING = "King";
   public static final String PAWN = "Pawn";
@@ -94,6 +93,7 @@ public class ChessBoard extends Board {
     }
     return null;
   }
+
   @Override
   public int doMove(Move m) {
     int startX = (int) m.getStartLocation().getX();
@@ -105,16 +105,17 @@ public class ChessBoard extends Board {
     if(!m.isUndo()) {
       currPiece.move();
     } else {
-      currPiece.unmove();
+      currPiece.unMove();
     }
     int score = 0;
     if (hitPiece != null) {
       score = hitPiece.getValue();
-      removePiece(hitPiece);
+      pieceBiMap.remove(hitPiece); // ***
     }
+    pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
+
     m.setPiece(currPiece);
     m.setCapturedPieceAndLocation(hitPiece, m.getEndLocation());
-    pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
     promote(currPiece, endX, endY);
     return score;
   }
@@ -125,14 +126,10 @@ public class ChessBoard extends Board {
     }
     int inc = getPawnInc(piece);
     if((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)){
-      piece.setName("Queen");
+      piece.setType("Queen");
       piece.setMovePattern("Any -1");
       this.promoteAction.process(endX, endY);
     }
-  }
-
-  private void removePiece(Piece piece) {
-    pieceColorMap.get(piece.getColor()).remove(piece);
   }
 
   @Override
@@ -151,7 +148,7 @@ public class ChessBoard extends Board {
     // If diff x and y and those differences aren't the same, it's a knight and we can't block.
     // I need every move the other team can make and every piece holding in check.
 
-    if(getCheckmate(WHITE, BLACK)){
+    if (getCheckmate(WHITE, BLACK)) {
       System.out.println("Checkmate");
       return WHITE;
     }
@@ -209,7 +206,7 @@ public class ChessBoard extends Board {
     List<Point2D> safeMoves = getSafeKingMoves(kingMoves, opponentMoves);
 
     safeMoves = checkDanger(safeMoves, kingI, kingJ);
-    if(!(safeMoves.size() == 0)){
+    if (!(safeMoves.size() == 0)) {
       System.out.println("CHECK BUT SAFE MOVES");
       return false;
     }
@@ -281,7 +278,7 @@ public class ChessBoard extends Board {
     Piece storedKing = getPieceAt(kingI, kingJ);
     System.out.println("storedKing = " + storedKing);
     if (ignoreTheirKing) {
-      pieceLocationBiMap.forcePut(new Double(kingI, kingJ), null);
+      pieceBiMap.forcePut(new Double(kingI, kingJ), null);
     }
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -304,7 +301,7 @@ public class ChessBoard extends Board {
       }
     }
     if (ignoreTheirKing) {
-      pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
+      pieceBiMap.forcePut(new Double(kingI, kingJ), storedKing);
     }
     for(Point2D pawn: pawnList){
       int i = (int) pawn.getX();
@@ -336,8 +333,8 @@ public class ChessBoard extends Board {
     return safePoints;
   }
 
-  // Used to see if killing a piece could keep king in check.
-  // Ignore current position of king.
+  /* Used to see if killing a piece could keep king in check.
+  Ignore current position of king. */
   private boolean isSpotInDanger(int potentialI, int potentialJ, int kingI, int kingJ) {
     Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
     Piece storedPiece = getPieceAt(potentialI, potentialJ);
@@ -346,8 +343,8 @@ public class ChessBoard extends Board {
     /*if (storedPiece == null) {
       return false;
     }*/
-    pieceLocationBiMap.forcePut(new Double(kingI, kingJ), null);
-    pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), null);
+    pieceBiMap.forcePut(new Double(kingI, kingJ), null);
+    pieceBiMap.forcePut(new Double(potentialI, potentialJ), null);
     System.out.println("Potentials: " + potentialI + ", " + potentialJ);
 
     for (int i = 0; i < height; i++) {
@@ -370,15 +367,15 @@ public class ChessBoard extends Board {
           continue;
         }
         if (thisPieceMoves.contains(potentialPoint)) {
-          pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
-          pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
+          pieceBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
+          pieceBiMap.forcePut(new Double(kingI, kingJ), storedKing);
           System.out.println(thisPiece + " at " + i + ", " + j);
           return true;
         }
       }
     }
-    pieceLocationBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
-    pieceLocationBiMap.forcePut(new Double(kingI, kingJ), storedKing);
+    pieceBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
+    pieceBiMap.forcePut(new Double(kingI, kingJ), storedKing);
     return false;
   }
 
@@ -397,6 +394,7 @@ public class ChessBoard extends Board {
     }
     return new ArrayList<>();
   }
+
   private List<Point2D> getPathSameRowRook(int i, int threatJ, int kingJ){
     List<Point2D> path = new ArrayList<>();
 
@@ -409,6 +407,7 @@ public class ChessBoard extends Board {
     }
     return path;
   }
+
   private List<Point2D> getPathSameColRook(int j, int threatI, int kingI){
     List<Point2D> path = new ArrayList<>();
 
@@ -421,6 +420,7 @@ public class ChessBoard extends Board {
     }
     return path;
   }
+
   private List<Point2D> getPathDiagonal(int threatI, int threatJ, int kingI, int kingJ){
     List<Point2D> path = new ArrayList<>();
 
@@ -446,7 +446,6 @@ public class ChessBoard extends Board {
     return Math.abs(kingJ - threatJ) == Math.abs(kingI - threatI);
   }
 
-
   private List<Point2D> any(int x, int y, List<Integer> params, Piece piece){
     List<Point2D> lat = lateral(x, y, params, piece);
     List<Point2D> diag = diagonal(x, y, params, piece);
@@ -454,6 +453,7 @@ public class ChessBoard extends Board {
     combined.addAll(diag);
     return  combined;
   }
+
   private List<Point2D> lateral(int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> up = up(x, y, params, piece);
     List<Point2D> down = down(x, y, params, piece);
@@ -483,6 +483,7 @@ public class ChessBoard extends Board {
     }
     return ret;
   }
+
   private List<Point2D> pawn(int i, int j, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int inc = getPawnInc(piece);
@@ -491,6 +492,7 @@ public class ChessBoard extends Board {
     ret.addAll(getPawnStraights(newI, j, piece, inc));
     return ret;
   }
+
   private int getPawnInc(Piece piece){
     int inc;
     if (piece.getColor().equals(bottomColor)) {
@@ -500,6 +502,7 @@ public class ChessBoard extends Board {
     }
     return inc;
   }
+
   private List<Point2D> getPawnDiags(int newI, int j, Piece piece, boolean check){
     List<Point2D> ret = new ArrayList<>();
     int[] diagJ = {-1, 1};
@@ -550,7 +553,7 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private List<Point2D> down ( int x, int y, List<Integer> params, Piece piece) {
+  private List<Point2D> down(int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int distance = params.get(0);
     int squares = 1;
@@ -639,18 +642,16 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private Point2D checkPoint (int x, int y, Piece thisPiece) {
+  private Point2D checkPoint(int x, int y, Piece thisPiece) {
     Point2D ret;
     if (!isCellInBounds(x, y)) {
       return null;
     }
     Piece thatPiece = getPieceAt(x, y);
-    if (thatPiece != null && thisPiece.isOnSameTeam(thatPiece)) {
+    if (thatPiece != null && thisPiece.isSameColor(thatPiece)) {
       return null;
     }
     ret = new Point2D.Double(x, y);
     return ret;
   }
-
-
 }
