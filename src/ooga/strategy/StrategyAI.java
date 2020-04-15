@@ -10,6 +10,7 @@ import java.util.Random;
 import ooga.board.Board;
 import ooga.controller.Controller.StrategyType;
 import ooga.controller.StringUtility;
+import ooga.history.Move;
 
 public class StrategyAI extends Player {
   private StrategyType strategy;
@@ -113,7 +114,9 @@ public class StrategyAI extends Player {
       return currBoard.getScore(color);
     }
     Board nextBoard = currBoard.getCopy();
-    nextBoard.doMove(currMove.get(0), currMove.get(1), currMove.get(2), currMove.get(3), false);
+    Point2D startPoint = new Point2D.Double(currMove.get(0), currMove.get(1));
+    Point2D endPoint = new Point2D.Double(currMove.get(2), currMove.get(3));
+    nextBoard.doMove(new Move(startPoint, endPoint));
     int bestValue;
     if (maximizer) {
       bestValue = Integer.MIN_VALUE;
