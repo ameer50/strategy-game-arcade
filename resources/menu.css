@@ -1,5 +1,5 @@
 .root {
-    -fx-background: #FFFAF0;
+    -fx-background: #228B22;
     -fx-alignment: center;
     -fx-padding: 10;
     -fx-box-border: white;
@@ -8,14 +8,10 @@
 
 .button {
     -fx-background-color:
-            linear-gradient(#ffd65b, #e68400),
-            linear-gradient(#ffef84, #f2ba44),
-            linear-gradient(#ffea6a, #efaa22),
-            linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
-            linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+            linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
     -fx-background-radius: 20;
     -fx-background-insets: 0,1,2,3,0;
-    -fx-text-fill: DARKGREEN;
+    -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
     -fx-font-family: Avant Garde;
@@ -25,14 +21,10 @@
 
 .settingsbuttons {
     -fx-background-color:
-            linear-gradient(#ffd65b, #e68400),
-            linear-gradient(#ffef84, #f2ba44),
-            linear-gradient(#ffea6a, #efaa22),
-            linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
-            linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+            linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
     -fx-background-radius: 15;
     -fx-background-insets: 0,1,2,3,0;
-    -fx-text-fill: DARKGREEN;
+    -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
     -fx-font-family: Avant Garde;
@@ -41,7 +33,7 @@
 }
 
 .button:hover {
-    -fx-background-color: #D2691E;
+    -fx-background-color: #808080;
 }
 
 .vbox {
@@ -73,5 +65,47 @@
     -fx-border-style: solid inside;
     -fx-padding: 10;
 }
+
+.logo{
+
+    -fx-font-family: "Forte";
+    -fx-font-size: 80px;
+
+}
+
+.logobox{
+
+    -fx-alignment: center;
+}
+
+.prefer{
+
+    -fx-font-family: "Forte";
+    -fx-font-size: 40px;
+    -fx-alignment: center;
+
+}
+
+.file-text-field{
+    -fx-border-width: 0 0 1 0; // top, right, bottom, left
+    -fx-background-color: #F8F8FF;
+    -fx-font: 20px "Helvatica";
+    -fx-font-weight: bold;
+    -fx-text-fill: BLACK;
+}
+
+.textfieldbox{
+    -fx-alignment: center;
+
+}
+
+.file-pop-up{
+    -fx-background: #228B22;
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-box-border: white;
+    -fx-border-width: 10;
+}
+
 
 

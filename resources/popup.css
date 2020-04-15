@@ -1,0 +1,51 @@
+.root {
+    -fx-background: #228B22;
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-box-border: white;
+    -fx-border-width: 10;
+}
+
+
+
+.file-text-field{
+    -fx-border-width: 0 0 1 0; // top, right, bottom, left
+    -fx-background-color: #F8F8FF;
+    -fx-font: 20px "Helvatica";
+    -fx-font-weight: bold;
+    -fx-text-fill: BLACK;
+}
+
+.textfieldbox{
+    -fx-alignment: center;
+
+}
+
+.file-pop-up{
+    -fx-background: #228B22;
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-box-border: white;
+    -fx-border-width: 10;
+}
+
+.settingsbuttons {
+    -fx-background-color:
+            linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
+    -fx-background-radius: 15;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #F8F8FF;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-font-family: Avant Garde;
+    -fx-padding: 10 20 10 20;
+
+}
+
+.prefer{
+
+    -fx-font-family: Avant Garde;
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+
+}
