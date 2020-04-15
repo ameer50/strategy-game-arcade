@@ -120,10 +120,13 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
             this.getCellAt(pieceLocation).setPiece(null);
         }
-        
+
+        // only sets the final cell if it is empty, or a piece is being captured (thus avoids the issue of promotion
+        // and the image preemptively changing)
         if (finalCellPiece == null || !finalCellPiece.getColor().equals(initCellPiece.getColor())) {
             finalCell.setPiece(initCellPiece);
         }
+
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
 //        tr.setFromX(tr.getFromX());
 //        tr.setFromY(tr.getFromY());

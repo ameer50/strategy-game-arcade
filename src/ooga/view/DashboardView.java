@@ -17,10 +17,11 @@ import java.util.List;
 
 public class DashboardView {
 
-
     private VBox display;
-    private IntegerProperty whiteScore;
-    private IntegerProperty blackScore;
+    private Text playerOneName;
+    private Text playerTwoName;
+    private IntegerProperty playerOneScore;
+    private IntegerProperty playerTwoScore;
     private HBox scores;
     private GridPane auxiliaryButtons;
     private HBox bottom;
@@ -58,34 +59,32 @@ public class DashboardView {
     private void createDisplay(){
         display.setLayoutX(900);
         display.setLayoutY(400);
-
-
     }
 
     private void createScoreBoxes() {
-        HBox whiteScoreBox = new HBox();
-        HBox blackScoreBox = new HBox();
-        Text whiteText = new Text("White: ");
-        Text blackText = new Text("Black: ");
+        HBox playerOneScoreBox = new HBox();
+        HBox playerTwoScoreBox = new HBox();
+        playerOneName = new Text();
+        playerTwoName = new Text();
 
-        whiteScore = new SimpleIntegerProperty();
-        blackScore  = new SimpleIntegerProperty();
-        Text whiteScoreText = new Text(whiteScore.toString());
-        whiteScoreText.textProperty().bind(whiteScore.asString());
-        Text blackScoreText = new Text(blackScore.toString());
-        blackScoreText.textProperty().bind(blackScore.asString());
+        playerOneScore = new SimpleIntegerProperty();
+        playerTwoScore = new SimpleIntegerProperty();
+        Text playerOneScoreText = new Text(playerOneScore.toString());
+        playerOneScoreText.textProperty().bind(playerOneScore.asString());
+        Text playerTwoScoreText = new Text(playerTwoScore.toString());
+        playerTwoScoreText.textProperty().bind(playerTwoScore.asString());
 
-        whiteScoreBox.getChildren().addAll(whiteText, whiteScoreText);
-        blackScoreBox.getChildren().addAll(blackText, blackScoreText);
+        playerOneScoreBox.getChildren().addAll(playerOneName, playerOneScoreText);
+        playerTwoScoreBox.getChildren().addAll(playerTwoName, playerTwoScoreText);
 
         scores = new HBox();
-        scores.getChildren().addAll(whiteScoreBox, blackScoreBox);
+        scores.getChildren().addAll(playerOneScoreBox, playerTwoScoreBox);
         applyStyle(scores, "scoreshbox");
     }
 
-    public void bindScores(Player white, Player black){
-        whiteScore.bind(white.getScore());
-        blackScore.bind(black.getScore());
+    public void bindScores(IntegerProperty playerOneScore, IntegerProperty playerTwoScore){
+        this.playerOneScore.bind(playerOneScore);
+        this.playerTwoScore.bind(playerTwoScore);
     }
 
     private void createAuxiliaryButtons() {
@@ -103,7 +102,6 @@ public class DashboardView {
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
 
-
         buttons.getButtons().get(0).setOnAction(e -> {
             undoMoveFunction.handle(e);
         });
@@ -118,8 +116,6 @@ public class DashboardView {
         buttons.getButtons().get(3).setOnAction(e -> {
             quitFunction.handle(e);
         });
-
-
     }
 
     private void createBottom() {
@@ -130,9 +126,13 @@ public class DashboardView {
         bottom.getStyleClass().add("scoreshbox");
     }
 
+    public void setPlayerNames(String playerOneName, String playerTwoName) {
+        this.playerOneName.setText(String.format("%s: ", playerOneName));
+        this.playerTwoName.setText(String.format("%s: ", playerTwoName));
+    }
 
-    public void setActivePlayerText(Player activePlayer) {
-        this.activePlayerText.setText(activePlayer.getName());
+    public void setActivePlayerText(String activePlayerName, String activePlayerColor) {
+        this.activePlayerText.setText(String.format("%s (%s)", activePlayerName, activePlayerColor));
     }
 
     public VBox getDisplay(){
@@ -150,7 +150,6 @@ public class DashboardView {
             a.getStyleClass().add(style);
         }
     }
-
 
     private void buttonEvent(Button b, EventHandler<ActionEvent> event){
         b.setOnAction(e -> {
@@ -181,5 +180,4 @@ public class DashboardView {
     public void setSaveClicked(EventHandler<ActionEvent> save) {
         saveFunction = save;
     }
-
 }
