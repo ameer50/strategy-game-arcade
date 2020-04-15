@@ -48,7 +48,7 @@ public class Controller {
     private BoardView boardView;
     private StrategyAI CPU;
     private boolean toggleMoves = true;
-    private boolean isAIOpponent = true; // ***
+    private boolean isAIOpponent = false; // ***
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -200,6 +200,8 @@ public class Controller {
 
 
         board.setOnPiecePromoted((int toX, int toY) -> {
+            System.out.println("Came here!!!!!!!");
+            board.getPieceAt(toX, toY);
             boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
         });
     }

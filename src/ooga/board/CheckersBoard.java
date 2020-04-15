@@ -92,9 +92,6 @@ public class CheckersBoard extends Board implements Serializable {
             return null;
         }
         String color = piece.getColor();
-        if (!pieceColorMap.get(color).contains(piece)) {
-            return null;
-        }
 
         String movPat = piece.getMovePattern();
         validKillMoves.clear();
@@ -134,6 +131,7 @@ public class CheckersBoard extends Board implements Serializable {
         int y_f = (int) m.getEndLocation().getY();
         System.out.println("Initial: " + x_i + "Initial: " + y_i);
         String init_Color = getPieceAt(x_i, y_i).getColor();
+        int initID = getPieceAt(x_i, y_i).getID();
         System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);
@@ -163,7 +161,9 @@ public class CheckersBoard extends Board implements Serializable {
 
         //TO-DO check if piece has reached opposite end
         if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
-            pieceLocationBiMap.forcePut(new Point2D.Double(x_f, y_f), new Piece(init_Color+"_Monarch", "KING 1", 10, init_Color));
+            getPieceAt(x_f, y_f).setType("Monarch");
+            getPieceAt(x_f, y_f).setMovePattern("KING 1");
+            //pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), new Piece("Monarch", "KING 1", 10, init_Color, initID));
             promoteAction.process(x_f, y_f);
         }
         
@@ -296,12 +296,20 @@ public class CheckersBoard extends Board implements Serializable {
         int sizeDiff = -1;
         while(sizeDiff != 0){
             int before_size = validKillMoves.size();
-            for (Point2D point: validKillMoves) {
+            System.out.println("Before loop VKM: " + validKillMoves);
+            for(int k = 0; k<validKillMoves.size(); k++){
+                Point2D point = validKillMoves.get(k);
                 int i = (int)point.getX();
                 int j = (int)point.getY();
                 down_left_kill(i, j);
                 down_right_kill(i, j);
             }
+            List<Point2D> newList = validKillMoves.stream().distinct().collect(Collectors.toList());
+            validKillMoves.clear();
+            for(Point2D p : newList) {
+                validKillMoves.add((Point2D) p.clone());
+            }
+
             sizeDiff = validKillMoves.size()-before_size;
         }
         System.out.println("END VNK: " + validNonKillMoves);

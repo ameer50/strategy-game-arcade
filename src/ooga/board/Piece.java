@@ -67,4 +67,8 @@ public class Piece implements Serializable {
   public String getFullName(){
     return String.format("%s_%s", this.color, this.type);
   }
+
+  public int getID(){
+    return this.ID;
+  }
 }
