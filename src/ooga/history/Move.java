@@ -12,11 +12,9 @@ public class Move {
     private Point2D endLocation;
     private Piece capturedPiece;
 
-    public Move(Piece piece, Point2D startLocation, Point2D endLocation, Piece capturedPiece) {
-        this.piece = piece;
+    public Move(Point2D startLocation, Point2D endLocation) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
-        this.capturedPiece = capturedPiece;
     }
 
     public Point2D getStartLocation() {
@@ -34,5 +32,14 @@ public class Move {
 
     public Piece getCapturedPiece(){
         return capturedPiece;
+    }
+
+
+    public void setCapturedPiece(Piece cap){
+        capturedPiece = cap;
+    }
+
+    public void setPiece(Piece piece){
+        this.piece = piece;
     }
 }

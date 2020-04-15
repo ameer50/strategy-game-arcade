@@ -23,17 +23,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-//        VBox vBox = new VBox(new Label("A JavaFX Label"));
-//        Scene scene = new Scene(vBox);
-//        primaryStage.setScene(scene);
-//        primaryStage.setWidth(500);
-//        primaryStage.setHeight(500);
-//        primaryStage.show();
-        // testing
-//        XMLParser p = new XMLParser();
-//        p.parse("resources/test_xml/Chess.xml");
+
         Controller c = new Controller(primaryStage);
-        // GameScreen game = new GameScreen(primaryStage);
+
 
     }
 }
