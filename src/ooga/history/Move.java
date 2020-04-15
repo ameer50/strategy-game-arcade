@@ -4,19 +4,21 @@ import ooga.board.Piece;
 import ooga.view.PieceView;
 
 import java.awt.geom.Point2D;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Move {
 
     private Piece piece;
     private Point2D startLocation;
     private Point2D endLocation;
-    private Piece capturedPiece;
-    private Point2D capturedPieceLocation;
+    private Map<Piece, Point2D> capturedPiecesAndLocations;
     private boolean isUndo;
 
     public Move(Point2D startLocation, Point2D endLocation) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
+        capturedPiecesAndLocations = new HashMap<>();
         isUndo = false;
     }
 
@@ -41,17 +43,12 @@ public class Move {
         return String.format("%s from (%d, %d) to (%d, %d)", piece, (int) startLocation.getX(), (int) startLocation.getY(), (int) endLocation.getX(), (int) endLocation.getY());
     }
 
-    public void setCapturedPieceAndLocation(Piece capturedPiece, Point2D capturedPieceLocation){
-        this.capturedPiece = capturedPiece;
-        this.capturedPieceLocation = capturedPieceLocation;
+    public void addCapturedPieceAndLocation(Piece capturedPiece, Point2D capturedPieceLocation){
+        capturedPiecesAndLocations.put(capturedPiece, capturedPieceLocation);
     }
 
-    public Piece getCapturedPiece(){
-        return capturedPiece;
-    }
-
-    public Point2D getCapturedPieceLocation() {
-        return capturedPieceLocation;
+    public Map<Piece, Point2D> getCapturedPiecesAndLocations() {
+        return capturedPiecesAndLocations;
     }
 
     public Piece getPiece() {
