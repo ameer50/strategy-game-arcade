@@ -23,7 +23,6 @@ public class ChessBoard extends Board {
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
       Pair<String, Integer>> pieces) {
     super(settings, locations, pieces);
-    System.out.println(pieceColorMap);
   }
 
   @Override
@@ -36,12 +35,16 @@ public class ChessBoard extends Board {
     String color = piece.getColor();
     if (pieceColorMap.get(color).contains(piece)) {
       String movePattern = piece.getMovePattern();
-      String moveType = movePattern.split(" ")[0].toLowerCase();
-      int moveDistance = Integer.parseInt(movePattern.split(" ")[1]);
+      String[] movePatternSplit = movePattern.split(" ");
+      String moveType = movePatternSplit[0].toLowerCase();
+      List<Integer> params = new ArrayList<>();
+      for(int inc = 1; inc < movePatternSplit.length; inc++){
+        params.add(Integer.parseInt(movePatternSplit[inc]));
+      }
       try {
-        Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, int.class,
+        Method moveMethod = this.getClass().getDeclaredMethod(moveType, int.class, int.class, List.class,
                 piece.getClass());
-        Object ret = moveMethod.invoke(this, i, j, moveDistance, piece);
+        Object ret = moveMethod.invoke(this, i, j, params, piece);
         return (List<Point2D>) ret;
       } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
         System.out.println("Error: " + moveType);
@@ -401,18 +404,18 @@ public class ChessBoard extends Board {
   }
 
 
-  private List<Point2D> any(int x, int y, int dist, Piece piece){
-    List<Point2D> lat = lateral(x, y, dist, piece);
-    List<Point2D> diag = diagonal(x, y, dist, piece);
+  private List<Point2D> any(int x, int y, List<Integer> params, Piece piece){
+    List<Point2D> lat = lateral(x, y, params, piece);
+    List<Point2D> diag = diagonal(x, y, params, piece);
     List<Point2D> combined = new ArrayList<>(lat);
     combined.addAll(diag);
     return  combined;
   }
-  private List<Point2D> lateral(int x, int y, int dist, Piece piece) {
-    List<Point2D> up = up(x, y, dist, piece);
-    List<Point2D> down = down(x, y, dist, piece);
-    List<Point2D> left = left(x, y, dist, piece);
-    List<Point2D> right = right(x, y, dist, piece);
+  private List<Point2D> lateral(int x, int y, List<Integer> params, Piece piece) {
+    List<Point2D> up = up(x, y, params, piece);
+    List<Point2D> down = down(x, y, params, piece);
+    List<Point2D> left = left(x, y, params, piece);
+    List<Point2D> right = right(x, y, params, piece);
     List<Point2D> combined = new ArrayList<>(up);
     combined.addAll(down);
     combined.addAll(left);
@@ -420,7 +423,24 @@ public class ChessBoard extends Board {
     return combined;
   }
 
-  private List<Point2D> pawn(int i, int j, int dist, Piece piece) {
+  private List<Point2D> knight(int i, int j, List<Integer> params, Piece piece){
+    List<Point2D> ret = new ArrayList<>();
+    int first = params.get(0);
+    int second = params.get(1);
+    int[] iShifts = {first, first, -first, -first, second, second, -second, -second};
+    int[] jShifts = {second, -second, second, -second, first, -first, first, -first};
+
+    for(int idx = 0; idx < iShifts.length; idx++){
+      int newI = i + iShifts[idx];
+      int newJ = j + jShifts[idx];
+      Point2D newPoint = checkPoint(newI, newJ, piece);
+      if(newPoint != null){
+        ret.add(newPoint);
+      }
+    }
+    return ret;
+  }
+  private List<Point2D> pawn(int i, int j, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int inc = getPawnInc(piece);
     int newI = i + inc;
@@ -467,8 +487,9 @@ public class ChessBoard extends Board {
   }
 
   // FIXME: these have a ton of duplication; could be made into much simpler methods
-  private List<Point2D> up (int x, int y, int distance, Piece piece) {
+  private List<Point2D> up (int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
+    int distance = params.get(0);
     int squares = 1;
     while (squares <= distance || distance < 0) {
       int newX = x - squares;
@@ -486,8 +507,9 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private List<Point2D> down ( int x, int y, int distance, Piece piece) {
+  private List<Point2D> down ( int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
+    int distance = params.get(0);
     int squares = 1;
     while (squares <= distance || distance < 0) {
       int newX = x + squares;
@@ -505,9 +527,10 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private List<Point2D> right (int x, int y, int distance, Piece piece) {
+  private List<Point2D> right (int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int squares = 1;
+    int distance = params.get(0);
     while (squares <= distance || distance < 0) {
       int newY = y + squares;
       Point2D newPoint = checkPoint(x, newY, piece);
@@ -524,7 +547,8 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private List<Point2D> left(int x, int y, int distance, Piece piece) {
+  private List<Point2D> left(int x, int y, List<Integer> params, Piece piece) {
+    int distance = params.get(0);
     List<Point2D> ret = new ArrayList<>();
     int squares = 1;
     while (squares <= distance || distance < 0) {
@@ -543,7 +567,8 @@ public class ChessBoard extends Board {
     return ret;
   }
 
-  private List<Point2D> diagonal(int x, int y, int distance, Piece piece){
+  private List<Point2D> diagonal(int x, int y, List<Integer> params, Piece piece){
+    int distance = params.get(0);
     List<Point2D> ret = new ArrayList<>();
     int inc = 1;
     int[] iShift = {1, 1, -1, -1};

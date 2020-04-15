@@ -36,9 +36,13 @@
         <item>7,4,White_Queen</item>
         <item>7,5,White_Bishop</item>
         <item>7,7,White_Rook</item>
+        <item>4,4,White_Knight</item>
 
     </locations>
     <pieces>
+        <item>
+            White_Knight:KNIGHT 2 1:5
+        </item>
         <item>
             White_Queen:ANY -1:25
         </item>
