@@ -20,6 +20,7 @@ import ooga.xml.XMLProcessor;
 
 import java.awt.geom.Point2D;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
 
@@ -170,14 +171,16 @@ public class Controller {
             doMove(reverseMove);
             toggleActivePlayer();
 
-            if (prevMove.getCapturedPiece() != null) {
-                Piece capturedPiece = prevMove.getCapturedPiece();
-                Point2D capturedPieceLocation = prevMove.getCapturedPieceLocation();
+//            if (prevMove.getCapturedPiecesAndLocations() != null) {
+//            }
+
+            Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
+            for (Piece capturedPiece: map.keySet()) {
+                Point2D capturedPieceLocation = map.get(capturedPiece);
                 board.putPieceAt(capturedPieceLocation, capturedPiece);
                 activePlayer.addToScore(-capturedPiece.getValue());
                 PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
                 boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
-                //TODO: another backend call that can take care of resetting pawns to their first move pattern
             }
         });
 
@@ -198,8 +201,9 @@ public class Controller {
             processor.write(board, "new.xml");
         });
 
-
         board.setOnPiecePromoted((int toX, int toY) -> {
+            System.out.println("Came here!!!!!!!");
+            board.getPieceAt(toX, toY);
             boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
         });
     }

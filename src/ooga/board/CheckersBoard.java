@@ -3,11 +3,12 @@ package ooga.board;
 import java.io.Serializable;
 import javafx.util.Pair;
 import ooga.history.Move;
-
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CheckersBoard extends Board implements Serializable {
 
@@ -15,18 +16,6 @@ public class CheckersBoard extends Board implements Serializable {
     public List<Point2D> validKillMoves = new ArrayList<Point2D>();
     public List<Point2D> validNonKillMoves = new ArrayList<Point2D>();
 
-    /* TO-DO Items
-    Two move types: Coin and King; Coin allows restricted diagonal movement, King allows diagonal movement in all directions.
-    Both can only move one cell or two cells
-    1) Add support for both colors Red and Black (Top color can only move down initially, bottom color can only move up initially)
-    2) Check upper diagonal neighbors and lower diagonal neighbors (depending on top or bottom), if piece @ that cell is null,
-    add to list of validMoves
-    3) check upper two diagonal neighbors and lower two diagonal neighbors (depending on top or bottom), if piece @ that cell is
-    null and the immediate diagonal neighbor is of the opposite piece color, allow for a valid move and remove opposite color piece
-    4) If a piece is captured, skip the other player/CPU turn and allow player to go again. This avoids recursion and a need
-    to change the piece's move type
-    5) Once a piece reaches the first/last row of the board, change the movetype of the piece to 'King'
-    */
 
     public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Integer>> pieces){
         super(settings, locs, pieces);
@@ -34,11 +23,16 @@ public class CheckersBoard extends Board implements Serializable {
 
     @Override
     public String checkWon() {
-
         String result = checkOneColor();
+        String result2 = checkTrapped();
 
-
-        return "Test";
+        if(result!=null){
+            return result;
+        }
+        else if(result2!= null){
+            return result2;
+        }
+        return null;
     }
 
     public String checkOneColor(){
@@ -92,20 +86,14 @@ public class CheckersBoard extends Board implements Serializable {
 
     @Override
     public List<Point2D> getValidMoves(int x, int y) {
-        System.out.println("X" + x);
-        System.out.println("Y" + y);
         Piece piece = getPieceAt(x,y);
         if (piece == null) {
             System.out.println("COLOR: " + piece.getColor());
             return null;
         }
         String color = piece.getColor();
-        if (!pieceColorMap.get(color).contains(piece)) {
-            return null;
-        }
 
         String movPat = piece.getMovePattern();
-        System.out.println("Move Pattern: " + movPat);
         validKillMoves.clear();
         validNonKillMoves.clear();
         if (movPat.equals("P1 1")) {
@@ -115,7 +103,7 @@ public class CheckersBoard extends Board implements Serializable {
         else if (movPat.equals("P2 1")) {
             //Employ down methods
             p2(x,y);
-        } else if (movPat.equals("KING")) {
+        } else if (movPat.equals("KING 1")) {
             //Employ king methods (ALL)
             king(x, y);
         } else {
@@ -142,6 +130,8 @@ public class CheckersBoard extends Board implements Serializable {
         int x_f = (int) m.getEndLocation().getX();
         int y_f = (int) m.getEndLocation().getY();
         System.out.println("Initial: " + x_i + "Initial: " + y_i);
+        String init_Color = getPieceAt(x_i, y_i).getColor();
+        int initID = getPieceAt(x_i, y_i).getID();
         System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);
@@ -161,13 +151,22 @@ public class CheckersBoard extends Board implements Serializable {
         }
 
         m.setPiece(currPiece);
-        m.setCapturedPieceAndLocation(hitPiece, capLoc);
+        m.addCapturedPieceAndLocation(hitPiece, capLoc);
         pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
 
         int score = 0;
         if(hitPiece != null) {
             score =  hitPiece.getValue();
         }
+
+        //TO-DO check if piece has reached opposite end
+        if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
+            getPieceAt(x_f, y_f).setType("Monarch");
+            getPieceAt(x_f, y_f).setMovePattern("KING 1");
+            //pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), new Piece("Monarch", "KING 1", 10, init_Color, initID));
+            promoteAction.process(x_f, y_f);
+        }
+        
         return score;
     }
 
@@ -263,14 +262,23 @@ public class CheckersBoard extends Board implements Serializable {
         up_right_kill(x, y);
 
         int sizeDiff = -1;
+
         while(sizeDiff != 0){
             int before_size = validKillMoves.size();
-            for(Point2D point: validKillMoves){
+            System.out.println("Before loop VKM: " + validKillMoves);
+            for(int k = 0; k<validKillMoves.size(); k++){
+                Point2D point = validKillMoves.get(k);
                 int i = (int)point.getX();
                 int j = (int)point.getY();
                 up_left_kill(i, j);
                 up_right_kill(i, j);
             }
+            List<Point2D> newList = validKillMoves.stream().distinct().collect(Collectors.toList());
+            validKillMoves.clear();
+            for(Point2D p : newList) {
+                validKillMoves.add((Point2D) p.clone());
+            }
+
             sizeDiff = validKillMoves.size()-before_size;
         }
     }
@@ -288,12 +296,20 @@ public class CheckersBoard extends Board implements Serializable {
         int sizeDiff = -1;
         while(sizeDiff != 0){
             int before_size = validKillMoves.size();
-            for (Point2D point: validKillMoves) {
+            System.out.println("Before loop VKM: " + validKillMoves);
+            for(int k = 0; k<validKillMoves.size(); k++){
+                Point2D point = validKillMoves.get(k);
                 int i = (int)point.getX();
                 int j = (int)point.getY();
                 down_left_kill(i, j);
                 down_right_kill(i, j);
             }
+            List<Point2D> newList = validKillMoves.stream().distinct().collect(Collectors.toList());
+            validKillMoves.clear();
+            for(Point2D p : newList) {
+                validKillMoves.add((Point2D) p.clone());
+            }
+
             sizeDiff = validKillMoves.size()-before_size;
         }
         System.out.println("END VNK: " + validNonKillMoves);
@@ -326,7 +342,12 @@ public class CheckersBoard extends Board implements Serializable {
     }
 
     public boolean isOppColor(Piece currPiece, Piece oppPiece) {
-        return !(oppPiece.getColor().equals(currPiece.getColor()));
+        if(currPiece==null || oppPiece==null){
+            return true;
+        }
+        else{
+            return !(oppPiece.getColor().equals(currPiece.getColor()));
+        }
     }
 
     public double distance(int x_i, int y_i, int x_f, int y_f) {
