@@ -36,7 +36,7 @@ public class ChessBoard extends Board implements Serializable {
     Point2D kingPoint = locateKings(color);
     int kingI = (int) kingPoint.getX();
     int kingJ = (int) kingPoint.getY();
-    Pair<List<Point2D>, List<Point2D>> checks = getMovesAndCheckPieces(kingI, kingJ, color, false);
+    Pair<List<Point2D>, List<Point2D>> checks = getMovesAndCheckPieces(kingI, kingJ, color, true);
     List<Point2D> checkPieces = checks.getValue();
     if (piece.getType().equals(KING)) {
       List<Point2D> safeKings = getSafeKingMoves(thisPieceValidMoves, checks.getKey());
