@@ -1,15 +1,16 @@
 package ooga.board;
+
+import java.io.Serializable;
 import javafx.util.Pair;
 import ooga.history.Move;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class CheckersBoard extends Board {
+public class CheckersBoard extends Board implements Serializable {
 
 
     public List<Point2D> validKillMoves = new ArrayList<Point2D>();
@@ -116,14 +117,14 @@ public class CheckersBoard extends Board {
         validNonKillMoves.addAll(validKillMoves);
         System.out.println("FINAL ENDD VNK: " + validNonKillMoves);
         return validNonKillMoves;
-        /*if (piece == null) { return null; }
+        /* if (piece == null) { return null; }
         System.out.println("Problem color " + color + " |  Problem piece" + piece + " | X, Y " + x + " " + y);
         System.out.println("problem map " + pieceColorMap);
         if (pieceColorMape.get(color).contains(piece)) {
             validMoves = new ArrayList<Point2D>();
             //checkRight(x, y, piece);
             //checkLeft(x, y, piece);
-         */
+         } */
     }
 
     public int doMove(Move m) {
@@ -153,7 +154,7 @@ public class CheckersBoard extends Board {
 
         m.setPiece(currPiece);
         m.setCapturedPieceAndLocation(hitPiece, capLoc);
-        pieceLocationBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
+        pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
 
         int score = 0;
         if(hitPiece != null) {
@@ -169,7 +170,7 @@ public class CheckersBoard extends Board {
         return score;
     }
 
-    //********START: Eight elements that make up the three possible move patterns of the pieces in the game.********
+    /* START: Eight elements that make up the three possible move patterns of the pieces in the game. */
     public boolean up_left (int x, int y) {
         if (isCellInBounds(x - 1, y - 1) && (getPieceAt(x - 1, y - 1) == null)) {
             validNonKillMoves.add(new Point2D.Double(x - 1, y - 1));
@@ -349,6 +350,6 @@ public class CheckersBoard extends Board {
         /*Piece piece = getPieceAt(i, j);
         pieceColorMap.get(piece.getColor()).remove(piece);
         pieceLocationBiMap.forcePut(new Point2D.Double(i, j), null);*/
-        putPieceAt(i, j, null);
+        putPieceAt(new Point2D.Double(i, j), null);
     }
 }
