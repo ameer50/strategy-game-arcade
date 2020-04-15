@@ -137,10 +137,11 @@ public class Controller {
             Point2D endLoc = new Point2D.Double(toX, toY);
             Piece capturedPiece = board.getPieceAt(toX, toY);
 
-            doPieceMove(startLoc, endLoc, false);
+
             printMessageAndTime("Did user's move.");
 
-            Move move = new Move(board.getPieceAt(toX, toY), startLoc, endLoc, capturedPiece);
+            Move move = new Move(startLoc, endLoc);
+            movePiece(startLoc, endLoc, false);
             history.addMove(move);
             historyList.add(move);
 
@@ -160,7 +161,8 @@ public class Controller {
             Point2D startLoc = prevMove.getEndLocation();
             Point2D endLoc = prevMove.getStartLocation();
 
-            doPieceMove(startLoc, endLoc, true);
+
+            movePiece(startLoc, endLoc, true);
             toggleActivePlayer();
 
             if (prevMove.getCapturedPiece() != null) {
@@ -180,7 +182,8 @@ public class Controller {
             historyList.add(prevMove);
             Point2D startLoc = prevMove.getStartLocation();
             Point2D endLoc = prevMove.getEndLocation();
-            doPieceMove(startLoc, endLoc, false);
+
+            movePiece(startLoc, endLoc, false);
             toggleActivePlayer();
         });
 
@@ -223,7 +226,9 @@ public class Controller {
         }
     }
 
-    private void doPieceMove(Point2D start, Point2D end, boolean undo) {
+
+    private void movePiece(Point2D start, Point2D end, boolean undo){
+
         int fromX = (int) start.getX();
         int fromY = (int) start.getY();
         int toX = (int) end.getX();
