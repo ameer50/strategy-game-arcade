@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ public abstract class Board implements Serializable {
   protected BiMap<Point2D, Piece> pieceLocationBiMap;
   protected int height;
   protected int width;
+  protected boolean over;
   protected ProcessCoordinateInterface promoteAction;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
@@ -35,6 +37,7 @@ public abstract class Board implements Serializable {
     height = Integer.parseInt(settings.get(HEIGHT));
     width = Integer.parseInt(settings.get(WIDTH));
     bottomColor = settings.get(BOTTOM_COLOR);
+    over = false;
 
     pieceLocationBiMap = HashBiMap.create();
     this.pieceTypeMap = pieceTypeMap;
@@ -45,6 +48,7 @@ public abstract class Board implements Serializable {
    Set up the board from the config file.
    **/
   private void initializePieces(Map<Point2D, String> locations) {
+    int ID = 0;
     for (Point2D point: locations.keySet()){
       int x = (int) point.getX();
       int y = (int) point.getY();
@@ -56,7 +60,7 @@ public abstract class Board implements Serializable {
 
       String movePattern = pieceInfo.getKey();
       int score = pieceInfo.getValue();
-      Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
+      Piece piece = new Piece(pieceName, movePattern, score, pieceColor, ID++);
 
       pieceLocationBiMap.put(new Point2D.Double(x, y), piece);
     }
@@ -93,7 +97,7 @@ public abstract class Board implements Serializable {
     }
   }
 
-  public List<Point2D> getPiecesOfColor(String color) {
+  public List<Point2D> getLocsOfColor(String color) {
     List pieceList = new ArrayList<>();
     for (Point2D point: pieceLocationBiMap.keySet()) {
       Piece piece = pieceLocationBiMap.get(point);
@@ -139,7 +143,43 @@ public abstract class Board implements Serializable {
 
   public abstract List<Point2D> getValidMoves(int i, int j);
 
-  @Deprecated
+  public int getScore(String color) {
+    int score = 0;
+    for (Piece piece: pieceLocationBiMap.values()) {
+      int value = piece.getValue();
+      int multiplier = 0;
+      if (piece.getColor().equals(color)) {
+        multiplier = 1;
+      } else {
+        multiplier = -1;
+      }
+      score += (value*multiplier);
+    }
+    return score;
+  }
+
+  public List<List<Integer>> getPossibleMoves(String color) {
+    List<Point2D> possibleLocs = getLocsOfColor(color);
+    return movesFromLocs(possibleLocs);
+  }
+
+  public List<List<Integer>> movesFromLocs(List<Point2D> locs) {
+    List<List<Integer>> moveList = new ArrayList<>();
+    for (Point2D fromPoint: locs) {
+      int fromX = (int) fromPoint.getX();
+      int fromY = (int) fromPoint.getY();
+      List<Point2D> toPoints = getValidMoves(fromX, fromY);
+      for (Point2D toPoint: toPoints) {
+        moveList.add(Arrays.asList(fromX, fromY, (int) toPoint.getX(), (int) toPoint.getY()));
+      }
+    }
+    return moveList;
+  }
+
+  public boolean isGameOver() {
+    return over;
+  }
+
   public Board getCopy() {
     try {
       ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

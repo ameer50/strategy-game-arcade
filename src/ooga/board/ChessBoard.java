@@ -54,7 +54,7 @@ public class ChessBoard extends Board {
     if(!undo) {
       currPiece.move();
     } else {
-      currPiece.unmove();
+      currPiece.unMove();
     }
     int score = 0;
     if (hitPiece != null) {
@@ -72,7 +72,7 @@ public class ChessBoard extends Board {
     }
     int inc = getPawnInc(piece);
     if((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)){
-      piece.setName("Queen");
+      piece.setType("Queen");
       piece.setMovePattern("Any -1");
       this.promoteAction.process(endX, endY);
     }
@@ -573,7 +573,7 @@ public class ChessBoard extends Board {
       return null;
     }
     Piece thatPiece = getPieceAt(x, y);
-    if (thatPiece != null && thisPiece.isOnSameTeam(thatPiece)) {
+    if (thatPiece != null && thisPiece.isSameColor(thatPiece)) {
       return null;
     }
     ret = new Point2D.Double(x, y);

@@ -68,49 +68,82 @@ public class StrategyAI extends Player {
 
   public List<Integer> generateRandomMove() {
     Random rng = new Random();
-    List<List<Integer>> moves = new ArrayList<>();
-    for (int i = 0; i < board.getWidth(); i++) {
-      for (int j = 0; j < board.getHeight(); j++) {
-        List<Point2D> pieceMoves = board.getValidMoves(i, j);
-        if (pieceMoves != null) {
-          if (pieceMoves.size() != 0 && board.getPieceAt(i, j).getColor().equals(color)) {
-            addAllPieceMoves(moves, pieceMoves, i, j);
-          }
-        }
-      }
-    }
-    if (moves.size() == 0) {
-      System.out.println("AI could not find a piece");
-      return null;
-    } else {
-      int index = rng.nextInt(moves.size());
-      List<Integer> move = moves.get(index);
+    List<List<Integer>> possibleMoves = board.getPossibleMoves(color);
+
+    if (possibleMoves.size() != 0) {
+      int index = rng.nextInt(possibleMoves.size());
+      List<Integer> move = possibleMoves.get(index);
       System.out.println(String.format("Generated RANDOM move: (%.1f, %.1f), (%.1f, %.1f)", (float) move.get(0),
           (float) move.get(1), (float) move.get(2), (float) move.get(3)));
-      return moves.get(index);
+      return move;
     }
+    System.out.println("AI could not find a piece");
+    return null;
   }
 
-  private void addAllPieceMoves(List<List<Integer>> moves, List<Point2D> pieceMoves, int i, int j) {
-      for (Point2D moveTo: pieceMoves) {
-        List<Integer> move = Arrays.asList(i, j, (int) moveTo.getX(), (int) moveTo.getY());
-        moves.add(move);
-      }
-    }
-
   public List<Integer> generateAlphaBetaMove() {
-    int branches = 4;
+    int depth = 4;
     int alpha = Integer.MIN_VALUE;
     int beta = Integer.MAX_VALUE;
 
+    /*
+    The ALPHA-BETA algorithm will generate scores for each of these moves...
+     */
+    List<List<Integer>> parallelMoves = board.getPossibleMoves(color);
+    List<Integer> parallelScores = new ArrayList<>();
 
-    return null;
+    for (List<Integer> move: parallelMoves) {
+      int moveScore = alphabeta(move, depth, alpha, beta, true, board);
+      parallelScores.add(moveScore);
+    }
+    int bestScore = 0;
+    List<Integer> bestMove = parallelMoves.get(0);
+    for (int i=0; i<parallelScores.size(); i++) {
+      int score = parallelScores.get(i);
+      if (score > bestScore) {
+        bestMove = parallelMoves.get(i);
+        bestScore = score;
+      }
+    }
+    return bestMove;
+  }
+
+  private int alphabeta(List<Integer> currMove, int depth, int alpha, int beta, boolean maximizer, Board currBoard) {
+    if (depth==0 | currBoard.isGameOver()) {
+      return currBoard.getScore(color);
+    }
+    Board nextBoard = currBoard.getCopy();
+    nextBoard.doMove(currMove.get(0), currMove.get(1), currMove.get(2), currMove.get(3), false);
+    int bestValue;
+    if (maximizer) {
+      bestValue = Integer.MIN_VALUE;
+      for (List<Integer> nextMove : nextBoard.getPossibleMoves(color)) {
+        int value = alphabeta(nextMove, depth-1, alpha, beta, false, nextBoard);
+        bestValue = Math.max(bestValue, value);
+        alpha = Math.max(alpha, bestValue);
+        if (beta <= alpha) {
+          break;
+        }
+      }
+    } else {
+      bestValue = Integer.MIN_VALUE;
+      for (List<Integer> nextMove : nextBoard.getPossibleMoves(color)) {
+        int value = alphabeta(nextMove, depth-1, alpha, beta, true, nextBoard);
+        bestValue = Math.min(bestValue, value);
+        beta = Math.min(beta, bestValue);
+        if (beta <= alpha) {
+          break;
+        }
+      }
+    }
+    return bestValue;
   }
 
   public List<Integer> generateBruteForceMove() {
     return null;
     // TODO: Implement.
   }
+
   public List<Integer> generateSingleBranchMove() {
     // TODO: Implement.
     return null;
