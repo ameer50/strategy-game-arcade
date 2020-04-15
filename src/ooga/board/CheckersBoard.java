@@ -33,6 +33,15 @@ public class CheckersBoard extends Board {
 
     @Override
     public String checkWon() {
+
+        String result = checkOneColor();
+
+
+
+        return "Test";
+    }
+
+    public String checkOneColor(){
         int numWhite = 0;
         int numBlack = 0;
         for(int i = 0; i<width; i++){
@@ -47,10 +56,38 @@ public class CheckersBoard extends Board {
                 }
             }
         }
-        if(numBlack==0 || numWhite==0){
-            return "sdkfjhd";
+        if(numBlack==0){
+            return "White";
         }
-        return "Test";
+        else if(numWhite==0){
+            return "Black";
+        }
+        return null;
+    }
+
+    public String checkTrapped(){
+        int numWhite = 0;
+        int numBlack = 0;
+        for(int i = 0; i<width; i++){
+            for(int j = 0; j<height; j++){
+                if(getPieceAt(i, j) != null){
+                    List<Point2D> temp = getValidMoves(i, j);
+                    if(getPieceAt(i,j).getColor().equals("White")){
+                        numWhite+=temp.size();
+                    }
+                    else if(getPieceAt(i,j).getColor().equals("Black")){
+                        numBlack+=temp.size();
+                    }
+                }
+            }
+        }
+        if(numBlack==0){
+            return "White";
+        }
+        else if(numWhite==0){
+            return "Black";
+        }
+        return null;
     }
 
     @Override
@@ -59,6 +96,7 @@ public class CheckersBoard extends Board {
         System.out.println("Y" + y);
         Piece piece = getPieceAt(x,y);
         if (piece == null) {
+            System.out.println("COLOR: " + piece.getColor());
             return null;
         }
         String color = piece.getColor();
@@ -70,19 +108,17 @@ public class CheckersBoard extends Board {
         System.out.println("Move Pattern: " + movPat);
         validKillMoves.clear();
         validNonKillMoves.clear();
-        if(movPat.equals("P1 1")){
+        if (movPat.equals("P1 1")) {
             //Employ upper methods
             p1(x,y);
         }
-        else if(movPat.equals("P2 1")){
+        else if (movPat.equals("P2 1")) {
             //Employ down methods
             p2(x,y);
-        }
-        else if(movPat.equals("KING")){
+        } else if (movPat.equals("KING")) {
             //Employ king methods (ALL)
             king(x, y);
-        }
-        else{
+        } else {
             return null;
         }
         System.out.println("ENDD VNK: " + validNonKillMoves);
@@ -113,11 +149,9 @@ public class CheckersBoard extends Board {
             System.out.println("X to be removed: " + Math.abs(x_f+x_i)/2 + "  Y To be removed: " + Math.abs(y_f+y_i)/2);
             removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
             //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
-        }
-        if(oppPiece == null){
+        } if(oppPiece == null) {
             return 0;
-        }
-        else{
+        } else {
             System.out.println("returning score");
             return (int) oppPiece.getValue();
         }

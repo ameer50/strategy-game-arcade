@@ -185,9 +185,10 @@ public class Controller {
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
-            Piece piece = board.getPieceAt(toX, toY);
-            String name = String.format("%s_%s", piece.getColor(), piece.getType());
-            boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
+            boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
+//        Piece piece = board.getPieceAt(toX, toY);
+//        String name = String.format("%s_%s", piece.getColor(), piece.getType());
+//        boardView.getCellAt(toX, toY).setPiece(new PieceView(name));
         });
     }
 
@@ -213,6 +214,7 @@ public class Controller {
         System.out.println(String.format("time: %.2f", (float)(endTime-startTime)));
     }
 
+    @Deprecated
     private void stall (double millis) {
         double initial = System.currentTimeMillis();
         double elapsed = 0;
