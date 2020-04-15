@@ -68,6 +68,8 @@ public class ChessBoard extends Board {
       score = hitPiece.getValue();
       removePiece(hitPiece);
     }
+    m.setPiece(currPiece);
+    m.setCapturedPieceAndLocation(hitPiece, m.getEndLocation());
     pieceLocationBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
     promote(currPiece, endX, endY);
     return score;
