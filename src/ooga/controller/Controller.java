@@ -16,8 +16,7 @@ import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
 import ooga.view.PieceView;
-import ooga.xml.XMLParser;
-import ooga.xml.XMLWriter;
+import ooga.xml.XMLProcessor;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -58,6 +57,7 @@ public class Controller {
     private History history;
     private ObservableList<Move> historyList;
     private Stage stage;
+    private XMLProcessor processor;
 
     public Controller (Stage stage) {
         startTime = System.currentTimeMillis();
@@ -79,20 +79,20 @@ public class Controller {
         GameType gameType = GameType.valueOf(typeString.toUpperCase());
         System.out.println("File name" + fileName);
         String gameXML = String.format(fileName);
-        XMLParser p = new XMLParser();
-        p.parse(gameXML);
+        processor = new XMLProcessor();
+        processor.parse(gameXML);
         printMessageAndTime("XML parsed.");
 
         //TODO: change to reflection
         switch (gameType) {
             case CHESS:
-                board = new ChessBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+                board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
                 break;
             case CHECKERS:
-                board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
+                board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
         } printMessageAndTime("Setup Board.");
 
-        gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
+        gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
         printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
@@ -195,8 +195,7 @@ public class Controller {
 
         gameScreen.getDashboardView().setSaveClicked((e) -> {
             System.out.println("inside");
-            XMLWriter test = new XMLWriter("testing.xml");
-            test.writePresets(board, "new.xml");
+            processor.write(board, "new.xml");
         });
 
 
