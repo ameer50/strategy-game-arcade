@@ -120,11 +120,12 @@ public class ChessBoard extends Board {
   }
 
   private void promote(Piece piece, int endX, int endY){
-    if(!piece.toString().equals(PAWN)){
+    if(!piece.getType().equals(PAWN)){
       return;
     }
     int inc = getPawnInc(piece);
     if((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)){
+      System.out.println("PROMOTE");
       piece.setName("Queen");
       piece.setMovePattern("Any -1");
       this.promoteAction.process(endX, endY);

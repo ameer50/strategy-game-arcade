@@ -48,15 +48,18 @@ public class CellView extends StackPane {
     }
 
     public void setPiece(PieceView piece) {
+        System.out.println("Entered setPiece");
+        System.out.println("piece = " + piece);
         // remove original piece if it exists
         if (this.piece != null) {
             this.getChildren().remove(this.piece.getImage());
         }
         // set new piece
         this.piece = piece;
+
         // if we want to set it to null, return since we don't want to put an image there
         if (piece == null) return;
-
+        System.out.println("piece.getPieceName() = " + piece.getPieceName());
         ImageView pieceImage = piece.getImage();
         System.out.println(pieceImage);
         pieceImage.setFitHeight(0.95 * height);
