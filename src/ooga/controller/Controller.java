@@ -56,23 +56,25 @@ public class Controller {
     private Player playerTwo;
     private History history;
     private ObservableList<Move> historyList;
+    private Stage stage;
 
     public Controller (Stage stage) {
         startTime = System.currentTimeMillis();
-        setUpMenu(stage);
+        this.stage = stage;
+        setUpMenu();
     }
 
-    private void setUpMenu(Stage stage) {
-        menuScreen = new MenuScreen(stage);
+    private void setUpMenu() {
+        menuScreen = new MenuScreen(this.stage);
         printMessageAndTime("Setup Menu Screen.");
 
         menuScreen.buttonListener(e -> {
-            setUpGameScreen(stage, menuScreen.getGameSelected(),menuScreen.getFileName());
+            setUpGameScreen(menuScreen.getGameSelected(),menuScreen.getFileName());
         });
         printMessageAndTime("Setup listener.");
     }
 
-    private void setUpGameScreen(Stage stage, String typeString, String fileName) {
+    private void setUpGameScreen(String typeString, String fileName) {
         GameType gameType = GameType.valueOf(typeString.toUpperCase());
         System.out.println("File name" + fileName);
         String gameXML = String.format(fileName);
@@ -89,7 +91,7 @@ public class Controller {
                 board = new CheckersBoard(p.getSettings(), p.getInitialPieceLocations(), p.getMovePatterns());
         } printMessageAndTime("Setup Board.");
 
-        gameScreen = new GameScreen(stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
+        gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), p.getInitialPieceLocations()); // ***
         printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
@@ -181,6 +183,11 @@ public class Controller {
             doMove(prevMove);
             toggleActivePlayer();
         });
+
+        gameScreen.getDashboardView().setQuitClicked((e) -> {
+            setUpMenu();
+        });
+
 
         board.setOnPiecePromoted((int toX, int toY) -> {
             boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));

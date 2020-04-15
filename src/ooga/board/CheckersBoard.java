@@ -38,7 +38,6 @@ public class CheckersBoard extends Board {
         String result = checkOneColor();
 
 
-
         return "Test";
     }
 
@@ -149,17 +148,27 @@ public class CheckersBoard extends Board {
         placePiece(x_i, y_i, null);
         placePiece(x_f, y_f, currPiece);
         boolean isKill = false;
+        Point2D.Double capLoc = null;
+        Piece hitPiece = null;
         System.out.println("Distance: " + distance(x_i,y_i,x_f,y_f));
+
         if (distance(x_i,y_i,x_f,y_f)>2.0) {
             System.out.println("X to be removed: " + Math.abs(x_f+x_i)/2 + "  Y To be removed: " + Math.abs(y_f+y_i)/2);
+            capLoc = new Point2D.Double(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
+            hitPiece = getPieceAt(capLoc);
             removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
             //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
-        } if(oppPiece == null) {
-            return 0;
-        } else {
-            System.out.println("returning score");
-            return (int) oppPiece.getValue();
         }
+
+        m.setPiece(currPiece);
+        m.setCapturedPieceAndLocation(hitPiece, capLoc);
+        pieceLocationBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
+
+        int score = 0;
+        if(hitPiece != null) {
+            score =  hitPiece.getValue();
+        }
+        return score;
     }
 
     //********START: Eight elements that make up the three possible move patterns of the pieces in the game.********

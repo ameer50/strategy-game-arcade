@@ -109,14 +109,14 @@ public abstract class Board implements Serializable {
   public void putPieceAt(int i, int j, Piece piece) {
     if (isCellInBounds(i, j)) {
       pieceLocationBiMap.forcePut(new Point2D.Double(i, j), piece);
-      updatePieceColorMap(piece);
+      //updatePieceColorMap(piece);
     }
   }
 
   public void putPieceAt(Point2D location, Piece piece) {
     if (isCellInBounds(location)) {
       pieceLocationBiMap.forcePut(location, piece);
-      updatePieceColorMap(piece);
+      //updatePieceColorMap(piece);
     }
   }
 
@@ -151,8 +151,7 @@ public abstract class Board implements Serializable {
 
   /**
    Execute the desired move
-   @param endX new x position
-   @param endY new y position
+   @param m Move object which operates on the piece
    @return score from completing this move
    **/
   public abstract int doMove(Move m);
@@ -161,6 +160,10 @@ public abstract class Board implements Serializable {
 
   public void setOnPiecePromoted(ProcessCoordinateInterface promoteAction) {
     this.promoteAction = promoteAction;
+  }
+
+  public BiMap<Point2D, Piece> getPieceLocationBiMap(){
+    return pieceLocationBiMap;
   }
 }
 

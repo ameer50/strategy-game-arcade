@@ -29,6 +29,7 @@ public class DashboardView {
     private ListView<Move> history;
     private EventHandler<ActionEvent> undoMoveFunction;
     private EventHandler<ActionEvent> redoMoveFunction;
+    private EventHandler<ActionEvent> quitFunction;
 
     public DashboardView(){
         display = new VBox();
@@ -101,12 +102,19 @@ public class DashboardView {
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
 
+
         buttons.getButtons().get(0).setOnAction(e -> {
             undoMoveFunction.handle(e);
         });
         buttons.getButtons().get(1).setOnAction(e -> {
             redoMoveFunction.handle(e);
         });
+
+        buttons.getButtons().get(3).setOnAction(e -> {
+            quitFunction.handle(e);
+        });
+
+
     }
 
     private void createBottom() {
@@ -114,7 +122,6 @@ public class DashboardView {
         Text turnText = new Text("Turn: ");
         activePlayerText = new Text();
         bottom.getChildren().addAll(turnText, activePlayerText);
-        //addGPaneElement(bottom, 0, 2);
         bottom.getStyleClass().add("scoreshbox");
     }
 
@@ -139,9 +146,13 @@ public class DashboardView {
         }
     }
 
-    private void setUndo(boolean state){
-        undoState = state;
+
+    private void buttonEvent(Button b, EventHandler<ActionEvent> event){
+        b.setOnAction(e -> {
+            event.handle(e);
+        });
     }
+
     public boolean getUndoState(){
         return undoState;
     }
@@ -157,4 +168,9 @@ public class DashboardView {
     public void setRedoMoveClicked(EventHandler<ActionEvent> move) {
         redoMoveFunction = move;
     }
+
+    public void setQuitClicked(EventHandler<ActionEvent> quit) {
+        quitFunction = quit;
+    }
+
 }
