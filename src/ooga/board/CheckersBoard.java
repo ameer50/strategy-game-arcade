@@ -33,6 +33,15 @@ public class CheckersBoard extends Board {
 
     @Override
     public String checkWon() {
+
+        String result = checkOneColor();
+
+
+
+        return "Test";
+    }
+
+    public String checkOneColor(){
         int numWhite = 0;
         int numBlack = 0;
         for(int i = 0; i<width; i++){
@@ -47,10 +56,38 @@ public class CheckersBoard extends Board {
                 }
             }
         }
-        if(numBlack==0 || numWhite==0){
-            return "sdkfjhd";
+        if(numBlack==0){
+            return "White";
         }
-        return "Test";
+        else if(numWhite==0){
+            return "Black";
+        }
+        return null;
+    }
+
+    public String checkTrapped(){
+        int numWhite = 0;
+        int numBlack = 0;
+        for(int i = 0; i<width; i++){
+            for(int j = 0; j<height; j++){
+                if(getPieceAt(i, j) != null){
+                    List<Point2D> temp = getValidMoves(i, j);
+                    if(getPieceAt(i,j).getColor().equals("White")){
+                        numWhite+=temp.size();
+                    }
+                    else if(getPieceAt(i,j).getColor().equals("Black")){
+                        numBlack+=temp.size();
+                    }
+                }
+            }
+        }
+        if(numBlack==0){
+            return "White";
+        }
+        else if(numWhite==0){
+            return "Black";
+        }
+        return null;
     }
 
     @Override
@@ -58,6 +95,7 @@ public class CheckersBoard extends Board {
         System.out.println("X" + x);
         System.out.println("Y" + y);
         Piece piece = getPieceAt(x,y);
+        System.out.println("COLOR: " + piece.getColor());
         if(piece == null){
             return null;
         }
