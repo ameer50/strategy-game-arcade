@@ -30,6 +30,7 @@ public class DashboardView {
     private EventHandler<ActionEvent> undoMoveFunction;
     private EventHandler<ActionEvent> redoMoveFunction;
     private EventHandler<ActionEvent> quitFunction;
+    private EventHandler<ActionEvent> saveFunction;
 
     public DashboardView(){
         display = new VBox();
@@ -110,6 +111,10 @@ public class DashboardView {
             redoMoveFunction.handle(e);
         });
 
+        buttons.getButtons().get(2).setOnAction(e -> {
+            saveFunction.handle(e);
+        });
+
         buttons.getButtons().get(3).setOnAction(e -> {
             quitFunction.handle(e);
         });
@@ -171,6 +176,10 @@ public class DashboardView {
 
     public void setQuitClicked(EventHandler<ActionEvent> quit) {
         quitFunction = quit;
+    }
+
+    public void setSaveClicked(EventHandler<ActionEvent> save) {
+        saveFunction = save;
     }
 
 }

@@ -24,12 +24,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-/**
- * Represents a class to copy an XML file and write into it
- *
- * @param <T> The type of the Grid
- */
-public class XMLWriter<T> {
+
+public class XMLWriter {
 
     private Document doc;
     private String fileName;
@@ -66,7 +62,7 @@ public class XMLWriter<T> {
         }
         doc.getDocumentElement().normalize();
 
-        Node node = doc.getDocumentElement().getElementsByTagName("initialstates").item(0);
+        Node node = doc.getDocumentElement().getElementsByTagName("item").item(0);
         //  System.out.println(
 //    doc.getDocumentElement().getElementsByTagName("initialstates").item(0).getChildNodes()
 //        .getLength());
@@ -81,20 +77,20 @@ public class XMLWriter<T> {
      */
     public void writePresets(Board board, String saveName) {
         if (doc == null) {
-            //  System.out.println("Failed to save");
+            System.out.println("Failed to save");
             return;
         }
         Element root = doc.getDocumentElement();
-        Element newList = doc.createElement("initialstates");
-        newList.setAttribute("type", "List");
+        Element newList = doc.createElement("locations");
+        newList.setAttribute("item", "List");
         root.appendChild(newList);
         for (Point2D location : board.getPieceLocationBiMap().keySet()) {
-//            Piece thePiece = board.getPieceLocationBiMap().get(location);
-//            Element newItem = doc.createElement("item");
-//            newItem.setAttribute("type", "String");
-//            newItem.setTextContent(
-//                    String.format(cell.getxPos() + "," + cell.getyPos() + ",%s", cell.getCurrentValue()));
-//            newList.appendChild(newItem);
+            Piece thePiece = board.getPieceLocationBiMap().get(location);
+            Element newItem = doc.createElement("item");
+            newItem.setAttribute("item", "String");
+            newItem.setTextContent(
+                    String.format(location.getX() + "," + location.getY() + ",%s", thePiece.getFullName()));
+            newList.appendChild(newItem);
         }
 
         try {

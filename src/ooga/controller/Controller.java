@@ -17,6 +17,7 @@ import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
 import ooga.view.PieceView;
 import ooga.xml.XMLParser;
+import ooga.xml.XMLWriter;
 
 import java.awt.geom.Point2D;
 import java.util.List;
@@ -186,6 +187,12 @@ public class Controller {
 
         gameScreen.getDashboardView().setQuitClicked((e) -> {
             setUpMenu();
+        });
+
+        gameScreen.getDashboardView().setSaveClicked((e) -> {
+            System.out.println("inside");
+            XMLWriter test = new XMLWriter("testing.xml");
+            test.writePresets(board, "new.xml");
         });
 
 
