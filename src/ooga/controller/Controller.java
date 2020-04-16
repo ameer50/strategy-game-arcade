@@ -49,7 +49,7 @@ public class Controller {
     private BoardView boardView;
     private CPUPlayer CPU;
     private boolean toggleMoves = true;
-    //private boolean isAIOpponent = false; // ***
+    private boolean isAIOpponent; // ***
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -71,15 +71,19 @@ public class Controller {
         printMessageAndTime("Setup Menu Screen.");
 
         menuScreen.setButtonListener(e -> {
-            setUpGameScreen(menuScreen.getGameChoice(),menuScreen.getFileChoice());
+            // setUpGameScreen(menuScreen.getGameChoice(),menuScreen.getFileChoice());
+            setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice(),
+                menuScreen.getAIChoice());
         });
         printMessageAndTime("Setup listener.");
     }
 
-    private void setUpGameScreen(String typeString, String fileName) {
-        GameType gameType = GameType.valueOf(typeString.toUpperCase());
-        System.out.println("File name" + fileName);
-        String gameXML = String.format(fileName);
+    private void setUpGameScreen(String gameChoice, String fileChoice, boolean AIChoice) {
+        GameType gameType = GameType.valueOf(gameChoice.toUpperCase());
+        System.out.println("File name" + fileChoice);
+        String gameXML = String.format(fileChoice);
+        // isAIOpponent = AIChoice;
+
         processor = new XMLProcessor();
         processor.parse(gameXML);
         printMessageAndTime("XML parsed.");
@@ -104,17 +108,16 @@ public class Controller {
 
     private void setUpPlayers() {
         playerOne = new HumanPlayer(menuScreen.getPlayerOneName(), menuScreen.getPlayerOneColor(), board);
-        if (!menuScreen.getIsGameOnePlayer()) {
+        if (! menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            // TODO: allow user to select strategy type
             playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);;
         }
         gameScreen.getDashboardView().setPlayerNames(playerOne.getName(), playerTwo.getName());
         gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());
+
         activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
-        // if CPU is white, start with a CPU move
-        if (activePlayer.isCPU()) doCPUMove();
+        // if (activePlayer.isCPU()) doCPUMove();
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
