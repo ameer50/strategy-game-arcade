@@ -77,7 +77,6 @@ public class MenuScreen {
             vbox.getChildren().add(b);
         }
         root.getChildren().add(vbox);
-        // System.out.println(vbox.getWidth());
         vbox.setLayoutX(STAGE_WIDTH/2 - vbox.getWidth()/2);
         vbox.setLayoutY(VBOX_Y);
         vbox.getStyleClass().add("vbox");
@@ -130,15 +129,17 @@ public class MenuScreen {
         for (Button b: playerOption.getButtons()) {
             vbox.getChildren().add(b);
         }
-        //root.getChildren().add(vbox);
+        root.getChildren().add(vbox);
         playerOption.getButtons().get(0).setOnAction(e -> {
             setUpColorPopUp(settingsStage, true);
         });
         playerOption.getButtons().get(1).setOnAction(e -> {
             setUpColorPopUp(settingsStage, false);
         });
+
+        vbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(vbox, Pos.CENTER);
-        root.setCenter(vbox);
+
     }
 
     private void setUpColorPopUp(Stage settingsStage, boolean isOnePlayer) {
@@ -180,6 +181,7 @@ public class MenuScreen {
         vbox.getChildren().addAll(textFieldBox, next);
         //root.getChildren().add(vbox);
         BorderPane.setAlignment(vbox, Pos.CENTER);
+        vbox.setAlignment(Pos.CENTER);
         root.setCenter(vbox);
     }
 
@@ -203,8 +205,8 @@ public class MenuScreen {
         });
 
         vbox.getChildren().add(goButton);
-        //root.getChildren().add(vbox);
         BorderPane.setAlignment(vbox, Pos.CENTER);
+        vbox.setAlignment(Pos.CENTER);
         root.setCenter(vbox);
     }
 
