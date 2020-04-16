@@ -11,7 +11,7 @@ import ooga.history.History;
 import ooga.history.Move;
 import ooga.player.HumanPlayer;
 import ooga.player.Player;
-import ooga.player.StrategyAI;
+import ooga.player.CPUPlayer;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
@@ -47,9 +47,9 @@ public class Controller {
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
     private BoardView boardView;
-    private StrategyAI CPU;
+    private CPUPlayer CPU;
     private boolean toggleMoves = true;
-    private boolean isAIOpponent = false; // ***
+    //private boolean isAIOpponent = false; // ***
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -97,23 +97,25 @@ public class Controller {
         printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
-        if (isAIOpponent) setUpAI();
+        //if (isAIOpponent) setUpAI();
         setUpPlayers();
         setUpHistory();
         setListeners();
     }
 
     private void setUpPlayers() {
-        // TODO: replace with AI, if AI
         playerOne = new HumanPlayer(menuScreen.getPlayerOneName(), menuScreen.getPlayerOneColor(), board);
-        if (!isAIOpponent) {
-            playerTwo = new HumanPlayer("CPU", menuScreen.getPlayerTwoColor(), board);
+        if (!menuScreen.getIsGameOnePlayer()) {
+            playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            playerTwo = CPU;
+            // TODO: allow user to select strategy type
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);;
         }
         gameScreen.getDashboardView().setPlayerNames(playerOne.getName(), playerTwo.getName());
         gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());
-        activePlayer = playerOne;
+        activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
+        // if CPU is white, start with a CPU move
+        if (activePlayer.isCPU()) doCPUMove();
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
@@ -123,9 +125,9 @@ public class Controller {
         gameScreen.getDashboardView().getHistory().setItems(historyList);
     }
 
-    private void setUpAI() {
+    private void setUpCPU() {
         // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new StrategyAI("AI", "Black", board, StrategyType.ALPHA_BETA);
+        CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
     }
 
     private void setListeners() {
@@ -156,7 +158,7 @@ public class Controller {
             board.checkWon();
 
             if (activePlayer.isCPU()) {
-                doAIMove();
+                doCPUMove();
                 printMessageAndTime("Did CPU's move.");
             }
             // board.print();
@@ -211,7 +213,7 @@ public class Controller {
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
-    private void doAIMove() {
+    private void doCPUMove() {
         //TODO: have generateMove return a Move
         List<Integer> AIMove = CPU.generateMove();
         int fromX = AIMove.get(0);
@@ -222,8 +224,7 @@ public class Controller {
         Point2D endLocation = new Point2D.Double(toX, toY);
         Move m = new Move(startLocation, endLocation);
 
-        activePlayer.doMove(m);
-        boardView.doMove(m);
+        doMove(m);
 
         toggleActivePlayer();
         board.checkWon();
