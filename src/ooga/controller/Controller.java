@@ -9,9 +9,9 @@ import ooga.board.ChessBoard;
 import ooga.board.Piece;
 import ooga.history.History;
 import ooga.history.Move;
-import ooga.strategy.HumanPlayer;
-import ooga.strategy.Player;
-import ooga.strategy.StrategyAI;
+import ooga.player.HumanPlayer;
+import ooga.player.Player;
+import ooga.player.StrategyAI;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.MenuScreen;
@@ -70,8 +70,8 @@ public class Controller {
         menuScreen = new MenuScreen(this.stage);
         printMessageAndTime("Setup Menu Screen.");
 
-        menuScreen.buttonListener(e -> {
-            setUpGameScreen(menuScreen.getGameSelected(),menuScreen.getFileName());
+        menuScreen.setButtonListener(e -> {
+            setUpGameScreen(menuScreen.getGameSelected(), menuScreen.getFileName());
         });
         printMessageAndTime("Setup listener.");
     }

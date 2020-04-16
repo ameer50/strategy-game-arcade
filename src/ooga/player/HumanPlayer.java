@@ -1,8 +1,6 @@
-package ooga.strategy;
+package ooga.player;
 
 import ooga.board.Board;
-
-import java.awt.*;
 
 public class HumanPlayer extends Player {
 

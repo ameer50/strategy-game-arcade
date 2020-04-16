@@ -63,7 +63,7 @@ public class CellView extends StackPane {
         System.out.println("piece.getPieceName() = " + piece.getPieceName());
         ImageView pieceImage = piece.getImage();
         System.out.println(pieceImage);
-        pieceImage.setFitHeight(0.95 * height);
+        pieceImage.setFitHeight(0.9 * height);
         pieceImage.setPreserveRatio(true);
         pieceImage.setLayoutX(width / 2 - pieceImage.getBoundsInLocal().getWidth() / 2);
         this.getChildren().add(pieceImage);

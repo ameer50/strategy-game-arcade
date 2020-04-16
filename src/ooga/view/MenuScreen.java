@@ -9,6 +9,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -34,11 +35,16 @@ public class MenuScreen {
     private String gameSelected;
     private String colorChoice;
     private String fileName;
+    private EventHandler<ActionEvent> goAction;
+    private String selectedColor;
+    private String playerOneName;
+    private String playerTwoName;
 
     public MenuScreen(Stage stage){
         this.stage = stage;
         startView();
         stage.show();
+        playerTwoName = "CPU";
 
     }
 
@@ -67,13 +73,12 @@ public class MenuScreen {
 
     }
 
-
-
-    public void buttonListener(EventHandler<ActionEvent> e) {
+    public void setButtonListener(EventHandler<ActionEvent> e) {
         for (Button b: buttons.getButtons()) {
             b.setOnAction(event -> {
                 gameSelected = b.getText();
-                settingsPopUp(e);
+                this.goAction = e;
+                settingsPopUp();
                 // e.handle(event);
             });
         }
@@ -83,16 +88,110 @@ public class MenuScreen {
         this.scene = scene;
     }
 
-    public void settingsPopUp(EventHandler<ActionEvent> e) {
+    public void settingsPopUp() {
         Stage settingsStage = new Stage();
         settingsStage.setHeight(500);
         settingsStage.setWidth(500);
-        StackPane settingsRoot = new StackPane();
-        Scene settingsScene = new Scene(settingsRoot);
-        settingsScene.getStylesheets().add(res.getString("MenuStyleSheet"));
-        settingsStage.setScene(settingsScene);
+
+        setUpPlayerPopUp(settingsStage);
+    }
+
+    public void setGoAction(EventHandler<ActionEvent> e) {
+        this.goAction = e;
+    }
+
+    private BorderPane createNewPopUpScene(Stage settingsStage) {
+        BorderPane root = new BorderPane();
+        Scene newScene = new Scene(root);
+        newScene.getStylesheets().add(res.getString("MenuStyleSheet"));
+        settingsStage.setScene(newScene);
         settingsStage.show();
-        setUpPopUp(settingsStage, settingsRoot, e);
+        return root;
+    }
+
+    private void setUpPlayerPopUp(Stage settingsStage) {
+        BorderPane root = createNewPopUpScene(settingsStage);
+        VBox vbox = new VBox();
+        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), 20, 40, res.getString("SettingsButtons"));
+        for (Button b: playerOption.getButtons()) {
+            vbox.getChildren().add(b);
+        }
+        //root.getChildren().add(vbox);
+        playerOption.getButtons().get(0).setOnAction(e -> {
+            setUpColorPopUp(settingsStage, true);
+        });
+        playerOption.getButtons().get(1).setOnAction(e -> {
+            setUpColorPopUp(settingsStage, false);
+        });
+        BorderPane.setAlignment(vbox, Pos.CENTER);
+        root.setCenter(vbox);
+    }
+
+    private void setUpColorPopUp(Stage settingsStage, boolean isOnePlayer) {
+        BorderPane root = createNewPopUpScene(settingsStage);
+        VBox vbox = new VBox();
+        ButtonGroup colorOption = new ButtonGroup(List.of("White", "Black"), 20, 40, res.getString("SettingsButtons"));
+
+        for (Button b: colorOption.getButtons()) {
+            b.setOnAction(e -> {
+                b.setDisable(true);
+                colorChoice = b.getText();
+            });
+            vbox.getChildren().add(b);
+        }
+        VBox textFieldBox = new VBox();
+
+        Text nameText = new Text();
+        nameText.setText("Enter Player Names");
+        nameText.setFill(Color.AZURE);
+
+        TextField playerOneText = new TextField("Player One");
+
+        textFieldBox.getChildren().addAll(nameText, playerOneText);
+
+        TextField playerTwoText = new TextField("CPU");
+        if (!isOnePlayer) {
+            playerTwoText = new TextField("Player Two");
+            textFieldBox.getChildren().add(playerTwoText);
+        }
+
+        Button next = new Button("Next");
+        next.getStyleClass().add(res.getString("SettingsButtons"));
+        next.setOnAction(e -> {
+            playerOneName = playerOneText.getText();
+            //playerTwoName = playerTwoText.getText();
+            setUpLoadGamePopUp(settingsStage);
+        });
+
+        vbox.getChildren().addAll(textFieldBox, next);
+        //root.getChildren().add(vbox);
+        BorderPane.setAlignment(vbox, Pos.CENTER);
+        root.setCenter(vbox);
+    }
+
+    private void setUpLoadGamePopUp(Stage settingsStage) {
+        BorderPane root = createNewPopUpScene(settingsStage);
+        VBox vbox = new VBox();
+        ButtonGroup loadGameGroup = new ButtonGroup(List.of("Default Game", "Custom Game"), 20, 40, res.getString("SettingsButtons"));
+        for (Button b: loadGameGroup.getButtons()) {
+            b.setOnAction((newEvent) -> {
+                assignXMLFile(b.getText());
+                b.setDisable(true);
+            });
+            vbox.getChildren().add(b);
+        }
+
+        Button goButton = new Button("Go!");
+        goButton.getStyleClass().add(res.getString("SettingsButtons"));
+        goButton.setOnAction(e -> {
+            settingsStage.close();
+            goAction.handle(e);
+        });
+
+        vbox.getChildren().add(goButton);
+        //root.getChildren().add(vbox);
+        BorderPane.setAlignment(vbox, Pos.CENTER);
+        root.setCenter(vbox);
     }
 
     private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {
