@@ -25,7 +25,6 @@ import java.util.Map;
 public class Controller {
 
     public static final int STALL_TIME = 1000;
-
     public enum StrategyType {
         TRIVIAL,
         RANDOM,
@@ -69,32 +68,29 @@ public class Controller {
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
         printMessageAndTime("Setup Menu Screen.");
-
         menuScreen.setButtonListener(e -> {
-            // setUpGameScreen(menuScreen.getGameChoice(),menuScreen.getFileChoice());
-            setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice(),
-                menuScreen.getAIChoice());
+            setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
         printMessageAndTime("Setup listener.");
     }
 
-    private void setUpGameScreen(String gameChoice, String fileChoice, boolean AIChoice) {
+    private void setUpGameScreen(String gameChoice, String fileChoice) {
         GameType gameType = GameType.valueOf(gameChoice.toUpperCase());
-        System.out.println("File name" + fileChoice);
         String gameXML = String.format(fileChoice);
-        // isAIOpponent = AIChoice;
 
         processor = new XMLProcessor();
         processor.parse(gameXML);
         printMessageAndTime("XML parsed.");
 
-        //TODO: change to reflection
+        //TODO: Change to reflection.
         switch (gameType) {
             case CHESS:
-                board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+                board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(),
+                    processor.getMovePatterns());
                 break;
             case CHECKERS:
-                board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+                board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(),
+                    processor.getMovePatterns());
         } printMessageAndTime("Setup Board.");
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
@@ -111,13 +107,13 @@ public class Controller {
         if (! menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);;
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.TRIVIAL);
         }
         gameScreen.getDashboardView().setPlayerNames(playerOne.getName(), playerTwo.getName());
         gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());
 
         activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
-        // if (activePlayer.isCPU()) doCPUMove();
+        if (activePlayer.isCPU()) doCPUMove();
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
@@ -125,11 +121,6 @@ public class Controller {
         history = new History();
         historyList = FXCollections.observableArrayList();
         gameScreen.getDashboardView().getHistory().setItems(historyList);
-    }
-
-    private void setUpCPU() {
-        // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
     }
 
     private void setListeners() {
