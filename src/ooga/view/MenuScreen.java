@@ -50,15 +50,13 @@ public class MenuScreen {
     private String playerOneName;
     private String playerTwoName;
     private String fileChoice;
-    private boolean AIChoice;
+    private boolean isOnePlayer;
 
 
     public MenuScreen(Stage stage){
         this.stage = stage;
         startView();
         stage.show();
-        playerTwoName = "CPU";
-
     }
 
     private void startView() {
@@ -131,17 +129,19 @@ public class MenuScreen {
         }
         //root.getChildren().add(vbox);
         playerOption.getButtons().get(0).setOnAction(e -> {
-            setUpColorPopUp(settingsStage, true);
+            isOnePlayer = true;
+            setUpColorPopUp(settingsStage);
         });
         playerOption.getButtons().get(1).setOnAction(e -> {
-            setUpColorPopUp(settingsStage, false);
+            isOnePlayer = false;
+            setUpColorPopUp(settingsStage);
         });
         vbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(vbox, Pos.CENTER);
         root.setCenter(vbox);
     }
 
-    private void setUpColorPopUp(Stage settingsStage, boolean isOnePlayer) {
+    private void setUpColorPopUp(Stage settingsStage) {
         BorderPane root = createNewPopUpScene(settingsStage);
         VBox vbox = new VBox();
         List<String> possibleColors = new ArrayList<>();
@@ -165,14 +165,15 @@ public class MenuScreen {
         nameText.setFill(Color.AZURE);
 
         TextField playerOneText = new TextField("Player One");
-        playerOneText.setMinWidth(200);
+        playerOneText.setMaxWidth(100);
 
         textFieldBox.getChildren().addAll(nameText, playerOneText);
         textFieldBox.setAlignment(Pos.CENTER);
 
-        TextField playerTwoText = new TextField("CPU");
+        TextField playerTwoText = new TextField();
+        playerTwoText.setMaxWidth(100);
         if (!isOnePlayer) {
-            playerTwoText = new TextField("Player Two");
+            playerTwoText.setText("Player Two");
             textFieldBox.getChildren().add(playerTwoText);
         }
 
@@ -180,7 +181,7 @@ public class MenuScreen {
         next.getStyleClass().add(res.getString("SettingsButtons"));
         next.setOnAction(e -> {
             playerOneName = playerOneText.getText();
-            //playerTwoName = playerTwoText.getText();
+            playerTwoName = playerTwoText.getText();
             setUpLoadGamePopUp(settingsStage);
         });
 
@@ -329,9 +330,9 @@ public class MenuScreen {
 
     private void assignAIOpponent(String choice) {
         if (choice.equals(AI_OPPONENT)) {
-            this.AIChoice = false;
+            this.isOnePlayer = false;
         } else {
-            this.AIChoice = true;
+            this.isOnePlayer = true;
         }
     }
 
@@ -343,11 +344,15 @@ public class MenuScreen {
         return fileChoice;
     }
 
-    public boolean getAIChoice() { return AIChoice; }
+    public boolean getIsGameOnePlayer() { return isOnePlayer; }
 
     public String getPlayerOneColor(){ return playerOneColor;}
 
     public String getPlayerTwoColor(){ return playerTwoColor;}
 
-    public String getPlayerOneName() { return playerOneName;};
+    public String getPlayerOneName() { return playerOneName; }
+
+    public String getPlayerTwoName() {
+        return playerTwoName;
+    }
 }

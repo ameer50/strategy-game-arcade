@@ -12,14 +12,14 @@ import ooga.controller.Controller.StrategyType;
 import ooga.controller.StringUtility;
 import ooga.history.Move;
 
-public class StrategyAI extends Player {
+public class CPUPlayer extends Player {
   private StrategyType strategy;
   private Board board;
   private String color;
   private List<Double> moveTimes;
   private StringUtility utility;
 
-  public StrategyAI(String name, String color, Board board, StrategyType strategy) {
+  public CPUPlayer(String name, String color, Board board, StrategyType strategy) {
     super(name, color, board);
     this.strategy = strategy;
     this.board = board;
