@@ -70,8 +70,8 @@ public class Controller {
         menuScreen = new MenuScreen(this.stage);
         printMessageAndTime("Setup Menu Screen.");
 
-        menuScreen.buttonListener(e -> {
-            setUpGameScreen(menuScreen.getGameSelected(),menuScreen.getFileName());
+        menuScreen.setButtonListener(e -> {
+            setUpGameScreen(menuScreen.getGameChoice(),menuScreen.getFileChoice());
         });
         printMessageAndTime("Setup listener.");
     }
