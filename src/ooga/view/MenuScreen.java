@@ -117,11 +117,13 @@ public class MenuScreen {
     private void setUpPlayerPopUp(Stage settingsStage) {
         BorderPane root = createNewPopUpScene(settingsStage);
         VBox vbox = new VBox();
-        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), 20, 40, res.getString("SettingsButtons"));
+        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), 170, 50, res.getString("SettingsButtons"));
         for (Button b: playerOption.getButtons()) {
+            //b.getStyleClass().add("settingsbuttons");
             vbox.getChildren().add(b);
         }
-        root.getChildren().add(vbox);
+
+
         playerOption.getButtons().get(0).setOnAction(e -> {
             isOnePlayer = true;
             setUpColorPopUp(settingsStage);
@@ -131,9 +133,10 @@ public class MenuScreen {
             setUpColorPopUp(settingsStage);
         });
 
-        vbox.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(vbox, Pos.CENTER);
-        root.setCenter(vbox);
+        root.getChildren().add(vbox);
+        vbox.setLayoutX(250);
+        vbox.setLayoutY(250);
+        vbox.getStyleClass().add("vbox");
     }
 
     private void setUpColorPopUp(Stage settingsStage) {
@@ -142,7 +145,7 @@ public class MenuScreen {
         List<String> possibleColors = new ArrayList<>();
         possibleColors.add("White");
         possibleColors.add("Black");
-        ButtonGroup colorOption = new ButtonGroup(possibleColors, 20, 40, res.getString("SettingsButtons"));
+        ButtonGroup colorOption = new ButtonGroup(possibleColors, 170, 50, res.getString("SettingsButtons"));
 
         for (Button b: colorOption.getButtons()) {
             b.setOnAction(e -> {
@@ -181,16 +184,16 @@ public class MenuScreen {
         });
 
         vbox.getChildren().addAll(textFieldBox, next);
-        //root.getChildren().add(vbox);
-        vbox.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(vbox, Pos.CENTER);
-        root.setCenter(vbox);
+        root.getChildren().add(vbox);
+        vbox.setLayoutX(250);
+        vbox.setLayoutY(250);
+        vbox.getStyleClass().add("vbox");
     }
 
     private void setUpLoadGamePopUp(Stage settingsStage) {
         BorderPane root = createNewPopUpScene(settingsStage);
         VBox vbox = new VBox();
-        ButtonGroup loadGameGroup = new ButtonGroup(List.of("Default Game", "Custom Game"), 20, 40, res.getString("SettingsButtons"));
+        ButtonGroup loadGameGroup = new ButtonGroup(List.of("Default Game", "Custom Game"), 170, 50, res.getString("SettingsButtons"));
         for (Button b: loadGameGroup.getButtons()) {
             b.setOnAction((newEvent) -> {
                 assignXMLFile(b.getText());
@@ -208,9 +211,10 @@ public class MenuScreen {
 
         vbox.getChildren().add(goButton);
 
-        vbox.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(vbox, Pos.CENTER);
-        root.setCenter(vbox);
+        root.getChildren().add(vbox);
+        vbox.setLayoutX(250);
+        vbox.setLayoutY(250);
+        vbox.getStyleClass().add("vbox");
     }
 
 //    private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {

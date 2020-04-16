@@ -154,7 +154,12 @@ public class Controller {
             history.addMove(move);
             historyList.add(move);
             toggleActivePlayer();
-            board.checkWon();
+
+            String winner = board.checkWon();
+            System.out.println("made it");
+            gameScreen.getDashboardView().setWinner(winner);
+            gameScreen.getDashboardView().winnerPopUp();
+
 
             if (activePlayer.isCPU()) {
                 doCPUMove();

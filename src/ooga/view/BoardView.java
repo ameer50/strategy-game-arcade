@@ -121,6 +121,11 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
             this.getCellAt(pieceLocation).setPiece(null);
         }
 
+        if (initCellPiece != null && finalCellPiece != null){
+            System.out.println("init piece color " + initCellPiece.getColor());
+            System.out.println("final piece color " + finalCellPiece.getColor());
+        }
+
         // only sets the final cell if it is empty, or a piece is being captured (thus avoids the issue of promotion
         // and the image preemptively changing)
         if (finalCellPiece == null || !finalCellPiece.getColor().equals(initCellPiece.getColor())) {
