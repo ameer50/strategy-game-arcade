@@ -117,15 +117,26 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         PieceView initCellPiece = initCell.getPiece();
         PieceView finalCellPiece = finalCell.getPiece();
 
-        for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
-            this.getCellAt(pieceLocation).setPiece(null);
-        }
-
-        // only sets the final cell if it is empty, or a piece is being captured (thus avoids the issue of promotion
-        // and the image preemptively changing)
-        if (finalCellPiece == null || !finalCellPiece.getColor().equals(initCellPiece.getColor())) {
+        if (!m.isPromote()) {
+            for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
+                this.getCellAt(pieceLocation).setPiece(null);
+            }
             finalCell.setPiece(initCellPiece);
         }
+//        for (Point2D pieceLocation: m.getCapturedPiecesAndLocations().values()) {
+//            PieceView pieceAtCapturedLocation = getCellAt(pieceLocation).getPiece();
+//            // handles the case if a capture and promotion happen at the same time
+//            if (!pieceAtCapturedLocation.getColor().equals(initCellPiece.getColor())) {
+//                this.getCellAt(pieceLocation).setPiece(null);
+//            }
+//            //this.getCellAt(pieceLocation).setPiece(null);
+//        }
+
+//        // only sets the final cell if it is empty, or a piece is being captured (thus avoids the issue of promotion
+//        // and the image preemptively changing)
+//        if (finalCellPiece == null || !finalCellPiece.getColor().equals(initCellPiece.getColor())) {
+//            finalCell.setPiece(initCellPiece);
+//        }
 
 //        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
 //        tr.setFromX(tr.getFromX());

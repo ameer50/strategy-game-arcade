@@ -166,10 +166,11 @@ public class Controller {
         gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
             Move prevMove = history.undo();
             historyList.remove(historyList.size() - 1);
-            Point2D startLocation = prevMove.getEndLocation();
-            Point2D endLocation = prevMove.getStartLocation();
-            Move reverseMove = new Move(startLocation, endLocation);
+            Move reverseMove = prevMove.getReverseMove();
             reverseMove.setUndoTrue();
+            if (prevMove.isPromote()) {
+                reverseMove.setPromote(true);
+            }
 
             doMove(reverseMove);
             toggleActivePlayer();
@@ -202,7 +203,7 @@ public class Controller {
         });
 
         board.setOnPiecePromoted((int toX, int toY) -> {
-            board.getPieceAt(toX, toY);
+            //board.getPieceAt(toX, toY);
             boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
         });
     }
@@ -249,5 +250,6 @@ public class Controller {
     private void doMove(Move m) {
         activePlayer.doMove(m);
         boardView.doMove(m);
+        board.print();
     }
 }

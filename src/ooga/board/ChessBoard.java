@@ -102,21 +102,32 @@ public class ChessBoard extends Board implements Serializable {
     pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
 
     m.setPiece(currPiece);
+    // if undo and it was a promote move before
+    if (m.isPromote() && m.isUndo()) {
+      m.getPiece().setType(PAWN);
+      m.getPiece().setMovePattern("PAWN -1");
+      m.setPromote(false);
+    }
+
     if(hitPiece != null) {
       m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
     }
-    promote(currPiece, endX, endY);
+    promote(m);
     //return score;
   }
 
-  private void promote(Piece piece, int endX, int endY){
+  private void promote(Move m){
+    Piece piece = m.getPiece();
     if(!piece.getType().equals(PAWN)){
       return;
     }
     int inc = getPawnInc(piece);
+    int endX = (int) m.getEndLocation().getX();
+    int endY = (int) m.getEndLocation().getY();
     if((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)){
       piece.setType("Queen");
       piece.setMovePattern("Any -1");
+      m.setPromote(true);
       this.promoteAction.process(endX, endY);
     }
   }
