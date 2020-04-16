@@ -82,14 +82,9 @@ public class MenuScreen {
         arrangeMenuImages();
     }
 
-
-
     public void setButtonListener(EventHandler<ActionEvent> e) {
-        System.out.println("enter");
         for (Button b: buttons.getButtons()) {
-            System.out.println("buttons exist");
             b.setOnAction(event -> {
-                System.out.println("button clicked");
                 gameChoice = b.getText();
                 this.goAction = e;
                 settingsPopUp();
@@ -138,7 +133,7 @@ public class MenuScreen {
 
         vbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(vbox, Pos.CENTER);
-
+        root.setCenter(vbox);
     }
 
     private void setUpColorPopUp(Stage settingsStage) {
@@ -189,7 +184,6 @@ public class MenuScreen {
         //root.getChildren().add(vbox);
         vbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(vbox, Pos.CENTER);
-        vbox.setAlignment(Pos.CENTER);
         root.setCenter(vbox);
     }
 
@@ -214,8 +208,8 @@ public class MenuScreen {
 
         vbox.getChildren().add(goButton);
 
-        BorderPane.setAlignment(vbox, Pos.CENTER);
         vbox.setAlignment(Pos.CENTER);
+        BorderPane.setAlignment(vbox, Pos.CENTER);
         root.setCenter(vbox);
     }
 
