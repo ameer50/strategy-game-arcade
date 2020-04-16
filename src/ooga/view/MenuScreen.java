@@ -137,6 +137,7 @@ public class MenuScreen {
         playerOption.getButtons().get(1).setOnAction(e -> {
             setUpColorPopUp(settingsStage, false);
         });
+        vbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(vbox, Pos.CENTER);
         root.setCenter(vbox);
     }
@@ -160,8 +161,10 @@ public class MenuScreen {
         nameText.setFill(Color.AZURE);
 
         TextField playerOneText = new TextField("Player One");
+        playerOneText.setMinWidth(200);
 
         textFieldBox.getChildren().addAll(nameText, playerOneText);
+        textFieldBox.setAlignment(Pos.CENTER);
 
         TextField playerTwoText = new TextField("CPU");
         if (!isOnePlayer) {
@@ -179,6 +182,7 @@ public class MenuScreen {
 
         vbox.getChildren().addAll(textFieldBox, next);
         //root.getChildren().add(vbox);
+        vbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(vbox, Pos.CENTER);
         root.setCenter(vbox);
     }
@@ -204,6 +208,7 @@ public class MenuScreen {
 
         vbox.getChildren().add(goButton);
         //root.getChildren().add(vbox);
+        vbox.setAlignment(Pos.CENTER);
         BorderPane.setAlignment(vbox, Pos.CENTER);
         root.setCenter(vbox);
     }
