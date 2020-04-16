@@ -3,27 +3,40 @@ package ooga.view;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import java.awt.event.MouseEvent;
 import java.io.File;
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class MenuScreen {
 
+    public static final int VBOX_Y = 600;
+    public static final int POPUP_DIMENSIONS = 500;
+    public static final String POPUP_PROMPT = "GAME PREFERENCE";
+    public static final int PROMPT_X = 100;
+    public static final int PROMPT_Y = 0;
+    public static final int IMAGES_X = 325;
+    public static final int IMAGES_Y = 220;
+    public static final int IMAGE_GAP = 40;
+    public static final int BUTTON_WIDTH = 20;
+    public static final int BUTTON_HEIGHT = 40;
+    public static final String DEFAULT_XML = "Default XML";
+    public static final String CUSTOM_XML = "Load XML File";
+    public static final String AI_OPPONENT = "AI Opponent";
+    public static final String HUMAN_OPPONENT = "Human Opponent";
+    public static final int IMAGE_SIZE = 220;
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private final FileChooser fileChooser = new FileChooser();
     private static final double STAGE_HEIGHT = 800;
@@ -32,13 +45,14 @@ public class MenuScreen {
     private Stage stage;
     private Scene scene;
     private ButtonGroup buttons;
-    private String gameSelected;
+    private String gameChoice;
     private String colorChoice;
-    private String fileName;
     private EventHandler<ActionEvent> goAction;
     private String selectedColor;
     private String playerOneName;
     private String playerTwoName;
+    private String fileChoice;
+    private boolean AIChoice;
 
     public MenuScreen(Stage stage){
         this.stage = stage;
@@ -52,7 +66,7 @@ public class MenuScreen {
         root = new BorderPane();
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
-        setAsScene(new Scene(root));
+        scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle(res.getString("MenuStageTitle"));
         scene.getStylesheets().add(res.getString("MenuStyleSheet"));
@@ -63,23 +77,21 @@ public class MenuScreen {
             vbox.getChildren().add(b);
         }
         root.getChildren().add(vbox);
-        System.out.println(vbox.getWidth());
-        vbox.setLayoutX(STAGE_WIDTH / 2 - vbox.getWidth() / 2);
-        vbox.setLayoutY(600);
+        // System.out.println(vbox.getWidth());
+        vbox.setLayoutX(STAGE_WIDTH/2 - vbox.getWidth()/2);
+        vbox.setLayoutY(VBOX_Y);
         vbox.getStyleClass().add("vbox");
 
         arrangeLogo();
         arrangeMenuImages();
-
     }
 
     public void setButtonListener(EventHandler<ActionEvent> e) {
         for (Button b: buttons.getButtons()) {
             b.setOnAction(event -> {
-                gameSelected = b.getText();
+                gameChoice = b.getText();
                 this.goAction = e;
                 settingsPopUp();
-                // e.handle(event);
             });
         }
     }
@@ -96,16 +108,11 @@ public class MenuScreen {
         setUpPlayerPopUp(settingsStage);
     }
 
-    public void setGoAction(EventHandler<ActionEvent> e) {
-        this.goAction = e;
-    }
-
     private BorderPane createNewPopUpScene(Stage settingsStage) {
         BorderPane root = new BorderPane();
         Scene newScene = new Scene(root);
         newScene.getStylesheets().add(res.getString("MenuStyleSheet"));
         settingsStage.setScene(newScene);
-        settingsStage.show();
         return root;
     }
 
@@ -194,58 +201,64 @@ public class MenuScreen {
         root.setCenter(vbox);
     }
 
-    private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {
+//    private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {
+//        GridPane pane = setUpButtonPane();
+//
+//        Label prompt = new Label(POPUP_PROMPT);
+//        prompt.getStyleClass().add("prompt");
+//
+//        HBox promptBox = new HBox();
+//        promptBox.getChildren().add(prompt);
+//        promptBox.setLayoutX(PROMPT_X);
+//        promptBox.setLayoutY(PROMPT_Y);
+//        settingsRoot.getChildren().addAll(promptBox, pane);
+//
+//        Button goButton = new Button("GO");
+//        goButton.getStyleClass().add(res.getString("SettingsButtons"));
+//        pane.add(goButton, 1,3);
+//        pane.getStyleClass().add("gpane");
+//
+//        goButton.setOnAction(e -> {
+//            settingsStage.close();
+//            event.handle(e);
+//        });
+//    }
 
-        GridPane pane = new GridPane();
-        ButtonGroup colorGroup = new ButtonGroup(List.of("White", "Black", "Default Game", "Load XML File"), 20, 40, res.getString("SettingsButtons"));
-
-        Text prefer = new Text();
-        prefer.setText("Game Preference");
-        prefer.getStyleClass().add("prefer");
-        prefer.setFill(Color.AZURE);
-        HBox preferBox = new HBox();
-        preferBox.getChildren().add(prefer);
-
-        preferBox.setLayoutX(100);
-        preferBox.setLayoutY(0);
-
-        int[] position = {0, 0, 2, 0, 0, 1, 2, 1};
-        int i = 0;
-        for(Button b: colorGroup.getButtons()){
-            if(i == 0 || i == 2){
-                b.setOnAction((newEvent) -> {
-                    setColorChoice(b.getText());
-                    b.setDisable(true);
-                });
-            }else{
-                b.setOnAction((newEvent) -> {
-                    assignXMLFile(b.getText());
-                    b.setDisable(true);
-                });
-
-            }
-            pane.add(b, position[i++], position[i++]);
-            GridPane.setHalignment(b, HPos.CENTER);
-            GridPane.setValignment(b, VPos.CENTER);
-        }
-        Button goButton = new Button("Go!");
-        goButton.getStyleClass().add(res.getString("SettingsButtons"));
-        pane.add(goButton, 1,2);
-
-        pane.getStyleClass().add("gpane");
-
-        settingsRoot.getChildren().addAll(preferBox, pane);
-
-
-        goButton.setOnAction(e -> {
-            settingsStage.close();
-            event.handle(e);
-        });
-    }
+//    private GridPane setUpButtonPane() {
+//        GridPane pane = new GridPane();
+//        List buttonLabels = List.of("White", "Black", DEFAULT_XML, CUSTOM_XML, AI_OPPONENT, HUMAN_OPPONENT);
+//        ButtonGroup buttonGroup = new ButtonGroup(buttonLabels, BUTTON_WIDTH, BUTTON_HEIGHT,
+//            res.getString("SettingsButtons"));
+//
+//        int[] positionIndices = {0, 0, 2, 0, 0, 1, 2, 1, 0, 2, 2, 2};
+//        int i = 0;
+//        for (Button button: buttonGroup.getButtons()) {
+//            if (i==0 || i==2) {
+//                button.setOnAction((newEvent) -> {
+//                    assignColorChoice(button.getText());
+//                    button.setDisable(true);
+//                });
+//            } else if (i==4 | i==6) {
+//                button.setOnAction((newEvent) -> {
+//                    assignXMLFile(button.getText());
+//                    button.setDisable(true);
+//                });
+//            } else {
+//                button.setOnAction((newEvent) -> {
+//                    assignAIOpponent(button.getText());
+//                    button.setDisable(true);
+//                });
+//            }
+//            pane.add(button, positionIndices[i++], positionIndices[i++]);
+//            GridPane.setHalignment(button, HPos.CENTER);
+//            GridPane.setValignment(button, VPos.CENTER);
+//        }
+//        return pane;
+//    }
 
     private void arrangeLogo() {
         Text logo = new Text();
-        logo.setText("Strategy Game Arcade");
+        logo.setText("STRATEGY GAME ARCADE");
         logo.getStyleClass().add("logo");
         logo.setFill(Color.AZURE);
         HBox logoBox = new HBox();
@@ -255,51 +268,64 @@ public class MenuScreen {
         logoBox.getStyleClass().add("logobox");
         root.getChildren().add(logoBox);
     }
+
     private void arrangeMenuImages() {
+        GridPane grid = new GridPane();
 
-
-
-        GridPane gridPane = new GridPane();
-
-
-        int[] dimensions = {250, 140, 250, 250, 200, 200};
+        int[] dimensions = {IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE};
         int i = 0;
         int colIndex = 0;
-        for(String s: List.of("CheckersIcon", "ChessIcon", "OthelloIcon" )){
-            ImageView picture = new ImageView(new Image(res.getString(s), dimensions[i++], dimensions[i++], false, true));
-            gridPane.add(picture, colIndex, 0);
-            colIndex+=2;
+        for (String s: List.of("CheckersIcon", "ChessIcon")) {
+            StackPane stack = new StackPane();
+            int width = dimensions[i++];
+            int height = dimensions[i++];
+            Rectangle background = new Rectangle(width+20, height+20);
+            background.getStyleClass().add("picture-background");
+            ImageView picture = new ImageView(new Image(res.getString(s), width, height, false, true));
+
+            stack.getChildren().addAll(background, picture);
+
+            grid.add(stack, colIndex, 0);
+            colIndex += 2;
         }
-
-        gridPane.setHgap(40);
-        gridPane.setLayoutX(160);
-        gridPane.setLayoutY(250);
-
-        root.getChildren().add(gridPane);
+        grid.setHgap(IMAGE_GAP);
+        grid.setLayoutX(IMAGES_X);
+        grid.setLayoutY(IMAGES_Y);
+        root.getChildren().add(grid);
     }
 
-    private void setColorChoice(String color) {
-        colorChoice = color;
-        System.out.println(colorChoice);
+    private void assignColorChoice(String choice) {
+        colorChoice = choice;
+        System.out.println(colorChoice); // ***
     }
 
     private void assignXMLFile(String choice) {
-        if (choice.equals("Default Game")) {
-            this.fileName = String.format("%s%s%s%s%s", "resources/", gameSelected,"/default", colorChoice , ".xml");;
+        if (choice.equals(DEFAULT_XML)) {
+            this.fileChoice = String.format("resources/%s/default%s.xml", gameChoice, colorChoice);
         } else {
             File file = fileChooser.showOpenDialog(new Stage());
             if (file != null) {
-                fileName = file.getAbsolutePath();
+                fileChoice = file.getAbsolutePath();
+                // TODO: Check that this works.
             }
         }
-
     }
 
-    public String getGameSelected() {
-        return gameSelected;
+    private void assignAIOpponent(String choice) {
+        if (choice.equals(AI_OPPONENT)) {
+            this.AIChoice = false;
+        } else {
+            this.AIChoice = true;
+        }
     }
 
-    public String getFileName(){
-        return fileName;
+    public String getGameChoice() {
+        return gameChoice;
     }
+
+    public String getFileChoice(){
+        return fileChoice;
+    }
+
+    public boolean getAIChoice() { return AIChoice; }
 }

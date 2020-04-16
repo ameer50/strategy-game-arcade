@@ -1,14 +1,12 @@
 .root {
-    -fx-background: #228B22;
+    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
     -fx-alignment: center;
     -fx-padding: 10;
-    -fx-box-border: white;
+    -fx-box-border: #000000;
     -fx-border-width: 10;
 }
 
-
-
-.file-text-field{
+.file-text-field {
     -fx-border-width: 0 0 1 0; // top, right, bottom, left
     -fx-background-color: #F8F8FF;
     -fx-font: 20px "Helvatica";
@@ -16,16 +14,15 @@
     -fx-text-fill: BLACK;
 }
 
-.textfieldbox{
+.textfieldbox {
     -fx-alignment: center;
-
 }
 
 .file-pop-up{
-    -fx-background: #228B22;
+    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
+    -fx-box-border: #ffffff;
     -fx-alignment: center;
     -fx-padding: 10;
-    -fx-box-border: white;
     -fx-border-width: 10;
 }
 
@@ -39,13 +36,10 @@
     -fx-font-size: 20px;
     -fx-font-family: Avant Garde;
     -fx-padding: 10 20 10 20;
-
 }
 
-.prefer{
-
+.prompt {
     -fx-font-family: Avant Garde;
     -fx-font-size: 20px;
     -fx-alignment: center;
-
 }

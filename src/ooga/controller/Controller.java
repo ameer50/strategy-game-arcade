@@ -71,7 +71,7 @@ public class Controller {
         printMessageAndTime("Setup Menu Screen.");
 
         menuScreen.setButtonListener(e -> {
-            setUpGameScreen(menuScreen.getGameSelected(), menuScreen.getFileName());
+            setUpGameScreen(menuScreen.getGameChoice(),menuScreen.getFileChoice());
         });
         printMessageAndTime("Setup listener.");
     }
