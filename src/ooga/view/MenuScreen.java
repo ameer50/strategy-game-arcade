@@ -2,13 +2,10 @@ package ooga.view;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -46,13 +43,15 @@ public class MenuScreen {
     private Scene scene;
     private ButtonGroup buttons;
     private String gameChoice;
-    private String colorChoice;
+    private String playerOneColor;
+    private String playerTwoColor;
     private EventHandler<ActionEvent> goAction;
     private String selectedColor;
     private String playerOneName;
     private String playerTwoName;
     private String fileChoice;
     private boolean AIChoice;
+
 
     public MenuScreen(Stage stage){
         this.stage = stage;
@@ -145,12 +144,17 @@ public class MenuScreen {
     private void setUpColorPopUp(Stage settingsStage, boolean isOnePlayer) {
         BorderPane root = createNewPopUpScene(settingsStage);
         VBox vbox = new VBox();
-        ButtonGroup colorOption = new ButtonGroup(List.of("White", "Black"), 20, 40, res.getString("SettingsButtons"));
+        List<String> possibleColors = new ArrayList<>();
+        possibleColors.add("White");
+        possibleColors.add("Black");
+        ButtonGroup colorOption = new ButtonGroup(possibleColors, 20, 40, res.getString("SettingsButtons"));
 
         for (Button b: colorOption.getButtons()) {
             b.setOnAction(e -> {
                 b.setDisable(true);
-                colorChoice = b.getText();
+                playerOneColor = b.getText();
+                possibleColors.remove(playerOneColor);
+                playerTwoColor = possibleColors.get(0);
             });
             vbox.getChildren().add(b);
         }
@@ -307,13 +311,13 @@ public class MenuScreen {
     }
 
     private void assignColorChoice(String choice) {
-        colorChoice = choice;
-        System.out.println(colorChoice); // ***
+        playerOneColor = choice;
+        System.out.println(playerOneColor); // ***
     }
 
     private void assignXMLFile(String choice) {
         if (choice.equals(DEFAULT_XML)) {
-            this.fileChoice = String.format("resources/%s/default%s.xml", gameChoice, colorChoice);
+            this.fileChoice = String.format("resources/%s/default%s.xml", gameChoice, playerOneColor);
         } else {
             File file = fileChooser.showOpenDialog(new Stage());
             if (file != null) {
@@ -340,4 +344,10 @@ public class MenuScreen {
     }
 
     public boolean getAIChoice() { return AIChoice; }
+
+    public String getPlayerOneColor(){ return playerOneColor;}
+
+    public String getPlayerTwoColor(){ return playerTwoColor;}
+
+    public String getPlayerOneName() { return playerOneName;};
 }

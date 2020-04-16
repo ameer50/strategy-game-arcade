@@ -105,9 +105,9 @@ public class Controller {
 
     private void setUpPlayers() {
         // TODO: replace with AI, if AI
-        playerOne = new HumanPlayer("Player1", "White", board);
+        playerOne = new HumanPlayer(menuScreen.getPlayerOneName(), menuScreen.getPlayerOneColor(), board);
         if (!isAIOpponent) {
-            playerTwo = new HumanPlayer("Player2", "Black", board);
+            playerTwo = new HumanPlayer("CPU", menuScreen.getPlayerTwoColor(), board);
         } else {
             playerTwo = CPU;
         }
