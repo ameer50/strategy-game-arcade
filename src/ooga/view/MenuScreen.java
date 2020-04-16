@@ -32,7 +32,7 @@ public class MenuScreen {
     public static final int IMAGE_GAP = 40;
     public static final int BUTTON_WIDTH = 20;
     public static final int BUTTON_HEIGHT = 40;
-    public static final String DEFAULT_XML = "Default XML";
+    public static final String DEFAULT_XML = "Default Game";
     public static final String CUSTOM_XML = "Load XML File";
     public static final String AI_OPPONENT = "AI Opponent";
     public static final String HUMAN_OPPONENT = "Human Opponent";
@@ -86,9 +86,14 @@ public class MenuScreen {
         arrangeMenuImages();
     }
 
+
+
     public void setButtonListener(EventHandler<ActionEvent> e) {
+        System.out.println("enter");
         for (Button b: buttons.getButtons()) {
+            System.out.println("buttons exist");
             b.setOnAction(event -> {
+                System.out.println("button clicked");
                 gameChoice = b.getText();
                 this.goAction = e;
                 settingsPopUp();
@@ -104,6 +109,7 @@ public class MenuScreen {
         Stage settingsStage = new Stage();
         settingsStage.setHeight(500);
         settingsStage.setWidth(500);
+        createNewPopUpScene(settingsStage);
 
         setUpPlayerPopUp(settingsStage);
     }
@@ -113,6 +119,7 @@ public class MenuScreen {
         Scene newScene = new Scene(root);
         newScene.getStylesheets().add(res.getString("MenuStyleSheet"));
         settingsStage.setScene(newScene);
+        settingsStage.show();
         return root;
     }
 
