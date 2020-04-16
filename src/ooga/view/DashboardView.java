@@ -174,11 +174,7 @@ public class DashboardView {
         setUpTextFieldPopUp(fileNameStage, fileRoot, e);
     }
 
-
-
-
     private void setUpTextFieldPopUp(Stage settingsStage, Pane fileRoot, EventHandler<ActionEvent> event) {
-
         Text prefer = new Text();
         prefer.setText("Enter XML Filename:");
         prefer.getStyleClass().add("prefer");
@@ -238,6 +234,4 @@ public class DashboardView {
     private void setNewFileName(String str){
         newFileName = "savedXML/" + str + ".xml";
     }
-
-
 }

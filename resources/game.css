@@ -1,18 +1,15 @@
 .root {
-    -fx-background: #228B22;
+    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
     -fx-padding: 10;
-    -fx-box-border: white;
+    -fx-box-border: #000000;
     -fx-border-width: 10;
 }
 
 .button {
     -fx-background-color:
             linear-gradient(#ffd65b, #e68400),
-            linear-gradient(#ffef84, #f2ba44),
-            linear-gradient(#ffea6a, #efaa22),
-            linear-gradient(#ffe657 0%, #f8c202 50%, #eea10b 100%),
-            linear-gradient(from 0% 0% to 15% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
-    -fx-background-radius: 30;
+            linear-gradient(from 0% 0% to 20% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 20;
     -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #404040;
     -fx-border-radius: 20;
@@ -47,18 +44,16 @@
 
 .display {
     -fx-alignment: center;
-    -fx-border-color: BLUE;
+    -fx-border-color: #e1ebff;
     -fx-border-width: 4px;
     -fx-border-insets: 5;
     -fx-border-style: solid inside;
     -fx-padding: 10;
     -fx-background-color: BLACK;
-
 }
 
-
 .text-area:focused .content {
-    -fx-border-color:  BLACK;
+    -fx-border-color: #000000;
     -fx-border-radius: 30;
     -fx-background-radius: 30;
     -fx-border-width: 5;
@@ -72,7 +67,7 @@
 .leftvbox {
     -fx-alignment: center;
     -fx-padding: 10;
-    -fx-spacing: 15;
+    -fx-spacing: 10;
 }
 
 .buttonvbox {
@@ -94,7 +89,6 @@
     -fx-padding: 10;
 }
 
-
 .yellowborder {
     -fx-border-style: solid inside;
     -fx-border-width: 3;
@@ -113,9 +107,8 @@
     -fx-border-style: solid inside;
     -fx-border-width: 3;
     -fx-border-insets: 3;
-    -fx-border-color: black;
+    -fx-border-color: #000000;
 }
-
 
 .cellcolor1 {
     -fx-fill: #F8F8FF;
@@ -127,9 +120,9 @@
 
 .auxbuttons {
     -fx-background-color:
-    linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
-    -fx-background-radius: 15;
-    -fx-background-insets: 0,1,2,3,0;
+        linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
@@ -138,7 +131,7 @@
 }
 
 .button:hover {
-    -fx-background-color: #D2691E;
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #be8264, #78503c);
 }
 
 .gpane {
@@ -160,54 +153,50 @@
 .scoreshbox {
     -fx-spacing: 15;
     -fx-alignment: center;
-    -fx-border-width: 4px;
-    -fx-border-color: BLACK;
-    -fx-background-color: #FFFAF0;
+    -fx-border-width: 5px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #fadcc8;
+    -fx-background-color: #fad2a0;
     -fx-padding: 5 10 5 10;
     -fx-fill: white;
     -fx-font-size: 20pt;
     -fx-font-family: Avant Garde;
     -fx-vgap: 10;
-
 }
 
 .hboxlist {
-
     -fx-background-insets: 0;
     -fx-padding: 20 20 20 20;
-    -fx-background-color: #228B22;
+    -fx-border-width: 5px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 10px;
+    -fx-background-color: #fadcc8;
     -fx-alignment: center;
 
 }
 
 .listview {
-
-    -fx-border-color: #90EE90;
-    -fx-border-width: 5px;
-    -fx-border-radius: 10px;
+    -fx-border-color: #fad2a0;
+    -fx-border-width: 10px;
+    -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: #90EE90;
-
+    -fx-background-color: #fad2a0;
 }
 
-
-
 .list-cell:filled:selected:focused, .list-cell:filled:selected {
-    -fx-background-color: linear-gradient(#F5FFFA 0%, #F5FFFA 25%, #00FA9A 75%, #00FA9A 100%);
+    -fx-background-color: linear-gradient(from 0% 25% to 75% 100%, #F5FFFA, #be8264);
     -fx-text-fill: white;
 }
 
-.list-cell:even { /* <=== changed to even */
+.list-cell:even { /* changed to even */
     -fx-background-color: #FFF8DC;
     -fx-font-famil: "Avant Garde";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
-
-
 }
 
-.list-cell:odd { /* <=== changed to even */
-    -fx-background-color: #90EE90;
+.list-cell:odd { /* changed to odd */
+    -fx-background-color: #fad2a0;
     -fx-font-family: "Avant Garde";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
@@ -216,6 +205,5 @@
 .list-cell:filled:hover {
     -fx-background-color: #DEB887;
     -fx-text-fill: white;
-
 }
 

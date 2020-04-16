@@ -1,17 +1,17 @@
 .root {
-    -fx-background: #228B22;
+    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
     -fx-alignment: center;
     -fx-padding: 10;
-    -fx-box-border: white;
+    -fx-box-border: #000000;
     -fx-border-width: 10;
 }
 
 .button {
     -fx-background-color:
-            linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
-    -fx-background-radius: 20;
+        linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-radius: 10;
     -fx-background-insets: 0,1,2,3,0;
-    -fx-text-fill: #F8F8FF;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
     -fx-font-family: Avant Garde;
@@ -21,19 +21,18 @@
 
 .settingsbuttons {
     -fx-background-color:
-            linear-gradient(to bottom, #77d42a 5%, #5cb811 100%);
-    -fx-background-radius: 15;
+        linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-radius: 10;
     -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
     -fx-font-family: Avant Garde;
     -fx-padding: 10 20 10 20;
-
 }
 
 .button:hover {
-    -fx-background-color: #808080;
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #be8264, #78503c);
 }
 
 .vbox {
@@ -54,39 +53,32 @@
     -fx-alignment: center;
     -fx-vgap: 15;
     -fx-hgap: 5;
-
-
 }
 
 .rectangle {
     -fx-background-color: WHITE;
-    -fx-border-color: black;
+    -fx-border-color: #000000;
     -fx-border-width: 10;
     -fx-border-style: solid inside;
     -fx-padding: 10;
 }
 
-.logo{
-
+.logo {
     -fx-font-family: "Forte";
     -fx-font-size: 80px;
-
 }
 
-.logobox{
-
+.logobox {
     -fx-alignment: center;
 }
 
-.prefer{
-
+.prefer {
     -fx-font-family: "Forte";
     -fx-font-size: 40px;
     -fx-alignment: center;
-
 }
 
-.file-text-field{
+.file-text-field {
     -fx-border-width: 0 0 1 0; // top, right, bottom, left
     -fx-background-color: #F8F8FF;
     -fx-font: 20px "Helvatica";
@@ -94,18 +86,25 @@
     -fx-text-fill: BLACK;
 }
 
-.textfieldbox{
+.textfieldbox {
     -fx-alignment: center;
-
 }
 
-.file-pop-up{
-    -fx-background: #228B22;
+.file-pop-up {
+    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
+    -fx-box-border: #ffffff;
     -fx-alignment: center;
     -fx-padding: 10;
-    -fx-box-border: white;
     -fx-border-width: 10;
 }
 
+.picture-background {
+    -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #fadcff, #c8dcff);
+}
 
-
+.prompt {
+    -fx-background: #404040;
+    -fx-font-family: Avant Garde;
+    -fx-font-size: 40px;
+    -fx-alignment: center;
+}

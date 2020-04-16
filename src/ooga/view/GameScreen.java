@@ -51,7 +51,7 @@ public class GameScreen {
         return boardView;
     }
 
-    public DashboardView getDashboardView(){ return dashboardView;}
+    public DashboardView getDashboardView() { return dashboardView;}
 
     public void setRecentLocation(int fromX, int fromY, int toX, int toY){
         recentLocs = new int[]{fromX, fromY, toX, toY};
@@ -60,6 +60,4 @@ public class GameScreen {
     public void getUndoState(){
         dashboardView.getUndoState();
     }
-
-
 }
