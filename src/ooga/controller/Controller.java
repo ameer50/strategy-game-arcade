@@ -97,9 +97,8 @@ public class Controller {
         printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
-        //if (isAIOpponent) setUpAI();
-        setUpPlayers();
         setUpHistory();
+        setUpPlayers();
         setListeners();
     }
 
@@ -225,6 +224,8 @@ public class Controller {
         Move m = new Move(startLocation, endLocation);
 
         doMove(m);
+        history.addMove(m);
+        historyList.add(m);
 
         toggleActivePlayer();
         board.checkWon();
