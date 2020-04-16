@@ -96,7 +96,8 @@ public class DashboardView {
 
     private void createAuxiliaryButtons() {
         auxiliaryButtons = new GridPane();
-        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit"), 115, 35, "auxbuttons");
+        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit"), "auxbuttons");
+        // 115 35
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(buttons.getButtons());
 
