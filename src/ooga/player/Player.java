@@ -1,11 +1,9 @@
-package ooga.strategy;
+package ooga.player;
 
 import javafx.beans.property.*;
 import ooga.board.Board;
 import ooga.board.Piece;
 import ooga.history.Move;
-
-import java.awt.*;
 
 public abstract class Player {
 
