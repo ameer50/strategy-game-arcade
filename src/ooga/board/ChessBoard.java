@@ -102,16 +102,17 @@ public class ChessBoard extends Board implements Serializable {
     pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
 
     m.setPiece(currPiece);
+    if(hitPiece != null) {
+      this.captureAction.process(endX, endY);
+      m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
+    }
     // if undo and it was a promote move before
     if (m.isPromote() && m.isUndo()) {
+      // demote piece in backend
       m.getPiece().setType(PAWN);
       m.getPiece().setMovePattern("PAWN -1");
+      // demote piece in frontend
       this.promoteAction.process((int) m.getEndLocation().getX(), (int) m.getEndLocation().getY());
-
-    }
-
-    if(hitPiece != null) {
-      m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
     }
     promote(m);
     //return score;

@@ -169,23 +169,36 @@ public class CheckersBoard extends Board implements Serializable {
         pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
 
         int score = 0;
-        if(hitPiece != null) {
-            score =  hitPiece.getValue();
+        if (hitPiece != null) {
+            score = hitPiece.getValue();
         }
 
+        if (killPaths.containsKey(m.getEndLocation())) {
+            for (Point2D point : killPaths.get(m.getEndLocation())) {
+                System.out.println("inside redo");
+                m.addCapturedPieceAndLocation(getPieceAt(point), point);
+                removePiece((int) point.getX(), (int) point.getY());
+            }
+        }
+
+        for (Point2D location : m.getCapturedPiecesAndLocations().values()) {
+            this.captureAction.process((int) location.getX(), (int) location.getY());
+        }
+
+        if (m.isPromote() && m.isUndo()) {
+            // demote backend
+            getPieceAt(x_f, y_f).setType("Coin");
+            getPieceAt(x_f, y_f).setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
+            // demote frontend
+            promoteAction.process(x_f, y_f);
+        }
         //TO-DO check if piece has reached opposite end
         if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
             getPieceAt(x_f, y_f).setType("Monarch");
             getPieceAt(x_f, y_f).setMovePattern("KING 1");
             //pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), new Piece("Monarch", "KING 1", 10, init_Color, initID));
+            m.setPromote(true);
             promoteAction.process(x_f, y_f);
-        }
-
-        if(killPaths.containsKey(m.getEndLocation())){
-            for(Point2D point: killPaths.get(m.getEndLocation())){
-                m.addCapturedPieceAndLocation(getPieceAt(point), point);
-                removePiece((int)point.getX(), (int)point.getY());
-            }
         }
 
         //return score;
