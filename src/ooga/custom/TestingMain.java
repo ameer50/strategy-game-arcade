@@ -1,8 +1,7 @@
-package ooga.testing;
+package ooga.custom;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ooga.controller.Controller;
 
 public class TestingMain extends Application {
 

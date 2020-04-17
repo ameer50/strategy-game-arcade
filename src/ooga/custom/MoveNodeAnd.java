@@ -1,19 +1,17 @@
-package ooga.testing;
+package ooga.custom;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class MoveNodeAND extends MoveNode {
+public class MoveNodeAnd extends MoveNode {
 
-  public MoveNodeAND(List<MoveNode> children) {
+  public MoveNodeAnd(List<MoveNode> children) {
     // TODO: Throw an error if 'children' has less than two nodes.
     super(children);
   }
-  public MoveNodeAND(MoveNode a, MoveNode b) {
+  public MoveNodeAnd(MoveNode a, MoveNode b) {
     super(List.of(a, b));
   }
 
