@@ -24,7 +24,7 @@ public class MoveNodeAnd extends MoveNode {
 
   protected List<Point2D> concatenate(MoveNode a, MoveNode b) {
     if ((a.size()==0) & (b.size()==0)) {
-      Point2D sum = pointSum(a.value(), b.value());
+      Point2D sum = pointSum(a.getValue(), b.getValue());
       return List.of(sum);
     }
     List<Point2D> pointsB = b.generatePoints();

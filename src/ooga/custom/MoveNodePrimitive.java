@@ -11,9 +11,16 @@ public class MoveNodePrimitive extends MoveNode {
   }
 
   @Override
+  public void multiply(int multiplier) {
+    Point2D oldPoint = this.getValue();
+    Point2D newPoint = new Point2D.Double(oldPoint.getX()*multiplier, oldPoint.getY()*multiplier);
+    this.setValue(newPoint);
+  }
+
+  @Override
   public List<Point2D> generatePoints() {
     List<Point2D> pointList = new ArrayList<>();
-    pointList.add(this.value());
+    pointList.add(this.getValue());
     return pointList;
   }
 }

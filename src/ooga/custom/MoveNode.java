@@ -18,14 +18,24 @@ public abstract class MoveNode {
 
   public abstract List<Point2D> generatePoints();
 
+  public void multiply(int multiplicand) {
+    for (MoveNode node: children) {
+      node.multiply(multiplicand);
+    }
+  }
+
   public int size() {
     if (children == null) return 0;
     return children.size();
   }
 
-  public Point2D value() {
+  public Point2D getValue() {
     // TODO: Clone instead?
     return value;
+  }
+
+  public void setValue(Point2D point) {
+    this.value = point;
   }
 
   public List<MoveNode> children() {
