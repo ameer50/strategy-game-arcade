@@ -36,8 +36,8 @@ public class Move {
         return endLocation;
     }
 
-    public void setUndoTrue() {
-        isUndo = true;
+    public void setUndo(boolean isUndo) {
+        this.isUndo = isUndo;
     }
 
     public boolean isUndo() {
