@@ -1,5 +1,6 @@
 package ooga.board;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.Serializable;
@@ -42,8 +43,13 @@ public class ChessBoard extends Board implements Serializable {
       List<Point2D> safeKings = getSafeKingMoves(thisPieceValidMoves, checks.getKey());
       return checkDanger(safeKings, kingI, kingJ);
     }
+    List<Point2D> blockingPath = getBlockingMoves(i, j, kingI, kingJ, checkPieces);
+    if(blockingPath != null){
+      thisPieceValidMoves.retainAll(blockingPath);
+    }
+
     if (checkPieces.size() == 0){
-      return getValidMovesIgnoreCheck(i, j);
+      return thisPieceValidMoves;
     }
 
     if (checkPieces.size() > 1) {
@@ -94,9 +100,7 @@ public class ChessBoard extends Board implements Serializable {
     } else {
       currPiece.unMove();
     }
-    int score = 0;
     if (hitPiece != null) {
-      score = hitPiece.getValue();
       pieceBiMap.remove(hitPiece); // ***
     }
     pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
@@ -115,7 +119,6 @@ public class ChessBoard extends Board implements Serializable {
       this.promoteAction.process((int) m.getEndLocation().getX(), (int) m.getEndLocation().getY());
     }
     promote(m);
-    //return score;
   }
 
   private void promote(Move m){
@@ -134,6 +137,36 @@ public class ChessBoard extends Board implements Serializable {
     }
   }
 
+  private List<Point2D> getBlockingMoves(int blockerI, int blockerJ, int kingI, int kingJ, List<Point2D> checkPieces){
+    //what is the path from that threat to the king
+    //if the path is empty, the piece can't be blocked, so not blocking
+    //if the path doesn't contain this location, i'm not blocking
+    //if the path does contain this location, return the path
+    Piece blocker = getPieceAt(blockerI, blockerJ);
+    Point2D blockPoint = new Point2D.Double(blockerI, blockerJ);
+    Point2D kingPoint = new Point2D.Double(kingI, kingJ);
+    String blockColor = blocker.getColor();
+    pieceBiMap.forcePut(blockPoint, null);
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        Piece threat = getPieceAt(i, j);
+        Point2D threatPoint = new Point2D.Double(i, j);
+        if(threat == null || threat.getColor().equals(blockColor) || checkPieces.contains(threatPoint) || !getValidMovesIgnoreCheck(i, j).contains(kingPoint)){
+          continue;
+        }
+        List<Point2D> path = getPath(i, j, kingI, kingJ);
+        path.add(threatPoint);
+        if(path.contains(blockPoint)){
+          System.out.println("BLOCKING");
+          pieceBiMap.forcePut(blockPoint, blocker);
+          return path;
+        }
+      }
+    }
+    pieceBiMap.forcePut(blockPoint, blocker);
+    return null;
+  }
   @Override
   public String checkWon() {
     // a) If not in check return 'null'. If not in check, checkPieces.size() is 0.
