@@ -15,6 +15,7 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import ooga.ProcessCoordinateInterface;
 import ooga.controller.CopyUtility;
+import ooga.custom.MoveNode;
 import ooga.history.Move;
 
 public abstract class Board implements Serializable {
@@ -23,6 +24,8 @@ public abstract class Board implements Serializable {
   public static final String WIDTH = "width";
   public static final String BOTTOM_COLOR = "bottomColor";
   protected Map<String, Pair<String, Integer>> pieceTypeMap;
+  protected Map<String, MoveNode> pieceMoves;
+  protected Map<String, Long> pieceScores;
   protected BiMap<Point2D, Piece> pieceBiMap;
   protected Map<String, String> settings;
   protected int height;
@@ -33,14 +36,30 @@ public abstract class Board implements Serializable {
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
       Map<String, Pair<String, Integer>> pieceTypeMap) {
-    height = Integer.parseInt(settings.get(HEIGHT));
     width = Integer.parseInt(settings.get(WIDTH));
+    height = Integer.parseInt(settings.get(HEIGHT));
     bottomColor = settings.get(BOTTOM_COLOR);
     over = false;
 
     pieceBiMap = HashBiMap.create();
     this.settings = settings;
     this.pieceTypeMap = pieceTypeMap;
+    this.pieceMoves = null;
+    initializePieces(locations);
+  }
+
+  public Board(int width, int height, Map<Point2D, String> locations,
+      Map<String, MoveNode> pieceMoves, Map<String, Long> pieceScores) {
+    this.width = width;
+    this.height = height;
+    bottomColor = "White";
+    over = false;
+
+    pieceBiMap = HashBiMap.create();
+    this.settings = null;
+    this.pieceTypeMap = null;
+    this.pieceMoves = pieceMoves;
+    this.pieceScores = pieceScores;
     initializePieces(locations);
   }
 
@@ -57,12 +76,17 @@ public abstract class Board implements Serializable {
       String[] pieceArr = pieceStr.split("_");
       String pieceColor = pieceArr[0];
       String pieceName = pieceArr[1];
-      Pair<String, Integer> pieceInfo = pieceTypeMap.get(pieceStr);
 
-      String pattern = pieceInfo.getKey();
-      int score = pieceInfo.getValue();
-      Piece piece = new Piece(pieceName, pattern, score, pieceColor, ID++);
-      pieceBiMap.put(new Point2D.Double(x, y), piece);
+      if (settings != null) {
+        Pair<String, Integer> pieceInfo = pieceTypeMap.get(pieceStr);
+        int score = pieceInfo.getValue();
+        String pattern = pieceInfo.getKey();
+        Piece piece = new Piece(pieceName, pattern, score, pieceColor, ID++);
+        pieceBiMap.put(new Point2D.Double(x, y), piece);
+      } else {
+        Piece piece = new Piece(pieceName, pieceMoves.get(pieceName),
+            Math.toIntExact(pieceScores.get(pieceName)), pieceColor, ID++);
+      }
     }
   }
 
@@ -104,7 +128,6 @@ public abstract class Board implements Serializable {
     }
   }
 
-  // TODO: Remove one of these?
   public void placePiece(int i, int j, Piece piece) {
     pieceBiMap.forcePut(new Point2D.Double(i, j), piece);
   }
@@ -202,12 +225,21 @@ public abstract class Board implements Serializable {
   }
 
   public Board getCopy() {
+    /* A test for a non-custom board */
+    if ((settings != null) & (settings.size() != 0) ){
+      return copyNotCustom();
+    } else {
+      return copyCustom();
+    }
+  }
+
+  private Board copyNotCustom() {
     CopyUtility utility = new CopyUtility();
     Map<String, String> settingsCopy = (Map<String, String>) utility.getSerializedCopy(settings);
     Map<String, Pair<String, Integer>> pieceTypeMapCopy =
         (Map<String, Pair<String, Integer>>) utility.getSerializedCopy(pieceTypeMap);
     Map<Point2D, String> locationsCopy = new HashMap<>();
-    // TODO: Make sure that the copying mechanism below works.
+    /* Make sure that the copying mechanism below works. */
     for (Point2D point: pieceBiMap.keySet()) {
       Piece piece = pieceBiMap.get(point);
       if (piece != null) {
@@ -222,9 +254,13 @@ public abstract class Board implements Serializable {
       return copy;
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
         InvocationTargetException e) {
-      e.printStackTrace();
-      // FIXME: don't print stack trace
+      // e.printStackTrace();
     }
+    return null;
+  }
+
+  private Board copyCustom() {
+    /* FIXME: implement */
     return null;
   }
 

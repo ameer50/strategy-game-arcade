@@ -3,7 +3,6 @@ package ooga.board;
 import java.io.Serializable;
 import javafx.util.Pair;
 import ooga.history.Move;
-import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.*;
 import java.util.List;
@@ -135,9 +134,7 @@ public class CheckersBoard extends Board implements Serializable {
             temp.add(killedPieces.get(i));
             ret.put(jumpLocs.get(i), new ArrayList<Point2D>(temp));
         }
-
         return ret;
-
     }
 
     public void doMove(Move m) {
@@ -145,49 +142,32 @@ public class CheckersBoard extends Board implements Serializable {
         int y_i = (int) m.getStartLocation().getY();
         int x_f = (int) m.getEndLocation().getX();
         int y_f = (int) m.getEndLocation().getY();
-        System.out.println("Initial: " + x_i + "Initial: " + y_i);
-        String init_Color = getPieceAt(x_i, y_i).getColor();
-        int initID = getPieceAt(x_i, y_i).getID();
-        System.out.println("Final: " + x_f + "Final: " + y_f);
+        // System.out.println("Initial: " + x_i + "Initial: " + y_i);
+        // System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
-        Piece oppPiece = getPieceAt(x_f, y_f);
         placePiece(x_i, y_i, null);
         placePiece(x_f, y_f, currPiece);
-        boolean isKill = false;
+        boolean isKill;
         Point2D.Double capLoc = null;
         Piece hitPiece = null;
-        /*if (distance(x_i,y_i,x_f,y_f)>2.0) {
-            capLoc = new Point2D.Double(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
-            hitPiece = getPieceAt(capLoc);
-            removePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2);
-            if (hitPiece != null) m.addCapturedPieceAndLocation(hitPiece, capLoc);
-            //placePiece(Math.abs(x_f+x_i)/2, Math.abs(y_f+y_i)/2, null);
-        }*/
 
         m.setPiece(currPiece);
-        //m.addCapturedPieceAndLocation(hitPiece, capLoc);
         pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
+        int score = (hitPiece == null) ? 0 : hitPiece.getValue();
 
-        int score = 0;
-        if(hitPiece != null) {
-            score =  hitPiece.getValue();
-        }
-
-        //TO-DO check if piece has reached opposite end
+        /* TODO: check if piece has reached opposite end */
         if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
             getPieceAt(x_f, y_f).setType("Monarch");
             getPieceAt(x_f, y_f).setMovePattern("KING 1");
             //pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), new Piece("Monarch", "KING 1", 10, init_Color, initID));
             promoteAction.process(x_f, y_f);
         }
-
-        if(killPaths.containsKey(m.getEndLocation())){
+        if (killPaths.containsKey(m.getEndLocation())){
             for(Point2D point: killPaths.get(m.getEndLocation())){
-                m.addCapturedPieceAndLocation(getPieceAt(point), point);
+                m.addCapturedPiece(getPieceAt(point), point);
                 removePiece((int)point.getX(), (int)point.getY());
             }
         }
-
         //return score;
     }
 

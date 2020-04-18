@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
@@ -89,21 +88,19 @@ public class ChessBoard extends Board implements Serializable {
     int endY = (int) m.getEndLocation().getY();
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
-    if(!m.isUndo()) {
+    if (! m.isUndo()) {
       currPiece.move();
     } else {
       currPiece.unMove();
     }
-    int score = 0;
-    if (hitPiece != null) {
-      score = hitPiece.getValue();
-      pieceBiMap.remove(hitPiece); // ***
-    }
+
+    int score = (hitPiece == null) ? 0 : hitPiece.getValue();
     pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
 
     m.setPiece(currPiece);
-    if(hitPiece != null) {
-      m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
+    if (hitPiece != null) {
+      m.addCapturedPiece(hitPiece, m.getEndLocation());
+      pieceBiMap.remove(hitPiece);
     }
     promote(currPiece, endX, endY);
     //return score;
