@@ -24,30 +24,28 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private double cellSize;
     private double cellSpan;
 
-    private String playerChoice;
+    private String colorChoice;
     private Map<Point2D, String> pieceLocations;
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private Point2D selectedLocation;
     private static final int ANIM_DURATION = 20;
 
-    public BoardView(int rows, int cols, String playerChoice, Map<Point2D, String> locations) {
-        unitWidth = rows;
-        unitHeight = cols;
-        cellArray = new CellView[rows][cols];
-        cellList = new CellView[rows * cols];
+    public BoardView(int width, int height, String colorChoice, Map<Point2D, String> locations) {
+        unitWidth = width;
+        unitHeight = height;
+        cellArray = new CellView[width][height];
+        cellList = new CellView[width * height];
 
-        cellSize = (BOARD_WIDTH) / rows;
-        cellSpan = cellSize + PIECE_SPACE;
-
-        this.playerChoice = playerChoice;
+        cellSize = BOARD_WIDTH/width;
+        cellSpan = cellSize+PIECE_SPACE;
+        this.colorChoice = colorChoice;
         this.pieceLocations = locations;
-
         initialize();
     }
 
     public void initialize() {
         checkeredColor();
-        fillCellStructures();
+        fillCells();
         setUpPieces();
     }
 
@@ -69,14 +67,13 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         Collections.reverse(colorSequence2);
     }
 
-    private void fillCellStructures() {
+    private void fillCells() {
         int index = 0;
-        for (int i = 0; i < unitWidth; i++) {
-            for (int j = 0; j < unitHeight; j++) {
+        for (int i=0; i < unitWidth; i++) {
+            for (int j=0 ; j < unitHeight; j++) {
                 String color = (i % 2 == 0) ? colorSequence2.get(j) : colorSequence1.get(j);
-                cellArray[i][j] = new CellView(i, j, (BOARD_XOFFSET + (cellSpan * j)),
-                    (BOARD_YOFFSET + (cellSpan * i)),
-                    cellSize, cellSize, color);
+                cellArray[i][j] = new CellView(i, j, (BOARD_XOFFSET+(cellSpan*j)),
+                    (BOARD_YOFFSET+(cellSpan*i)), cellSize, cellSize, color);
                 cellList[index] = cellArray[i][j];
                 index++;
                 cellArray[i][j].setNoBorderFunction((a, b) -> {

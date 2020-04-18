@@ -6,7 +6,6 @@ import ooga.board.Piece;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,7 +26,7 @@ public class XMLProcessor {
     private Map<String, String> settings;
     private Map<Point2D, String> initialPieceLocations;
     private Map<String, Pair<String, Integer>> movePatterns;
-    private final static String ERROR_MESSAGE = "Error parsing XML file.";
+    private static final String ERROR_MESSAGE = "Error parsing XML file.";
     private Document doc;
 
     public XMLProcessor() {
@@ -39,11 +38,9 @@ public class XMLProcessor {
     public Map<String, String> getSettings() {
         return settings;
     }
-
     public Map<Point2D, String> getInitialPieceLocations() {
         return initialPieceLocations;
     }
-
     public Map<String, Pair<String, Integer>> getMovePatterns() {
         return movePatterns;
     }
@@ -73,11 +70,9 @@ public class XMLProcessor {
         } catch (Exception e) {
             System.out.println(ERROR_MESSAGE);
         }
-
     }
 
-    public void write(Board board, String fileName){
-
+    public void write(Board board, String fileName) {
         Node node = doc.getDocumentElement().getElementsByTagName("locations").item(0);
         doc.getDocumentElement().removeChild(node);
 
@@ -89,7 +84,6 @@ public class XMLProcessor {
             newItem.setTextContent(
                     String.format("%d,%d,%s", (int) location.getX(), (int) location.getY(), thePiece.getFullName()));
             newList.appendChild(newItem);
-
         }
         root.appendChild(newList);
 
