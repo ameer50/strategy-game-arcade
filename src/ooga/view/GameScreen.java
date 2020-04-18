@@ -20,7 +20,6 @@ public class GameScreen {
     private Scene scene;
     private BoardView boardView;
     private DashboardView dashboardView;
-    private int[] recentLocations;
 
     public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
@@ -39,7 +38,7 @@ public class GameScreen {
         scene.getStylesheets().add(res.getString("GameStyleSheet"));
 
         Pane canvas = new Pane();
-        boardView = new BoardView(width, height, "Black", locations);
+        boardView = new BoardView(width, height, locations);
         canvas.getChildren().addAll(boardView.getCells());
         root.getChildren().addAll(canvas);
 
@@ -53,11 +52,4 @@ public class GameScreen {
 
     public DashboardView getDashboardView() { return dashboardView;}
 
-    public void setRecentLocation(int fromX, int fromY, int toX, int toY){
-        recentLocations = new int[]{fromX, fromY, toX, toY};
-    }
-
-    public void getUndoState(){
-        dashboardView.getUndoState();
-    }
 }

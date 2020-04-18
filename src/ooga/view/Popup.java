@@ -40,19 +40,16 @@ public class Popup {
         return stage;
     }
 
-    public ButtonGroup buttonsToDisplay(List<String> buttonNames, String buttonStyle, int layoutX, int layoutY, String vboxStyle){
+    public ButtonGroup buttonsToDisplay(ButtonGroup buttons,int layoutX, int layoutY){
         buttonBox = new VBox();
-        ButtonGroup buttons = new ButtonGroup(buttonNames, buttonStyle);
 
         for (Button b: buttons.getButtons()) {
-            b.getStyleClass().add(buttonStyle);
             buttonBox.getChildren().add(b);
         }
 
         root.getChildren().add(buttonBox);
         buttonBox.setLayoutX(layoutX);
         buttonBox.setLayoutY(layoutY);
-        buttonBox.getStyleClass().add(vboxStyle);
 
         return buttons;
     }
@@ -60,6 +57,9 @@ public class Popup {
     public VBox getButtonBox(){
         return  buttonBox;
     }
+
+
+
 
 
 

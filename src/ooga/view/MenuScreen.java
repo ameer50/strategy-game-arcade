@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import java.io.File;
 import java.util.*;
 
@@ -51,7 +52,7 @@ public class MenuScreen {
     private String playerTwoName;
     private String fileChoice;
     private boolean isOnePlayer;
-    private Popup thePop;
+    private Popup myPopupScreen;
 
 
     public MenuScreen(Stage stage){
@@ -69,10 +70,13 @@ public class MenuScreen {
         stage.setTitle(res.getString("MenuStageTitle"));
         scene.getStylesheets().add(res.getString("MenuStyleSheet"));
 
-        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"), "button");
+        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"));
+
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
+            b.getStyleClass().add("buttons");
             vbox.getChildren().add(b);
+
         }
         root.getChildren().add(vbox);
         vbox.setLayoutX(STAGE_WIDTH/2 - vbox.getWidth()/2);
@@ -88,138 +92,60 @@ public class MenuScreen {
             b.setOnAction(event -> {
                 gameChoice = b.getText();
                 this.goAction = e;
-                //settingsPopUp();
-                thePop = new Popup(500, 600, res.getString("PopupStyleSheet"));
-                setUpPlayerPopUp(thePop.getStage());
+
+                myPopupScreen = new Popup(500, 600, res.getString("PopupStyleSheet"));
+                setUpPlayerPopUp();
 
             });
         }
     }
 
-    private void setAsScene(Scene scene) {
-        this.scene = scene;
-    }
-
-    public void settingsPopUp() {
-        Stage settingsStage = new Stage();
-        settingsStage.setHeight(600);
-        settingsStage.setWidth(500);
-        createNewPopUpScene(settingsStage);
-
-        setUpPlayerPopUp(settingsStage);
-    }
-
-    private BorderPane createNewPopUpScene(Stage settingsStage) {
-        BorderPane root = new BorderPane();
-        Scene newScene = new Scene(root);
-        newScene.getStylesheets().add(res.getString("PopupStyleSheet"));
-        settingsStage.setScene(newScene);
-        settingsStage.show();
-        return root;
-    }
-
-    private void setUpPlayerPopUp(Stage settingsStage) {
-        //BorderPane root = createNewPopUpScene(settingsStage);
-        //BorderPane root = thePop.getNewPopup();
-
-        thePop.getNewPopup();
-        ButtonGroup playerOption = thePop.buttonsToDisplay(List.of("One Player", "Two Player"), res.getString("SettingsButtons"), 250, 250, "vbox");
-
-//        VBox vbox = new VBox();
-//        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), res.getString("SettingsButtons"));
-//        for (Button b: playerOption.getButtons()) {
-//            //b.getStyleClass().add("settingsbuttons");
-//            vbox.getChildren().add(b);
-//        }
-//
-//
+    private void setUpPlayerPopUp() {
+        myPopupScreen.getNewPopup();
+        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"));
+        playerOption.addStyle(res.getString("SettingsButtons"));
+        myPopupScreen.buttonsToDisplay(playerOption, 250, 250);
+        myPopupScreen.getButtonBox().getStyleClass().add("vbox");
 
         playerOption.getButtons().get(0).setOnAction(e -> {
             isOnePlayer = true;
-            setUpColorPopUp(thePop.getStage());
+            setUpColorPopUp();
         });
         playerOption.getButtons().get(1).setOnAction(e -> {
             isOnePlayer = false;
-            setUpColorPopUp(thePop.getStage());
+            setUpColorPopUp();
         });
-//
-//        root.getChildren().add(vbox);
-//        vbox.setLayoutX(250);
-//        vbox.setLayoutY(250);
-//        vbox.getStyleClass().add("vbox");
     }
 
-    private void setUpColorPopUp(Stage settingsStage) {
+    private void setUpColorPopUp() {
 
-        thePop.getNewPopup();
+        myPopupScreen.getNewPopup();
+        ButtonGroup colorOption = new ButtonGroup(List.of("White", "Black"));
 
-
-
-        List<String> possibleColors = new ArrayList<>();
-        possibleColors.add("White");
-        possibleColors.add("Black");
-        ButtonGroup colorOption = thePop.buttonsToDisplay(possibleColors, res.getString("SettingsButtons"), 250, 250, "vbox");
-        VBox vBox = thePop.getButtonBox();
+        colorOption.addStyle(res.getString("SettingsButtons"));
+        myPopupScreen.buttonsToDisplay(colorOption, 250, 250);
+        myPopupScreen.getButtonBox().getStyleClass().add("vbox");
+        VBox textFieldBox = myPopupScreen.getButtonBox();
 
         Text enterColorText = new Text();
         enterColorText.setText("Player One Color: ");
         enterColorText.getStyleClass().add("playername");
-        enterColorText.setFill(Color.BLACK);
 
-        if (!isOnePlayer) {
-
-            vBox.getChildren().add(0, enterColorText);
-        }
-
+        if (!isOnePlayer) textFieldBox.getChildren().add(0, enterColorText);
 
         for (Button b: colorOption.getButtons()) {
             b.setOnAction(e -> {
                 b.setDisable(true);
+                Button otherButton = colorOption.getButtons().get(colorOption.getButtons().indexOf(b) ^ 1);
+                otherButton.setDisable(false);
                 playerOneColor = b.getText();
-                possibleColors.remove(playerOneColor);
-                playerTwoColor = possibleColors.get(0);
+                playerTwoColor = otherButton.getText();
 
             });
         }
 
-        //--------------------------------------------------------------------------------
-
-//        BorderPane root = createNewPopUpScene(settingsStage);
-//        VBox vbox = new VBox();
-
-//        Text enterColorText = new Text();
-//        enterColorText.setText("Player One Color: ");
-//        enterColorText.getStyleClass().add("playername");
-//        enterColorText.setFill(Color.BLACK);
-//
-//        if (!isOnePlayer) {
-//
-//            vbox.getChildren().add(enterColorText);
-//        }
-
-
-//        List<String> possibleColors = new ArrayList<>();
-//        possibleColors.add("White");
-//        possibleColors.add("Black");
-//        ButtonGroup colorOption = new ButtonGroup(possibleColors, res.getString("SettingsButtons"));
-
-//        for (Button b: colorOption.getButtons()) {
-//            b.setOnAction(e -> {
-//                b.setDisable(true);
-//                playerOneColor = b.getText();
-//                possibleColors.remove(playerOneColor);
-//                playerTwoColor = possibleColors.get(0);
-//
-//            });
-//            vbox.getChildren().add(b);
-//        }
-        VBox textFieldBox = new VBox();
-
-        Text nameText = new Text();
-        nameText.setText("Enter Player Name(s)");
+        Text nameText = new Text("Enter Player Name(s)");
         nameText.getStyleClass().add("playername");
-        nameText.setFill(Color.BLACK);
-
 
         TextField playerOneText = new TextField();
         playerOneText.setPromptText("Player One");
@@ -235,108 +161,47 @@ public class MenuScreen {
         playerTwoText.getStyleClass().add("file-text-field");
         playerTwoText.setMinWidth(200);
 
-        if (!isOnePlayer) {
-
-            textFieldBox.getChildren().add(playerTwoText);
-        }
+        if (!isOnePlayer) textFieldBox.getChildren().add(playerTwoText);
 
         Button next = new Button("Next");
         next.getStyleClass().add(res.getString("SettingsButtons"));
         next.setOnAction(e -> {
             playerOneName = playerOneText.getText();
             playerTwoName = playerTwoText.getText();
-            setUpLoadGamePopUp(settingsStage);
+            setUpLoadGamePopUp();
         });
-
-        vBox.getChildren().addAll(textFieldBox, next);
-        //vbox.getChildren().addAll(textFieldBox, next);
-//        root.getChildren().add(vbox);
-//        vbox.setLayoutX(250);
-//        vbox.setLayoutY(250);
-//        vbox.getStyleClass().add("vbox");
+        textFieldBox.getChildren().addAll(next);
     }
 
-    private void setUpLoadGamePopUp(Stage settingsStage) {
-        BorderPane root = createNewPopUpScene(settingsStage);
-        VBox vbox = new VBox();
-        ButtonGroup loadGameGroup = new ButtonGroup(List.of("Default Game", "Custom Game"), res.getString("SettingsButtons"));
-        for (Button b: loadGameGroup.getButtons()) {
+    private void setUpLoadGamePopUp() {
+
+        myPopupScreen.getNewPopup();
+        ButtonGroup loadGameOption = new ButtonGroup(List.of("Default Game", "Custom Game"));
+
+        loadGameOption.addStyle(res.getString("SettingsButtons"));
+        myPopupScreen.buttonsToDisplay(loadGameOption, 250, 250);
+        myPopupScreen.getButtonBox().getStyleClass().add("vbox");
+        VBox vBox = myPopupScreen.getButtonBox();
+
+
+        for (Button b: loadGameOption.getButtons()) {
             b.setOnAction((newEvent) -> {
-                assignXMLFile(b.getText());
                 b.setDisable(true);
+                Button otherButton = loadGameOption.getButtons().get(loadGameOption.getButtons().indexOf(b) ^ 1);
+                otherButton.setDisable(false);
+                assignXMLFile(b.getText());
             });
-            vbox.getChildren().add(b);
         }
 
         Button goButton = new Button("Go!");
         goButton.getStyleClass().add(res.getString("SettingsButtons"));
         goButton.setOnAction(e -> {
-            settingsStage.close();
+            myPopupScreen.getStage().close();
             goAction.handle(e);
         });
 
-        vbox.getChildren().add(goButton);
-
-        root.getChildren().add(vbox);
-        vbox.setLayoutX(250);
-        vbox.setLayoutY(250);
-        vbox.getStyleClass().add("vbox");
+        vBox.getChildren().add(goButton);
     }
-
-//    private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {
-//        GridPane pane = setUpButtonPane();
-//
-//        Label prompt = new Label(POPUP_PROMPT);
-//        prompt.getStyleClass().add("prompt");
-//
-//        HBox promptBox = new HBox();
-//        promptBox.getChildren().add(prompt);
-//        promptBox.setLayoutX(PROMPT_X);
-//        promptBox.setLayoutY(PROMPT_Y);
-//        settingsRoot.getChildren().addAll(promptBox, pane);
-//
-//        Button goButton = new Button("GO");
-//        goButton.getStyleClass().add(res.getString("SettingsButtons"));
-//        pane.add(goButton, 1,3);
-//        pane.getStyleClass().add("gpane");
-//
-//        goButton.setOnAction(e -> {
-//            settingsStage.close();
-//            event.handle(e);
-//        });
-//    }
-
-//    private GridPane setUpButtonPane() {
-//        GridPane pane = new GridPane();
-//        List buttonLabels = List.of("White", "Black", DEFAULT_XML, CUSTOM_XML, AI_OPPONENT, HUMAN_OPPONENT);
-//        ButtonGroup buttonGroup = new ButtonGroup(buttonLabels, BUTTON_WIDTH, BUTTON_HEIGHT,
-//            res.getString("SettingsButtons"));
-//
-//        int[] positionIndices = {0, 0, 2, 0, 0, 1, 2, 1, 0, 2, 2, 2};
-//        int i = 0;
-//        for (Button button: buttonGroup.getButtons()) {
-//            if (i==0 || i==2) {
-//                button.setOnAction((newEvent) -> {
-//                    assignColorChoice(button.getText());
-//                    button.setDisable(true);
-//                });
-//            } else if (i==4 | i==6) {
-//                button.setOnAction((newEvent) -> {
-//                    assignXMLFile(button.getText());
-//                    button.setDisable(true);
-//                });
-//            } else {
-//                button.setOnAction((newEvent) -> {
-//                    assignAIOpponent(button.getText());
-//                    button.setDisable(true);
-//                });
-//            }
-//            pane.add(button, positionIndices[i++], positionIndices[i++]);
-//            GridPane.setHalignment(button, HPos.CENTER);
-//            GridPane.setValignment(button, VPos.CENTER);
-//        }
-//        return pane;
-//    }
 
     private void arrangeLogo() {
         Text logo = new Text();
@@ -389,24 +254,12 @@ public class MenuScreen {
         }
     }
 
-    private void assignAIOpponent(String choice) {
-        if (choice.equals(AI_OPPONENT)) {
-            this.isOnePlayer = false;
-        } else {
-            this.isOnePlayer = true;
-        }
-    }
-
     public String getGameChoice() {
         return gameChoice;
     }
 
     public String getFileChoice() {
         return fileChoice;
-    }
-
-    public boolean getAIChoice() {
-        return false;
     }
 
     public boolean getIsGameOnePlayer() { return isOnePlayer; }

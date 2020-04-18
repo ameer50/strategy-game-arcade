@@ -69,14 +69,6 @@ public class CellView extends StackPane {
         this.getChildren().add(pieceImage);
     }
 
-    public double getWidthOfCell() {
-        return width;
-    }
-
-    public double getHeightOfCell() {
-        return height;
-    }
-
     public PieceView getPiece() {
         return piece;
     }
