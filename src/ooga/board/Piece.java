@@ -8,15 +8,13 @@ public class Piece implements Serializable {
   private int score;
   private String color;
   private int moves;
-  private int ID;
 
-  public Piece (String type, String pattern, int score, String color, int uniqueID) {
+  public Piece (String type, String pattern, int score, String color) {
     this.type = type;
     this.pattern = pattern;
     this.score = score;
     this.color = color;
     this.moves = 0;
-    this.ID = uniqueID;
   }
 
   public boolean isSameColor(Piece that){
@@ -66,9 +64,5 @@ public class Piece implements Serializable {
 
   public String getFullName(){
     return String.format("%s_%s", this.color, this.type);
-  }
-
-  public int getID(){
-    return this.ID;
   }
 }

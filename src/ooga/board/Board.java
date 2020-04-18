@@ -50,7 +50,6 @@ public abstract class Board implements Serializable {
    Set up the board from the config file.
    **/
   private void initializePieces(Map<Point2D, String> locations) {
-    int ID = 0;
     for (Point2D point: locations.keySet()){
       int x = (int) point.getX();
       int y = (int) point.getY();
@@ -62,21 +61,32 @@ public abstract class Board implements Serializable {
 
       String movePattern = pieceInfo.getKey();
       int score = pieceInfo.getValue();
-      Piece piece = new Piece(pieceName, movePattern, score, pieceColor, ID++);
+      Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
 
       pieceBiMap.put(new Point2D.Double(x, y), piece);
     }
   }
 
-  public void print() {
+  @Override
+  public String toString() {
+    String str = "";
     for(int i=0; i< height; i++){
       for(int j=0; j< width; j++){
-        System.out.print(getPieceAt(i, j) + ", ");
+        str += getPieceAt(i, j);
+        if(j!= width - 1){
+          str += ", ";
+        }
       }
-      System.out.println("");
+      if(i!= height - 1) {
+        str += "\n";
+      }
     }
+    return str;
   }
 
+  public void print(){
+    System.out.println(this);
+  }
   /**
    Get piece at the specified coordinates.
    @return the Piece object at x, y; null if nothing in the cell.
