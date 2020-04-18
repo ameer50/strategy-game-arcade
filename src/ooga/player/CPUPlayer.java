@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import ooga.board.Board;
 import ooga.controller.Controller.StrategyType;
-import ooga.controller.StringUtility;
+import ooga.utility.StringUtility;
 import ooga.history.Move;
 
 public class CPUPlayer extends Player {

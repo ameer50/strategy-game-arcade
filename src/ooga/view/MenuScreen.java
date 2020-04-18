@@ -359,8 +359,12 @@ public class MenuScreen {
         return gameChoice;
     }
 
-    public String getFileChoice(){
+    public String getFileChoice() {
         return fileChoice;
+    }
+
+    public boolean getAIChoice() {
+        return false;
     }
 
     public boolean getIsGameOnePlayer() { return isOnePlayer; }

@@ -27,10 +27,6 @@
     -fx-text-fill: #404040;
 }
 
-.button:hover {
-    -fx-background-color: #c8aaff;
-}
-
 .vbox {
     -fx-alignment: center;
     -fx-spacing: 25;
@@ -154,13 +150,14 @@
 
 .scoreshbox {
     -fx-spacing: 15;
+    -fx-background-radius: 5;
     -fx-alignment: center;
-    -fx-border-width: 5px;
-    -fx-border-radius: 5px;
-    -fx-border-color: #fadcc8;
+    /*-fx-border-width: 5;*/
+    /*-fx-border-radius: 5;*/
+    /*-fx-border-color: #fadcc8;*/
     -fx-background-color: #fad2a0;
     -fx-padding: 5 10 5 10;
-    -fx-fill: white;
+    -fx-fill: #ffffff;
     -fx-font-size: 20pt;
     -fx-font-family: Avant Garde;
     -fx-vgap: 10;
@@ -172,9 +169,8 @@
     -fx-border-width: 5px;
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: #fadcc8;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fadcff, #c8dcff);
     -fx-alignment: center;
-
 }
 
 .listview {
@@ -206,6 +202,6 @@
 
 .list-cell:filled:hover {
     -fx-background-color: #DEB887;
-    -fx-text-fill: white;
+    -fx-text-fill: #ffffff;
 }
 

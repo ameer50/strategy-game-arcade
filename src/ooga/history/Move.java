@@ -29,12 +29,14 @@ public class Move {
     }
 
     public Point2D getStartLocation() {
-        return startLocation;
+        return (Point2D) startLocation.clone();
     }
-
-    public Point2D getEndLocation() {
-        return endLocation;
-    }
+    public Point2D getEndLocation() { return (Point2D) endLocation.clone(); }
+    /* TODO: replace instances of the above with instances of the below */
+    public int getStartX() { return (int) startLocation.getX(); }
+    public int getStartY() { return (int) startLocation.getY(); }
+    public int getEndX() { return (int) endLocation.getX(); }
+    public int getEndY() { return (int) endLocation.getY(); }
 
     public void setUndo(boolean isUndo) {
         this.isUndo = isUndo;
@@ -53,7 +55,7 @@ public class Move {
         return String.format("%s from (%d, %d) to (%d, %d)", piece, (int) startLocation.getX(), (int) startLocation.getY(), (int) endLocation.getX(), (int) endLocation.getY());
     }
 
-    public void addCapturedPieceAndLocation(Piece capturedPiece, Point2D capturedPieceLocation){
+    public void addCapturedPiece(Piece capturedPiece, Point2D capturedPieceLocation){
         capturedPiecesAndLocations.put(capturedPiece, capturedPieceLocation);
     }
 

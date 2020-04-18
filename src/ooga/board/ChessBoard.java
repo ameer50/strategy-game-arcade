@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
@@ -96,20 +95,19 @@ public class ChessBoard extends Board implements Serializable {
     int endY = (int) m.getEndLocation().getY();
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
-    if(!m.isUndo()) {
+    if (! m.isUndo()) {
       currPiece.move();
     } else {
       currPiece.unMove();
     }
-    if (hitPiece != null) {
-      pieceBiMap.remove(hitPiece); // ***
-    }
+
+    int score = (hitPiece == null) ? 0 : hitPiece.getValue();
     pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
 
     m.setPiece(currPiece);
-    if(hitPiece != null) {
-      this.captureAction.process(endX, endY);
-      m.addCapturedPieceAndLocation(hitPiece, m.getEndLocation());
+    if (hitPiece != null) {
+      m.addCapturedPiece(hitPiece, m.getEndLocation());
+      pieceBiMap.remove(hitPiece);
     }
     // if undo and it was a promote move before
     if (m.isPromote() && m.isUndo()) {
@@ -122,15 +120,15 @@ public class ChessBoard extends Board implements Serializable {
     promote(m);
   }
 
-  private void promote(Move m){
+  private void promote(Move m) {
     Piece piece = m.getPiece();
-    if(!piece.getType().equals(PAWN)){
+    if (!piece.getType().equals(PAWN)) {
       return;
     }
     int inc = getPawnInc(piece);
     int endX = (int) m.getEndLocation().getX();
     int endY = (int) m.getEndLocation().getY();
-    if((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)){
+    if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
       piece.setType("Queen");
       piece.setMovePattern("Any -1");
       m.setPromote(true);
@@ -168,6 +166,7 @@ public class ChessBoard extends Board implements Serializable {
     pieceBiMap.forcePut(blockPoint, blocker);
     return null;
   }
+
   @Override
   public String checkWon() {
     // a) If not in check return 'null'. If not in check, checkPieces.size() is 0.
@@ -303,6 +302,7 @@ public class ChessBoard extends Board implements Serializable {
     }
     return false;
   }
+
   private Pair<List<Point2D>, List<Point2D>> getMovesAndCheckPieces(int kingI, int kingJ,
       String targetColor, boolean ignoreTheirKing) {
     List<Point2D> allPossibleMoves = new ArrayList<>();
@@ -476,6 +476,7 @@ public class ChessBoard extends Board implements Serializable {
     }
     return path;
   }
+
   private boolean isDiagonal(int threatI, int threatJ, int kingI, int kingJ){
     return Math.abs(kingJ - threatJ) == Math.abs(kingI - threatI);
   }
@@ -566,7 +567,6 @@ public class ChessBoard extends Board implements Serializable {
     return ret;
   }
 
-  // FIXME: these have a ton of duplication; could be made into much simpler methods
   private List<Point2D> up (int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int distance = params.get(0);
@@ -607,7 +607,7 @@ public class ChessBoard extends Board implements Serializable {
     return ret;
   }
 
-  private List<Point2D> right (int x, int y, List<Integer> params, Piece piece) {
+  private List<Point2D> right(int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int squares = 1;
     int distance = params.get(0);
