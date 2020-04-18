@@ -43,8 +43,6 @@ public class CustomBoard extends Board {
 
   public List<Point2D> getValidMoves(int i, int j) {
     Piece piece = getPieceAt(i, j);
-    /* FIXME: remove */
-    System.out.println(piece.getValue());
     if (piece == null) return null;
 
     Point2DUtility utility = new Point2DUtility();
@@ -57,8 +55,6 @@ public class CustomBoard extends Board {
         validCoordinates.add(point);
       }
     }
-    /* FIXME: remove */
-    System.out.println(validCoordinates);
     return validCoordinates;
   }
 

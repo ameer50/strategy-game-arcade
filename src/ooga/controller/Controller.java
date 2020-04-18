@@ -67,11 +67,11 @@ public class Controller {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
-        printMessageAndTime("Setup Menu Screen.");
+        printMessageAndTime("Set up Menu Screen.");
         menuScreen.setButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
-        printMessageAndTime("Setup listener.");
+        printMessageAndTime("Set up listeners.");
     }
 
     private void setUpGameScreen(String gameChoice, String fileChoice) {
@@ -126,21 +126,19 @@ public class Controller {
     private void setListeners() {
         /* X and Y are the indices of the cell clicked to move FROM */
         boardView.setOnPieceClicked((int x, int y) -> {
-            System.out.println(boardView.getCellAt(x, y).getPiece().getColor()); // ***
-            if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) {
-                return;
+            PieceView pieceView = boardView.getCellAt(x, y).getPiece();
+            System.out.println(pieceView.getColor()); // ***
+            if (pieceView.getColor().equals(activePlayer.getColor())) {
+                boardView.setSelectedLocation(x, y);
+                boardView.highlightValidMoves(board.getValidMoves(x, y));
+                System.out.println("Highlighted moves.");
             }
-            boardView.setSelectedLocation(x, y);
-            boardView.highlightValidMoves(board.getValidMoves(x, y));
-            System.out.println("Highlighted moves.");
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
         boardView.setOnMoveClicked((int toX, int toY) -> {
             Point2D startLocation = boardView.getSelectedLocation();
             Point2D endLocation = new Point2D.Double(toX, toY);
-
-            printMessageAndTime("Did user's move.");
 
             Move move = new Move(startLocation, endLocation);
             doMove(move);
@@ -149,12 +147,12 @@ public class Controller {
             historyList.add(move);
             toggleActivePlayer();
             board.checkWon();
+            printMessageAndTime("Did user's move.");
 
             if (activePlayer.isCPU()) {
                 doCPUMove();
                 printMessageAndTime("Did CPU's move.");
             }
-            // board.print();
         });
 
         gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
@@ -225,14 +223,14 @@ public class Controller {
         board.checkWon();
     }
 
-    private void printMessageAndTime (String message) {
+    private void printMessageAndTime(String message) {
         long endTime = System.currentTimeMillis();
         System.out.println(message);
         System.out.println(String.format("time: %.2f", (float)(endTime-startTime)));
     }
 
     @Deprecated
-    private void stall (double millis) {
+    private void stall(double millis) {
         double initial = System.currentTimeMillis();
         double elapsed = 0;
         while (elapsed < millis) {

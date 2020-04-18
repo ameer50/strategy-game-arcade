@@ -167,7 +167,7 @@
     -fx-border-width: 5px;
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: #fadcc8;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #fadcff, #c8dcff);
     -fx-alignment: center;
 }
 

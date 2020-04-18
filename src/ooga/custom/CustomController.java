@@ -34,7 +34,7 @@ public class CustomController {
   private CPUPlayer CPU;
   private History history;
   private ObservableList historyList;
-  private boolean isCPU = true;
+  private boolean isCPU = false;
   private long startTime;
 
   public CustomController(Stage stage) {
