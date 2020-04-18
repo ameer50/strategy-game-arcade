@@ -1,49 +1,70 @@
 package ooga.board;
 
 import java.awt.geom.Point2D;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javafx.util.Pair;
+import ooga.controller.Point2DUtility;
+import ooga.custom.MoveNode;
 import ooga.history.Move;
 
 public class CustomBoard extends Board {
 
-  public CustomBoard(Map<String, String> settings,
-      Map<Point2D, String> locations,
-      Map<String, Pair<String, Integer>> pieceTypeMap) {
-    super(settings, locations, pieceTypeMap);
+  public CustomBoard(int width, int height, Map<Point2D, String> locations,
+      Map<String, MoveNode> pieceMoves, Map<String, Long> pieceScores) {
+    super(width, height, locations, pieceMoves, pieceScores);
   }
 
-  @Override
   public String checkWon() {
     return null;
   }
 
-  @Override
   public void doMove(Move move) {
+    int startX = move.getStartX();
+    int startY = move.getStartY();
+    int endX = move.getEndX();
+    int endY = move.getEndY();
+    Piece currPiece = getPieceAt(startX, startY);
+    Piece hitPiece = getPieceAt(endX, endY);
+
+    if (! move.isUndo()) currPiece.move();
+    else currPiece.unMove();
+
+    if (hitPiece != null) {
+      move.addCapturedPiece(hitPiece, move.getEndLocation());
+      pieceBiMap.remove(hitPiece);
+    }
+    pieceBiMap.remove(currPiece); // Just in case...
+    pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
+
+    move.setPiece(currPiece);
   }
 
-  @Override
   public List<Point2D> getValidMoves(int i, int j) {
-    // TODO: Remove duplication.
     Piece piece = getPieceAt(i, j);
     if (piece == null) return null;
 
-    String pattern = piece.getMovePattern();
-    String[] patternArr = pattern.split(" ");
-    String moveStr = patternArr[0].toLowerCase();
-    List<Integer> moveInts = new ArrayList<>();
-    for (int inc=1; inc<patternArr.length; inc++) {
-      moveInts.add(Integer.parseInt(patternArr[inc]));
+    Point2DUtility utility = new Point2DUtility();
+    List<Point2D> displacements = piece.getDisplacements();
+    List<Point2D> originalCoordinates = List.of(new Double(i, j));
+    List<Point2D> displacedCoordinates = utility.concatPointLists(displacements, originalCoordinates);
+    List<Point2D> validCoordinates = new ArrayList<>();
+    for (Point2D point: displacedCoordinates) {
+      if (canMoveToPoint(point, piece.getColor())) {
+        validCoordinates.add(point);
+      }
     }
-    return generateMoves(i, j, moveStr, moveInts);
+    return validCoordinates;
   }
 
-  private List<Point2D> generateMoves(int i, int j, String moveStr, List<Integer> moveInts) {
-
-    return null;
+  private boolean canMoveToPoint(Point2D point, String color) {
+    Piece pieceAtPoint = getPieceAt(point);
+    if (pieceAtPoint==null) {
+      return true;
+    } else if (pieceAtPoint.getColor().equals(color)) {
+      return false;
+    }
+    return true;
   }
 }
