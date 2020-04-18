@@ -69,13 +69,13 @@ public class CustomController {
   }
 
   private void setUpPlayers() {
-    playerOne = new HumanPlayer("PLAYER ONE", "White", board);
-    if (isCPU) {
-      playerTwo = new HumanPlayer("PLAYER TWO", "Black", board);
+    playerOne = new HumanPlayer("P1", "White", board);
+    if (! isCPU) {
+      playerTwo = new HumanPlayer("P2", "Black", board);
     } else {
       playerTwo = CPU = new CPUPlayer("CPU", "Black", board, StrategyType.TRIVIAL);
     }
-    gameScreen.getDashboardView().setPlayerNames(playerOne.getName(), playerTwo.getName());
+    gameScreen.getDashboardView().setPlayerNames("P1", "P2");
     gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());
 
     activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;

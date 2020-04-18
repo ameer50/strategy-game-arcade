@@ -52,6 +52,7 @@ public abstract class Board implements Serializable {
       Map<String, MoveNode> pieceMoves, Map<String, Long> pieceScores) {
     this.width = width;
     this.height = height;
+    /* TODO: replace with value in JSON */
     bottomColor = "White";
     over = false;
 
@@ -86,6 +87,7 @@ public abstract class Board implements Serializable {
       } else {
         Piece piece = new Piece(pieceName, pieceMoves.get(pieceName),
             Math.toIntExact(pieceScores.get(pieceName)), pieceColor, ID++);
+        pieceBiMap.put(new Point2D.Double(x, y), piece);
       }
     }
   }
@@ -215,7 +217,7 @@ public abstract class Board implements Serializable {
     for (Point2D startPoint: points) {
       int startX = (int) startPoint.getX();
       int startY = (int) startPoint.getY();
-      // These are the valid moves for this particular piece...
+
       List<Point2D> endPoints = getValidMoves(startX, startY);
       for (Point2D endPoint: endPoints) {
         moveList.add(Arrays.asList(startX, startY, (int) endPoint.getX(), (int) endPoint.getY()));

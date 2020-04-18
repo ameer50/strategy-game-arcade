@@ -43,6 +43,8 @@ public class CustomBoard extends Board {
 
   public List<Point2D> getValidMoves(int i, int j) {
     Piece piece = getPieceAt(i, j);
+    /* FIXME: remove */
+    System.out.println(piece.getValue());
     if (piece == null) return null;
 
     Point2DUtility utility = new Point2DUtility();
@@ -55,16 +57,21 @@ public class CustomBoard extends Board {
         validCoordinates.add(point);
       }
     }
+    /* FIXME: remove */
+    System.out.println(validCoordinates);
     return validCoordinates;
   }
 
   private boolean canMoveToPoint(Point2D point, String color) {
     Piece pieceAtPoint = getPieceAt(point);
-    if (pieceAtPoint==null) {
+    if (! isCellInBounds(point)) {
+      return false;
+    } else if (pieceAtPoint==null) {
       return true;
     } else if (pieceAtPoint.getColor().equals(color)) {
       return false;
+    } else {
+      return true;
     }
-    return true;
   }
 }
