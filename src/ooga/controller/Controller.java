@@ -25,7 +25,6 @@ import java.util.Map;
 public class Controller {
 
     public static final int STALL_TIME = 1000;
-
     public enum StrategyType {
         TRIVIAL,
         RANDOM,
@@ -49,7 +48,7 @@ public class Controller {
     private BoardView boardView;
     private CPUPlayer CPU;
     private boolean toggleMoves = true;
-    //private boolean isAIOpponent = false; // ***
+    private boolean isAIOpponent; // ***
     private boolean isOpponentTurn = false;
     private List<Point2D> temp;
     private Player activePlayer;
@@ -68,29 +67,30 @@ public class Controller {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
-        printMessageAndTime("Setup Menu Screen.");
-
+        printMessageAndTime("Set up Menu Screen.");
         menuScreen.setButtonListener(e -> {
-            setUpGameScreen(menuScreen.getGameChoice(),menuScreen.getFileChoice());
+            setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
-        printMessageAndTime("Setup listener.");
+        printMessageAndTime("Set up listeners.");
     }
 
-    private void setUpGameScreen(String typeString, String fileName) {
-        GameType gameType = GameType.valueOf(typeString.toUpperCase());
-        System.out.println("File name" + fileName);
-        String gameXML = String.format(fileName);
+    private void setUpGameScreen(String gameChoice, String fileChoice) {
+        GameType gameType = GameType.valueOf(gameChoice.toUpperCase());
+        String gameXML = String.format(fileChoice);
+
         processor = new XMLProcessor();
         processor.parse(gameXML);
         printMessageAndTime("XML parsed.");
 
-        //TODO: change to reflection
+        //TODO: Change to reflection.
         switch (gameType) {
             case CHESS:
-                board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+                board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(),
+                    processor.getMovePatterns());
                 break;
             case CHECKERS:
-                board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+                board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(),
+                    processor.getMovePatterns());
         } printMessageAndTime("Setup Board.");
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
@@ -104,16 +104,15 @@ public class Controller {
 
     private void setUpPlayers() {
         playerOne = new HumanPlayer(menuScreen.getPlayerOneName(), menuScreen.getPlayerOneColor(), board);
-        if (!menuScreen.getIsGameOnePlayer()) {
+        if (! menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            // TODO: allow user to select strategy type
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);;
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.TRIVIAL);
         }
         gameScreen.getDashboardView().setPlayerNames(playerOne.getName(), playerTwo.getName());
         gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());
+
         activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
-        // if CPU is white, start with a CPU move
         if (activePlayer.isCPU()) doCPUMove();
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
@@ -124,21 +123,16 @@ public class Controller {
         gameScreen.getDashboardView().getHistory().setItems(historyList);
     }
 
-    private void setUpCPU() {
-        // TODO: Make this dependent on the user's choice of strategy.
-        CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
-    }
-
     private void setListeners() {
         /* X and Y are the indices of the cell clicked to move FROM */
         boardView.setOnPieceClicked((int x, int y) -> {
-            System.out.println(boardView.getCellAt(x, y).getPiece().getColor()); // ***
-            if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) {
-                return;
+            PieceView pieceView = boardView.getCellAt(x, y).getPiece();
+            System.out.println(pieceView.getColor()); // ***
+            if (pieceView.getColor().equals(activePlayer.getColor())) {
+                boardView.setSelectedLocation(x, y);
+                boardView.highlightValidMoves(board.getValidMoves(x, y));
+                System.out.println("Highlighted moves.");
             }
-            boardView.setSelectedLocation(x, y);
-            boardView.highlightValidMoves(board.getValidMoves(x, y));
-            System.out.println("Highlighted moves.");
         });
 
         /* X and Y are the indices of the cell clicked to move TO */
@@ -146,17 +140,17 @@ public class Controller {
             Point2D startLocation = boardView.getSelectedLocation();
             Point2D endLocation = new Point2D.Double(toX, toY);
 
-            printMessageAndTime("Did user's move.");
-
             Move move = new Move(startLocation, endLocation);
             doMove(move);
 
             history.addMove(move);
             historyList.add(move);
             toggleActivePlayer();
+            printMessageAndTime("Did user's move.");
 
+            board.checkWon();
             String winner = board.checkWon();
-            if(winner != null){
+            if (winner != null){
                 gameScreen.getDashboardView().setWinner(winner);
                 gameScreen.getDashboardView().winnerPopUp();
             }
@@ -166,7 +160,6 @@ public class Controller {
                 doCPUMove();
                 printMessageAndTime("Did CPU's move.");
             }
-            // board.print();
         });
 
         gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
@@ -243,14 +236,14 @@ public class Controller {
         board.checkWon();
     }
 
-    private void printMessageAndTime (String message) {
+    private void printMessageAndTime(String message) {
         long endTime = System.currentTimeMillis();
         System.out.println(message);
         System.out.println(String.format("time: %.2f", (float)(endTime-startTime)));
     }
 
     @Deprecated
-    private void stall (double millis) {
+    private void stall(double millis) {
         double initial = System.currentTimeMillis();
         double elapsed = 0;
         while (elapsed < millis) {

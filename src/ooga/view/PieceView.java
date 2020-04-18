@@ -15,18 +15,10 @@ public class PieceView {
 
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
 
-    public PieceView(String name) {
-        pieceName = name;
-
-        System.out.println("name " + name);
-        pieceImage = new ImageView(res.getString(name));
-//        try {
-//            Field field = Color.class.getField(name.split("_")[0].toLowerCase());
-//            color = (Color) field.get(null);
-//        } catch (Exception e) {
-//            System.out.println("undefined color");
-//        }
-        color = name.split("_")[0];
+    public PieceView(String fullName) {
+        pieceName = fullName;
+        pieceImage = new ImageView(res.getString(fullName));
+        color = fullName.split("_")[0];
     }
 
     public String getColor() {
