@@ -161,7 +161,6 @@ public class CheckersBoard extends Board implements Serializable {
         int y_f = (int) m.getEndLocation().getY();
         System.out.println("Initial: " + x_i + "Initial: " + y_i);
         String init_Color = getPieceAt(x_i, y_i).getColor();
-        int initID = getPieceAt(x_i, y_i).getID();
         System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
         Piece oppPiece = getPieceAt(x_f, y_f);

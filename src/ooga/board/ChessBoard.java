@@ -28,6 +28,7 @@ public class ChessBoard extends Board implements Serializable {
 
   @Override
   public List<Point2D> getValidMoves(int i, int j) {
+    System.out.println("CHECK WON: " + checkWon());
     Piece piece = getPieceAt(i, j);
     if (piece == null) {
       return null;
@@ -185,11 +186,11 @@ public class ChessBoard extends Board implements Serializable {
 
     if (getCheckmate(WHITE, BLACK)) {
       System.out.println("Checkmate.");
-      return WHITE;
+      return BLACK;
     }
     if(getCheckmate(BLACK, WHITE)){
       System.out.println("Checkmate.");
-      return BLACK;
+      return WHITE;
     }
     return null;
   }
