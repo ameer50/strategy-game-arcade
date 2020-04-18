@@ -7,8 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
-import ooga.board.CheckersBoard;
-import ooga.board.ChessBoard;
+import ooga.board.CustomBoard;
 import ooga.board.Piece;
 import ooga.controller.Controller.GameType;
 import ooga.controller.Controller.StrategyType;
@@ -23,7 +22,8 @@ import ooga.view.PieceView;
 import ooga.xml.XMLProcessor;
 
 public class CustomController {
-  private XMLProcessor processor;
+  private XMLProcessor XMLprocessor;
+  private JSONProcessor JSONprocessor;
   private Board board;
   private GameScreen gameScreen;
   private BoardView boardView;
@@ -40,30 +40,27 @@ public class CustomController {
   public CustomController(Stage stage) {
     startTime = System.currentTimeMillis();
     this.stage = stage;
-    setUpGameScreen("Chess", "resources/Chess/defaultBlack.xml");
+    setUpGameScreen("custom.json");
   }
 
-  private void setUpGameScreen(String gameChoice, String fileChoice) {
-    GameType gameType = GameType.valueOf(gameChoice.toUpperCase());
-    String gameXML = String.format(fileChoice);
+  private void setUpGameScreen(String fileChoice) {
+    JSONprocessor = new JSONProcessor();
+    JSONprocessor.parse(fileChoice);
+    printMessageAndTime("JSON parsed.");
+    /* To be used in reflection... */
+    GameType type = GameType.valueOf(JSONprocessor.getName().toUpperCase());
 
-    processor = new XMLProcessor();
-    processor.parse(gameXML);
-    printMessageAndTime("XML parsed.");
+    Map<String, Long> dimensions = JSONprocessor.getDimensions();
+    int width = Math.toIntExact(dimensions.get("width"));
+    int height = Math.toIntExact(dimensions.get("height"));
 
-    //TODO: Change to reflection.
-    switch (gameType) {
-      case CHESS:
-        board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(),
-            processor.getMovePatterns());
-        break;
-      case CHECKERS:
-        board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(),
-            processor.getMovePatterns());
-    } printMessageAndTime("Setup Board.");
+    /* Use reflection here... */
+    board = new CustomBoard(width, height, JSONprocessor.getPieceLocations(),
+        JSONprocessor.getPieceMoves(), JSONprocessor.getPieceScores());
+    printMessageAndTime("Set up Board.");
 
-    gameScreen = new GameScreen(stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
-    printMessageAndTime("Setup Game Screen.");
+    gameScreen = new GameScreen(stage, width, height, JSONprocessor.getPieceLocations());
+    printMessageAndTime("Set up Game Screen.");
 
     boardView = gameScreen.getBoardView();
     setUpHistory();
@@ -96,7 +93,7 @@ public class CustomController {
     /* X and Y are the indices of the cell clicked to move FROM */
     boardView.setOnPieceClicked((int x, int y) -> {
       System.out.println(boardView.getCellAt(x, y).getPiece().getColor()); // ***
-      if (!boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) {
+      if (! boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) {
         return;
       }
       boardView.setSelectedLocation(x, y);
@@ -156,12 +153,13 @@ public class CustomController {
     });
 
     gameScreen.getDashboardView().setQuitClicked((e) -> {
+      // FIXME: restore this later
       // setUpMenu();
     });
 
     gameScreen.getDashboardView().setSaveClicked((e) -> {
-      //TODO: change fileName to be an input
-      processor.write(board, gameScreen.getDashboardView().getNewFileName());
+      // FIXME: actually implement this.
+      // JSONprocessor.write(board, gameScreen.getDashboardView().getNewFileName());
     });
 
     board.setOnPiecePromoted((int toX, int toY) -> {

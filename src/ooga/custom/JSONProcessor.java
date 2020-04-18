@@ -13,13 +13,13 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-public class JSONReader {
+public class JSONProcessor {
 
   public static final String AND = " AND ";
   public static final String OR = " OR ";
   private String name;
   private Map<String, MoveNode> pieceMoves;
-  private Map<String, Integer> pieceScores;
+  private Map<String, Long> pieceScores;
   private Map<Point2D, String> pieceLocations;
   private Map<String, MoveNode> basicMoves;
   private Map<String, MoveNode> compoundMoves;
@@ -29,7 +29,7 @@ public class JSONReader {
   private static final String ERROR_MSG = "Error parsing JSON file.";
   private JSONObject jo;
 
-  public JSONReader() {
+  public JSONProcessor() {
     dimensions = new HashMap<>();
     pieceLocations = new HashMap<>();
     pieceMoves = new HashMap<>();
@@ -40,7 +40,7 @@ public class JSONReader {
   public Map<String, Long> getDimensions() { return Map.copyOf(dimensions); }
   public Map<Point2D, String> getPieceLocations() { return Map.copyOf(pieceLocations); }
   public Map<String, MoveNode> getPieceMoves() { return Map.copyOf(pieceMoves); }
-  public Map<String, Integer> getPieceScores() { return pieceScores; }
+  public Map<String, Long> getPieceScores() { return pieceScores; }
 
   public void parse(String dir) {
     clearAll();
@@ -50,12 +50,24 @@ public class JSONReader {
 
       name = (String) jo.get("name");
       dimensions = (Map) jo.get("dimensions");
-      pieceLocations = (Map) jo.get("locations");
       pieceScores = (Map) jo.get("scores");
+      parsePieceLocations();
       parsePieceMoves();
 
     } catch (ParseException | IOException e) {
       System.out.println(ERROR_MSG);
+    }
+  }
+
+  private void parsePieceLocations() {
+    pieceLocations = new HashMap<>();
+    Map<String, String> locations = (Map) jo.get("locations");
+    for (String pieceName: locations.keySet()) {
+      String[] coordinateArr = locations.get(pieceName).split(", ");
+      int x = Integer.parseInt(coordinateArr[0]);
+      int y = Integer.parseInt(coordinateArr[1]);
+      Point2D point = new Point2D.Double(x, y);
+      pieceLocations.put(point, pieceName);
     }
   }
 

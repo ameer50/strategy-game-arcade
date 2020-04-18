@@ -10,30 +10,29 @@ public class JSONWriter {
 
   public static void main(String[] args) throws FileNotFoundException {
     JSONObject jo = new JSONObject();
+    jo.put("name", "Custom");
 
-    jo.put("name", "custom");
+    Map dimensions = new LinkedHashMap(2);
+    dimensions.put("height", 6);
+    dimensions.put("width", 6);
+    jo.put("dimensions", dimensions);
 
-    Map types = new LinkedHashMap(3);
-    types.put("pieceOne", "moveOne");
-    types.put("pieceTwo", "moveTwo");
-    types.put("pieceThree", "moveThree");
-    jo.put("types", types);
-
-    Map icons = new LinkedHashMap(3);
-    types.put("pieceOne", "triangle_icon.jpg");
-    types.put("pieceTwo", "square_icon.jpg");
-    types.put("pieceThree", "circle_icon.jpg");
-    jo.put("icons", icons);
+    Map scores = new LinkedHashMap(3);
+    scores.put("Triangle", 3);
+    scores.put("Square", 2);
+    scores.put("Circle", 2);
+    jo.put("scores", scores);
 
     Map moves = new LinkedHashMap(5);
-    moves.put("pieceOne", "diagonal 2:3");
-    moves.put("pieceTwo", "vertical 1:4");
-    moves.put("pieceThree", "horizontal 2:7");
+    Map pieces = new LinkedHashMap(3);
+    pieces.put("Triangle", "diagonal 2:3");
+    pieces.put("Square", "vertical 1:4");
+    pieces.put("Circle", "horizontal 2:7");
     Map compound = new LinkedHashMap(4);
-    compound.put("vertical", "up 1 | down 1");
-    compound.put("horizontal", "right 1 | left 1");
-    compound.put("diagonal", "vertical 1 & horizontal 1");
-    compound.put("hook", "vertical 2 & horizontal 1");
+    compound.put("vertical", "up 1 OR down 1");
+    compound.put("horizontal", "right 1 OR left 1");
+    compound.put("diagonal", "vertical 1 AND horizontal 1");
+    compound.put("hook", "vertical 2 AND horizontal 1");
     Map basic = new LinkedHashMap(4);
     basic.put("up", "0, 1");
     basic.put("down", "0, -1");
@@ -41,8 +40,17 @@ public class JSONWriter {
     basic.put("left", "-1, 0");
     moves.put("compound", compound);
     moves.put("basic", basic);
+    moves.put("pieces", pieces);
     jo.put("moves", moves);
 
+    Map locations = new LinkedHashMap();
+    locations.put("White_Triangle", "5, 1");
+    locations.put("White_Square", "5, 3");
+    locations.put("White_Circle", "5, 5");
+    locations.put("Black_Triangle", "0, 0");
+    locations.put("Black_Square", "0, 2");
+    locations.put("Black_Circle", "0, 4");
+    jo.put("locations", locations);
 
     PrintWriter writer = new PrintWriter("custom.json");
     writer.write(jo.toJSONString());

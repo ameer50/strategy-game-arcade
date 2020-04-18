@@ -1,13 +1,20 @@
 package ooga.custom;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoveNodePrimitive extends MoveNode {
+public class MoveNodeLeaf extends MoveNode implements Serializable {
 
-  public MoveNodePrimitive(Point2D value) {
+  public MoveNodeLeaf(Point2D value) {
     super(null, value);
+  }
+
+  @Override
+  public MoveNode invokeConstructor(List<MoveNode> children) {
+    // Should never be called...
+    return null;
   }
 
   @Override
