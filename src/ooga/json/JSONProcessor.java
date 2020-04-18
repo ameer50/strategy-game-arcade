@@ -1,4 +1,4 @@
-package ooga.custom;
+package ooga.json;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
@@ -9,6 +9,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javafx.util.Pair;
+import ooga.custom.MoveNode;
+import ooga.custom.MoveNodeAnd;
+import ooga.custom.MoveNodeLeaf;
+import ooga.custom.MoveNodeOr;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

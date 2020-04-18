@@ -5,7 +5,7 @@ import java.awt.geom.Point2D.Double;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import ooga.controller.Point2DUtility;
+import ooga.utility.Point2DUtility;
 import ooga.custom.MoveNode;
 import ooga.history.Move;
 

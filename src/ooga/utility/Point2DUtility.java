@@ -1,4 +1,4 @@
-package ooga.controller;
+package ooga.utility;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;

@@ -9,7 +9,7 @@
 *.html          text
 *.java          text
 *.js            text
-*.json          text
+*.ooga.json          text
 *.jsp           text
 *.jspf          text
 *.jspx          text

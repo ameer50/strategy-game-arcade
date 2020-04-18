@@ -13,6 +13,7 @@ import ooga.controller.Controller.GameType;
 import ooga.controller.Controller.StrategyType;
 import ooga.history.History;
 import ooga.history.Move;
+import ooga.json.JSONProcessor;
 import ooga.player.CPUPlayer;
 import ooga.player.HumanPlayer;
 import ooga.player.Player;

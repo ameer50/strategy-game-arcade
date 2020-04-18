@@ -14,7 +14,7 @@ import javafx.util.Pair;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import ooga.ProcessCoordinateInterface;
-import ooga.controller.CopyUtility;
+import ooga.utility.CopyUtility;
 import ooga.custom.MoveNode;
 import ooga.history.Move;
 

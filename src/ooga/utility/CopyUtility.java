@@ -1,4 +1,4 @@
-package ooga.controller;
+package ooga.utility;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

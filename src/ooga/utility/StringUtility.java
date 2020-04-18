@@ -1,4 +1,4 @@
-package ooga.controller;
+package ooga.utility;
 
 import ooga.controller.Controller.StrategyType;
 

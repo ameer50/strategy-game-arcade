@@ -2,9 +2,8 @@ package ooga.custom;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
-import ooga.controller.Point2DUtility;
+import ooga.utility.Point2DUtility;
 
 public class MoveNodeAnd extends MoveNode implements Serializable {
 

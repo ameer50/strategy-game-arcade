@@ -1,4 +1,4 @@
-package ooga.custom;
+package ooga.json;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -52,7 +52,7 @@ public class JSONWriter {
     locations.put("Black_Circle", "0, 4");
     jo.put("locations", locations);
 
-    PrintWriter writer = new PrintWriter("custom.json");
+    PrintWriter writer = new PrintWriter("custom.ooga.json");
     writer.write(jo.toJSONString());
     writer.flush();
     writer.close();
