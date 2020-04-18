@@ -51,6 +51,7 @@ public class MenuScreen {
     private String playerTwoName;
     private String fileChoice;
     private boolean isOnePlayer;
+    private Popup thePop;
 
 
     public MenuScreen(Stage stage){
@@ -87,7 +88,10 @@ public class MenuScreen {
             b.setOnAction(event -> {
                 gameChoice = b.getText();
                 this.goAction = e;
-                settingsPopUp();
+                //settingsPopUp();
+                thePop = new Popup(500, 600, res.getString("PopupStyleSheet"));
+                setUpPlayerPopUp(thePop.getStage());
+
             });
         }
     }
@@ -115,33 +119,47 @@ public class MenuScreen {
     }
 
     private void setUpPlayerPopUp(Stage settingsStage) {
-        BorderPane root = createNewPopUpScene(settingsStage);
-        VBox vbox = new VBox();
-        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), res.getString("SettingsButtons"));
-        for (Button b: playerOption.getButtons()) {
-            //b.getStyleClass().add("settingsbuttons");
-            vbox.getChildren().add(b);
-        }
+        //BorderPane root = createNewPopUpScene(settingsStage);
+        //BorderPane root = thePop.getNewPopup();
 
+        thePop.getNewPopup();
+        ButtonGroup playerOption = thePop.buttonsToDisplay(List.of("One Player", "Two Player"), res.getString("SettingsButtons"), 250, 250, "vbox");
+
+//        VBox vbox = new VBox();
+//        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), res.getString("SettingsButtons"));
+//        for (Button b: playerOption.getButtons()) {
+//            //b.getStyleClass().add("settingsbuttons");
+//            vbox.getChildren().add(b);
+//        }
+//
+//
 
         playerOption.getButtons().get(0).setOnAction(e -> {
             isOnePlayer = true;
-            setUpColorPopUp(settingsStage);
+            setUpColorPopUp(thePop.getStage());
         });
         playerOption.getButtons().get(1).setOnAction(e -> {
             isOnePlayer = false;
-            setUpColorPopUp(settingsStage);
+            setUpColorPopUp(thePop.getStage());
         });
-
-        root.getChildren().add(vbox);
-        vbox.setLayoutX(250);
-        vbox.setLayoutY(250);
-        vbox.getStyleClass().add("vbox");
+//
+//        root.getChildren().add(vbox);
+//        vbox.setLayoutX(250);
+//        vbox.setLayoutY(250);
+//        vbox.getStyleClass().add("vbox");
     }
 
     private void setUpColorPopUp(Stage settingsStage) {
-        BorderPane root = createNewPopUpScene(settingsStage);
-        VBox vbox = new VBox();
+
+        thePop.getNewPopup();
+
+
+
+        List<String> possibleColors = new ArrayList<>();
+        possibleColors.add("White");
+        possibleColors.add("Black");
+        ButtonGroup colorOption = thePop.buttonsToDisplay(possibleColors, res.getString("SettingsButtons"), 250, 250, "vbox");
+        VBox vBox = thePop.getButtonBox();
 
         Text enterColorText = new Text();
         enterColorText.setText("Player One Color: ");
@@ -150,14 +168,9 @@ public class MenuScreen {
 
         if (!isOnePlayer) {
 
-            vbox.getChildren().add(enterColorText);
+            vBox.getChildren().add(0, enterColorText);
         }
 
-
-        List<String> possibleColors = new ArrayList<>();
-        possibleColors.add("White");
-        possibleColors.add("Black");
-        ButtonGroup colorOption = new ButtonGroup(possibleColors, res.getString("SettingsButtons"));
 
         for (Button b: colorOption.getButtons()) {
             b.setOnAction(e -> {
@@ -167,14 +180,46 @@ public class MenuScreen {
                 playerTwoColor = possibleColors.get(0);
 
             });
-            vbox.getChildren().add(b);
         }
+
+        //--------------------------------------------------------------------------------
+
+//        BorderPane root = createNewPopUpScene(settingsStage);
+//        VBox vbox = new VBox();
+
+//        Text enterColorText = new Text();
+//        enterColorText.setText("Player One Color: ");
+//        enterColorText.getStyleClass().add("playername");
+//        enterColorText.setFill(Color.BLACK);
+//
+//        if (!isOnePlayer) {
+//
+//            vbox.getChildren().add(enterColorText);
+//        }
+
+
+//        List<String> possibleColors = new ArrayList<>();
+//        possibleColors.add("White");
+//        possibleColors.add("Black");
+//        ButtonGroup colorOption = new ButtonGroup(possibleColors, res.getString("SettingsButtons"));
+
+//        for (Button b: colorOption.getButtons()) {
+//            b.setOnAction(e -> {
+//                b.setDisable(true);
+//                playerOneColor = b.getText();
+//                possibleColors.remove(playerOneColor);
+//                playerTwoColor = possibleColors.get(0);
+//
+//            });
+//            vbox.getChildren().add(b);
+//        }
         VBox textFieldBox = new VBox();
 
         Text nameText = new Text();
         nameText.setText("Enter Player Name(s)");
         nameText.getStyleClass().add("playername");
         nameText.setFill(Color.BLACK);
+
 
         TextField playerOneText = new TextField();
         playerOneText.setPromptText("Player One");
@@ -203,11 +248,12 @@ public class MenuScreen {
             setUpLoadGamePopUp(settingsStage);
         });
 
-        vbox.getChildren().addAll(textFieldBox, next);
-        root.getChildren().add(vbox);
-        vbox.setLayoutX(250);
-        vbox.setLayoutY(250);
-        vbox.getStyleClass().add("vbox");
+        vBox.getChildren().addAll(textFieldBox, next);
+        //vbox.getChildren().addAll(textFieldBox, next);
+//        root.getChildren().add(vbox);
+//        vbox.setLayoutX(250);
+//        vbox.setLayoutY(250);
+//        vbox.getStyleClass().add("vbox");
     }
 
     private void setUpLoadGamePopUp(Stage settingsStage) {
@@ -330,10 +376,6 @@ public class MenuScreen {
         root.getChildren().add(grid);
     }
 
-    private void assignColorChoice(String choice) {
-        playerOneColor = choice;
-        System.out.println(playerOneColor); // ***
-    }
 
     private void assignXMLFile(String choice) {
         if (choice.equals(DEFAULT_XML)) {

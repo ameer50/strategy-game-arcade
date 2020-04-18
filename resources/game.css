@@ -1,5 +1,5 @@
 .root {
-    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
     -fx-padding: 10;
     -fx-box-border: #000000;
     -fx-border-width: 10;
@@ -7,18 +7,16 @@
 
 .button {
     -fx-background-color:
-            linear-gradient(#ffd65b, #e68400),
-            linear-gradient(from 0% 0% to 20% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
-    -fx-background-radius: 20;
+            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-radius: 10;
     -fx-background-insets: 0,1,2,3,0;
-    -fx-text-fill: #404040;
-    -fx-border-radius: 20;
-    -fx-pref-width: 80;
-    -fx-pref-height: 5;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
-    -fx-font-family: Cambria;
+    -fx-font-family: Avant Garde;
     -fx-padding: 10 20 10 20;
+    -fx-min-width: 250;
+    -fx-min-height: 60;
 }
 
 .label {
@@ -120,7 +118,7 @@
 
 .auxbuttons {
     -fx-background-color:
-        linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
     -fx-background-radius: 10;
     -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
@@ -171,8 +169,6 @@
     -fx-padding: 20 20 20 20;
     -fx-border-width: 5px;
     -fx-border-radius: 5px;
-    -fx-background-radius: 10px;
-    -fx-background-color: #fadcc8;
     -fx-alignment: center;
 
 }
