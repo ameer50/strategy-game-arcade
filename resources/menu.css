@@ -16,8 +16,11 @@
     -fx-font-size: 30px;
     -fx-font-family: Avant Garde;
     -fx-padding: 10 20 10 20;
+    -fx-min-width: 250;
+    -fx-min-height: 60;
 
 }
+
 
 .settingsbuttons {
     -fx-background-color:
@@ -29,6 +32,8 @@
     -fx-font-size: 20px;
     -fx-font-family: Avant Garde;
     -fx-padding: 10 20 10 20;
+    -fx-min-width: 170;
+    -fx-min-height: 50;
 }
 
 .button:hover {

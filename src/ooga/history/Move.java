@@ -14,12 +14,18 @@ public class Move {
     private Point2D endLocation;
     private Map<Piece, Point2D> capturedPiecesAndLocations;
     private boolean isUndo;
+    private boolean isPromote;
 
     public Move(Point2D startLocation, Point2D endLocation) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         capturedPiecesAndLocations = new HashMap<>();
         isUndo = false;
+        isPromote = false;
+    }
+
+    public Move getReverseMove() {
+        return new Move(endLocation, startLocation);
     }
 
     public Point2D getStartLocation() {
@@ -32,12 +38,16 @@ public class Move {
     public int getEndX() { return (int) endLocation.getX(); }
     public int getEndY() { return (int) endLocation.getY(); }
 
-    public void setUndoTrue() {
-        isUndo = true;
+    public void setUndo(boolean isUndo) {
+        this.isUndo = isUndo;
     }
 
     public boolean isUndo() {
         return isUndo;
+    }
+
+    public boolean isPromote() {
+        return isPromote;
     }
 
     @Override
@@ -59,5 +69,9 @@ public class Move {
 
     public void setPiece(Piece piece){
         this.piece = piece;
+    }
+
+    public void setPromote(boolean isPromote) {
+        this.isPromote = isPromote;
     }
 }

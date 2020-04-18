@@ -68,7 +68,7 @@ public class MenuScreen {
         stage.setTitle(res.getString("MenuStageTitle"));
         scene.getStylesheets().add(res.getString("MenuStyleSheet"));
 
-        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"), 250, 60, "button");
+        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"), "button");
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
             vbox.getChildren().add(b);
@@ -98,7 +98,7 @@ public class MenuScreen {
 
     public void settingsPopUp() {
         Stage settingsStage = new Stage();
-        settingsStage.setHeight(500);
+        settingsStage.setHeight(600);
         settingsStage.setWidth(500);
         createNewPopUpScene(settingsStage);
 
@@ -108,7 +108,7 @@ public class MenuScreen {
     private BorderPane createNewPopUpScene(Stage settingsStage) {
         BorderPane root = new BorderPane();
         Scene newScene = new Scene(root);
-        newScene.getStylesheets().add(res.getString("MenuStyleSheet"));
+        newScene.getStylesheets().add(res.getString("PopupStyleSheet"));
         settingsStage.setScene(newScene);
         settingsStage.show();
         return root;
@@ -117,11 +117,13 @@ public class MenuScreen {
     private void setUpPlayerPopUp(Stage settingsStage) {
         BorderPane root = createNewPopUpScene(settingsStage);
         VBox vbox = new VBox();
-        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), 20, 40, res.getString("SettingsButtons"));
+        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"), res.getString("SettingsButtons"));
         for (Button b: playerOption.getButtons()) {
+            //b.getStyleClass().add("settingsbuttons");
             vbox.getChildren().add(b);
         }
-        root.getChildren().add(vbox);
+
+
         playerOption.getButtons().get(0).setOnAction(e -> {
             isOnePlayer = true;
             setUpColorPopUp(settingsStage);
@@ -131,18 +133,31 @@ public class MenuScreen {
             setUpColorPopUp(settingsStage);
         });
 
-        vbox.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(vbox, Pos.CENTER);
-        root.setCenter(vbox);
+        root.getChildren().add(vbox);
+        vbox.setLayoutX(250);
+        vbox.setLayoutY(250);
+        vbox.getStyleClass().add("vbox");
     }
 
     private void setUpColorPopUp(Stage settingsStage) {
         BorderPane root = createNewPopUpScene(settingsStage);
         VBox vbox = new VBox();
+
+        Text enterColorText = new Text();
+        enterColorText.setText("Player One Color: ");
+        enterColorText.getStyleClass().add("playername");
+        enterColorText.setFill(Color.BLACK);
+
+        if (!isOnePlayer) {
+
+            vbox.getChildren().add(enterColorText);
+        }
+
+
         List<String> possibleColors = new ArrayList<>();
         possibleColors.add("White");
         possibleColors.add("Black");
-        ButtonGroup colorOption = new ButtonGroup(possibleColors, 20, 40, res.getString("SettingsButtons"));
+        ButtonGroup colorOption = new ButtonGroup(possibleColors, res.getString("SettingsButtons"));
 
         for (Button b: colorOption.getButtons()) {
             b.setOnAction(e -> {
@@ -150,25 +165,33 @@ public class MenuScreen {
                 playerOneColor = b.getText();
                 possibleColors.remove(playerOneColor);
                 playerTwoColor = possibleColors.get(0);
+
             });
             vbox.getChildren().add(b);
         }
         VBox textFieldBox = new VBox();
 
         Text nameText = new Text();
-        nameText.setText("Enter Player Names");
-        nameText.setFill(Color.AZURE);
+        nameText.setText("Enter Player Name(s)");
+        nameText.getStyleClass().add("playername");
+        nameText.setFill(Color.BLACK);
 
-        TextField playerOneText = new TextField("Player One");
-        playerOneText.setMaxWidth(100);
+        TextField playerOneText = new TextField();
+        playerOneText.setPromptText("Player One");
+        playerOneText.setMinWidth(200);
+        playerOneText.getStyleClass().add("file-text-field");
 
         textFieldBox.getChildren().addAll(nameText, playerOneText);
         textFieldBox.setAlignment(Pos.CENTER);
+        textFieldBox.getStyleClass().add("vbox");
 
         TextField playerTwoText = new TextField();
-        playerTwoText.setMaxWidth(100);
+        playerTwoText.setPromptText("Player Two");
+        playerTwoText.getStyleClass().add("file-text-field");
+        playerTwoText.setMinWidth(200);
+
         if (!isOnePlayer) {
-            playerTwoText.setText("Player Two");
+
             textFieldBox.getChildren().add(playerTwoText);
         }
 
@@ -181,16 +204,16 @@ public class MenuScreen {
         });
 
         vbox.getChildren().addAll(textFieldBox, next);
-        //root.getChildren().add(vbox);
-        vbox.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(vbox, Pos.CENTER);
-        root.setCenter(vbox);
+        root.getChildren().add(vbox);
+        vbox.setLayoutX(250);
+        vbox.setLayoutY(250);
+        vbox.getStyleClass().add("vbox");
     }
 
     private void setUpLoadGamePopUp(Stage settingsStage) {
         BorderPane root = createNewPopUpScene(settingsStage);
         VBox vbox = new VBox();
-        ButtonGroup loadGameGroup = new ButtonGroup(List.of("Default Game", "Custom Game"), 20, 40, res.getString("SettingsButtons"));
+        ButtonGroup loadGameGroup = new ButtonGroup(List.of("Default Game", "Custom Game"), res.getString("SettingsButtons"));
         for (Button b: loadGameGroup.getButtons()) {
             b.setOnAction((newEvent) -> {
                 assignXMLFile(b.getText());
@@ -208,9 +231,10 @@ public class MenuScreen {
 
         vbox.getChildren().add(goButton);
 
-        vbox.setAlignment(Pos.CENTER);
-        BorderPane.setAlignment(vbox, Pos.CENTER);
-        root.setCenter(vbox);
+        root.getChildren().add(vbox);
+        vbox.setLayoutX(250);
+        vbox.setLayoutY(250);
+        vbox.getStyleClass().add("vbox");
     }
 
 //    private void setUpPopUp(Stage settingsStage, StackPane settingsRoot, EventHandler<ActionEvent> event) {

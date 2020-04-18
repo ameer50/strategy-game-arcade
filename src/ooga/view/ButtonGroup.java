@@ -16,23 +16,17 @@ public class ButtonGroup {
     private static ResourceBundle myResources =
             ResourceBundle.getBundle("resources", Locale.getDefault());
     private List<Button> buttons;
-    private double width;
-    private double height;
     private String style;
 
-    public ButtonGroup(List<String> buttonNames, double width, double height, String style) {
+    public ButtonGroup(List<String> buttonNames, String style) {
         buttons = new ArrayList<>();
-        this.width = width;
-        this.height = height;
         this.style = style;
-        createButtons(buttonNames, width, height);
+        createButtons(buttonNames);
     }
 
-    private void createButtons(List<String> buttonNames, double width, double height) {
+    private void createButtons(List<String> buttonNames) {
         for (String buttonName : buttonNames) {
             Button button = new Button(buttonName);
-            button.setMinHeight(height);
-            button.setMinWidth(width);
             button.getStyleClass().add(style);
             buttons.add(button);
         }
@@ -40,13 +34,5 @@ public class ButtonGroup {
 
     public List<Button> getButtons() {
         return buttons;
-    }
-
-    public double getWidth() {
-        return width;
-    }
-
-    public double getHeight() {
-        return height;
     }
 }

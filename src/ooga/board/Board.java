@@ -33,6 +33,7 @@ public abstract class Board implements Serializable {
   protected String bottomColor;
   protected boolean over;
   protected ProcessCoordinateInterface promoteAction;
+  protected ProcessCoordinateInterface captureAction;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
       Map<String, Pair<String, Integer>> pieceTypeMap) {
@@ -272,6 +273,10 @@ public abstract class Board implements Serializable {
 
   public BiMap<Point2D, Piece> getPieceBiMap() {
     return pieceBiMap;
+  }
+
+  public void setOnPieceCaptured(ProcessCoordinateInterface captureAction) {
+    this.captureAction = captureAction;
   }
 }
 

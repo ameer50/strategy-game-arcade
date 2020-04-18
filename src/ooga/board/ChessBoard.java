@@ -1,5 +1,6 @@
 package ooga.board;
 
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.Serializable;
@@ -41,8 +42,13 @@ public class ChessBoard extends Board implements Serializable {
       List<Point2D> safeKings = getSafeKingMoves(thisPieceValidMoves, checks.getKey());
       return checkDanger(safeKings, kingI, kingJ);
     }
+    List<Point2D> blockingPath = getBlockingMoves(i, j, kingI, kingJ, checkPieces);
+    if(blockingPath != null){
+      thisPieceValidMoves.retainAll(blockingPath);
+    }
+
     if (checkPieces.size() == 0){
-      return getValidMovesIgnoreCheck(i, j);
+      return thisPieceValidMoves;
     }
 
     if (checkPieces.size() > 1) {
@@ -102,20 +108,62 @@ public class ChessBoard extends Board implements Serializable {
       m.addCapturedPiece(hitPiece, m.getEndLocation());
       pieceBiMap.remove(hitPiece);
     }
-    promote(currPiece, endX, endY);
-    //return score;
+    // if undo and it was a promote move before
+    if (m.isPromote() && m.isUndo()) {
+      // demote piece in backend
+      m.getPiece().setType(PAWN);
+      m.getPiece().setMovePattern("PAWN -1");
+      // demote piece in frontend
+      this.promoteAction.process((int) m.getEndLocation().getX(), (int) m.getEndLocation().getY());
+    }
+    promote(m);
   }
 
-  private void promote(Piece piece, int endX, int endY){
-    if(!piece.getType().equals(PAWN)){
+  private void promote(Move m) {
+    Piece piece = m.getPiece();
+    if (!piece.getType().equals(PAWN)) {
       return;
     }
     int inc = getPawnInc(piece);
-    if((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)){
+    int endX = (int) m.getEndLocation().getX();
+    int endY = (int) m.getEndLocation().getY();
+    if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
       piece.setType("Queen");
       piece.setMovePattern("Any -1");
+      m.setPromote(true);
       this.promoteAction.process(endX, endY);
     }
+  }
+
+  private List<Point2D> getBlockingMoves(int blockerI, int blockerJ, int kingI, int kingJ, List<Point2D> checkPieces){
+    //what is the path from that threat to the king
+    //if the path is empty, the piece can't be blocked, so not blocking
+    //if the path doesn't contain this location, i'm not blocking
+    //if the path does contain this location, return the path
+    Piece blocker = getPieceAt(blockerI, blockerJ);
+    Point2D blockPoint = new Point2D.Double(blockerI, blockerJ);
+    Point2D kingPoint = new Point2D.Double(kingI, kingJ);
+    String blockColor = blocker.getColor();
+    pieceBiMap.forcePut(blockPoint, null);
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        Piece threat = getPieceAt(i, j);
+        Point2D threatPoint = new Point2D.Double(i, j);
+        if(threat == null || threat.getColor().equals(blockColor) || checkPieces.contains(threatPoint) || !getValidMovesIgnoreCheck(i, j).contains(kingPoint)){
+          continue;
+        }
+        List<Point2D> path = getPath(i, j, kingI, kingJ);
+        path.add(threatPoint);
+        if(path.contains(blockPoint)){
+          System.out.println("BLOCKING");
+          pieceBiMap.forcePut(blockPoint, blocker);
+          return path;
+        }
+      }
+    }
+    pieceBiMap.forcePut(blockPoint, blocker);
+    return null;
   }
 
   @Override
@@ -253,6 +301,7 @@ public class ChessBoard extends Board implements Serializable {
     }
     return false;
   }
+
   private Pair<List<Point2D>, List<Point2D>> getMovesAndCheckPieces(int kingI, int kingJ,
       String targetColor, boolean ignoreTheirKing) {
     List<Point2D> allPossibleMoves = new ArrayList<>();
@@ -426,6 +475,7 @@ public class ChessBoard extends Board implements Serializable {
     }
     return path;
   }
+
   private boolean isDiagonal(int threatI, int threatJ, int kingI, int kingJ){
     return Math.abs(kingJ - threatJ) == Math.abs(kingI - threatI);
   }
@@ -516,7 +566,6 @@ public class ChessBoard extends Board implements Serializable {
     return ret;
   }
 
-  // FIXME: these have a ton of duplication; could be made into much simpler methods
   private List<Point2D> up (int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int distance = params.get(0);
@@ -557,7 +606,7 @@ public class ChessBoard extends Board implements Serializable {
     return ret;
   }
 
-  private List<Point2D> right (int x, int y, List<Integer> params, Piece piece) {
+  private List<Point2D> right(int x, int y, List<Integer> params, Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int squares = 1;
     int distance = params.get(0);

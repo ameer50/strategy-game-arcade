@@ -128,9 +128,9 @@ public class CustomController {
       historyList.remove(historyList.size() - 1);
       Point2D startLocation = prevMove.getEndLocation();
       Point2D endLocation = prevMove.getStartLocation();
-      Move reverseMove = new Move(startLocation, endLocation);
-      reverseMove.setUndoTrue();
 
+      Move reverseMove = new Move(startLocation, endLocation);
+      reverseMove.setUndo(true);
       doMove(reverseMove);
       toggleActivePlayer();
 

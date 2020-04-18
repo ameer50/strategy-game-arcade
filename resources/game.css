@@ -123,6 +123,8 @@
     -fx-font-weight: bold;
     -fx-font-size: 14px;
     -fx-font-family: Avant Garde;
+    -fx-min-width: 115;
+    -fx-min-height: 35;
 
 }
 

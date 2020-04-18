@@ -38,6 +38,7 @@ public class DashboardView {
     private EventHandler<ActionEvent> quitFunction;
     private EventHandler<ActionEvent> saveFunction;
     private String newFileName;
+    private String winner;
 
     public DashboardView(){
         display = new VBox();
@@ -95,7 +96,8 @@ public class DashboardView {
 
     private void createAuxiliaryButtons() {
         auxiliaryButtons = new GridPane();
-        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit"), 115, 35, "auxbuttons");
+        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit"), "auxbuttons");
+        // 115 35
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(buttons.getButtons());
 
@@ -175,7 +177,6 @@ public class DashboardView {
         Text prefer = new Text();
         prefer.setText("Enter XML Filename:");
         prefer.getStyleClass().add("prefer");
-        prefer.setFill(Color.AZURE);
 
         TextField textField = new TextField();
         textField.getStyleClass().add("file-text-field");
@@ -198,6 +199,45 @@ public class DashboardView {
             setNewFileName(textField.getText());
             settingsStage.close();
             event.handle(e);
+        });
+    }
+
+    public void winnerPopUp() {
+        Stage fileNameStage = new Stage();
+        fileNameStage.setTitle("Winner!");
+        fileNameStage.setHeight(500);
+        fileNameStage.setWidth(500);
+        Pane fileRoot = new Pane();
+        Scene settingsScene = new Scene(fileRoot);
+        settingsScene.getStylesheets().add(res.getString("PopupStyleSheet"));
+        fileNameStage.setScene(settingsScene);
+        fileNameStage.show();
+        setUpWinnerPopUp(fileNameStage, fileRoot);
+    }
+
+    private void setUpWinnerPopUp(Stage settingsStage, Pane fileRoot) {
+        Text prefer = new Text();
+        prefer.setText("The winner is: " + winner);
+        prefer.getStyleClass().add("prefer");
+
+        VBox textFieldBox = new VBox();
+
+
+        textFieldBox.getChildren().addAll(prefer);
+        textFieldBox.setLayoutX(150);
+        textFieldBox.setLayoutY(220);
+
+        Button quitButton = new Button("Quit");
+        quitButton.getStyleClass().add(res.getString("SettingsButtons"));
+        quitButton.setLayoutX(220);
+        quitButton.setLayoutY(250);
+
+        fileRoot.getChildren().addAll(textFieldBox, quitButton);
+
+
+        quitButton.setOnAction(e -> {
+            settingsStage.close();
+            quitFunction.handle(e);
         });
     }
 
@@ -230,5 +270,9 @@ public class DashboardView {
 
     private void setNewFileName(String str){
         newFileName = "savedXML/" + str + ".xml";
+    }
+    
+    public void setWinner(String winner){
+        this.winner = winner;
     }
 }

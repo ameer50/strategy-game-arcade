@@ -146,8 +146,15 @@ public class Controller {
             history.addMove(move);
             historyList.add(move);
             toggleActivePlayer();
-            board.checkWon();
             printMessageAndTime("Did user's move.");
+
+            board.checkWon();
+            String winner = board.checkWon();
+            if (winner != null){
+                gameScreen.getDashboardView().setWinner(winner);
+                gameScreen.getDashboardView().winnerPopUp();
+            }
+
 
             if (activePlayer.isCPU()) {
                 doCPUMove();
@@ -158,10 +165,11 @@ public class Controller {
         gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
             Move prevMove = history.undo();
             historyList.remove(historyList.size() - 1);
-            Point2D startLocation = prevMove.getEndLocation();
-            Point2D endLocation = prevMove.getStartLocation();
-            Move reverseMove = new Move(startLocation, endLocation);
-            reverseMove.setUndoTrue();
+            Move reverseMove = prevMove.getReverseMove();
+            reverseMove.setUndo(true);
+            if (prevMove.isPromote()) {
+                reverseMove.setPromote(true);
+            }
 
             doMove(reverseMove);
             toggleActivePlayer();
@@ -174,6 +182,7 @@ public class Controller {
                 PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
                 boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
             }
+            board.print();
         });
 
         gameScreen.getDashboardView().setRedoMoveClicked((e) -> {
@@ -184,6 +193,15 @@ public class Controller {
             toggleActivePlayer();
         });
 
+        board.setOnPieceCaptured((int toX, int toY) -> {
+            boardView.getCellAt(toX, toY).setPiece(null);
+        });
+
+        board.setOnPiecePromoted((int toX, int toY) -> {
+            //board.getPieceAt(toX, toY);
+            boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
+        });
+
         gameScreen.getDashboardView().setQuitClicked((e) -> {
             setUpMenu();
         });
@@ -191,11 +209,6 @@ public class Controller {
         gameScreen.getDashboardView().setSaveClicked((e) -> {
             //TODO: change fileName to be an input
             processor.write(board, gameScreen.getDashboardView().getNewFileName());
-        });
-
-        board.setOnPiecePromoted((int toX, int toY) -> {
-            board.getPieceAt(toX, toY);
-            boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
         });
     }
 
@@ -241,5 +254,6 @@ public class Controller {
     private void doMove(Move m) {
         activePlayer.doMove(m);
         boardView.doMove(m);
+        //board.print();
     }
 }
