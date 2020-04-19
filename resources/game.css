@@ -1,5 +1,5 @@
 .root {
-    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #c8dcff, #fadcff);
     -fx-padding: 10;
     -fx-box-border: #000000;
     -fx-border-width: 10;
@@ -7,18 +7,16 @@
 
 .button {
     -fx-background-color:
-            linear-gradient(#ffd65b, #e68400),
-            linear-gradient(from 0% 0% to 20% 50%, rgba(255,255,255,0.9), rgba(255,255,255,0));
-    -fx-background-radius: 20;
+            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-radius: 10;
     -fx-background-insets: 0,1,2,3,0;
-    -fx-text-fill: #404040;
-    -fx-border-radius: 20;
-    -fx-pref-width: 80;
-    -fx-pref-height: 5;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
-    -fx-font-family: Cambria;
+    -fx-font-family: "Trebuchet MS";
     -fx-padding: 10 20 10 20;
+    -fx-min-width: 250;
+    -fx-min-height: 60;
 }
 
 .label {
@@ -116,13 +114,13 @@
 
 .auxbuttons {
     -fx-background-color:
-        linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
     -fx-background-radius: 10;
     -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-min-width: 115;
     -fx-min-height: 35;
 
@@ -144,7 +142,7 @@
     -fx-font-smoothing-type: lcd;
     -fx-fill: white;
     -fx-font-size: 13pt;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-vgap: 10;
 }
 
@@ -159,7 +157,7 @@
     -fx-padding: 5 10 5 10;
     -fx-fill: #ffffff;
     -fx-font-size: 20pt;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-vgap: 10;
 }
 
@@ -188,14 +186,14 @@
 
 .list-cell:even { /* changed to even */
     -fx-background-color: #FFF8DC;
-    -fx-font-famil: "Avant Garde";
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }
 
 .list-cell:odd { /* changed to odd */
     -fx-background-color: #fad2a0;
-    -fx-font-family: "Avant Garde";
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }

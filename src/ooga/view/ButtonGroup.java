@@ -16,19 +16,23 @@ public class ButtonGroup {
     private static ResourceBundle myResources =
             ResourceBundle.getBundle("resources", Locale.getDefault());
     private List<Button> buttons;
-    private String style;
 
-    public ButtonGroup(List<String> buttonNames, String style) {
+    public ButtonGroup(List<String> buttonNames) {
         buttons = new ArrayList<>();
-        this.style = style;
         createButtons(buttonNames);
     }
 
     private void createButtons(List<String> buttonNames) {
         for (String buttonName : buttonNames) {
             Button button = new Button(buttonName);
-            button.getStyleClass().add(style);
+
             buttons.add(button);
+        }
+    }
+
+    public void addStyle(String style){
+        for (Button button : buttons) {
+            button.getStyleClass().add(style);
         }
     }
 
