@@ -47,6 +47,12 @@
         <item>
             Black_Coin:P1 1:1
         </item>
+        <item>
+            White_Monarch:KING 1:25
+        </item>
+        <item>
+            Black_Monarch:KING 1:25
+        </item>
 
     </pieces>
 </game_config>

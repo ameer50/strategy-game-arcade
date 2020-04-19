@@ -24,10 +24,9 @@ public class CheckersBoard extends Board implements Serializable {
         if(result!=null){
             return result;
         }
-        else if(result2!= null){
+        else {
             return result2;
         }
-        return null;
     }
 
     public String checkOneColor(){
@@ -105,17 +104,9 @@ public class CheckersBoard extends Board implements Serializable {
         int y_i = (int) m.getStartLocation().getY();
         int x_f = (int) m.getEndLocation().getX();
         int y_f = (int) m.getEndLocation().getY();
-        System.out.println("Initial: " + x_i + "Initial: " + y_i);
-        String init_Color = getPieceAt(x_i, y_i).getColor();
-        System.out.println("Final: " + x_f + "Final: " + y_f);
         Piece currPiece = getPieceAt(x_i, y_i);
-        Piece oppPiece = getPieceAt(x_f, y_f);
         placePiece(x_i, y_i, null);
         placePiece(x_f, y_f, currPiece);
-        boolean isKill = false;
-        Point2D.Double capLoc = null;
-        Piece hitPiece = null;
-
         m.setPiece(currPiece);
         pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
 
@@ -131,22 +122,23 @@ public class CheckersBoard extends Board implements Serializable {
 
         for (Point2D location : m.getCapturedPiecesAndLocations().values()) {
             if(location!= null){
+                removePiece((int) location.getX(), (int) location.getY());
                 this.captureAction.process((int) location.getX(), (int) location.getY());
             }
         }
 
         if (m.isPromote() && m.isUndo()) {
             // demote backend
-            getPieceAt(x_f, y_f).setType("Coin");
-            getPieceAt(x_f, y_f).setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
+            m.getPiece().setType("Coin");
+            m.getPiece().setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
+            m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
             // demote frontend
             promoteAction.process(x_f, y_f);
         }
-        //TO-DO check if piece has reached opposite end
         if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
-            getPieceAt(x_f, y_f).setType("Monarch");
-            getPieceAt(x_f, y_f).setMovePattern("KING 1");
-            //pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), new Piece("Monarch", "KING 1", 10, init_Color, initID));
+            m.getPiece().setType("Monarch");
+            m.getPiece().setMovePattern("KING 1");
+            m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
             m.setPromote(true);
             promoteAction.process(x_f, y_f);
         }
@@ -252,7 +244,7 @@ public class CheckersBoard extends Board implements Serializable {
     private Point2D down_right_kill(int x, int y, Set<Point2D> currentPath){
         Piece temp1 = getPieceAt(x+1, y+1);
         Piece temp2 = getPieceAt(x+2, y+2);
-        boolean killConditions = isCellInBounds(x+1, y-1) && isCellInBounds(x+2, y-2) && temp1!=null && temp2==null && isOppColor(getPieceAt(x, y), temp1);
+        boolean killConditions = isCellInBounds(x+1, y+1) && isCellInBounds(x+2, y+2) && temp1!=null && temp2==null && isOppColor(getPieceAt(x, y), temp1);
         if(!killConditions){
             return null;
         }
@@ -263,6 +255,7 @@ public class CheckersBoard extends Board implements Serializable {
                 killPath.addAll(currentPath);
                 killPath.add(new Point2D.Double(x+1, y+1));
                 killPaths.put(ret, killPath);
+
             } else if(killPaths.containsKey(ret)){
                 killPaths.get(ret).add(new Point2D.Double(x+1, y+1));
             }
@@ -278,7 +271,7 @@ public class CheckersBoard extends Board implements Serializable {
         Set<Point2D> nonKills = p1NoKills(x, y);
         Set<Point2D> kills = p1Kills(x, y);
         kills.addAll(nonKills);
-        System.out.println("KILL PATHS: " + killPaths);
+        //System.out.println("KILL PATHS: " + killPaths);
         return kills;
     }
     private Set<Point2D> p1NoKills(int x, int y){
@@ -320,7 +313,6 @@ public class CheckersBoard extends Board implements Serializable {
         Set<Point2D> nonKills = p2NoKills(x, y);
         Set<Point2D> kills = p2Kills(x, y);
         kills.addAll(nonKills);
-        System.out.println("KILL PATHS: " + killPaths);
         return kills;
     }
     private Set<Point2D> p2NoKills(int x, int y){
@@ -366,12 +358,8 @@ public class CheckersBoard extends Board implements Serializable {
         int j = (int)start.getY();
         pieceBiMap.forcePut(start, p);
         getNextStepsP1(up_left_kill(i, j, killPaths.get(start)), ret, p);
-        getNextStepsP2(up_left_kill(i, j, killPaths.get(start)), ret, p);
         getNextStepsP1(up_right_kill(i, j, killPaths.get(start)), ret, p);
-        getNextStepsP2(up_right_kill(i, j, killPaths.get(start)), ret, p);
-        getNextStepsP1(down_left_kill(i, j, killPaths.get(start)), ret, p);
         getNextStepsP2(down_left_kill(i, j, killPaths.get(start)), ret, p);
-        getNextStepsP1(down_right_kill(i, j, killPaths.get(start)), ret, p);
         getNextStepsP2(down_right_kill(i, j, killPaths.get(start)), ret, p);
         pieceBiMap.forcePut(start, null);
     }
