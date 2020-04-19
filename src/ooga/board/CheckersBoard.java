@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class CheckersBoard extends Board implements Serializable {
     public Map<Point2D, Set<Point2D>> killPaths = new HashMap<>();
 
-
     public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Integer>> pieces){
         super(settings, locs, pieces);
     }
@@ -86,30 +85,18 @@ public class CheckersBoard extends Board implements Serializable {
         if (piece == null) {
             return null;
         }
+        killPaths.clear();
         String movPat = piece.getMovePattern();
         switch (movPat) {
             case "P1 1":
-                //Employ upper methods
-                Set<Point2D> nonKills = p1NoKills(x, y);
-                Set<Point2D> kills = p1Kills(x, y);
-                kills.addAll(nonKills);
-                System.out.println("KILL PATHS: " + killPaths);
-                return new ArrayList<>(kills);
+                return new ArrayList<>(p1(x, y));
             case "P2 1":
-                //Employ down methods
-                nonKills = p2NoKills(x, y);
-                kills = p2Kills(x, y);
-                kills.addAll(nonKills);
-                System.out.println("KILL PATHS: " + killPaths);
-                return new ArrayList<>(kills);
+                return new ArrayList<>(p2(x, y));
             case "KING 1":
-                //Employ king methods (ALL)
-                king(x, y);
-                break;
+                return new ArrayList<>(king(x, y));
             default:
                 return null;
         }
-        return null;
     }
 
 
@@ -265,7 +252,7 @@ public class CheckersBoard extends Board implements Serializable {
     private Point2D down_right_kill(int x, int y, Set<Point2D> currentPath){
         Piece temp1 = getPieceAt(x+1, y+1);
         Piece temp2 = getPieceAt(x+2, y+2);
-        boolean killConditions = isCellInBounds(x+1, y+1) && isCellInBounds(x+2, y+2) && temp1!=null && temp2==null && isOppColor(getPieceAt(x, y), temp1);
+        boolean killConditions = isCellInBounds(x+1, y-1) && isCellInBounds(x+2, y-2) && temp1!=null && temp2==null && isOppColor(getPieceAt(x, y), temp1);
         if(!killConditions){
             return null;
         }
@@ -286,6 +273,14 @@ public class CheckersBoard extends Board implements Serializable {
     /* ***END: Eight elements that make up the three possible move patterns of the pieces in the game.***
     START: Three possible move patterns, one for player 1 (black checkers), one for player 2 (red checkers),
     and one for king checkers. */
+
+    private Set<Point2D> p1(int x, int y){
+        Set<Point2D> nonKills = p1NoKills(x, y);
+        Set<Point2D> kills = p1Kills(x, y);
+        kills.addAll(nonKills);
+        System.out.println("KILL PATHS: " + killPaths);
+        return kills;
+    }
     private Set<Point2D> p1NoKills(int x, int y){
         Point2D p1 = up_left(x, y);
         Point2D p2 = up_right(x, y);
@@ -319,6 +314,14 @@ public class CheckersBoard extends Board implements Serializable {
         getNextStepsP1(up_left_kill(i, j, killPaths.get(start)), ret, p);
         getNextStepsP1(up_right_kill(i, j, killPaths.get(start)), ret, p);
         pieceBiMap.forcePut(start, null);
+    }
+
+    private Set<Point2D> p2(int x, int y){
+        Set<Point2D> nonKills = p2NoKills(x, y);
+        Set<Point2D> kills = p2Kills(x, y);
+        kills.addAll(nonKills);
+        System.out.println("KILL PATHS: " + killPaths);
+        return kills;
     }
     private Set<Point2D> p2NoKills(int x, int y){
         Point2D p1 = down_left(x, y);
@@ -354,36 +357,47 @@ public class CheckersBoard extends Board implements Serializable {
         getNextStepsP2(down_right_kill(i, j, killPaths.get(start)), ret, p);
         pieceBiMap.forcePut(start, null);
     }
+    private void getNextStepsKing(Point2D start, Set<Point2D> ret, Piece p){
+        if(start == null){
+            return;
+        }
+        ret.add(start);
+        int i = (int)start.getX();
+        int j = (int)start.getY();
+        pieceBiMap.forcePut(start, p);
+        getNextStepsP1(up_left_kill(i, j, killPaths.get(start)), ret, p);
+        getNextStepsP2(up_left_kill(i, j, killPaths.get(start)), ret, p);
+        getNextStepsP1(up_right_kill(i, j, killPaths.get(start)), ret, p);
+        getNextStepsP2(up_right_kill(i, j, killPaths.get(start)), ret, p);
+        getNextStepsP1(down_left_kill(i, j, killPaths.get(start)), ret, p);
+        getNextStepsP2(down_left_kill(i, j, killPaths.get(start)), ret, p);
+        getNextStepsP1(down_right_kill(i, j, killPaths.get(start)), ret, p);
+        getNextStepsP2(down_right_kill(i, j, killPaths.get(start)), ret, p);
+        pieceBiMap.forcePut(start, null);
+    }
+    private Set<Point2D> king(int x, int y) {
+        Set<Point2D> kingNoKills = p1NoKills(x, y);
+        kingNoKills.addAll(p2NoKills(x, y));
+        Point2D p3 = up_left_kill(x, y, new HashSet<>());
+        Point2D p4 = up_right_kill(x, y, new HashSet<>());
+        Point2D p5 = down_left_kill(x, y, new HashSet<>());
+        Point2D p6 = down_right_kill(x, y, new HashSet<>());
+        Set<Point2D> ret = new HashSet<>();
+        ret.addAll(kingNoKills);
+        ret.add(p3);
+        ret.add(p4);
+        ret.add(p5);
+        ret.add(p6);
+        Piece p = getPieceAt(x, y);
+        Point2D[] pArray = {p3, p4, p5, p6};
 
-    private void king(int x, int y) {
-        /*up_left(x, y);
-        up_right(x, y);
-        //up_left_kill(x, y);
-        up_right_kill(x, y);
-        down_left(x, y);
-        down_right(x, y);
-        down_left_kill(x, y);
-        down_right_kill(x, y);
-        int sizeDiff = -1;
-        while(sizeDiff != 0) {
-            int before_size = validKillMoves.size();
-            for(int k = 0; k<validKillMoves.size(); k++){
-                Point2D point = validKillMoves.get(k);
-                int i = (int)point.getX();
-                int j = (int)point.getY();
-                //up_left_kill(i, j);
-                up_right_kill(i, j);
-                down_left_kill(i, j);
-                down_right_kill(i, j);
-            }
-            List<Point2D> newList = validKillMoves.stream().distinct().collect(Collectors.toList());
-            validKillMoves.clear();
-            for(Point2D p : newList) {
-                validKillMoves.add((Point2D) p.clone());
-            }
+        for(Point2D point: pArray){
+            getNextStepsKing(point, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()));
+        }
+        ret.remove(null);
 
-            sizeDiff = validKillMoves.size()-before_size;
-        }*/
+        System.out.println("KILL PATHS: " + killPaths);
+        return ret;
     }
 
     public boolean isOppColor(Piece currPiece, Piece oppPiece) {
