@@ -28,6 +28,8 @@ public class DashboardView {
     private Text playerTwoName;
     private IntegerProperty playerOneScore;
     private IntegerProperty playerTwoScore;
+    private Text playerOneScoreText;
+    private Text playerTwoScoreText;
     private HBox scores;
     private GridPane auxiliaryButtons;
     private HBox bottom;
@@ -92,9 +94,9 @@ public class DashboardView {
 
         playerOneScore = new SimpleIntegerProperty();
         playerTwoScore = new SimpleIntegerProperty();
-        Text playerOneScoreText = new Text(playerOneScore.toString());
+        playerOneScoreText = new Text(playerOneScore.toString());
         playerOneScoreText.textProperty().bind(playerOneScore.asString());
-        Text playerTwoScoreText = new Text(playerTwoScore.toString());
+        playerTwoScoreText = new Text(playerTwoScore.toString());
         playerTwoScoreText.textProperty().bind(playerTwoScore.asString());
 
         playerOneScoreBox.getChildren().addAll(playerOneName, playerOneScoreText);
@@ -106,6 +108,14 @@ public class DashboardView {
         applyStyle(playerTwoScoreBox, "scoreshbox");
         scores.getChildren().addAll(playerOneScoreBox, playerTwoScoreBox);
         applyStyle(scores, "scoreshbox");
+    }
+
+    public Text getPlayerOneScoreText() {
+        return playerOneScoreText;
+    }
+
+    public Text getPlayerTwoScoreText() {
+        return playerTwoScoreText;
     }
 
     public void bindScores(IntegerProperty playerOneScore, IntegerProperty playerTwoScore){
@@ -291,6 +301,14 @@ public class DashboardView {
     
     public void setWinner(String winner){
         this.winner = winner;
+    }
+
+    public Button getUndoButton() {
+        return undoButton;
+    }
+
+    public Button getRedoButton() {
+        return redoButton;
     }
 
     public void toggleDarkMode(){
