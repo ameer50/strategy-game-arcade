@@ -12,10 +12,7 @@ import ooga.history.Move;
 import ooga.player.HumanPlayer;
 import ooga.player.Player;
 import ooga.player.CPUPlayer;
-import ooga.view.BoardView;
-import ooga.view.GameScreen;
-import ooga.view.MenuScreen;
-import ooga.view.PieceView;
+import ooga.view.*;
 import ooga.xml.XMLProcessor;
 
 import java.awt.geom.Point2D;
@@ -46,11 +43,8 @@ public class Controller {
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
     private BoardView boardView;
+    private DashboardView dashboardView;
     private CPUPlayer CPU;
-    private boolean toggleMoves = true;
-    private boolean isAIOpponent; // ***
-    private boolean isOpponentTurn = false;
-    private List<Point2D> temp;
     private Player activePlayer;
     private Player playerOne;
     private Player playerTwo;
@@ -97,6 +91,7 @@ public class Controller {
         printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
+        dashboardView = gameScreen.getDashboardView();
         setUpHistory();
         setUpPlayers();
         setListeners();
@@ -109,8 +104,8 @@ public class Controller {
         } else {
             playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.TRIVIAL);
         }
-        gameScreen.getDashboardView().setPlayerNames(playerOne.getName(), playerTwo.getName());
-        gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());
+        dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
+        dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
 
         activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
         if (activePlayer.isCPU()) doCPUMove();
@@ -120,7 +115,7 @@ public class Controller {
     private void setUpHistory() {
         history = new History();
         historyList = FXCollections.observableArrayList();
-        gameScreen.getDashboardView().getHistory().setItems(historyList);
+        dashboardView.getHistoryDisplay().setItems(historyList);
     }
 
     private void setListeners() {
@@ -145,16 +140,16 @@ public class Controller {
 
             history.addMove(move);
             historyList.add(move);
+            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+
             toggleActivePlayer();
             printMessageAndTime("Did user's move.");
 
-            board.checkWon();
             String winner = board.checkWon();
-            if (winner != null){
-                gameScreen.getDashboardView().setWinner(winner);
-                gameScreen.getDashboardView().winnerPopUp();
+            if (winner != null) {
+                dashboardView.setWinner(winner);
+                dashboardView.winnerPopUp();
             }
-
 
             if (activePlayer.isCPU()) {
                 doCPUMove();
@@ -162,7 +157,7 @@ public class Controller {
             }
         });
 
-        gameScreen.getDashboardView().setUndoMoveClicked((e) -> {
+        dashboardView.setUndoMoveClicked((e) -> {
             Move prevMove = history.undo();
             historyList.remove(historyList.size() - 1);
             Move reverseMove = prevMove.getReverseMove();
@@ -172,6 +167,7 @@ public class Controller {
             }
 
             doMove(reverseMove);
+            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
 
             Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
@@ -185,11 +181,12 @@ public class Controller {
             board.print();
         });
 
-        gameScreen.getDashboardView().setRedoMoveClicked((e) -> {
+        dashboardView.setRedoMoveClicked((e) -> {
             Move prevMove = history.redo();
             historyList.add(prevMove);
 
             doMove(prevMove);
+            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
         });
 
@@ -214,7 +211,7 @@ public class Controller {
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
-        gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
+        dashboardView.setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
     private void doCPUMove() {
@@ -231,6 +228,7 @@ public class Controller {
         doMove(m);
         history.addMove(m);
         historyList.add(m);
+        dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
 
         toggleActivePlayer();
         board.checkWon();

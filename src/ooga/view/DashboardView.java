@@ -32,7 +32,6 @@ public class DashboardView {
     private GridPane auxiliaryButtons;
     private HBox bottom;
     private Text activePlayerText;
-    boolean undoState;
     private ListView<Move> history;
     private EventHandler<ActionEvent> undoMoveFunction;
     private EventHandler<ActionEvent> redoMoveFunction;
@@ -40,10 +39,11 @@ public class DashboardView {
     private EventHandler<ActionEvent> saveFunction;
     private String newFileName;
     private String winner;
+    private Button undoButton;
+    private Button redoButton;
 
     public DashboardView(){
         display = new VBox();
-        undoState = false;
 
         createDisplay();
         createScoreBoxes();
@@ -109,19 +109,26 @@ public class DashboardView {
             addGPaneElement(b, position[i++], position[i++]);
         }
         auxiliaryButtons.getStyleClass().add("gpane");
-        auxiliaryButtons.setLayoutX(750);
-        auxiliaryButtons.setLayoutY(750);
+        //auxiliaryButtons.setLayoutX(750);
+        //auxiliaryButtons.setLayoutY(750);
 
-        buttons.getButtons().get(0).setOnAction(e -> {
+        auxiliaryButtons.setAlignment(Pos.CENTER);
+
+        undoButton = buttons.getButtons().get(0);
+        undoButton.setDisable(true);
+        redoButton = buttons.getButtons().get(1);
+        redoButton.setDisable(true);
+
+        undoButton.setOnAction(e -> {
             undoMoveFunction.handle(e);
         });
-        buttons.getButtons().get(1).setOnAction(e -> {
+
+        redoButton.setOnAction(e -> {
             redoMoveFunction.handle(e);
         });
 
         buttons.getButtons().get(2).setOnAction(e -> {
             textFieldPopUp(saveFunction);
-
         });
 
         buttons.getButtons().get(3).setOnAction(e -> {
@@ -167,7 +174,7 @@ public class DashboardView {
         fileNameStage.setTitle(res.getString("FileEnterTitle"));
         fileNameStage.setHeight(500);
         fileNameStage.setWidth(500);
-        Pane fileRoot = new Pane();
+        BorderPane fileRoot = new BorderPane();
         Scene settingsScene = new Scene(fileRoot);
         settingsScene.getStylesheets().add(res.getString("PopupStyleSheet"));
         fileNameStage.setScene(settingsScene);
@@ -175,27 +182,22 @@ public class DashboardView {
         setUpTextFieldPopUp(fileNameStage, fileRoot, e);
     }
 
-    private void setUpTextFieldPopUp(Stage settingsStage, Pane fileRoot, EventHandler<ActionEvent> event) {
+    private void setUpTextFieldPopUp(Stage settingsStage, BorderPane fileRoot, EventHandler<ActionEvent> event) {
         Text prefer = new Text();
         prefer.setText("Enter XML Filename:");
-        prefer.getStyleClass().add("prefer");
+        prefer.getStyleClass().add("savefile");
 
         TextField textField = new TextField();
+        textField.setMaxWidth(200);
         textField.getStyleClass().add("file-text-field");
         VBox textFieldBox = new VBox();
 
-
-        textFieldBox.getChildren().addAll(prefer, textField);
-        textFieldBox.setLayoutX(125);
-        textFieldBox.setLayoutY(150);
-
         Button goButton = new Button("Go!");
         goButton.getStyleClass().add(res.getString("SettingsButtons"));
-        goButton.setLayoutX(220);
-        goButton.setLayoutY(250);
 
-        fileRoot.getChildren().addAll(textFieldBox, goButton);
-
+        textFieldBox.getChildren().addAll(prefer, textField, goButton);
+        textFieldBox.setAlignment(Pos.CENTER);
+        fileRoot.setCenter(textFieldBox);
 
         goButton.setOnAction(e -> {
             setNewFileName(textField.getText());
@@ -236,11 +238,7 @@ public class DashboardView {
         });
     }
 
-    public boolean getUndoState(){
-        return undoState;
-    }
-
-    public ListView<Move> getHistory() {
+    public ListView<Move> getHistoryDisplay() {
         return history;
     }
 
@@ -252,6 +250,11 @@ public class DashboardView {
         redoMoveFunction = move;
     }
 
+    public void setUndoRedoButtonsDisabled(boolean undoDisabled, boolean redoDisabled) {
+        undoButton.setDisable(undoDisabled);
+        redoButton.setDisable(redoDisabled);
+    }
+
     public void setQuitClicked(EventHandler<ActionEvent> quit) {
         quitFunction = quit;
     }
@@ -259,6 +262,7 @@ public class DashboardView {
     public void setSaveClicked(EventHandler<ActionEvent> save) {
         saveFunction = save;
     }
+
     public String getNewFileName(){
         return newFileName;
     }

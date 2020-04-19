@@ -21,19 +21,10 @@ import java.util.*;
 public class MenuScreen {
 
     public static final int VBOX_Y = 600;
-    public static final int POPUP_DIMENSIONS = 500;
-    public static final String POPUP_PROMPT = "GAME PREFERENCE";
-    public static final int PROMPT_X = 100;
-    public static final int PROMPT_Y = 0;
     public static final int IMAGES_X = 325;
     public static final int IMAGES_Y = 220;
     public static final int IMAGE_GAP = 40;
-    public static final int BUTTON_WIDTH = 20;
-    public static final int BUTTON_HEIGHT = 40;
     public static final String DEFAULT_XML = "Default Game";
-    public static final String CUSTOM_XML = "Load XML File";
-    public static final String AI_OPPONENT = "AI Opponent";
-    public static final String HUMAN_OPPONENT = "Human Opponent";
     public static final int IMAGE_SIZE = 220;
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private final FileChooser fileChooser = new FileChooser();
@@ -47,16 +38,17 @@ public class MenuScreen {
     private String playerOneColor;
     private String playerTwoColor;
     private EventHandler<ActionEvent> goAction;
-    private String selectedColor;
     private String playerOneName;
     private String playerTwoName;
     private String fileChoice;
     private boolean isOnePlayer;
     private Popup myPopupScreen;
+    private VBox menuVBox;
 
 
     public MenuScreen(Stage stage){
         this.stage = stage;
+        this.menuVBox = new VBox();
         startView();
         stage.show();
     }
@@ -70,21 +62,14 @@ public class MenuScreen {
         stage.setTitle(res.getString("MenuStageTitle"));
         scene.getStylesheets().add(res.getString("MenuStyleSheet"));
 
-        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"));
-
-        VBox vbox = new VBox();
-        for (Button b : buttons.getButtons()) {
-            b.getStyleClass().add("buttons");
-            vbox.getChildren().add(b);
-
-        }
-        root.getChildren().add(vbox);
-        vbox.setLayoutX(STAGE_WIDTH/2 - vbox.getWidth()/2);
-        vbox.setLayoutY(VBOX_Y);
-        vbox.getStyleClass().add("vbox");
-
         arrangeLogo();
         arrangeMenuImages();
+        arrangeButtons();
+
+        menuVBox.setAlignment(Pos.CENTER);
+        root.setCenter(menuVBox);
+
+
     }
 
     public void setButtonListener(EventHandler<ActionEvent> e) {
@@ -104,8 +89,7 @@ public class MenuScreen {
         myPopupScreen.getNewPopup();
         ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"));
         playerOption.addStyle(res.getString("SettingsButtons"));
-        myPopupScreen.buttonsToDisplay(playerOption, 250, 250);
-        myPopupScreen.getButtonBox().getStyleClass().add("vbox");
+        myPopupScreen.addButtonGroup(playerOption);
 
         playerOption.getButtons().get(0).setOnAction(e -> {
             isOnePlayer = true;
@@ -123,8 +107,7 @@ public class MenuScreen {
         ButtonGroup colorOption = new ButtonGroup(List.of("White", "Black"));
 
         colorOption.addStyle(res.getString("SettingsButtons"));
-        myPopupScreen.buttonsToDisplay(colorOption, 250, 250);
-        myPopupScreen.getButtonBox().getStyleClass().add("vbox");
+        myPopupScreen.addButtonGroup(colorOption);
         VBox textFieldBox = myPopupScreen.getButtonBox();
 
         Text enterColorText = new Text();
@@ -149,7 +132,7 @@ public class MenuScreen {
 
         TextField playerOneText = new TextField();
         playerOneText.setPromptText("Player One");
-        playerOneText.setMinWidth(200);
+        playerOneText.setMaxWidth(200);
         playerOneText.getStyleClass().add("file-text-field");
 
         textFieldBox.getChildren().addAll(nameText, playerOneText);
@@ -159,7 +142,7 @@ public class MenuScreen {
         TextField playerTwoText = new TextField();
         playerTwoText.setPromptText("Player Two");
         playerTwoText.getStyleClass().add("file-text-field");
-        playerTwoText.setMinWidth(200);
+        playerTwoText.setMaxWidth(200);
 
         if (!isOnePlayer) textFieldBox.getChildren().add(playerTwoText);
 
@@ -174,15 +157,12 @@ public class MenuScreen {
     }
 
     private void setUpLoadGamePopUp() {
-
         myPopupScreen.getNewPopup();
         ButtonGroup loadGameOption = new ButtonGroup(List.of("Default Game", "Custom Game"));
 
         loadGameOption.addStyle(res.getString("SettingsButtons"));
-        myPopupScreen.buttonsToDisplay(loadGameOption, 250, 250);
-        myPopupScreen.getButtonBox().getStyleClass().add("vbox");
+        myPopupScreen.addButtonGroup(loadGameOption);
         VBox vBox = myPopupScreen.getButtonBox();
-
 
         for (Button b: loadGameOption.getButtons()) {
             b.setOnAction((newEvent) -> {
@@ -194,7 +174,7 @@ public class MenuScreen {
         }
 
         Button goButton = new Button("Go!");
-        goButton.getStyleClass().add(res.getString("SettingsButtons"));
+        goButton.getStyleClass().add(res.getString("GoButton"));
         goButton.setOnAction(e -> {
             myPopupScreen.getStage().close();
             goAction.handle(e);
@@ -210,14 +190,12 @@ public class MenuScreen {
         logo.setFill(Color.AZURE);
         HBox logoBox = new HBox();
         logoBox.getChildren().add(logo);
-        logoBox.setLayoutX(STAGE_WIDTH/2);
-        logoBox.setLayoutY(150);
         logoBox.getStyleClass().add("logobox");
-        root.getChildren().add(logoBox);
+        menuVBox.getChildren().add(logoBox);
     }
 
     private void arrangeMenuImages() {
-        GridPane grid = new GridPane();
+        HBox hBox = new HBox();
 
         int[] dimensions = {IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE};
         int i = 0;
@@ -232,13 +210,29 @@ public class MenuScreen {
 
             stack.getChildren().addAll(background, picture);
 
-            grid.add(stack, colIndex, 0);
+            hBox.getChildren().add(stack);
             colIndex += 2;
         }
-        grid.setHgap(IMAGE_GAP);
-        grid.setLayoutX(IMAGES_X);
-        grid.setLayoutY(IMAGES_Y);
-        root.getChildren().add(grid);
+        hBox.getStyleClass().add("hbox");
+        menuVBox.getChildren().add(hBox);
+    }
+
+    private void arrangeButtons(){
+
+        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"));
+
+        VBox vbox = new VBox();
+        for (Button b : buttons.getButtons()) {
+            b.getStyleClass().add("buttons");
+            vbox.getChildren().add(b);
+
+        }
+        //root.getChildren().add(vbox);
+        //vbox.setLayoutX(STAGE_WIDTH/2 - vbox.getWidth()/2);
+        //vbox.setLayoutY(VBOX_Y);
+        vbox.getStyleClass().add("vbox");
+        menuVBox.getChildren().add(vbox);
+        //root.setCenter(vbox);
     }
 
 

@@ -114,6 +114,7 @@ public class ChessBoard extends Board implements Serializable {
       // demote piece in backend
       m.getPiece().setType(PAWN);
       m.getPiece().setMovePattern("PAWN -1");
+      m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
       // demote piece in frontend
       this.promoteAction.process((int) m.getEndLocation().getX(), (int) m.getEndLocation().getY());
     }
@@ -131,6 +132,7 @@ public class ChessBoard extends Board implements Serializable {
     if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
       piece.setType("Queen");
       piece.setMovePattern("Any -1");
+      piece.setValue(pieceTypeMap.get(piece.getFullName()).getValue());
       m.setPromote(true);
       this.promoteAction.process(endX, endY);
     }

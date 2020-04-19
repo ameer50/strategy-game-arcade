@@ -1,5 +1,6 @@
 package ooga.view;
 
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
@@ -10,10 +11,11 @@ import java.util.List;
 
 public class Popup {
 
+    private static final String vboxStyle = "vbox";
     Stage stage;
     Scene scene;
     String stylesheet;
-    VBox buttonBox;
+    VBox popupBox;
 
 
     private BorderPane root;
@@ -23,11 +25,16 @@ public class Popup {
         stage.setHeight(stageHeight);
         root = new BorderPane();
         this.stylesheet = stylesheet;
+
+
     }
 
 
     public void getNewPopup(){
         root = new BorderPane();
+        popupBox = new VBox();
+        root.setCenter(popupBox);
+        popupBox.setAlignment(Pos.CENTER);
         scene = new Scene(root);
         scene.getStylesheets().add(stylesheet);
         stage.setScene(scene);
@@ -40,22 +47,20 @@ public class Popup {
         return stage;
     }
 
-    public ButtonGroup buttonsToDisplay(ButtonGroup buttons,int layoutX, int layoutY){
-        buttonBox = new VBox();
+    public void addButtonGroup(ButtonGroup buttons){
+        VBox buttonBox = new VBox();
 
         for (Button b: buttons.getButtons()) {
             buttonBox.getChildren().add(b);
         }
 
-        root.getChildren().add(buttonBox);
-        buttonBox.setLayoutX(layoutX);
-        buttonBox.setLayoutY(layoutY);
+        buttonBox.getStyleClass().add(vboxStyle);
 
-        return buttons;
+        popupBox.getChildren().add(buttonBox);
     }
 
     public VBox getButtonBox(){
-        return  buttonBox;
+        return  popupBox;
     }
 
 

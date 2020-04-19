@@ -87,7 +87,7 @@ public class CustomController {
   private void setUpHistory() {
     history = new History();
     historyList = FXCollections.observableArrayList();
-    gameScreen.getDashboardView().getHistory().setItems(historyList);
+    gameScreen.getDashboardView().getHistoryDisplay().setItems(historyList);
   }
 
   private void setListeners() {
