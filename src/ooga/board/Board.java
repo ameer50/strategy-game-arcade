@@ -50,7 +50,6 @@ public abstract class Board implements Serializable {
    Set up the board from the config file.
    **/
   private void initializePieces(Map<Point2D, String> locations) {
-    int ID = 0;
     for (Point2D point: locations.keySet()){
       int x = (int) point.getX();
       int y = (int) point.getY();
@@ -62,7 +61,7 @@ public abstract class Board implements Serializable {
 
       String movePattern = pieceInfo.getKey();
       int score = pieceInfo.getValue();
-      Piece piece = new Piece(pieceName, movePattern, score, pieceColor, ID++);
+      Piece piece = new Piece(pieceName, movePattern, score, pieceColor);
 
       pieceBiMap.put(new Point2D.Double(x, y), piece);
     }
