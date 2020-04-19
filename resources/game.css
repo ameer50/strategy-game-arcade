@@ -13,7 +13,7 @@
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-padding: 10 20 10 20;
     -fx-min-width: 250;
     -fx-min-height: 60;
@@ -120,7 +120,7 @@
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 14px;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-min-width: 115;
     -fx-min-height: 35;
 
@@ -142,7 +142,7 @@
     -fx-font-smoothing-type: lcd;
     -fx-fill: white;
     -fx-font-size: 13pt;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-vgap: 10;
 }
 
@@ -157,7 +157,7 @@
     -fx-padding: 5 10 5 10;
     -fx-fill: #ffffff;
     -fx-font-size: 20pt;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-vgap: 10;
 }
 
@@ -186,14 +186,14 @@
 
 .list-cell:even { /* changed to even */
     -fx-background-color: #FFF8DC;
-    -fx-font-famil: "Avant Garde";
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }
 
 .list-cell:odd { /* changed to odd */
     -fx-background-color: #fad2a0;
-    -fx-font-family: "Avant Garde";
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }

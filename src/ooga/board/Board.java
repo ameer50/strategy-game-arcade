@@ -296,5 +296,9 @@ public abstract class Board implements Serializable {
   public void setOnPieceCaptured(ProcessCoordinateInterface captureAction) {
     this.captureAction = captureAction;
   }
+
+  public Map<String, Pair<String, Integer>> getPieceTypeMap() {
+    return pieceTypeMap;
+  }
 }
 

@@ -14,7 +14,7 @@
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-padding: 10 20 10 20;
 
 }
@@ -27,7 +27,7 @@
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-padding: 10 20 10 20;
     -fx-min-width: 200;
     -fx-min-height: 50;
@@ -67,7 +67,7 @@
 }
 
 .logo {
-    -fx-font-family: "Forte";
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 80px;
 }
 
@@ -76,7 +76,7 @@
 }
 
 .prefer {
-    -fx-font-family: "Forte";
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 40px;
     -fx-alignment: center;
 }
@@ -108,13 +108,13 @@
 
 .prompt {
     -fx-background: #404040;
-    -fx-font-family: Avant Garde;
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 40px;
     -fx-alignment: center;
 }
 
 .playername {
-    -fx-font-family: "Helvetica";
+    -fx-font-family: "Trebuchet MS";
     -fx-font-size: 20px;
     -fx-alignment: center;
     -fx-fill: BLACK

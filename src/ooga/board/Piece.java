@@ -8,23 +8,23 @@ import ooga.custom.MoveNode;
 public class Piece implements Serializable {
   private String type;
   private String pattern;
-  private int score;
+  private int value;
   private String color;
   private int moves;
   private List<Point2D> displacements;
 
-  public Piece (String type, String pattern, int score, String color) {
+  public Piece (String type, String pattern, int value, String color) {
 
     this.type = type;
     this.pattern = pattern;
-    this.score = score;
+    this.value = value;
     this.color = color;
     this.moves = 0;
   }
-  public Piece(String type, MoveNode node, int score, String color) {
+  public Piece(String type, MoveNode node, int value, String color) {
     this.type = type;
     this.pattern = null;
-    this.score = score;
+    this.value = value;
     this.color = color;
     this.moves = 0;
     this.displacements = node.generatePoints();
@@ -59,7 +59,7 @@ public class Piece implements Serializable {
     return this.pattern;
   }
   public int getValue(){
-    return this.score;
+    return this.value;
   }
   public String getColor(){
     return this.color;
@@ -75,5 +75,8 @@ public class Piece implements Serializable {
   }
   public void setType(String type){
     this.type = type;
+  }
+  public void setValue(int value) {
+    this.value = value;
   }
 }

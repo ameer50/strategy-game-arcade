@@ -31,7 +31,6 @@ public class DashboardView {
     private GridPane auxiliaryButtons;
     private HBox bottom;
     private Text activePlayerText;
-    boolean undoState;
     private ListView<Move> history;
     private EventHandler<ActionEvent> undoMoveFunction;
     private EventHandler<ActionEvent> redoMoveFunction;
@@ -39,10 +38,11 @@ public class DashboardView {
     private EventHandler<ActionEvent> saveFunction;
     private String newFileName;
     private String winner;
+    private Button undoButton;
+    private Button redoButton;
 
     public DashboardView(){
         display = new VBox();
-        undoState = false;
 
         createDisplay();
         createScoreBoxes();
@@ -111,16 +111,21 @@ public class DashboardView {
         auxiliaryButtons.setLayoutX(750);
         auxiliaryButtons.setLayoutY(750);
 
-        buttons.getButtons().get(0).setOnAction(e -> {
+        undoButton = buttons.getButtons().get(0);
+        undoButton.setDisable(true);
+        redoButton = buttons.getButtons().get(1);
+        redoButton.setDisable(true);
+
+        undoButton.setOnAction(e -> {
             undoMoveFunction.handle(e);
         });
-        buttons.getButtons().get(1).setOnAction(e -> {
+
+        redoButton.setOnAction(e -> {
             redoMoveFunction.handle(e);
         });
 
         buttons.getButtons().get(2).setOnAction(e -> {
             textFieldPopUp(saveFunction);
-
         });
 
         buttons.getButtons().get(3).setOnAction(e -> {
@@ -195,7 +200,6 @@ public class DashboardView {
 
         fileRoot.getChildren().addAll(textFieldBox, goButton);
 
-
         goButton.setOnAction(e -> {
             setNewFileName(textField.getText());
             settingsStage.close();
@@ -223,7 +227,6 @@ public class DashboardView {
 
         VBox textFieldBox = new VBox();
 
-
         textFieldBox.getChildren().addAll(prefer);
         textFieldBox.setLayoutX(150);
         textFieldBox.setLayoutY(220);
@@ -235,18 +238,13 @@ public class DashboardView {
 
         fileRoot.getChildren().addAll(textFieldBox, quitButton);
 
-
         quitButton.setOnAction(e -> {
             settingsStage.close();
             quitFunction.handle(e);
         });
     }
 
-    public boolean getUndoState(){
-        return undoState;
-    }
-
-    public ListView<Move> getHistory() {
+    public ListView<Move> getHistoryDisplay() {
         return history;
     }
 
@@ -258,6 +256,11 @@ public class DashboardView {
         redoMoveFunction = move;
     }
 
+    public void setUndoRedoButtonsDisabled(boolean undoDisabled, boolean redoDisabled) {
+        undoButton.setDisable(undoDisabled);
+        redoButton.setDisable(redoDisabled);
+    }
+
     public void setQuitClicked(EventHandler<ActionEvent> quit) {
         quitFunction = quit;
     }
@@ -265,6 +268,7 @@ public class DashboardView {
     public void setSaveClicked(EventHandler<ActionEvent> save) {
         saveFunction = save;
     }
+
     public String getNewFileName(){
         return newFileName;
     }

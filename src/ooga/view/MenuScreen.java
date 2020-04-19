@@ -21,19 +21,10 @@ import java.util.*;
 public class MenuScreen {
 
     public static final int VBOX_Y = 600;
-    public static final int POPUP_DIMENSIONS = 500;
-    public static final String POPUP_PROMPT = "GAME PREFERENCE";
-    public static final int PROMPT_X = 100;
-    public static final int PROMPT_Y = 0;
     public static final int IMAGES_X = 325;
     public static final int IMAGES_Y = 220;
     public static final int IMAGE_GAP = 40;
-    public static final int BUTTON_WIDTH = 20;
-    public static final int BUTTON_HEIGHT = 40;
     public static final String DEFAULT_XML = "Default Game";
-    public static final String CUSTOM_XML = "Load XML File";
-    public static final String AI_OPPONENT = "AI Opponent";
-    public static final String HUMAN_OPPONENT = "Human Opponent";
     public static final int IMAGE_SIZE = 220;
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private final FileChooser fileChooser = new FileChooser();
@@ -47,7 +38,6 @@ public class MenuScreen {
     private String playerOneColor;
     private String playerTwoColor;
     private EventHandler<ActionEvent> goAction;
-    private String selectedColor;
     private String playerOneName;
     private String playerTwoName;
     private String fileChoice;
@@ -174,7 +164,6 @@ public class MenuScreen {
     }
 
     private void setUpLoadGamePopUp() {
-
         myPopupScreen.getNewPopup();
         ButtonGroup loadGameOption = new ButtonGroup(List.of("Default Game", "Custom Game"));
 
@@ -182,7 +171,6 @@ public class MenuScreen {
         myPopupScreen.buttonsToDisplay(loadGameOption, 250, 250);
         myPopupScreen.getButtonBox().getStyleClass().add("vbox");
         VBox vBox = myPopupScreen.getButtonBox();
-
 
         for (Button b: loadGameOption.getButtons()) {
             b.setOnAction((newEvent) -> {
