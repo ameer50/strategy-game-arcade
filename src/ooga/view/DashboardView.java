@@ -41,9 +41,11 @@ public class DashboardView {
     private String winner;
     private Button undoButton;
     private Button redoButton;
+    private String popupStyle;
 
     public DashboardView(){
         display = new VBox();
+        popupStyle = res.getString("PopupStyleSheet");
 
         createDisplay();
         createScoreBoxes();
@@ -59,7 +61,20 @@ public class DashboardView {
         hbox.getChildren().add(history);
         hbox.getStyleClass().add("hboxlist");
 
-        display.getChildren().addAll(scores, hbox, bottom, auxiliaryButtons);
+        HBox darkButtonBox = new HBox();
+
+        Button dark = new Button();
+        darkButtonBox.getStyleClass().add("hbox");
+
+        dark.setOnMouseClicked((e) -> {
+            toggleDarkMode();
+        });
+
+        darkButtonBox.getChildren().add(dark);
+
+
+
+        display.getChildren().addAll(darkButtonBox, scores, hbox, bottom, auxiliaryButtons);
         display.getStyleClass().add("display");
 
     }
@@ -86,6 +101,9 @@ public class DashboardView {
         playerTwoScoreBox.getChildren().addAll(playerTwoName, playerTwoScoreText);
 
         scores = new HBox();
+
+        applyStyle(playerOneScoreBox, "scoreshbox");
+        applyStyle(playerTwoScoreBox, "scoreshbox");
         scores.getChildren().addAll(playerOneScoreBox, playerTwoScoreBox);
         applyStyle(scores, "scoreshbox");
     }
@@ -176,7 +194,7 @@ public class DashboardView {
         fileNameStage.setWidth(500);
         BorderPane fileRoot = new BorderPane();
         Scene settingsScene = new Scene(fileRoot);
-        settingsScene.getStylesheets().add(res.getString("PopupStyleSheet"));
+        settingsScene.getStylesheets().add(popupStyle);
         fileNameStage.setScene(settingsScene);
         fileNameStage.show();
         setUpTextFieldPopUp(fileNameStage, fileRoot, e);
@@ -213,7 +231,7 @@ public class DashboardView {
         fileNameStage.setWidth(500);
         BorderPane fileRoot = new BorderPane();
         Scene settingsScene = new Scene(fileRoot);
-        settingsScene.getStylesheets().add(res.getString("PopupStyleSheet"));
+        settingsScene.getStylesheets().add(popupStyle);
         fileNameStage.setScene(settingsScene);
         fileNameStage.show();
         setUpWinnerPopUp(fileNameStage, fileRoot);
@@ -273,5 +291,11 @@ public class DashboardView {
     
     public void setWinner(String winner){
         this.winner = winner;
+    }
+
+    public void toggleDarkMode(){
+
+        popupStyle = (popupStyle.equals(res.getString("PopupStyleSheet"))) ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
+
     }
 }

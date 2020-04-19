@@ -71,7 +71,7 @@ public class BoardViewTests extends DukeApplicationTest {
         PieceView currPiece = boardView.getCellAt(6,7).getPiece();
         Move move = new Move(new Point2D.Double(6,7), new Point2D.Double(5,7));
         boardView.doMove(move);
-        assertNull(boardView.getCellAt(6,7));
+        assertEquals(null ,boardView.getCellAt(6,7).getPiece());
         assertEquals(currPiece, boardView.getCellAt(5,7).getPiece());
         tearDown();
     }

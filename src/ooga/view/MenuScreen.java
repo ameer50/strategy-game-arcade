@@ -40,11 +40,15 @@ public class MenuScreen {
     private boolean isOnePlayer;
     private Popup myPopupScreen;
     private VBox menuVBox;
+    private String menuStyle;
+    private String popupStyle;
 
 
     public MenuScreen(Stage stage){
         this.stage = stage;
         this.menuVBox = new VBox();
+        menuStyle = res.getString("MenuDarkSheet");
+        popupStyle = res.getString("PopupDarkSheet");
         startView();
         stage.show();
     }
@@ -56,7 +60,7 @@ public class MenuScreen {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.setTitle(res.getString("MenuStageTitle"));
-        scene.getStylesheets().add(res.getString("MenuStyleSheet"));
+        scene.getStylesheets().add(menuStyle);
 
         arrangeLogo();
         arrangeMenuImages();
@@ -74,7 +78,7 @@ public class MenuScreen {
                 gameChoice = b.getText();
                 this.goAction = e;
 
-                myPopupScreen = new Popup(500, 600, res.getString("PopupStyleSheet"));
+                myPopupScreen = new Popup(500, 600, popupStyle);
                 setUpPlayerPopUp();
 
             });
@@ -264,4 +268,11 @@ public class MenuScreen {
     public String getPlayerTwoName() {
         return playerTwoName;
     }
+
+    public void toggleDarkMode(){
+        popupStyle = (popupStyle.equals(res.getString("MenuStyleSheet"))) ? res.getString("MenuDarkSheet") : res.getString("MenuStyleSheet");
+        popupStyle = (popupStyle.equals(res.getString("PopupStyleSheet"))) ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
+
+    }
+
 }
