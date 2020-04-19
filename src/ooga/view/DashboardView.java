@@ -4,6 +4,7 @@ import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -208,7 +209,7 @@ public class DashboardView {
         fileNameStage.setTitle("Winner!");
         fileNameStage.setHeight(500);
         fileNameStage.setWidth(500);
-        Pane fileRoot = new Pane();
+        BorderPane fileRoot = new BorderPane();
         Scene settingsScene = new Scene(fileRoot);
         settingsScene.getStylesheets().add(res.getString("PopupStyleSheet"));
         fileNameStage.setScene(settingsScene);
@@ -216,25 +217,18 @@ public class DashboardView {
         setUpWinnerPopUp(fileNameStage, fileRoot);
     }
 
-    private void setUpWinnerPopUp(Stage settingsStage, Pane fileRoot) {
+    private void setUpWinnerPopUp(Stage settingsStage, BorderPane fileRoot) {
         Text prefer = new Text();
         prefer.setText("The winner is: " + winner);
         prefer.getStyleClass().add("prefer");
 
         VBox textFieldBox = new VBox();
 
-
-        textFieldBox.getChildren().addAll(prefer);
-        textFieldBox.setLayoutX(150);
-        textFieldBox.setLayoutY(220);
-
         Button quitButton = new Button("Quit");
         quitButton.getStyleClass().add(res.getString("SettingsButtons"));
-        quitButton.setLayoutX(220);
-        quitButton.setLayoutY(250);
-
-        fileRoot.getChildren().addAll(textFieldBox, quitButton);
-
+        textFieldBox.getChildren().addAll(prefer, quitButton);
+        textFieldBox.getStyleClass().add("vbox");
+        fileRoot.setCenter(textFieldBox);
 
         quitButton.setOnAction(e -> {
             settingsStage.close();
