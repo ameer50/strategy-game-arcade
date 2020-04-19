@@ -142,4 +142,7 @@ public class CellView extends StackPane {
         this.noBorderFunction = clicked;
     }
 
+    public boolean isYellow(){  return isYellow;  }
+    public boolean isRed(){  return isRed;  }
+
 }

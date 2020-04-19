@@ -20,16 +20,12 @@ import java.util.*;
 
 public class MenuScreen {
 
-    public static final int VBOX_Y = 600;
-    public static final int IMAGES_X = 325;
-    public static final int IMAGES_Y = 220;
-    public static final int IMAGE_GAP = 40;
     public static final String DEFAULT_XML = "Default Game";
     public static final int IMAGE_SIZE = 220;
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private final FileChooser fileChooser = new FileChooser();
     private static final double STAGE_HEIGHT = 800;
-    private static final double STAGE_WIDTH = 1200;
+    private static final double STAGE_WIDTH = 1000;
     private BorderPane root;
     private Stage stage;
     private Scene scene;
@@ -185,6 +181,7 @@ public class MenuScreen {
 
     private void arrangeLogo() {
         Text logo = new Text();
+        logo.setId("banana");
         logo.setText("STRATEGY GAME ARCADE");
         logo.getStyleClass().add("logo");
         logo.setFill(Color.AZURE);

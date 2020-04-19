@@ -18,8 +18,8 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private static final double BOARD_HEIGHT = 600;
     private List<String> colorSequence1;
     private List<String> colorSequence2;
-    private int unitWidth;
-    private int unitHeight;
+    private int width;
+    private int height;
 
     private double cellSize;
     private double cellSpan;
@@ -30,8 +30,8 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private static final int ANIM_DURATION = 20;
 
     public BoardView(int width, int height, Map<Point2D, String> locations) {
-        unitWidth = width;
-        unitHeight = height;
+        this.width = width;
+        this.height = height;
         cellArray = new CellView[width][height];
         cellList = new CellView[width * height];
 
@@ -48,16 +48,23 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     }
 
     public CellView getCellAt(int x, int y) {
-        return cellArray[x][y];
+
+        if (inBounds(x,y)) {
+            return cellArray[x][y];
+        }
+        return null;
     }
 
     public CellView getCellAt(Point2D location) {
-        return cellArray[(int) location.getX()][(int) location.getY()];
+        if (inBounds((int) location.getX(), (int) location.getY())){
+            return cellArray[(int) location.getX()][(int) location.getY()];
+        }
+        return null;
     }
 
     public void checkeredColor() {
         colorSequence1 = new ArrayList<>();
-        for (int i = 0; i < unitWidth; i++){
+        for (int i = 0; i < width; i++){
             if (i % 2 == 0) colorSequence1.add("cellcolor1");
             else colorSequence1.add("cellcolor2");
         }
@@ -67,8 +74,8 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     private void fillCells() {
         int index = 0;
-        for (int i=0; i < unitWidth; i++) {
-            for (int j=0 ; j < unitHeight; j++) {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
                 String color = (i % 2 == 0) ? colorSequence2.get(j) : colorSequence1.get(j);
                 cellArray[i][j] = new CellView(i, j, (BOARD_XOFFSET+(cellSpan*j)),
                     (BOARD_YOFFSET+(cellSpan*i)), cellSize, cellSize, color);
@@ -139,9 +146,9 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         }
     }
 
-    public int getUnitWidth(){ return unitWidth; }
+    public int getWidth(){ return width; }
 
-    public int getUnitHeight(){ return unitHeight; }
+    public int getHeight(){ return height; }
 
     public double getCellSpan(){ return cellSpan; }
 
@@ -176,5 +183,9 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
                 throw new UnsupportedOperationException("Cannot remove cell from board.");
             }
         };
+    }
+
+    private boolean inBounds(int x, int y){
+        return x >= 0 && x <= width && y >= 0 && y <= height;
     }
 }

@@ -121,6 +121,7 @@ public class Controller {
     private void setListeners() {
         /* X and Y are the indices of the cell clicked to move FROM */
         boardView.setOnPieceClicked((int x, int y) -> {
+            System.out.println(boardView.getCellAt(x,y));
             PieceView pieceView = boardView.getCellAt(x, y).getPiece();
             System.out.println(pieceView.getColor()); // ***
             if (pieceView.getColor().equals(activePlayer.getColor())) {
