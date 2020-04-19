@@ -14,7 +14,6 @@ public class Piece implements Serializable {
   private List<Point2D> displacements;
 
   public Piece (String type, String pattern, int score, String color) {
-
     this.type = type;
     this.pattern = pattern;
     this.score = score;
@@ -64,9 +63,6 @@ public class Piece implements Serializable {
   public String getColor(){
     return this.color;
   }
-  public String getFullName(){
-    return String.format("%s_%s", this.color, this.type);
-  }
 
   public List<Point2D> getDisplacements() { return List.copyOf(displacements); }
 
@@ -76,4 +72,9 @@ public class Piece implements Serializable {
   public void setType(String type){
     this.type = type;
   }
+
+  public String getFullName(){
+    return String.format("%s_%s", this.color, this.type);
+  }
+
 }

@@ -23,6 +23,7 @@ public abstract class Player {
 
     public void doMove(Move m) {
         board.doMove(m);
+        System.out.println(m.getCapturedPiecesAndLocations());
         for (Piece capturedPiece: m.getCapturedPiecesAndLocations().keySet()) {
             addToScore(capturedPiece.getValue());
         }
