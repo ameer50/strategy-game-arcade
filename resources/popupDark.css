@@ -1,0 +1,142 @@
+.root {
+    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-box-border: #000000;
+    -fx-border-width: 10;
+}
+
+.button {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 30px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-padding: 10 20 10 20;
+
+}
+
+.settingsbuttons {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #F8F8FF;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-padding: 10 20 10 20;
+    -fx-min-width: 200;
+    -fx-min-height: 50;
+}
+
+.gobutton {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: BLACK;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-padding: 10 30 10 20;
+    -fx-min-width: 200;
+    -fx-min-height: 50;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
+}
+
+.vbox {
+    -fx-alignment: center;
+    -fx-spacing: 25;
+    -fx-padding: 5;
+    -fx-vgap: 5;
+}
+
+.hbox {
+    -fx-alignment: center;
+    -fx-spacing: 25;
+    -fx-padding: 10;
+    -fx-hgap: 25;
+}
+
+.gpane {
+    -fx-padding: 10;
+    -fx-spacing: 25;
+    -fx-alignment: center;
+    -fx-vgap: 15;
+    -fx-hgap: 5;
+}
+
+.rectangle {
+    -fx-background-color: WHITE;
+    -fx-border-color: #000000;
+    -fx-border-width: 10;
+    -fx-border-style: solid inside;
+    -fx-padding: 10;
+}
+
+.logo {
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 80px;
+}
+
+.logobox {
+    -fx-alignment: center;
+}
+
+.prefer {
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 40px;
+    -fx-alignment: center;
+}
+
+.file-text-field {
+    -fx-border-width: 0 0 1 0; // top, right, bottom, left
+-fx-background-color: #F8F8FF;
+    -fx-font: 20px "Helvatica";
+    -fx-font-weight: bold;
+    -fx-text-fill: BLACK;
+
+}
+
+.textfieldbox {
+    -fx-alignment: center;
+}
+
+.file-pop-up {
+    -fx-background: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
+    -fx-box-border: #ffffff;
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-border-width: 10;
+}
+
+.picture-background {
+    -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
+}
+
+.prompt {
+    -fx-background: #404040;
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 40px;
+    -fx-alignment: center;
+}
+
+.playername {
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+    -fx-fill: BLACK
+}
+
+.savefile {
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 20px;
+    -fx-alignment: center;
+}

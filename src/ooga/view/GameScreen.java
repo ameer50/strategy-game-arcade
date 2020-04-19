@@ -20,9 +20,11 @@ public class GameScreen {
     private Scene scene;
     private BoardView boardView;
     private DashboardView dashboardView;
+    private String gameStyle;
 
     public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
+        this.gameStyle = res.getString("GameStyleSheet");
         initializeView(width, height, locations);
         stage.show();
     }
@@ -35,7 +37,7 @@ public class GameScreen {
 
         stage.setScene(scene);
         stage.setTitle(res.getString("GameStageTitle"));
-        scene.getStylesheets().add(res.getString("GameStyleSheet"));
+        scene.getStylesheets().add(gameStyle);
 
         Pane canvas = new Pane();
         boardView = new BoardView(width, height, locations);
@@ -51,5 +53,9 @@ public class GameScreen {
     }
 
     public DashboardView getDashboardView() { return dashboardView;}
+
+    public void setGameStyle(String newStyle){
+        gameStyle = newStyle;
+    }
 
 }
