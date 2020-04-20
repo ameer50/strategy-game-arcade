@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<game_config>
+    <settings>
+        <name>
+            Othello
+        </name>
+        <width>8</width>
+        <height>8</height>
+        <icon>Coin</icon>
+    </settings>
+    <locations>
+
+        <item>3,3,White_Coin</item>
+        <item>3,4,Black_Coin</item>
+
+        <item>4,3,Black_Coin</item>
+        <item>4,4, White_Coin</item>
+
+    </locations>
+    <pieces>
+
+
+    </pieces>
+</game_config>

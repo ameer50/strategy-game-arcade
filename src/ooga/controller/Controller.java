@@ -32,7 +32,6 @@ public class Controller {
         CHESS,
         CHECKERS,
         CONNECTFOUR,
-        GO,
         OTHELLO,
         TIC_TAC_TOE,
         CUSTOM,
@@ -90,6 +89,12 @@ public class Controller {
             case CONNECTFOUR:
                 board = new ConnectFourBoard(processor.getSettings(), processor.getInitialPieceLocations(),
                         processor.getMovePatterns());
+                break;
+            case OTHELLO:
+                board = new OthelloBoard(processor.getSettings(), processor.getInitialPieceLocations(),
+                        processor.getMovePatterns());
+                
+
         } //printMessageAndTime("Setup Board.");
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
