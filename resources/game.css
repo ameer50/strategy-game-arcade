@@ -121,7 +121,7 @@
     -fx-font-weight: bold;
     -fx-font-size: 14px;
     -fx-font-family: "Trebuchet MS";
-    -fx-min-width: 115;
+    -fx-min-width: 130;
     -fx-min-height: 35;
 
 }
@@ -155,7 +155,7 @@
     /*-fx-border-color: #fadcc8;*/
     -fx-background-color: #fad2a0;
     -fx-padding: 5 10 5 10;
-    -fx-fill: #ffffff;
+    -fx-fill: BLACK;
     -fx-font-size: 20pt;
     -fx-font-family: "Trebuchet MS";
     -fx-vgap: 10;

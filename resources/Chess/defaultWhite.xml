@@ -7,6 +7,7 @@
         <width>8</width>
         <height>8</height>
         <bottomColor>White</bottomColor>
+        <icon>Pawn</icon>
     </settings>
     <locations>
         <item>0,0,Black_Rook</item>

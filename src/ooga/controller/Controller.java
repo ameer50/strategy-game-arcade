@@ -1,8 +1,10 @@
 package ooga.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
+import ooga.Main;
 import ooga.board.Board;
 import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
@@ -92,6 +94,7 @@ public class Controller {
         //printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
+        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
 
         if (menuScreen.isDarkMode()){
@@ -101,9 +104,6 @@ public class Controller {
         setUpHistory();
         setUpPlayers();
         setListeners();
-
-
-
 
     }
 
@@ -199,6 +199,10 @@ public class Controller {
             toggleActivePlayer();
         });
 
+        dashboardView.setNewWindowClicked((e) -> {
+            newWindow();
+        });
+
         board.setOnPieceCaptured((int toX, int toY) -> {
             boardView.getCellAt(toX, toY).setPiece(null);
         });
@@ -262,5 +266,18 @@ public class Controller {
         activePlayer.doMove(m);
         boardView.doMove(m);
         //board.print();
+    }
+
+    private void newWindow() {
+        Stage newStage = new Stage();
+        Thread thread = new Thread(() -> Platform.runLater(() -> {
+            Main newSimul = new Main();
+            try {
+                newSimul.start(newStage);
+            } catch (NullPointerException e) {
+                System.out.println("Null.");
+            }
+        }));
+        thread.start();
     }
 }

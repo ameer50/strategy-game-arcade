@@ -60,6 +60,20 @@
     -fx-hgap: 5;
 }
 
+.darkmode {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #F8F8FF;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-padding: 10 20 10 20;
+    -fx-min-width: 80;
+    -fx-min-height: 40;
+}
+
 .rectangle {
     -fx-background-color: WHITE;
     -fx-border-color: #000000;

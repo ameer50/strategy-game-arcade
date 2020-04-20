@@ -15,6 +15,7 @@ public class Move {
     private Map<Piece, Point2D> capturedPiecesAndLocations;
     private boolean isUndo;
     private boolean isPromote;
+    private boolean isPieceGenerated;
 
     public Move(Point2D startLocation, Point2D endLocation) {
         this.startLocation = startLocation;
@@ -22,6 +23,7 @@ public class Move {
         capturedPiecesAndLocations = new HashMap<>();
         isUndo = false;
         isPromote = false;
+        isPieceGenerated = false;
     }
 
     public Move getReverseMove() {
@@ -73,5 +75,13 @@ public class Move {
 
     public void setPromote(boolean isPromote) {
         this.isPromote = isPromote;
+    }
+
+    public boolean isPieceGenerated() {
+        return isPieceGenerated;
+    }
+
+    public void setPieceGenerated(boolean isPieceGenerated) {
+        this.isPieceGenerated = isPieceGenerated;
     }
 }
