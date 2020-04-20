@@ -94,6 +94,7 @@ public class Controller {
         //printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
+        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
 
         if (menuScreen.isDarkMode()){

@@ -2,6 +2,7 @@ package ooga.view;
 
 import javafx.scene.layout.StackPane;
 import ooga.ProcessCoordinateInterface;
+import ooga.controller.Controller;
 import ooga.history.Move;
 
 import java.awt.geom.Point2D;
@@ -29,11 +30,23 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private Point2D selectedLocation;
     private static final int ANIM_DURATION = 20;
 
+//    private enum GameIcon {
+//        CHESS("PAWN"),
+//        CHECKERS("COIN"),
+//        CONNECT4("DISC"),
+//        OTHELLO("DISC");
+//
+//        private final String icon;
+//        private GameIcon(String icon) {
+//            this.icon = icon;
+//        }
+//    }
+
     public BoardView(int width, int height, Map<Point2D, String> locations) {
         this.width = width;
         this.height = height;
         cellArray = new CellView[width][height];
-        cellList = new CellView[width * height];
+        cellList = new CellView[width * height + 2];
 
         cellSize = BOARD_WIDTH/width;
         cellSpan = cellSize+PIECE_SPACE;
@@ -45,28 +58,31 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         checkeredColor();
         fillCells();
         setUpPieces();
+        //setUpIcons();
     }
 
     public CellView getCellAt(int x, int y) {
 
-        if (inBounds(x,y)) {
-            return cellArray[x][y];
-        }
-        return null;
+//        if (inBounds(x,y)) {
+//            return cellArray[x][y];
+//        }
+        return (CellView) cellList[x * width + y];
+        //return null;
     }
 
     public CellView getCellAt(Point2D location) {
-        if (inBounds((int) location.getX(), (int) location.getY())){
-            return cellArray[(int) location.getX()][(int) location.getY()];
-        }
-        return null;
+//        if (inBounds((int) location.getX(), (int) location.getY())){
+//            return cellArray[(int) location.getX()][(int) location.getY()];
+//        }
+//        return null;
+        return getCellAt((int) location.getX(), (int) location.getY());
     }
 
     public void checkeredColor() {
         colorSequence1 = new ArrayList<>();
         for (int i = 0; i < width; i++){
-            if (i % 2 == 0) colorSequence1.add("cellcolor1");
-            else colorSequence1.add("cellcolor2");
+            if (i % 2 == 0) colorSequence1.add("cellcolor2");
+            else colorSequence1.add("cellcolor1");
         }
         colorSequence2 = new ArrayList<>(colorSequence1);
         Collections.reverse(colorSequence2);
@@ -81,12 +97,21 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
                     (BOARD_YOFFSET+(cellSpan*i)), cellSize, cellSize, color);
                 cellList[index] = cellArray[i][j];
                 index++;
-                cellArray[i][j].setNoBorderFunction((a, b) -> {
-                    for (CellView c: this) {
-                        c.toggleNoBorder();
-                    }
-                });
+//                cellArray[i][j].setNoBorderFunction((a, b) -> {
+//                    for (CellView c: this) {
+//                        c.toggleNoBorder();
+//                    }
+//                });
             }
+        }
+        cellList[index] = new IconView(width, 0, 700, 10, cellSize / 2, cellSize / 2, "cellcolor1");
+        cellList[index+1] = new IconView(width, 1, 800, 10, cellSize / 2, cellSize / 2, "cellcolor1");
+        for (CellView cell : this) {
+            cell.setNoBorderFunction((a, b) -> {
+                for (CellView c : this) {
+                    c.toggleNoBorder();
+                }
+            });
         }
     }
 
@@ -96,6 +121,11 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
             int y = (int) point.getY();
             this.getCellAt(x, y).setPiece(new PieceView(pieceLocations.get(point)));
         }
+    }
+
+    public void arrangePlayerIcons(String icon, String playerOneColor, String playerTwoColor) {
+        this.getCellAt(width, 0).setPiece(new PieceView(String.format("%s_%s", playerOneColor, icon)));
+        this.getCellAt(width, 1).setPiece(new PieceView(String.format("%s_%s", playerTwoColor, icon)));
     }
 
     public StackPane[] getCells() {
@@ -155,19 +185,21 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     public Iterator<CellView> iterator() {
         return new Iterator<>() {
             private int i = 0;
-            private int j = 0;
+            //private int j = 0;
 
             @Override
             public boolean hasNext() {
-                return !(i == cellArray.length - 1 && j == cellArray[i].length);
+                //return !(i == cellArray.length - 1 && j == cellArray[i].length);
+                return i < cellList.length;
             }
 
             @Override
             public CellView next() {
-                if (j <= cellArray[i].length - 1) return cellArray[i][j++];
-                i++;
-                j = 0;
-                return cellArray[i][j];
+//                if (j <= cellArray[i].length - 1) return cellArray[i][j++];
+//                i++;
+//                j = 0;
+//                return cellArray[i][j];
+                return (CellView) cellList[i++];
             }
 
             @Override
