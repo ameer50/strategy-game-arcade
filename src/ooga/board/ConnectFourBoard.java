@@ -11,16 +11,113 @@ import java.util.Map;
 
 public class ConnectFourBoard extends Board implements Serializable {
 
+    private static final int PIECES_NEEDED = 3;
 
     public ConnectFourBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
             Pair<String, Integer>> pieces) {
         super(settings, locations, pieces);
     }
 
-
     @Override
     public String checkWon() {
+        String winner;
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                winner = checkAllDirections(i, j);
+                if (winner != null) return winner;
+            }
+        }
         return null;
+    }
+
+    private String checkAllDirections(int i, int j) {
+        StringBuilder winner = new StringBuilder();
+        winner.append(checkUpLeft(i, j, PIECES_NEEDED));
+        winner.append(checkUp(i, j, PIECES_NEEDED));
+        winner.append(checkUpRight(i, j, PIECES_NEEDED));
+        winner.append(checkRight(i, j, PIECES_NEEDED));
+        winner.append(checkDownRight(i, j, PIECES_NEEDED));
+        winner.append(checkDown(i, j, PIECES_NEEDED));
+        winner.append(checkDownLeft(i, j, PIECES_NEEDED));
+        winner.append(checkLeft(i, j, PIECES_NEEDED));
+        System.out.println(winner);
+        return winner.length() > 0 ? winner.toString() : null;
+    }
+
+    private boolean piecesMatch(int x1, int y1, int x2, int y2) {
+        return getPieceAt(x1, y1).getColor().equals(getPieceAt(x2, y2).getColor());
+    }
+
+    private String checkLeft(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i, j - 1)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i, j - 1) == null) return "";
+        if (!piecesMatch(i, j, i, j - 1)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkLeft(i, j - 1, piecesNeeded - 1);
+        return "";
+    }
+
+    private String checkDownLeft(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i + 1, j - 1)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i + 1, j - 1) == null) return "";
+        if (!piecesMatch(i, j, i + 1, j - 1)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkDownLeft(i + 1, j - 1, piecesNeeded - 1);
+        return "";
+    }
+
+    private String checkDown(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i + 1, j)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i + 1, j) == null) return "";
+        if (!piecesMatch(i, j, i + 1, j)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkDown(i + 1, j, piecesNeeded - 1);
+        return "";
+    }
+
+    private String checkDownRight(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i + 1, j + 1)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i + 1, j + 1) == null) return "";
+        if (!piecesMatch(i, j, i + 1, j + 1)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkDownRight(i + 1, j + 1, piecesNeeded - 1);
+        return "";
+    }
+
+    private String checkUp(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i - 1, j)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i - 1, j) == null) return "";
+        if (!piecesMatch(i, j, i - 1, j)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkUp(i - 1, j, piecesNeeded - 1);
+        return "";
+    }
+
+    private String checkRight(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i, j + 1)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i, j + 1) == null) return "";
+        if (!piecesMatch(i, j, i, j + 1)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkRight(i, j + 1, piecesNeeded - 1);
+        return "";
+    }
+
+    private String checkUpRight(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i - 1, j + 1)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i - 1, j + 1) == null) return "";
+        if (!piecesMatch(i, j, i - 1, j + 1)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkUpRight(i - 1, j + 1, piecesNeeded - 1);
+        return "";
+    }
+
+    private String checkUpLeft(int i, int j, int piecesNeeded) {
+        if (!isCellInBounds(i - 1, j - 1)) return "";
+        if (getPieceAt(i, j) == null || getPieceAt(i - 1, j - 1) == null) return "";
+        if (!piecesMatch(i, j, i - 1, j - 1)) return "";
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        checkUpLeft(i - 1, j - 1, piecesNeeded - 1);
+        return "";
     }
 
     @Override
