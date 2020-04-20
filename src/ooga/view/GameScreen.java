@@ -21,10 +21,12 @@ public class GameScreen {
     private BoardView boardView;
     private DashboardView dashboardView;
     private String gameStyle;
+    private boolean isDarkMode;
 
     public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
         this.stage = stage;
         this.gameStyle = res.getString("GameStyleSheet");
+        this.isDarkMode = false;
         initializeView(width, height, locations);
         stage.show();
     }
@@ -57,8 +59,24 @@ public class GameScreen {
 
     public void toggleGameDarkMode(){
         scene.getStylesheets().remove(gameStyle);
-        gameStyle = (gameStyle.equals(res.getString("GameStyleSheet"))) ? res.getString("GameDarkSheet") : res.getString("GameStyleSheet");
+        if (gameStyle.equals(res.getString("GameStyleSheet"))){
+            gameStyle = res.getString("GameDarkSheet");
+            isDarkMode = true;
+        }else{
+            gameStyle = res.getString("GameStyleSheet");
+            isDarkMode = false;
+        }
         scene.getStylesheets().add(gameStyle);
     }
+
+    public void enableGameCSS(String cssStyle){
+        if (!isDarkMode){
+            scene.getStylesheets().remove(gameStyle);
+            gameStyle = res.getString(cssStyle + "StyleSheet");
+            scene.getStylesheets().add(gameStyle);
+        }
+    }
+
+
 
 }

@@ -104,6 +104,8 @@ public class Controller {
             gameScreen.toggleGameDarkMode();
             dashboardView.toggleDarkMode();
         }
+
+        gameScreen.enableGameCSS(menuScreen.getGameChoice());
         setUpHistory();
         setUpPlayers();
         setListeners();
