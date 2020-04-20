@@ -55,6 +55,7 @@ public class Move {
 
     @Override
     public String toString() {
+        if (isPieceGenerated) return String.format("%s added at (%d, %d)", piece, (int) endLocation.getX(), (int) endLocation.getY());
         return String.format("%s from (%d, %d) to (%d, %d)", piece, (int) startLocation.getX(), (int) startLocation.getY(), (int) endLocation.getX(), (int) endLocation.getY());
     }
 
