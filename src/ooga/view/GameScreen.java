@@ -54,8 +54,10 @@ public class GameScreen {
 
     public DashboardView getDashboardView() { return dashboardView;}
 
-    public void setGameStyle(String newStyle){
-        gameStyle = newStyle;
+    public void toggleGameDarkMode(){
+        scene.getStylesheets().remove(gameStyle);
+        gameStyle = (gameStyle.equals(res.getString("GameStyleSheet"))) ? res.getString("GameDarkSheet") : res.getString("GameStyleSheet");
+        scene.getStylesheets().add(gameStyle);
     }
 
 }

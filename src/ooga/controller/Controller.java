@@ -65,6 +65,7 @@ public class Controller {
         menuScreen.setButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
+
         printMessageAndTime("Set up listeners.");
     }
 
@@ -92,9 +93,18 @@ public class Controller {
 
         boardView = gameScreen.getBoardView();
         dashboardView = gameScreen.getDashboardView();
+
+        if (menuScreen.isDarkMode()){
+            gameScreen.toggleGameDarkMode();
+            dashboardView.toggleDashboardDarkMode();
+        }
         setUpHistory();
         setUpPlayers();
         setListeners();
+
+
+
+
     }
 
     private void setUpPlayers() {

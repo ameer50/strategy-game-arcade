@@ -61,20 +61,7 @@ public class DashboardView {
         hbox.getChildren().add(history);
         hbox.getStyleClass().add("hboxlist");
 
-        HBox darkButtonBox = new HBox();
-
-        Button dark = new Button();
-        darkButtonBox.getStyleClass().add("hbox");
-
-        dark.setOnMouseClicked((e) -> {
-            toggleDarkMode();
-        });
-
-        darkButtonBox.getChildren().add(dark);
-
-
-
-        display.getChildren().addAll(darkButtonBox, scores, hbox, bottom, auxiliaryButtons);
+        display.getChildren().addAll(scores, hbox, bottom, auxiliaryButtons);
         display.getStyleClass().add("display");
 
     }
@@ -293,9 +280,8 @@ public class DashboardView {
         this.winner = winner;
     }
 
-    public void toggleDarkMode(){
-
+    public void toggleDashboardDarkMode(){
         popupStyle = (popupStyle.equals(res.getString("PopupStyleSheet"))) ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
-
     }
+
 }

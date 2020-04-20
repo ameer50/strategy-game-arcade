@@ -42,13 +42,16 @@ public class MenuScreen {
     private VBox menuVBox;
     private String menuStyle;
     private String popupStyle;
+    private Button darkButton;
+    private boolean isDarkMode;
 
 
     public MenuScreen(Stage stage){
         this.stage = stage;
         this.menuVBox = new VBox();
-        menuStyle = res.getString("MenuDarkSheet");
-        popupStyle = res.getString("PopupDarkSheet");
+        this.isDarkMode = false;
+        menuStyle = res.getString("MenuStyleSheet");
+        popupStyle = res.getString("PopupStyleSheet");
         startView();
         stage.show();
     }
@@ -69,6 +72,13 @@ public class MenuScreen {
         menuVBox.setAlignment(Pos.CENTER);
         root.setCenter(menuVBox);
 
+        VBox darkButtonBox = new VBox();
+        darkButton = new Button("Dark Mode");
+        darkButtonBox.getChildren().add(darkButton);
+        darkButtonBox.setAlignment(Pos.CENTER);
+        root.setTop(darkButtonBox);
+        listenDarkModeButton();
+
 
     }
 
@@ -84,6 +94,7 @@ public class MenuScreen {
             });
         }
     }
+
 
     private void setUpPlayerPopUp() {
         myPopupScreen.getNewPopup();
@@ -269,10 +280,28 @@ public class MenuScreen {
         return playerTwoName;
     }
 
-    public void toggleDarkMode(){
-        popupStyle = (popupStyle.equals(res.getString("MenuStyleSheet"))) ? res.getString("MenuDarkSheet") : res.getString("MenuStyleSheet");
-        popupStyle = (popupStyle.equals(res.getString("PopupStyleSheet"))) ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
+    public void toggleMenuDarkMode(){
+        isDarkMode = !isDarkMode;
+        scene.getStylesheets().remove(menuStyle);
+        scene.getStylesheets().remove(popupStyle);
+        menuStyle = isDarkMode ? res.getString("MenuDarkSheet") : res.getString("MenuStyleSheet");
+        popupStyle = isDarkMode ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
+        scene.getStylesheets().add(menuStyle);
+        scene.getStylesheets().add(popupStyle);
 
+
+
+    }
+
+    public boolean isDarkMode(){
+        return isDarkMode;
+    }
+
+    private void listenDarkModeButton(){
+        darkButton.setOnAction(event -> {
+            System.out.println("dark modeeee");
+            toggleMenuDarkMode();
+        });
     }
 
 }
