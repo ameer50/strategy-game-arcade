@@ -290,9 +290,7 @@ public class DashboardView {
         this.winner = winner;
     }
 
-<<<<<<< HEAD
-    public void toggleDashboardDarkMode(){
-=======
+
     public Button getUndoButton() {
         return undoButton;
     }
@@ -302,8 +300,6 @@ public class DashboardView {
     }
 
     public void toggleDarkMode(){
-
->>>>>>> cda384004623f7c8235639aa97b952d7bfc98eb3
         popupStyle = (popupStyle.equals(res.getString("PopupStyleSheet"))) ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
     }
 

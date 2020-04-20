@@ -96,7 +96,7 @@ public class Controller {
 
         if (menuScreen.isDarkMode()){
             gameScreen.toggleGameDarkMode();
-            dashboardView.toggleDashboardDarkMode();
+            dashboardView.toggleDarkMode();
         }
         setUpHistory();
         setUpPlayers();
