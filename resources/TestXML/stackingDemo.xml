@@ -7,7 +7,7 @@
     <width>8</width>
     <height>8</height>
     <bottomColor>Black</bottomColor>
-
+    <icon>Coin</icon>
   </settings>
   <locations>
     <item>0,1,White_Coin</item>
@@ -18,20 +18,18 @@
     <item>1,4,White_Coin</item>
     <item>1,6,White_Coin</item>
     <item>2,1,White_Coin</item>
-    <item>2,3,White_Coin</item>
+    <item>2,3,Black_Coin</item>
     <item>2,5,White_Coin</item>
     <item>2,7,White_Coin</item>
 
-
+    <item>4,3,Black_Coin</item>
     <item>5,0,Black_Coin</item>
-    <item>5,2,Black_Coin</item>
     <item>5,4,Black_Coin</item>
-    <item>5,6,Black_Coin</item>
+    <item>4,6,Black_Coin</item>
     <item>6,1,Black_Coin</item>
     <item>6,3,Black_Coin</item>
     <item>6,5,Black_Coin</item>
     <item>6,7,Black_Coin</item>
-    <item>7,0,Black_Coin</item>
     <item>7,2,Black_Coin</item>
     <item>7,4,Black_Coin</item>
     <item>7,6,Black_Coin</item>

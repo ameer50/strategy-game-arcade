@@ -85,7 +85,7 @@ public class CPUPlayer extends Player {
   }
 
   public List<Integer> generateAlphaBetaMove() {
-    int depth = 4;
+    int depth = 2;
     int alpha = Integer.MIN_VALUE;
     int beta = Integer.MAX_VALUE;
 
@@ -131,7 +131,7 @@ public class CPUPlayer extends Player {
         }
       }
     } else {
-      bestValue = Integer.MIN_VALUE;
+      bestValue = Integer.MAX_VALUE;
       for (List<Integer> nextMove : nextBoard.getPossibleMoves(color)) {
         int value = alphabeta(nextMove, depth-1, alpha, beta, true, nextBoard);
         bestValue = Math.min(bestValue, value);

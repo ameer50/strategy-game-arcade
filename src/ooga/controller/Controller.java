@@ -114,7 +114,7 @@ public class Controller {
         if (! menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.TRIVIAL);
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
