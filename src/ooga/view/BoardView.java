@@ -124,8 +124,15 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     }
 
     public void arrangePlayerIcons(String icon, String playerOneColor, String playerTwoColor) {
-        this.getCellAt(width, 0).setPiece(new PieceView(String.format("%s_%s", playerOneColor, icon)));
-        this.getCellAt(width, 1).setPiece(new PieceView(String.format("%s_%s", playerTwoColor, icon)));
+        IconView playerOneIcon = (IconView) getCellAt(width, 0);
+        IconView playerTwoIcon = (IconView) getCellAt(width, 1);
+        String playerOneIconName = String.format("%s_%s", playerOneColor, icon);
+        String playerTwoIconName = String.format("%s_%s", playerTwoColor, icon);
+
+        playerOneIcon.setIconName(playerOneIconName);
+        playerTwoIcon.setIconName(playerTwoIconName);
+        playerOneIcon.setPiece(new PieceView(playerOneIconName));
+        playerTwoIcon.setPiece(new PieceView(playerTwoIconName));
     }
 
     public StackPane[] getCells() {
@@ -154,6 +161,10 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         }
 
         initCell.setPiece(null);
+
+        if (m.isPieceGenerated()) {
+            initCell.setPiece(new PieceView(((IconView) initCell).getIconName()));
+        }
     }
 
     public void setOnPieceClicked(ProcessCoordinateInterface clicked) {
