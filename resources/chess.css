@@ -1,0 +1,206 @@
+.root {
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #DEB887, #D2691E);
+    -fx-padding: 10;
+    -fx-box-border: #000000;
+    -fx-border-width: 10;
+}
+
+.button {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 50% 100%, #DEB887, #D2691E);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 30px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-padding: 10 20 10 20;
+    -fx-min-width: 250;
+    -fx-min-height: 60;
+}
+
+.label {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #404040;
+}
+
+.vbox {
+    -fx-alignment: center;
+    -fx-spacing: 25;
+    -fx-padding: 10;
+}
+
+.hbox {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+}
+
+.display {
+    -fx-alignment: center;
+    -fx-border-color: #e1ebff;
+    -fx-border-width: 4px;
+    -fx-border-insets: 5;
+    -fx-border-style: solid inside;
+    -fx-padding: 10;
+    -fx-background-color: BLACK;
+}
+
+.text-area:focused .content {
+    -fx-border-color: #000000;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-border-width: 5;
+    -fx-padding: 10 20 10 20;
+}
+
+.text-field {
+    -fx-pref-columns: 10;
+}
+
+.leftvbox {
+    -fx-alignment: center;
+    -fx-padding: 10;
+    -fx-spacing: 10;
+}
+
+.buttonvbox {
+    -fx-spacing: 10;
+}
+
+.pane {
+    -fx-border-color: #000000;
+    -fx-border-width: 10;
+    -fx-border-style: solid inside;
+    -fx-padding: 10;
+}
+
+.rectangle {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-border-width: 10;
+    -fx-border-style: solid inside;
+    -fx-padding: 10;
+}
+
+.yellowborder {
+    -fx-border-style: solid inside;
+    -fx-border-width: 3;
+    -fx-border-insets: 3;
+    -fx-border-color: YELLOW;
+}
+
+.redborder {
+    -fx-border-style: solid inside;
+    -fx-border-width: 3;
+    -fx-border-insets: 3;
+    -fx-border-color: #e60000;
+}
+
+.blackborder {
+    -fx-border-style: solid inside;
+    -fx-border-width: 3;
+    -fx-border-insets: 3;
+    -fx-border-color: #000000;
+}
+
+.cellcolor1 {
+    -fx-fill: #F8F8FF;
+}
+
+.cellcolor2 {
+    -fx-fill: #808080;
+}
+
+.auxbuttons {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0, 1, 2, 3, 0;
+    -fx-text-fill: #F8F8FF;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-min-width: 130;
+    -fx-min-height: 35;
+
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #be8264, #78503c);
+}
+
+.gpane {
+    -fx-padding: 10;
+    -fx-spacing: 25;
+    -fx-alignment: center;
+    -fx-vgap: 5;
+    -fx-hgap: 5;
+}
+
+.stats {
+    -fx-font-smoothing-type: lcd;
+    -fx-fill: white;
+    -fx-font-size: 13pt;
+    -fx-font-family: "Trebuchet MS";
+    -fx-vgap: 10;
+}
+
+.scoreshbox {
+    -fx-spacing: 15;
+    -fx-background-radius: 5;
+    -fx-alignment: center;
+    /*-fx-border-width: 5;*/
+    /*-fx-border-radius: 5;*/
+    /*-fx-border-color: #fadcc8;*/
+    -fx-background-color: #FFF5EE;
+    -fx-padding: 5 10 5 10;
+    -fx-fill: BLACK;
+    -fx-font-size: 20pt;
+    -fx-font-family: "Trebuchet MS";
+    -fx-vgap: 10;
+    -fx-hgap: 15;
+}
+
+.hboxlist {
+    -fx-background-insets: 0;
+    -fx-padding: 20 20 20 20;
+    -fx-border-width: 5px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 10px;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #DEB887, #D2691E);
+    -fx-alignment: center;
+}
+
+.listview {
+    -fx-border-color: #FFF5EE;
+    -fx-border-width: 10px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 10px;
+    -fx-background-color: #FFF5EE;
+}
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected {
+    -fx-background-color: linear-gradient(from 0% 25% to 75% 100%, #F5FFFA, #be8264);
+    -fx-text-fill: white;
+}
+
+.list-cell:even { /* changed to even */
+    -fx-background-color: #FFC0CB;
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+}
+
+.list-cell:odd { /* changed to odd */
+    -fx-background-color: #FFF5EE;
+    -fx-font-family: "Trebuchet MS";
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: #DEB887;
+    -fx-text-fill: #ffffff;
+}
+

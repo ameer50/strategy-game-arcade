@@ -27,6 +27,9 @@ public class ConnectFourBoard extends Board implements Serializable {
                 if (winner.length() > 0) return winner;
             }
         }
+        if (this.isFull()){
+            return "Tie";
+        }
         return null;
     }
 
@@ -51,7 +54,7 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (!isCellInBounds(i, j - 1)) return "";
         if (getPieceAt(i, j) == null || getPieceAt(i, j - 1) == null) return "";
         if (!piecesMatch(i, j, i, j - 1)) return "";
-        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
+        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();
         return checkLeft(i, j - 1, piecesNeeded - 1);
     }
 

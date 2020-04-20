@@ -319,4 +319,10 @@ public class DashboardView {
         popupStyle = (popupStyle.equals(res.getString("PopupStyleSheet"))) ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
     }
 
+    public void addIcons(List<CellView> icons) {
+        HBox iconBox = new HBox();
+        iconBox.getChildren().addAll(icons);
+        iconBox.setAlignment(Pos.CENTER);
+        display.getChildren().add(0, iconBox);
+    }
 }

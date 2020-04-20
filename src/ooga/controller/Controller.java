@@ -98,11 +98,14 @@ public class Controller {
         boardView = gameScreen.getBoardView();
         boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
+        dashboardView.addIcons(boardView.getIcons());
 
         if (menuScreen.isDarkMode()){
             gameScreen.toggleGameDarkMode();
             dashboardView.toggleDarkMode();
         }
+
+        gameScreen.enableGameCSS(menuScreen.getGameChoice());
         setUpHistory();
         setUpPlayers();
         setListeners();
