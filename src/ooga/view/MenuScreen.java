@@ -237,7 +237,7 @@ public class MenuScreen {
 
     private void arrangeButtons(){
 
-        buttons = new ButtonGroup(List.of("Chess", "Checkers", "Othello"));
+        buttons = new ButtonGroup(List.of("Chess", "Checkers", "ConnectFour"));
 
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
