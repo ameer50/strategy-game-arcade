@@ -61,12 +61,12 @@ public class Controller {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
-        printMessageAndTime("Set up Menu Screen.");
+        //printMessageAndTime("Set up Menu Screen.");
         menuScreen.setButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
-
         printMessageAndTime("Set up listeners.");
+
     }
 
     private void setUpGameScreen(String gameChoice, String fileChoice) {
@@ -75,7 +75,7 @@ public class Controller {
 
         processor = new XMLProcessor();
         processor.parse(gameXML);
-        printMessageAndTime("XML parsed.");
+        //printMessageAndTime("XML parsed.");
 
         //TODO: Change to reflection.
         switch (gameType) {
@@ -86,10 +86,10 @@ public class Controller {
             case CHECKERS:
                 board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(),
                     processor.getMovePatterns());
-        } printMessageAndTime("Setup Board.");
+        } //printMessageAndTime("Setup Board.");
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
-        printMessageAndTime("Setup Game Screen.");
+        //printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
         dashboardView = gameScreen.getDashboardView();
@@ -133,11 +133,11 @@ public class Controller {
         boardView.setOnPieceClicked((int x, int y) -> {
             System.out.println(boardView.getCellAt(x,y));
             PieceView pieceView = boardView.getCellAt(x, y).getPiece();
-            System.out.println(pieceView.getColor()); // ***
+            //System.out.println(pieceView.getColor()); // ***
             if (pieceView.getColor().equals(activePlayer.getColor())) {
                 boardView.setSelectedLocation(x, y);
                 boardView.highlightValidMoves(board.getValidMoves(x, y));
-                System.out.println("Highlighted moves.");
+                //System.out.println("Highlighted moves.");
             }
         });
 
@@ -154,7 +154,7 @@ public class Controller {
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
 
             toggleActivePlayer();
-            printMessageAndTime("Did user's move.");
+            //printMessageAndTime("Did user's move.");
 
             String winner = board.checkWon();
             if (winner != null) {
@@ -164,7 +164,7 @@ public class Controller {
 
             if (activePlayer.isCPU()) {
                 doCPUMove();
-                printMessageAndTime("Did CPU's move.");
+                //printMessageAndTime("Did CPU's move.");
             }
         });
 
@@ -189,13 +189,11 @@ public class Controller {
                 PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
                 boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
             }
-            board.print();
         });
 
         dashboardView.setRedoMoveClicked((e) -> {
             Move prevMove = history.redo();
             historyList.add(prevMove);
-
             doMove(prevMove);
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
