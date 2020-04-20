@@ -1,5 +1,5 @@
 .root {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, BLACK, #FA8072);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #DEB887, #D2691E);
     -fx-padding: 10;
     -fx-box-border: #000000;
     -fx-border-width: 10;
@@ -7,7 +7,7 @@
 
 .button {
     -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, BLACK, #FA8072);
+            linear-gradient(from 0% 0% to 50% 100%, #DEB887, #D2691E);
     -fx-background-radius: 10;
     -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #ffffff;
@@ -105,11 +105,11 @@
 }
 
 .cellcolor1 {
-    -fx-fill: #B22222;
+    -fx-fill: #F8F8FF;
 }
 
 .cellcolor2 {
-    -fx-fill: BLACK;
+    -fx-fill: #808080;
 }
 
 .auxbuttons {
@@ -168,7 +168,7 @@
     -fx-border-width: 5px;
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, BLACK, #FA8072);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #DEB887, #D2691E);
     -fx-alignment: center;
 }
 
