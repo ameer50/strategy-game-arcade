@@ -24,7 +24,7 @@ public class ConnectFourBoard extends Board implements Serializable {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 winner = checkAllDirections(i, j);
-                if (winner != null) return winner;
+                if (winner.length() > 0) return winner;
             }
         }
         return null;
@@ -40,8 +40,7 @@ public class ConnectFourBoard extends Board implements Serializable {
         winner.append(checkDown(i, j, PIECES_NEEDED));
         winner.append(checkDownLeft(i, j, PIECES_NEEDED));
         winner.append(checkLeft(i, j, PIECES_NEEDED));
-        System.out.println(winner);
-        return winner.length() > 0 ? winner.toString() : null;
+        return winner.toString();
     }
 
     private boolean piecesMatch(int x1, int y1, int x2, int y2) {
@@ -53,8 +52,7 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i, j - 1) == null) return "";
         if (!piecesMatch(i, j, i, j - 1)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkLeft(i, j - 1, piecesNeeded - 1);
-        return "";
+        return checkLeft(i, j - 1, piecesNeeded - 1);
     }
 
     private String checkDownLeft(int i, int j, int piecesNeeded) {
@@ -62,8 +60,7 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i + 1, j - 1) == null) return "";
         if (!piecesMatch(i, j, i + 1, j - 1)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkDownLeft(i + 1, j - 1, piecesNeeded - 1);
-        return "";
+        return checkDownLeft(i + 1, j - 1, piecesNeeded - 1);
     }
 
     private String checkDown(int i, int j, int piecesNeeded) {
@@ -71,8 +68,7 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i + 1, j) == null) return "";
         if (!piecesMatch(i, j, i + 1, j)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkDown(i + 1, j, piecesNeeded - 1);
-        return "";
+        return checkDown(i + 1, j, piecesNeeded - 1);
     }
 
     private String checkDownRight(int i, int j, int piecesNeeded) {
@@ -80,8 +76,8 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i + 1, j + 1) == null) return "";
         if (!piecesMatch(i, j, i + 1, j + 1)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkDownRight(i + 1, j + 1, piecesNeeded - 1);
-        return "";
+        return checkDownRight(i + 1, j + 1, piecesNeeded - 1);
+
     }
 
     private String checkUp(int i, int j, int piecesNeeded) {
@@ -89,17 +85,19 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i - 1, j) == null) return "";
         if (!piecesMatch(i, j, i - 1, j)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkUp(i - 1, j, piecesNeeded - 1);
-        return "";
+        return checkUp(i - 1, j, piecesNeeded - 1);
     }
 
     private String checkRight(int i, int j, int piecesNeeded) {
         if (!isCellInBounds(i, j + 1)) return "";
         if (getPieceAt(i, j) == null || getPieceAt(i, j + 1) == null) return "";
         if (!piecesMatch(i, j, i, j + 1)) return "";
-        if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkRight(i, j + 1, piecesNeeded - 1);
-        return "";
+        if (piecesNeeded == 1) {
+            System.out.println("reached " + getPieceAt(i,j).getColor());
+            return getPieceAt(i, j).getColor();
+        }
+
+        return checkRight(i, j + 1, piecesNeeded - 1);
     }
 
     private String checkUpRight(int i, int j, int piecesNeeded) {
@@ -107,8 +105,8 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i - 1, j + 1) == null) return "";
         if (!piecesMatch(i, j, i - 1, j + 1)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkUpRight(i - 1, j + 1, piecesNeeded - 1);
-        return "";
+        return checkUpRight(i - 1, j + 1, piecesNeeded - 1);
+
     }
 
     private String checkUpLeft(int i, int j, int piecesNeeded) {
@@ -116,8 +114,7 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i - 1, j - 1) == null) return "";
         if (!piecesMatch(i, j, i - 1, j - 1)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();;
-        checkUpLeft(i - 1, j - 1, piecesNeeded - 1);
-        return "";
+        return checkUpLeft(i - 1, j - 1, piecesNeeded - 1);
     }
 
     @Override
