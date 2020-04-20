@@ -72,14 +72,19 @@ public class MenuScreen {
         menuVBox.setAlignment(Pos.CENTER);
         root.setCenter(menuVBox);
 
+        arrangeDarkModeButton();
+
+
+    }
+
+    private void arrangeDarkModeButton() {
         VBox darkButtonBox = new VBox();
         darkButton = new Button("Dark Mode");
+        darkButton.getStyleClass().add("darkmode");
         darkButtonBox.getChildren().add(darkButton);
-        darkButtonBox.setAlignment(Pos.CENTER);
+        darkButtonBox.setAlignment(Pos.TOP_RIGHT);
         root.setTop(darkButtonBox);
         listenDarkModeButton();
-
-
     }
 
     public void setButtonListener(EventHandler<ActionEvent> e) {
@@ -191,6 +196,7 @@ public class MenuScreen {
             goAction.handle(e);
         });
 
+        vBox.getStyleClass().add("vbox");
         vBox.getChildren().add(goButton);
     }
 
@@ -283,13 +289,9 @@ public class MenuScreen {
     public void toggleMenuDarkMode(){
         isDarkMode = !isDarkMode;
         scene.getStylesheets().remove(menuStyle);
-        scene.getStylesheets().remove(popupStyle);
         menuStyle = isDarkMode ? res.getString("MenuDarkSheet") : res.getString("MenuStyleSheet");
         popupStyle = isDarkMode ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
         scene.getStylesheets().add(menuStyle);
-        scene.getStylesheets().add(popupStyle);
-
-
 
     }
 
@@ -299,7 +301,6 @@ public class MenuScreen {
 
     private void listenDarkModeButton(){
         darkButton.setOnAction(event -> {
-            System.out.println("dark modeeee");
             toggleMenuDarkMode();
         });
     }

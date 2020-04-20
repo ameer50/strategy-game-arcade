@@ -121,7 +121,7 @@
     -fx-font-weight: bold;
     -fx-font-size: 14px;
     -fx-font-family: "Trebuchet MS";
-    -fx-min-width: 115;
+    -fx-min-width: 130;
     -fx-min-height: 35;
 
 }
@@ -179,6 +179,7 @@
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#696969, BLACK);;
+
 }
 
 .list-cell:filled:selected:focused, .list-cell:filled:selected {

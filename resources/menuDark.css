@@ -8,7 +8,7 @@
 
 .button {
     -fx-background-color:
-        linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
+            linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
     -fx-background-radius: 10;
     -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #ffffff;
@@ -105,6 +105,20 @@
 
 .picture-background {
     -fx-fill: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
+}
+
+.darkmode {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
+    -fx-background-radius: 10;
+    -fx-background-insets: 0,1,2,3,0;
+    -fx-text-fill: #F8F8FF;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-padding: 10 20 10 20;
+    -fx-min-width: 80;
+    -fx-min-height: 40;
 }
 
 .prompt {

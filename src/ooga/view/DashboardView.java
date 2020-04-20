@@ -39,6 +39,7 @@ public class DashboardView {
     private EventHandler<ActionEvent> redoMoveFunction;
     private EventHandler<ActionEvent> quitFunction;
     private EventHandler<ActionEvent> saveFunction;
+    private EventHandler<ActionEvent> newWindowFunction;
     private String newFileName;
     private String winner;
     private Button undoButton;
@@ -112,13 +113,13 @@ public class DashboardView {
 
     private void createAuxiliaryButtons() {
         auxiliaryButtons = new GridPane();
-        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit"));
+        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit", "New Window"));
         buttons.addStyle(res.getString("AuxiliaryButton"));
         // 115 35
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(buttons.getButtons());
 
-        int[] position = {0, 0, 1, 0, 0, 1, 1, 1};
+        int[] position = {0, 0, 1, 0, 0, 1, 1, 1, 0, 2};
         int i = 0;
         for(Button b: buttons.getButtons()){
             addGPaneElement(b, position[i++], position[i++]);
@@ -142,12 +143,22 @@ public class DashboardView {
             redoMoveFunction.handle(e);
         });
 
-        buttons.getButtons().get(2).setOnAction(e -> {
+        Button saveGame = buttons.getButtons().get(2);
+
+        saveGame.setOnAction(e -> {
             textFieldPopUp(saveFunction);
         });
 
-        buttons.getButtons().get(3).setOnAction(e -> {
+        Button quitGame = buttons.getButtons().get(3);
+
+        quitGame.setOnAction(e -> {
             quitFunction.handle(e);
+        });
+
+        Button newWindow = buttons.getButtons().get(4);
+
+        newWindow.setOnAction(e -> {
+            newWindowFunction.handle(e);
         });
     }
 
@@ -273,6 +284,11 @@ public class DashboardView {
     public void setQuitClicked(EventHandler<ActionEvent> quit) {
         quitFunction = quit;
     }
+
+    public void setNewWindowClicked(EventHandler<ActionEvent> newWindow) {
+        newWindowFunction = newWindow;
+    }
+
 
     public void setSaveClicked(EventHandler<ActionEvent> save) {
         saveFunction = save;
