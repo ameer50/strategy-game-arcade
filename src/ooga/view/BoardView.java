@@ -123,14 +123,6 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
             finalCell.setPiece(initCellPiece);
         }
 
-
-//        TranslateTransition tr = new TranslateTransition(Duration.millis(ANIM_DURATION), piece.getImage());
-//        tr.setFromX(tr.getFromX());
-//        tr.setFromY(tr.getFromY());
-//        tr.setByX(getDeltaX()*(finalY-initY));
-//        tr.setByY(getDeltaY()*(finalX-initX));
-//        tr.play();
-
         initCell.setPiece(null);
     }
 
