@@ -300,5 +300,17 @@ public abstract class Board implements Serializable {
   public Map<String, Pair<String, Integer>> getPieceTypeMap() {
     return pieceTypeMap;
   }
+
+  protected boolean isFull() {
+
+    for (int i = 0; i < height; i++) {
+      for (int j = 0; j < width; j++) {
+        if(getPieceAt(i,j) == null){
+          return false;
+        }
+      }
+    }
+    return true;
+  }
 }
 

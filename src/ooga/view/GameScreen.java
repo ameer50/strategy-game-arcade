@@ -42,6 +42,7 @@ public class GameScreen {
         Pane canvas = new Pane();
         boardView = new BoardView(width, height, locations);
         canvas.getChildren().addAll(boardView.getCells());
+        canvas.getChildren().removeAll(boardView.getIcons());
         root.getChildren().addAll(canvas);
 
         dashboardView = new DashboardView();

@@ -1,5 +1,7 @@
 package ooga.view;
 
+import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import ooga.ProcessCoordinateInterface;
 import ooga.controller.Controller;
@@ -29,6 +31,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private Point2D selectedLocation;
     private static final int ANIM_DURATION = 20;
+    private List<CellView> icons;
 
 //    private enum GameIcon {
 //        CHESS("PAWN"),
@@ -104,8 +107,12 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 //                });
             }
         }
-        cellList[index] = new IconView(width, 0, 700, 10, cellSize / 2, cellSize / 2, "cellcolor1");
-        cellList[index+1] = new IconView(width, 1, 800, 10, cellSize / 2, cellSize / 2, "cellcolor1");
+        CellView playerOneIcon = new IconView(width, 0, 0, 0, cellSize / 2, cellSize / 2, "cellcolor1");
+        CellView playerTwoIcon = new IconView(width, 1, 0, 0, cellSize / 2, cellSize / 2, "cellcolor1");
+        cellList[index] = playerOneIcon;
+        cellList[index+1] = playerTwoIcon;
+        icons = List.of(playerOneIcon, playerTwoIcon);
+
         for (CellView cell : this) {
             cell.setNoBorderFunction((a, b) -> {
                 for (CellView c : this) {
@@ -121,6 +128,10 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
             int y = (int) point.getY();
             this.getCellAt(x, y).setPiece(new PieceView(pieceLocations.get(point)));
         }
+    }
+
+    public List<CellView> getIcons() {
+        return icons;
     }
 
     public void arrangePlayerIcons(String icon, String playerOneColor, String playerTwoColor) {
