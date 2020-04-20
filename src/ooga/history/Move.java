@@ -16,6 +16,7 @@ public class Move {
     private boolean isUndo;
     private boolean isPromote;
     private boolean isPieceGenerated;
+    private String color;
 
     public Move(Point2D startLocation, Point2D endLocation) {
         this.startLocation = startLocation;
@@ -83,5 +84,13 @@ public class Move {
 
     public void setPieceGenerated(boolean isPieceGenerated) {
         this.isPieceGenerated = isPieceGenerated;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor(){
+        return color;
     }
 }

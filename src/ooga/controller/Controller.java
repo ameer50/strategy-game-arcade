@@ -5,10 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.Main;
-import ooga.board.Board;
-import ooga.board.CheckersBoard;
-import ooga.board.ChessBoard;
-import ooga.board.Piece;
+import ooga.board.*;
 import ooga.history.History;
 import ooga.history.Move;
 import ooga.player.HumanPlayer;
@@ -34,6 +31,7 @@ public class Controller {
     public enum GameType {
         CHESS,
         CHECKERS,
+        CONNECTFOUR,
         GO,
         OTHELLO,
         TIC_TAC_TOE,
@@ -88,6 +86,10 @@ public class Controller {
             case CHECKERS:
                 board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(),
                     processor.getMovePatterns());
+                break;
+            case CONNECTFOUR:
+                board = new ConnectFourBoard(processor.getSettings(), processor.getInitialPieceLocations(),
+                        processor.getMovePatterns());
         } //printMessageAndTime("Setup Board.");
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
@@ -131,7 +133,7 @@ public class Controller {
     private void setListeners() {
         /* X and Y are the indices of the cell clicked to move FROM */
         boardView.setOnPieceClicked((int x, int y) -> {
-            System.out.println(boardView.getCellAt(x,y));
+            System.out.println("piece map" + board.getPieceBiMap());
             PieceView pieceView = boardView.getCellAt(x, y).getPiece();
             //System.out.println(pieceView.getColor()); // ***
             if (pieceView.getColor().equals(activePlayer.getColor())) {

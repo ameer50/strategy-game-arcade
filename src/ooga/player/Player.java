@@ -22,6 +22,7 @@ public abstract class Player {
     public abstract boolean isCPU();
 
     public void doMove(Move m) {
+        m.setColor(color);
         board.doMove(m);
         System.out.println(m.getCapturedPiecesAndLocations());
         for (Piece capturedPiece: m.getCapturedPiecesAndLocations().keySet()) {
