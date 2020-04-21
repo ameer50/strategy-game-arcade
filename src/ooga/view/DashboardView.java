@@ -113,7 +113,7 @@ public class DashboardView {
 
     private void createAuxiliaryButtons() {
         auxiliaryButtons = new GridPane();
-        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Quit", "New Window"));
+        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Return to Menu", "New Window"));
         buttons.addStyle(res.getString("AuxiliaryButton"));
         // 115 35
         HBox buttonBox = new HBox();

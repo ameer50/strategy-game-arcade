@@ -66,10 +66,15 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     public CellView getCellAt(int x, int y) {
 
-//        if (inBounds(x,y)) {
-//            return cellArray[x][y];
-//        }
-        return (CellView) cellList[x * width + y];
+        if (inBounds(x,y)) {
+            return cellArray[x][y];
+        }
+
+        // special case that checks to return icon views located in indices not on the board itself
+        if ((x*width + y) <= cellList.length - 1){
+            return (CellView) cellList[x * width + y];
+        }
+        return null;
         //return null;
     }
 
@@ -226,6 +231,6 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     }
 
     private boolean inBounds(int x, int y){
-        return x >= 0 && x <= width && y >= 0 && y <= height;
+        return x >= 0 && x < width && y >= 0 && y < height;
     }
 }
