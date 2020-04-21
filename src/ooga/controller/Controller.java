@@ -135,24 +135,22 @@ public class Controller {
     }
 
     private void setBoardListeners() {
-        board.setOnPiecePromoted((int fromX, int fromY) -> {
-            boardView.getCellAt(fromX, fromY).setPiece(new PieceView(board.getPieceAt(fromX, fromY).getFullName()));
+        board.setOnPiecePromoted((coordinate) -> {
+            boardView.getCellAt(coordinate).setPiece(new PieceView(board.getPieceAt(coordinate).getFullName()));
         });
     }
 
     private void setBoardViewListeners() {
-        boardView.setOnPieceClicked((int x, int y) -> {
-            PieceView pieceView = boardView.getCellAt(x, y).getPiece();
+        boardView.setOnPieceClicked((coordinate) -> {
+            PieceView pieceView = boardView.getCellAt(coordinate).getPiece();
             if (pieceView.getColor().equals(activePlayer.getColor())) {
-                boardView.setSelectedLocation(x, y);
-                boardView.highlightValidMoves(board.getValidMoves(x, y));
+                boardView.setSelectedLocation(coordinate);
+                boardView.highlightValidMoves(board.getValidMoves(coordinate));
             }
         });
 
-        boardView.setOnMoveClicked((int toX, int toY) -> {
+        boardView.setOnMoveClicked((endLocation) -> {
             Point2D startLocation = boardView.getSelectedLocation();
-            Point2D endLocation = new Point2D.Double(toX, toY);
-
             Move move = new Move(startLocation, endLocation);
             doMove(move);
             removeCapturedPieces(move);

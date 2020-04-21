@@ -5,6 +5,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
 import ooga.ProcessCoordinateInterface;
 
+import java.awt.geom.Point2D;
+
 public class CellView extends StackPane {
 
     private boolean isYellow;
@@ -14,16 +16,14 @@ public class CellView extends StackPane {
     private double width;
     private double height;
     private String style;
-    private int xIndex;
-    private int yIndex;
+    private Point2D coordinate;
     private ProcessCoordinateInterface clickPieceFunction;
     private ProcessCoordinateInterface noBorderFunction;
     private ProcessCoordinateInterface movePieceFunction;
     private PieceView piece;
 
-    public CellView(int xindex, int yindex, double xpos, double ypos, double width, double height, String cellColorStyle){
-        this.xIndex = xindex;
-        this.yIndex = yindex;
+    public CellView(Point2D coordinate, double xpos, double ypos, double width, double height, String cellColorStyle){
+        this.coordinate = coordinate;
         this.xPos = xpos;
         this.yPos = ypos;
         this.width = width;
@@ -42,14 +42,11 @@ public class CellView extends StackPane {
         this.getChildren().addAll(rectangle);
         this.setLayoutX(xPos);
         this.setLayoutY(yPos);
-
         toggleNoBorder();
         setOnClickFunctions();
     }
 
     public void setPiece(PieceView piece) {
-        System.out.println("Entered setPiece");
-        System.out.println("piece = " + piece);
         // remove original piece if it exists
         if (this.piece != null) {
             this.getChildren().remove(this.piece.getImage());
@@ -60,9 +57,7 @@ public class CellView extends StackPane {
 
         // if we want to set it to null, return since we don't want to put an image there
         if (piece == null) return;
-        System.out.println("piece.getPieceName() = " + piece.getPieceName());
         ImageView pieceImage = piece.getImage();
-        System.out.println(pieceImage);
         pieceImage.setFitHeight(0.9 * height);
         pieceImage.setPreserveRatio(true);
         pieceImage.setLayoutX(width / 2 - pieceImage.getBoundsInLocal().getWidth() / 2);
@@ -81,7 +76,6 @@ public class CellView extends StackPane {
             toggleNoBorder();
         }
         isYellow = !isYellow;
-
     }
 
     public void toggleRed(){
@@ -92,7 +86,6 @@ public class CellView extends StackPane {
             toggleNoBorder();
         }
         isRed = !isRed;
-
     }
 
 
@@ -100,22 +93,22 @@ public class CellView extends StackPane {
         this.setOnMouseClicked(e -> {
             // unhighlight everything if a box is clicked that has nothing there
             if (piece == null && !isYellow){
-                noBorderFunction.process(xIndex, yIndex);
+                noBorderFunction.process(coordinate);
                 return;
             }
             // if a piece is there, and it is not highlighted, trigger lambdas to highlight it red and its valid moves yellow
             // also unhighlight everything
             if (!isRed && !isYellow){
-                noBorderFunction.process(xIndex, yIndex);
+                noBorderFunction.process(coordinate);
                 //toggleRed();
-                clickPieceFunction.process(xIndex, yIndex);
+                clickPieceFunction.process(coordinate);
             // if a cell is yellow and clicked, trigger lambda to move the piece, unhighlight everything
             } else if (isYellow) {
-                movePieceFunction.process(xIndex, yIndex);
-                noBorderFunction.process(xIndex, yIndex);
+                movePieceFunction.process(coordinate);
+                noBorderFunction.process(coordinate);
             // if other, just unhighlight all cells
             } else {
-                noBorderFunction.process(xIndex, yIndex);
+                noBorderFunction.process(coordinate);
             }
         });
     }
@@ -127,7 +120,7 @@ public class CellView extends StackPane {
     }
 
     public String toString(){
-        return "[ " + xIndex + " , " + yIndex + " ] at x = " + xPos + " , y = " + yPos;
+        return "[ " + (int) coordinate.getX() + " , " + (int) coordinate.getY() + " ] at x = " + xPos + " , y = " + yPos;
     }
 
     public void setPieceClicked(ProcessCoordinateInterface clicked){

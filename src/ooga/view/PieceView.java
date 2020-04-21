@@ -17,7 +17,6 @@ public class PieceView {
 
     public PieceView(String fullName) {
         pieceName = fullName;
-        System.out.println("fullname " + fullName);
         pieceImage = new ImageView(res.getString(fullName));
         color = fullName.split("_")[0];
     }

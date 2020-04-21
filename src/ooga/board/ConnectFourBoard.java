@@ -134,7 +134,7 @@ public class ConnectFourBoard extends Board implements Serializable {
     }
 
     @Override
-    public List<Point2D> getValidMoves(int i, int j) {
+    public List<Point2D> getValidMoves(Point2D coordinate) {
 
         List<Point2D> validMoves = new ArrayList<>();
 
