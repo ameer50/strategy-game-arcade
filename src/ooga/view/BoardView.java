@@ -165,19 +165,10 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         CellView initCell = getCellAt(m.getStartLocation());
         CellView finalCell = getCellAt(m.getEndLocation());
         PieceView initCellPiece = initCell.getPiece();
-        PieceView finalCellPiece = finalCell.getPiece();
 
-        if (!m.isPromote()) {
-            finalCell.setPiece(initCellPiece);
-        }
+        finalCell.setPiece(initCellPiece);
 
         initCell.setPiece(null);
-
-        if (m.isPieceGenerated()) {
-            initCell.setPiece(new PieceView(((IconView) initCell).getIconName()));
-        }
-
-
     }
 
     public void setOnPieceClicked(ProcessCoordinateInterface clicked) {
