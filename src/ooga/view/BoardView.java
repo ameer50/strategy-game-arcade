@@ -89,8 +89,8 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
                 index++;
             }
         }
-        CellView playerOneIcon = new IconView(width, 0, 0, 0, cellSize / 2, cellSize / 2, "cellcolor1");
-        CellView playerTwoIcon = new IconView(width, 1, 0, 0, cellSize / 2, cellSize / 2, "cellcolor1");
+        CellView playerOneIcon = new IconView(new Point2D.Double(width, 0), 0, 0, cellSize / 2, cellSize / 2, "cellcolor1");
+        CellView playerTwoIcon = new IconView(new Point2D.Double(width, 1), 0, 0, cellSize / 2, cellSize / 2, "cellcolor1");
         cellList[index] = playerOneIcon;
         cellList[index+1] = playerTwoIcon;
         icons = List.of(playerOneIcon, playerTwoIcon);

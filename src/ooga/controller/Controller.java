@@ -64,11 +64,9 @@ public class Controller {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
-        //printMessageAndTime("Set up Menu Screen.");
         menuScreen.setButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
-        printMessageAndTime("Set up listeners.");
 
     }
 
@@ -88,7 +86,6 @@ public class Controller {
         }
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
-        //printMessageAndTime("Setup Game Screen.");
 
         boardView = gameScreen.getBoardView();
         boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());

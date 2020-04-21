@@ -29,7 +29,6 @@ public class ChessBoard extends Board implements Serializable {
   public List<Point2D> getValidMoves(Point2D coordinate) {
     int i = (int) coordinate.getX();
     int j = (int) coordinate.getY();
-    System.out.println("CHECK WON: " + checkWon());
     Piece piece = getPieceAt(i, j);
     if (piece == null) {
       return null;
