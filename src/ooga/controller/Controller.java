@@ -109,7 +109,7 @@ public class Controller {
 
     private void setUpPlayers() {
         playerOne = new HumanPlayer(menuScreen.getPlayerOneName(), menuScreen.getPlayerOneColor(), board);
-        if (! menuScreen.getIsGameOnePlayer()) {
+        if (!menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
             playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
@@ -134,37 +134,9 @@ public class Controller {
         setDashboardViewListeners();
     }
 
-    private void setDashboardViewListeners() {
-        dashboardView.setUndoMoveClicked((e) -> {
-            Move prevMove = history.undo();
-            historyList.remove(historyList.size() - 1);
-            Move reverseMove = prevMove.getReverseMove(true);
-
-            doMove(reverseMove);
-            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
-            toggleActivePlayer();
-
-            replenishCapturedPieces(prevMove);
-        });
-
-        dashboardView.setRedoMoveClicked((e) -> {
-            Move prevMove = history.redo();
-            historyList.add(prevMove);
-            doMove(prevMove);
-            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
-            toggleActivePlayer();
-        });
-
-        dashboardView.setNewWindowClicked((e) -> {
-            newWindow();
-        });
-        dashboardView.setQuitClicked((e) -> {
-            setUpMenu();
-        });
-
-        dashboardView.setSaveClicked((e) -> {
-            //TODO: change fileName to be an input
-            processor.write(board, gameScreen.getDashboardView().getNewFileName());
+    private void setBoardListeners() {
+        board.setOnPiecePromoted((int fromX, int fromY) -> {
+            boardView.getCellAt(fromX, fromY).setPiece(new PieceView(board.getPieceAt(fromX, fromY).getFullName()));
         });
     }
 
@@ -183,7 +155,8 @@ public class Controller {
 
             Move move = new Move(startLocation, endLocation);
             doMove(move);
-            replenishIcon(move);
+            removeCapturedPieces(move);
+            boardView.replenishIcon(move);
 
             history.addMove(move);
             historyList.add(move);
@@ -198,13 +171,38 @@ public class Controller {
         });
     }
 
-    private void setBoardListeners() {
-        board.setOnPieceCaptured((int toX, int toY) -> {
-            boardView.getCellAt(toX, toY).setPiece(null);
+    private void setDashboardViewListeners() {
+        dashboardView.setUndoMoveClicked((e) -> {
+            Move prevMove = history.undo();
+            historyList.remove(historyList.size() - 1);
+            Move reverseMove = prevMove.getReverseMove(true);
+
+            doMove(reverseMove);
+            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+            toggleActivePlayer();
+
+            replenishCapturedPieces(prevMove);
         });
 
-        board.setOnPiecePromoted((int fromX, int fromY) -> {
-            boardView.getCellAt(fromX, fromY).setPiece(new PieceView(board.getPieceAt(fromX, fromY).getFullName()));
+        dashboardView.setRedoMoveClicked((e) -> {
+            Move prevMove = history.redo();
+            historyList.add(prevMove);
+            doMove(prevMove);
+            removeCapturedPieces(prevMove);
+            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+            toggleActivePlayer();
+        });
+
+        dashboardView.setNewWindowClicked((e) -> {
+            newWindow();
+        });
+        dashboardView.setQuitClicked((e) -> {
+            setUpMenu();
+        });
+
+        dashboardView.setSaveClicked((e) -> {
+            //TODO: change fileName to be an input
+            processor.write(board, gameScreen.getDashboardView().getNewFileName());
         });
     }
 
@@ -216,10 +214,9 @@ public class Controller {
         }
     }
 
-    private void replenishIcon(Move m) {
-        CellView initCell = boardView.getCellAt(m.getStartLocation());
-        if (m.isPieceGenerated()) {
-            initCell.setPiece(new PieceView(((IconView) initCell).getIconName()));
+    private void removeCapturedPieces(Move m) {
+        for (Point2D location: m.getCapturedPiecesAndLocations().values()) {
+            if (board.getPieceAt(location) == null) boardView.getCellAt(location).setPiece(null);
         }
     }
 
