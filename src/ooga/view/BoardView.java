@@ -177,6 +177,13 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         initCell.setPiece(null);
     }
 
+    public void replenishIcon(Move m) {
+        CellView initCell = getCellAt(m.getStartLocation());
+        if (m.isPieceGenerated()) {
+            initCell.setPiece(new PieceView(((IconView) initCell).getIconName()));
+        }
+    }
+
     public void setOnPieceClicked(ProcessCoordinateInterface clicked) {
         for (CellView cell: this) {
             cell.setPieceClicked(clicked);
