@@ -15,12 +15,14 @@ import ooga.view.*;
 import ooga.xml.XMLProcessor;
 
 import java.awt.geom.Point2D;
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 
 public class Controller {
 
     public static final int STALL_TIME = 1000;
+
     public enum StrategyType {
         TRIVIAL,
         RANDOM,
@@ -38,6 +40,7 @@ public class Controller {
         CUSTOM,
     }
 
+    private static String PACKAGE_NAME = "ooga.board.";
     private long startTime;
     private Board board;
     private GameScreen gameScreen;
@@ -70,27 +73,19 @@ public class Controller {
     }
 
     private void setUpGameScreen(String gameChoice, String fileChoice) {
-        GameType gameType = GameType.valueOf(gameChoice.toUpperCase());
         String gameXML = String.format(fileChoice);
 
         processor = new XMLProcessor();
         processor.parse(gameXML);
-        //printMessageAndTime("XML parsed.");
 
-        //TODO: Change to reflection.
-        switch (gameType) {
-            case CHESS:
-                board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(),
+        try {
+            Class c = Class.forName(PACKAGE_NAME + gameChoice + "Board");
+            Constructor objConstruct = c.getDeclaredConstructor(Map.class, Map.class, Map.class);
+            board = (Board) objConstruct.newInstance(processor.getSettings(), processor.getInitialPieceLocations(),
                     processor.getMovePatterns());
-                break;
-            case CHECKERS:
-                board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(),
-                    processor.getMovePatterns());
-                break;
-            case CONNECTFOUR:
-                board = new ConnectFourBoard(processor.getSettings(), processor.getInitialPieceLocations(),
-                        processor.getMovePatterns());
-        } //printMessageAndTime("Setup Board.");
+        } catch (Exception e) {
+            System.out.println("Could not find game.");
+        }
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
         //printMessageAndTime("Setup Game Screen.");

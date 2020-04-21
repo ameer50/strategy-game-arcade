@@ -165,6 +165,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         CellView initCell = getCellAt(m.getStartLocation());
         CellView finalCell = getCellAt(m.getEndLocation());
         PieceView initCellPiece = initCell.getPiece();
+        System.out.println(initCellPiece.getPieceName());
 
         finalCell.setPiece(initCellPiece);
 

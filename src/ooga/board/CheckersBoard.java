@@ -105,8 +105,6 @@ public class CheckersBoard extends Board implements Serializable {
         int x_f = (int) m.getEndLocation().getX();
         int y_f = (int) m.getEndLocation().getY();
         Piece currPiece = getPieceAt(x_i, y_i);
-        placePiece(x_i, y_i, null);
-        placePiece(x_f, y_f, currPiece);
         m.setPiece(currPiece);
 
         if (m.isPromote() && m.isUndo()) {
@@ -117,13 +115,17 @@ public class CheckersBoard extends Board implements Serializable {
             // demote frontend
             promoteAction.process(x_i, y_i);
         }
-        if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
+        if((getPieceAt(x_i, y_i).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_i, y_i).getColor().equals(bottomColor)) && x_f==height-1)){
             m.getPiece().setType("Monarch");
             m.getPiece().setMovePattern("KING 1");
             m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
             m.setPromote(true);
+            System.out.println("getPieceAt(x_i, y_i).getFullName() = " + getPieceAt(x_i, y_i).getFullName());
             promoteAction.process(x_i, y_i);
         }
+
+        placePiece(x_i, y_i, null);
+        placePiece(x_f, y_f, currPiece);
 
         pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
 
