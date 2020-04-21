@@ -108,6 +108,23 @@ public class CheckersBoard extends Board implements Serializable {
         placePiece(x_i, y_i, null);
         placePiece(x_f, y_f, currPiece);
         m.setPiece(currPiece);
+
+        if (m.isPromote() && m.isUndo()) {
+            // demote backend
+            m.getPiece().setType("Coin");
+            m.getPiece().setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
+            m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
+            // demote frontend
+            promoteAction.process(x_i, y_i);
+        }
+        if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
+            m.getPiece().setType("Monarch");
+            m.getPiece().setMovePattern("KING 1");
+            m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
+            m.setPromote(true);
+            promoteAction.process(x_i, y_i);
+        }
+
         pieceBiMap.forcePut(new Point2D.Double(x_f, y_f), currPiece);
 
         if (killPaths.containsKey(m.getEndLocation())) {
@@ -127,21 +144,6 @@ public class CheckersBoard extends Board implements Serializable {
             }
         }
 
-        if (m.isPromote() && m.isUndo()) {
-            // demote backend
-            m.getPiece().setType("Coin");
-            m.getPiece().setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
-            m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
-            // demote frontend
-            promoteAction.process(x_f, y_f);
-        }
-        if((getPieceAt(x_f, y_f).getColor().equals(bottomColor) && x_f==0) || (!(getPieceAt(x_f, y_f).getColor().equals(bottomColor)) && x_f==height-1)){
-            m.getPiece().setType("Monarch");
-            m.getPiece().setMovePattern("KING 1");
-            m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
-            m.setPromote(true);
-            promoteAction.process(x_f, y_f);
-        }
 
         //return score;
     }

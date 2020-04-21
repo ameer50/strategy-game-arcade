@@ -134,66 +134,22 @@ public class Controller {
     }
 
     private void setListeners() {
-        /* X and Y are the indices of the cell clicked to move FROM */
-        boardView.setOnPieceClicked((int x, int y) -> {
-            System.out.println("piece map" + board.getPieceBiMap());
-            PieceView pieceView = boardView.getCellAt(x, y).getPiece();
-            //System.out.println(pieceView.getColor()); // ***
-            if (pieceView.getColor().equals(activePlayer.getColor())) {
-                boardView.setSelectedLocation(x, y);
-                boardView.highlightValidMoves(board.getValidMoves(x, y));
-                //System.out.println("Highlighted moves.");
-            }
-        });
+        setBoardListeners();
+        setBoardViewListeners();
+        setDashboardViewListeners();
+    }
 
-        /* X and Y are the indices of the cell clicked to move TO */
-        boardView.setOnMoveClicked((int toX, int toY) -> {
-            Point2D startLocation = boardView.getSelectedLocation();
-            Point2D endLocation = new Point2D.Double(toX, toY);
-
-            Move move = new Move(startLocation, endLocation);
-            doMove(move);
-
-            history.addMove(move);
-            historyList.add(move);
-            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
-
-            toggleActivePlayer();
-            //printMessageAndTime("Did user's move.");
-
-            String winner = board.checkWon();
-            if (winner != null) {
-                dashboardView.setWinner(winner);
-                dashboardView.winnerPopUp();
-            }
-
-            if (activePlayer.isCPU()) {
-                doCPUMove();
-                //printMessageAndTime("Did CPU's move.");
-            }
-        });
-
+    private void setDashboardViewListeners() {
         dashboardView.setUndoMoveClicked((e) -> {
             Move prevMove = history.undo();
             historyList.remove(historyList.size() - 1);
-            Move reverseMove = prevMove.getReverseMove();
-            reverseMove.setUndo(true);
-            if (prevMove.isPromote()) {
-                reverseMove.setPromote(true);
-            }
+            Move reverseMove = prevMove.getReverseMove(true);
 
             doMove(reverseMove);
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
 
-            Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
-            for (Piece capturedPiece: map.keySet()) {
-                Point2D capturedPieceLocation = map.get(capturedPiece);
-                board.putPieceAt(capturedPieceLocation, capturedPiece);
-                activePlayer.addToScore(-capturedPiece.getValue());
-                PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-                boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
-            }
+            replenishCapturedPieces(prevMove);
         });
 
         dashboardView.setRedoMoveClicked((e) -> {
@@ -207,24 +163,80 @@ public class Controller {
         dashboardView.setNewWindowClicked((e) -> {
             newWindow();
         });
+        dashboardView.setQuitClicked((e) -> {
+            setUpMenu();
+        });
 
+        dashboardView.setSaveClicked((e) -> {
+            //TODO: change fileName to be an input
+            processor.write(board, gameScreen.getDashboardView().getNewFileName());
+        });
+    }
+
+    private void setBoardViewListeners() {
+        boardView.setOnPieceClicked((int x, int y) -> {
+            PieceView pieceView = boardView.getCellAt(x, y).getPiece();
+            if (pieceView.getColor().equals(activePlayer.getColor())) {
+                boardView.setSelectedLocation(x, y);
+                boardView.highlightValidMoves(board.getValidMoves(x, y));
+            }
+        });
+
+        boardView.setOnMoveClicked((int toX, int toY) -> {
+            Point2D startLocation = boardView.getSelectedLocation();
+            Point2D endLocation = new Point2D.Double(toX, toY);
+
+            Move move = new Move(startLocation, endLocation);
+            doMove(move);
+            replenishIcon(move);
+
+            history.addMove(move);
+            historyList.add(move);
+            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+
+            toggleActivePlayer();
+
+            if (activePlayer.isCPU()) {
+                doCPUMove();
+                toggleActivePlayer();
+            }
+        });
+    }
+
+    private void setBoardListeners() {
         board.setOnPieceCaptured((int toX, int toY) -> {
             boardView.getCellAt(toX, toY).setPiece(null);
         });
 
-        board.setOnPiecePromoted((int toX, int toY) -> {
-            //board.getPieceAt(toX, toY);
-            boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
+        board.setOnPiecePromoted((int fromX, int fromY) -> {
+            boardView.getCellAt(fromX, fromY).setPiece(new PieceView(board.getPieceAt(fromX, fromY).getFullName()));
         });
+    }
 
-        gameScreen.getDashboardView().setQuitClicked((e) -> {
-            setUpMenu();
-        });
+    private void checkWon() {
+        String winner = board.checkWon();
+        if (winner != null) {
+            dashboardView.setWinner(winner);
+            dashboardView.winnerPopUp();
+        }
+    }
 
-        gameScreen.getDashboardView().setSaveClicked((e) -> {
-            //TODO: change fileName to be an input
-            processor.write(board, gameScreen.getDashboardView().getNewFileName());
-        });
+    private void replenishIcon(Move m) {
+        CellView initCell = boardView.getCellAt(m.getStartLocation());
+        if (m.isPieceGenerated()) {
+            initCell.setPiece(new PieceView(((IconView) initCell).getIconName()));
+        }
+    }
+
+    private void replenishCapturedPieces(Move prevMove) {
+        Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
+        for (Piece capturedPiece: map.keySet()) {
+            Point2D capturedPieceLocation = map.get(capturedPiece);
+            board.putPieceAt(capturedPieceLocation, capturedPiece);
+            activePlayer.addToScore(-capturedPiece.getValue());
+            PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
+            boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
+        }
     }
 
     private void toggleActivePlayer() {
@@ -235,21 +247,14 @@ public class Controller {
     private void doCPUMove() {
         //TODO: have generateMove return a Move
         List<Integer> AIMove = CPU.generateMove();
-        int fromX = AIMove.get(0);
-        int fromY = AIMove.get(1);
-        Point2D startLocation = new Point2D.Double(fromX, fromY);
-        int toX = AIMove.get(2);
-        int toY = AIMove.get(3);
-        Point2D endLocation = new Point2D.Double(toX, toY);
+        Point2D startLocation = new Point2D.Double(AIMove.get(0), AIMove.get(1));
+        Point2D endLocation = new Point2D.Double(AIMove.get(2), AIMove.get(3));
         Move m = new Move(startLocation, endLocation);
 
         doMove(m);
         history.addMove(m);
         historyList.add(m);
         dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
-
-        toggleActivePlayer();
-        board.checkWon();
     }
 
     private void printMessageAndTime(String message) {
@@ -270,7 +275,7 @@ public class Controller {
     private void doMove(Move m) {
         activePlayer.doMove(m);
         boardView.doMove(m);
-        //board.print();
+        checkWon();
     }
 
     private void newWindow() {
