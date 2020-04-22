@@ -25,5 +25,5 @@ public interface BoardViewInterface {
 
     void setOnMoveClicked(ProcessCoordinateInterface clicked);
 
-    void setSelectedLocation(int x, int y);
+    void setSelectedLocation(Point2D coordinate);
 }

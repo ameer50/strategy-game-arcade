@@ -142,8 +142,8 @@ public abstract class Board implements Serializable {
     }
   }
 
-  public void placePiece(int i, int j, Piece piece) {
-    pieceBiMap.forcePut(new Point2D.Double(i, j), piece);
+  public void placePiece(Point2D coordinate, Piece piece) {
+    pieceBiMap.forcePut(coordinate, piece);
   }
 
   /**
@@ -203,7 +203,7 @@ public abstract class Board implements Serializable {
    **/
   public abstract void doMove(Move move);
 
-  public abstract List<Point2D> getValidMoves(int i, int j);
+  public abstract List<Point2D> getValidMoves(Point2D coordinate);
 
   /**
    * @param color the color of the team whose board score is desired
@@ -237,7 +237,7 @@ public abstract class Board implements Serializable {
       int startX = (int) startPoint.getX();
       int startY = (int) startPoint.getY();
 
-      List<Point2D> endPoints = getValidMoves(startX, startY);
+      List<Point2D> endPoints = getValidMoves(startPoint);
       for (Point2D endPoint : endPoints) {
         moveList.add(Arrays.asList(startX, startY, (int) endPoint.getX(), (int) endPoint.getY()));
       }
