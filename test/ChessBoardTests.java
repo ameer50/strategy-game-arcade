@@ -62,7 +62,7 @@ public class ChessBoardTests {
   @Test
   public void testGetValidMovesEmptyCell(){
     List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,7));
-    assertNull(moves);
+    assertEquals(moves.size(), 0);
   }
 
 
