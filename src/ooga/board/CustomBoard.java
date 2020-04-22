@@ -41,13 +41,13 @@ public class CustomBoard extends Board {
     move.setPiece(currPiece);
   }
 
-  public List<Point2D> getValidMoves(int i, int j) {
-    Piece piece = getPieceAt(i, j);
+  public List<Point2D> getValidMoves(Point2D coordinate) {
+    Piece piece = getPieceAt(coordinate);
     if (piece == null) return null;
 
     Point2DUtility utility = new Point2DUtility();
     List<Point2D> displacements = piece.getDisplacements();
-    List<Point2D> originalCoordinates = List.of(new Double(i, j));
+    List<Point2D> originalCoordinates = List.of(coordinate);
     List<Point2D> displacedCoordinates = utility.concatPointLists(displacements, originalCoordinates);
     List<Point2D> validCoordinates = new ArrayList<>();
     for (Point2D point: displacedCoordinates) {

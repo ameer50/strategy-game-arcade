@@ -92,7 +92,6 @@ public class MenuScreen {
             b.setOnAction(event -> {
                 gameChoice = b.getText();
                 this.goAction = e;
-
                 myPopupScreen = new Popup(500, 600, popupStyle);
                 setUpPlayerPopUp();
 
@@ -126,8 +125,7 @@ public class MenuScreen {
         myPopupScreen.addButtonGroup(colorOption);
         VBox textFieldBox = myPopupScreen.getButtonBox();
 
-        Text enterColorText = new Text();
-        enterColorText.setText("Player One Color: ");
+        Text enterColorText = new Text("Player One Color: ");
         enterColorText.getStyleClass().add("playername");
 
         if (!isOnePlayer) textFieldBox.getChildren().add(0, enterColorText);
@@ -146,19 +144,13 @@ public class MenuScreen {
         Text nameText = new Text("Enter Player Name(s)");
         nameText.getStyleClass().add("playername");
 
-        TextField playerOneText = new TextField();
-        playerOneText.setPromptText("Player One");
-        playerOneText.setMaxWidth(200);
-        playerOneText.getStyleClass().add("file-text-field");
+        TextField playerOneText = makeTextField("Player One", 200, "file-text-field");
+        TextField playerTwoText = makeTextField("Player Two", 200, "file-text-field");
 
         textFieldBox.getChildren().addAll(nameText, playerOneText);
         textFieldBox.setAlignment(Pos.CENTER);
         textFieldBox.getStyleClass().add("vbox");
 
-        TextField playerTwoText = new TextField();
-        playerTwoText.setPromptText("Player Two");
-        playerTwoText.getStyleClass().add("file-text-field");
-        playerTwoText.setMaxWidth(200);
 
         if (!isOnePlayer) textFieldBox.getChildren().add(playerTwoText);
 
@@ -170,6 +162,14 @@ public class MenuScreen {
             setUpLoadGamePopUp();
         });
         textFieldBox.getChildren().addAll(next);
+    }
+
+    private TextField makeTextField(String promptText, int maxWidth, String style){
+        TextField textField = new TextField();
+        textField.setPromptText(promptText);
+        textField.setMaxWidth(maxWidth);
+        textField.getStyleClass().add(style);
+        return textField;
     }
 
     private void setUpLoadGamePopUp() {
@@ -237,7 +237,7 @@ public class MenuScreen {
 
     private void arrangeButtons(){
 
-        buttons = new ButtonGroup(List.of("Chess", "Checkers", "ConnectFour"));
+        buttons = new ButtonGroup(List.of("Chess", "Checkers", "ConnectFour", "Othello"));
 
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
@@ -245,12 +245,8 @@ public class MenuScreen {
             vbox.getChildren().add(b);
 
         }
-        //root.getChildren().add(vbox);
-        //vbox.setLayoutX(STAGE_WIDTH/2 - vbox.getWidth()/2);
-        //vbox.setLayoutY(VBOX_Y);
         vbox.getStyleClass().add("vbox");
         menuVBox.getChildren().add(vbox);
-        //root.setCenter(vbox);
     }
 
 
@@ -261,9 +257,14 @@ public class MenuScreen {
             File file = fileChooser.showOpenDialog(new Stage());
             if (file != null) {
                 fileChoice = file.getAbsolutePath();
-                // TODO: Check that this works.
             }
         }
+    }
+
+    private void listenDarkModeButton(){
+        darkButton.setOnAction(event -> {
+            toggleMenuDarkMode();
+        });
     }
 
     public String getGameChoice() {
@@ -297,12 +298,6 @@ public class MenuScreen {
 
     public boolean isDarkMode(){
         return isDarkMode;
-    }
-
-    private void listenDarkModeButton(){
-        darkButton.setOnAction(event -> {
-            toggleMenuDarkMode();
-        });
     }
 
 }

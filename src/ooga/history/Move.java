@@ -31,6 +31,13 @@ public class Move {
         return new Move(endLocation, startLocation);
     }
 
+    public Move getReverseMove(boolean isUndo) {
+        Move m = getReverseMove();
+        m.setUndo(isUndo);
+        if (this.isPromote) m.setPromote(true);
+        return m;
+    }
+
     public Point2D getStartLocation() {
         return (Point2D) startLocation.clone();
     }

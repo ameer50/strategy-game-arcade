@@ -92,20 +92,20 @@ public class CustomController {
 
   private void setListeners() {
     /* X and Y are the indices of the cell clicked to move FROM */
-    boardView.setOnPieceClicked((int x, int y) -> {
-      System.out.println(boardView.getCellAt(x, y).getPiece().getColor()); // ***
-      if (! boardView.getCellAt(x, y).getPiece().getColor().equals(activePlayer.getColor())) {
+    boardView.setOnPieceClicked((coordinate) -> {
+      System.out.println(boardView.getCellAt(coordinate).getPiece().getColor()); // ***
+      if (! boardView.getCellAt(coordinate).getPiece().getColor().equals(activePlayer.getColor())) {
         return;
       }
-      boardView.setSelectedLocation(x, y);
-      boardView.highlightValidMoves(board.getValidMoves(x, y));
+      boardView.setSelectedLocation(coordinate);
+      boardView.highlightValidMoves(board.getValidMoves(coordinate));
       System.out.println("Highlighted moves.");
     });
 
     /* X and Y are the indices of the cell clicked to move TO */
-    boardView.setOnMoveClicked((int toX, int toY) -> {
+    boardView.setOnMoveClicked((coordinate) -> {
       Point2D startLocation = boardView.getSelectedLocation();
-      Point2D endLocation = new Point2D.Double(toX, toY);
+      Point2D endLocation = coordinate;
 
       printMessageAndTime("Did user's move.");
 
@@ -163,9 +163,9 @@ public class CustomController {
       // JSONprocessor.write(board, gameScreen.getDashboardView().getNewFileName());
     });
 
-    board.setOnPiecePromoted((int toX, int toY) -> {
-      board.getPieceAt(toX, toY);
-      boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
+    board.setOnPiecePromoted((coordinate) -> {
+      board.getPieceAt(coordinate);
+      boardView.getCellAt(coordinate).setPiece(new PieceView(board.getPieceAt(coordinate).getFullName()));
     });
   }
 

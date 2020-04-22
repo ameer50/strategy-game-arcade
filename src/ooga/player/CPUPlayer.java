@@ -53,7 +53,7 @@ public class CPUPlayer extends Player {
     Board board = this.getBoard();
     for (int i=0; i<board.getWidth(); i++) {
       for (int j=0; j<board.getHeight(); j++) {
-        List<Point2D> validMoves = board.getValidMoves(i, j);
+        List<Point2D> validMoves = board.getValidMoves(new Point2D.Double(i, j));
         if (validMoves != null) {
           if (validMoves.size() != 0) {
             Point2D moveTo = validMoves.get(0);
