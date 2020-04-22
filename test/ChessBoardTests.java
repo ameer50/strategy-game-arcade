@@ -2,6 +2,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,14 +27,6 @@ public class ChessBoardTests {
     XMLProcessor processor = new XMLProcessor();
     processor.parse(gameXML);
     board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
-    board.setOnPieceCaptured((int toX, int toY) -> {
-      //boardView.getCellAt(toX, toY).setPiece(null);
-    });
-
-    board.setOnPiecePromoted((int toX, int toY) -> {
-      //board.getPieceAt(toX, toY);
-      //boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
-    });
   }
 
   @Test
@@ -68,7 +61,7 @@ public class ChessBoardTests {
 
   @Test
   public void testGetValidMovesEmptyCell(){
-    List<Point2D> moves = board.getValidMoves(4, 7);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,7));
     assertNull(moves);
   }
 
@@ -88,7 +81,7 @@ public class ChessBoardTests {
 
   @Test
   public void testTwoMovesOnStartPawn(){
-    List<Point2D> moves = board.getValidMoves(6, 0);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(6,0));
     Point2D firstMove = new Point2D.Double(5, 0);
     Point2D secondMove = new Point2D.Double(4, 0);
     assertEquals(moves.size(), 2);
@@ -100,15 +93,16 @@ public class ChessBoardTests {
   public void testOnlyOneMoveAfterFirstPawn(){
     Move m = new Move(new Point2D.Double(6, 1), new Point2D.Double(5, 1));
     board.doMove(m);
-    List<Point2D> moves = board.getValidMoves(5, 1);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(5,1));
     assertEquals(moves.size(), 1);
   }
 
   @Test
   public void testDiagonalKillPawn(){
-    board.placePiece(5, 1, new Piece("Pawn", "pawn 1", 0, "Black"));
-    List<Point2D> moves = board.getValidMoves(6, 0);
-    Point2D firstMove = new Point2D.Double(5, 1);
+    Point2D point = new Point2D.Double(5,1);
+    board.placePiece(point, new Piece("Pawn", "pawn 1", 0, "Black"));
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(6,0));
+    Point2D firstMove = point;
     Point2D secondMove = new Point2D.Double(5, 0);
     Point2D thirdMove = new Point2D.Double(4, 0);
     assertEquals(moves.get(0), firstMove);
@@ -119,7 +113,7 @@ public class ChessBoardTests {
 
   @Test
   public void testKnightMoves(){
-    List<Point2D> moves = board.getValidMoves(7, 6);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(7,6));
     assertEquals(moves.size(), 2);
     Point2D firstMove = new Point2D.Double(5, 7);
     Point2D secondMove = new Point2D.Double(5, 5);
@@ -129,7 +123,7 @@ public class ChessBoardTests {
 
   @Test
   public void testBishopMoves(){
-    board.placePiece(4, 4, new Piece("Bishop", "diagonal -1", 5, "White"));
+    board.placePiece(new Point2D.Double(4,4), new Piece("Bishop", "diagonal -1", 5, "White"));
     List<Point2D> actual = new ArrayList<>();
     actual.add(new Point2D.Double(5, 5));
     actual.add(new Point2D.Double(5, 3));
@@ -139,7 +133,7 @@ public class ChessBoardTests {
     actual.add(new Point2D.Double(3, 3));
     actual.add(new Point2D.Double(2, 2));
     actual.add(new Point2D.Double(1, 1));
-    List<Point2D> moves = board.getValidMoves(4, 4);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,4));
     assertEquals(moves.size(), actual.size());
     for(Point2D point: actual){
       assertTrue(moves.contains(point));
@@ -147,7 +141,7 @@ public class ChessBoardTests {
   }
   @Test
   public void testRookMoves(){
-    board.placePiece(4, 4, new Piece("Rook", "lateral -1", 5, "Black"));
+    board.placePiece(new Point2D.Double(4,4), new Piece("Rook", "lateral -1", 5, "Black"));
     List<Point2D> actual = new ArrayList<>();
     actual.add(new Point2D.Double(3, 4));
     actual.add(new Point2D.Double(2, 4));
@@ -160,7 +154,7 @@ public class ChessBoardTests {
     actual.add(new Point2D.Double(4, 5));
     actual.add(new Point2D.Double(4, 6));
     actual.add(new Point2D.Double(4, 7));
-    List<Point2D> moves = board.getValidMoves(4, 4);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,4));
     System.out.println(moves);
     assertEquals(moves.size(), actual.size());
     for(Point2D point: actual){
@@ -169,7 +163,7 @@ public class ChessBoardTests {
   }
   @Test
   public void testQueenMoves(){
-    board.placePiece(4, 4, new Piece("Queen", "any -1", 5, "White"));
+    board.placePiece(new Point2D.Double(4,4), new Piece("Queen", "any -1", 5, "White"));
     List<Point2D> actual = new ArrayList<>();
     actual.add(new Point2D.Double(3, 4));
     actual.add(new Point2D.Double(2, 4));
@@ -190,7 +184,7 @@ public class ChessBoardTests {
     actual.add(new Point2D.Double(3, 3));
     actual.add(new Point2D.Double(2, 2));
     actual.add(new Point2D.Double(1, 1));
-    List<Point2D> moves = board.getValidMoves(4, 4);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,4));
     System.out.println(moves);
     assertEquals(moves.size(), actual.size());
     for(Point2D point: actual){
@@ -199,7 +193,7 @@ public class ChessBoardTests {
   }
   @Test
   public void testKingMoves(){
-    board.placePiece(4, 4, new Piece("King", "any 1", 25, "White"));
+    board.placePiece(new Point2D.Double(4,4), new Piece("King", "any 1", 25, "White"));
     List<Point2D> actual = new ArrayList<>();
     actual.add(new Point2D.Double(3, 4));
     actual.add(new Point2D.Double(5, 4));
@@ -209,7 +203,7 @@ public class ChessBoardTests {
     actual.add(new Point2D.Double(5, 3));
     actual.add(new Point2D.Double(3, 5));
     actual.add(new Point2D.Double(3, 3));
-    List<Point2D> moves = board.getValidMoves(4, 4);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,4));
     System.out.println(moves);
     assertEquals(moves.size(), actual.size());
     for(Point2D point: actual){
@@ -220,10 +214,10 @@ public class ChessBoardTests {
   public void testCantKillTeammatesButKillOpponents(){
     Piece rook = board.getPieceAt(7, 0);
     Piece blackPawn = board.getPieceAt(1, 0);
-    List<Point2D> moves = board.getValidMoves(7, 0);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(7,0));
     assertEquals(moves.size(), 0);
     board.putPieceAt(new Point2D.Double(6, 0), null);
-    moves = board.getValidMoves(7, 0);
+    moves = board.getValidMoves(new Point2D.Double(7,0));
     assertTrue(moves.contains(new Point2D.Double(1, 0)));
     Move m = new Move(new Point2D.Double(7, 0), new Point2D.Double(1, 0));
     board.doMove(m);
@@ -231,9 +225,9 @@ public class ChessBoardTests {
   }
   @Test
   public void testLimitKingMovesUnderCheck(){
-    board.placePiece(4, 4, new Piece("King", "any 1", 25, "White"));
-    board.placePiece(7, 3, null);
-    board.placePiece(4, 0, new Piece("Rook", "lateral -1", 55, "Black"));
+    board.placePiece(new Point2D.Double(4,4), new Piece("King", "any 1", 25, "White"));
+    board.placePiece(new Point2D.Double(7,3), null);
+    board.placePiece(new Point2D.Double(4,0), new Piece("Rook", "lateral -1", 55, "Black"));
     List<Point2D> actual = new ArrayList<>();
     actual.add(new Point2D.Double(3, 4));
     actual.add(new Point2D.Double(5, 4));
@@ -241,7 +235,7 @@ public class ChessBoardTests {
     actual.add(new Point2D.Double(5, 3));
     actual.add(new Point2D.Double(3, 5));
     actual.add(new Point2D.Double(3, 3));
-    List<Point2D> moves = board.getValidMoves(4, 4);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,4));
     System.out.println(moves);
     assertEquals(moves.size(), actual.size());
     for(Point2D point: actual){
@@ -250,49 +244,49 @@ public class ChessBoardTests {
   }
   @Test
   public void testLimitOtherPiecesUnderCheck(){
-    board.placePiece(4, 4, new Piece("King", "any 1", 25, "White"));
-    board.placePiece(7, 3, null);
-    board.placePiece(4, 0, new Piece("Rook", "lateral -1", 55, "Black"));
+    board.placePiece(new Point2D.Double(4,4), new Piece("King", "any 1", 25, "White"));
+    board.placePiece(new Point2D.Double(7,3), null);
+    board.placePiece(new Point2D.Double(4,0), new Piece("Rook", "lateral -1", 55, "Black"));
 
-    assertEquals(board.getValidMoves(6, 0).size(), 0);
-    assertEquals(board.getValidMoves(6, 4).size(), 0);
-    assertEquals(board.getValidMoves(6, 5).size(), 0);
+    assertEquals(board.getValidMoves(new Point2D.Double(6,0)).size(), 0);
+    assertEquals(board.getValidMoves(new Point2D.Double(6,4)).size(), 0);
+    assertEquals(board.getValidMoves(new Point2D.Double(6,5)).size(), 0);
     //white queen can't move laterally (king has been removed)
-    assertEquals(board.getValidMoves(7, 4).size(), 0);
+    assertEquals(board.getValidMoves(new Point2D.Double(7,4)).size(), 0);
   }
 
   @Test
   public void testBlocking(){
-    board.placePiece(4, 4, new Piece("King", "any 1", 25, "White"));
-    board.placePiece(7, 3, null);
-    board.placePiece(4, 0, new Piece("Rook", "lateral -1", 55, "Black"));
-    board.placePiece(4, 5, new Piece("Pawn", "pawn 1", 0, "White"));
-    board.placePiece(3, 5, new Piece("Pawn", "pawn 1", 0, "White"));
-    board.placePiece(5, 5, new Piece("Pawn", "pawn 1", 0, "White"));
-    board.placePiece(3, 3, new Piece("Pawn", "pawn 1", 0, "White"));
-    board.placePiece(5, 3, new Piece("Pawn", "pawn 1", 0, "White"));
-    board.placePiece(3, 4, new Piece("Pawn", "pawn 1", 0, "White"));
-    board.placePiece(5, 4, new Piece("Pawn", "pawn 1", 0, "White"));
+    board.placePiece(new Point2D.Double(4, 4), new Piece("King", "any 1", 25, "White"));
+    board.placePiece(new Point2D.Double(7, 3), null);
+    board.placePiece(new Point2D.Double(4, 0), new Piece("Rook", "lateral -1", 55, "Black"));
+    board.placePiece(new Point2D.Double(4, 5), new Piece("Pawn", "pawn 1", 0, "White"));
+    board.placePiece(new Point2D.Double(3, 5), new Piece("Pawn", "pawn 1", 0, "White"));
+    board.placePiece(new Point2D.Double(5, 5), new Piece("Pawn", "pawn 1", 0, "White"));
+    board.placePiece(new Point2D.Double(3, 3), new Piece("Pawn", "pawn 1", 0, "White"));
+    board.placePiece(new Point2D.Double(5, 3), new Piece("Pawn", "pawn 1", 0, "White"));
+    board.placePiece(new Point2D.Double(3, 4), new Piece("Pawn", "pawn 1", 0, "White"));
+    board.placePiece(new Point2D.Double(5, 4), new Piece("Pawn", "pawn 1", 0, "White"));
 
     //white pawns can block
-    assertEquals(board.getValidMoves(4, 4).size(), 0);
-    assertEquals(board.getValidMoves(5, 3).size(), 1);
-    assertEquals(board.getValidMoves(6, 1).size(), 1);
-    assertEquals(board.getValidMoves(6, 2).size(), 1);
+    assertEquals(board.getValidMoves(new Point2D.Double(4, 4)).size(), 0);
+    assertEquals(board.getValidMoves(new Point2D.Double(5, 3)).size(), 1);
+    assertEquals(board.getValidMoves(new Point2D.Double(6, 1)).size(), 1);
+    assertEquals(board.getValidMoves(new Point2D.Double(6, 2)).size(), 1);
     assertNull(board.checkWon());
   }
 
   @Test
   public void testCheckWon(){
-    board.placePiece(3, 4, new Piece("King", "any 1", 25, "White"));
-    board.placePiece(7, 3, null);
+    board.placePiece(new Point(3, 4), new Piece("King", "any 1", 25, "White"));
+    board.placePiece(new Point(7, 3), null);
 
-    board.placePiece(4, 0, new Piece("Rook", "lateral -1", 55, "Black"));
-    board.placePiece(3, 0, new Piece("Rook", "lateral -1", 55, "Black"));
-    board.placePiece(2, 0, new Piece("Rook", "lateral -1", 55, "Black"));
+    board.placePiece(new Point(4, 0), new Piece("Rook", "lateral -1", 55, "Black"));
+    board.placePiece(new Point(3, 0), new Piece("Rook", "lateral -1", 55, "Black"));
+    board.placePiece(new Point(2, 0), new Piece("Rook", "lateral -1", 55, "Black"));
 
     //blockers removed
-    assertEquals(board.getValidMoves(3, 4).size(), 0);
+    assertEquals(board.getValidMoves(new Point2D.Double(3, 4)).size(), 0);
     assertEquals(board.checkWon(), "Black");
   }
 }

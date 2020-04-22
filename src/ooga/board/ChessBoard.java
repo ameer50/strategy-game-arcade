@@ -26,8 +26,9 @@ public class ChessBoard extends Board implements Serializable {
   }
 
   @Override
-  public List<Point2D> getValidMoves(int i, int j) {
-    System.out.println("CHECK WON: " + checkWon());
+  public List<Point2D> getValidMoves(Point2D coordinate) {
+    int i = (int) coordinate.getX();
+    int j = (int) coordinate.getY();
     Piece piece = getPieceAt(i, j);
     if (piece == null) {
       return null;
@@ -102,13 +103,7 @@ public class ChessBoard extends Board implements Serializable {
     }
 
     int score = (hitPiece == null) ? 0 : hitPiece.getValue();
-    pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
-
     m.setPiece(currPiece);
-    if (hitPiece != null) {
-      m.addCapturedPiece(hitPiece, m.getEndLocation());
-      pieceBiMap.remove(hitPiece);
-    }
     // if undo and it was a promote move before
     if (m.isPromote() && m.isUndo()) {
       // demote piece in backend
@@ -116,9 +111,15 @@ public class ChessBoard extends Board implements Serializable {
       m.getPiece().setMovePattern("PAWN -1");
       m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
       // demote piece in frontend
-      this.promoteAction.process((int) m.getEndLocation().getX(), (int) m.getEndLocation().getY());
+      this.promoteAction.process(m.getStartLocation());
     }
     promote(m);
+    pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
+
+    if (hitPiece != null) {
+      m.addCapturedPiece(hitPiece, m.getEndLocation());
+      pieceBiMap.remove(hitPiece);
+    }
   }
 
   private void promote(Move m) {
@@ -127,6 +128,8 @@ public class ChessBoard extends Board implements Serializable {
       return;
     }
     int inc = getPawnInc(piece);
+    int startX = (int) m.getStartLocation().getX();
+    int startY = (int) m.getStartLocation().getY();
     int endX = (int) m.getEndLocation().getX();
     int endY = (int) m.getEndLocation().getY();
     if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
@@ -134,7 +137,7 @@ public class ChessBoard extends Board implements Serializable {
       piece.setMovePattern("Any -1");
       piece.setValue(pieceTypeMap.get(piece.getFullName()).getValue());
       m.setPromote(true);
-      this.promoteAction.process(endX, endY);
+      this.promoteAction.process(m.getStartLocation());
     }
   }
 

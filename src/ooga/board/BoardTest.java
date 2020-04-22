@@ -29,7 +29,7 @@ public class BoardTest {
     System.out.println("");
 
     System.out.println("Valid moves for rook at 0,1 with lateral -1:");
-    List<Point2D> moves = board.getValidMoves(0, 1);
+    List<Point2D> moves = board.getValidMoves(new Point2D.Double(0, 1));
     for(Point2D move: moves){
       System.out.println(move.getX() + ", " + move.getY());
     }

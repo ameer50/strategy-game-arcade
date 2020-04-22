@@ -50,7 +50,7 @@ public class BoardViewTests extends DukeApplicationTest {
 
     @Test
     public void testHighlightValidMoves() throws Exception {
-        List<Point2D> validMoves = board.getValidMoves(6,7);
+        List<Point2D> validMoves = board.getValidMoves(new Point2D.Double(6,7));
         boardView.highlightValidMoves(validMoves);
 
         assertEquals(true, boardView.getCellAt(5,7).isYellow());
@@ -60,8 +60,9 @@ public class BoardViewTests extends DukeApplicationTest {
 
     @Test
     public void testToggleRed() throws Exception {
-        boardView.setSelectedLocation(6,7);
-        assertEquals(true, boardView.getCellAt(6,7).isRed());
+        Point2D point = new Point2D.Double(6,7);
+        boardView.setSelectedLocation(point);
+        assertEquals(true, boardView.getCellAt(point).isRed());
 
         tearDown();
     }

@@ -28,14 +28,6 @@ public class CheckersBoardTests{
         XMLProcessor processor = new XMLProcessor();
         processor.parse(gameXML);
         board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
-        board.setOnPieceCaptured((int toX, int toY) -> {
-            //boardView.getCellAt(toX, toY).setPiece(null);
-        });
-
-        board.setOnPiecePromoted((int toX, int toY) -> {
-            //board.getPieceAt(toX, toY);
-            //boardView.getCellAt(toX, toY).setPiece(new PieceView(board.getPieceAt(toX, toY).getFullName()));
-        });
     }
 
     @Test
@@ -99,11 +91,12 @@ public class CheckersBoardTests{
 
     @Test
     public void blackKillWhite(){
-        board.placePiece(4, 3, new Piece("Coin", "P2 1", 5, "White"));
+        Point2D point = new Point2D.Double(4,3);
+        board.placePiece(point, new Piece("Coin", "P2 1", 5, "White"));
         System.out.println(board);
         Move m = new Move(new Point2D.Double(5, 2), new Point2D.Double(3, 4));
         board.doMove(m);
-        board.putPieceAt(new Point2D.Double(4, 3), null);
+        board.putPieceAt(point, null);
         Piece p = board.getPieceAt(3, 4);
         Piece origin = board.getPieceAt(5, 2);
         Piece killed = board.getPieceAt(4, 3);
@@ -114,7 +107,8 @@ public class CheckersBoardTests{
 
     @Test
     public void whiteKillBlack(){
-        board.placePiece(3, 2, new Piece("Coin", "P1 1", 5, "Black"));
+        Point2D point = new Point2D.Double(3,2);
+        board.placePiece(point, new Piece("Coin", "P1 1", 5, "Black"));
         System.out.println(board);
         Move m = new Move(new Point2D.Double(2, 1), new Point2D.Double(4, 3));
         board.doMove(m);
