@@ -106,15 +106,14 @@ public class CheckersBoard extends Board implements Serializable {
         }
         killPaths.clear();
         String movPat = piece.getMovePattern();
-        switch (movPat) {
-            case "P1 1":
-                return new ArrayList<>(p1(coordinate));
-            case "P2 1":
-                return new ArrayList<>(p2(coordinate));
-            case "KING 1":
-                return new ArrayList<>(king(coordinate));
-            default:
-                return null;
+        if(movPat.equals("KING 1")){
+            return new ArrayList<>(king(coordinate));
+        } else if((piece.getColor()).equals(bottomColor)){
+            return new ArrayList<>(p(coordinate, "up"));
+        } else if(!(piece.getColor()).equals(bottomColor)){
+            return new ArrayList<>(p(coordinate, "down"));
+        } else{
+            return null;
         }
     }
 
@@ -195,15 +194,16 @@ public class CheckersBoard extends Board implements Serializable {
         }
     }
 
-    private Set<Point2D> p1(Point2D coordinate){
-        Set<Point2D> nonKills = p1NoKills(coordinate);
-        Set<Point2D> kills = p1Kills(coordinate);
+    private Set<Point2D> p(Point2D coordinate, String uord){
+        Set<Point2D> nonKills = pNoKills(coordinate, uord);
+        Set<Point2D> kills = pKills(coordinate, uord);
         kills.addAll(nonKills);
         return kills;
     }
-    private Set<Point2D> p1NoKills(Point2D coordinate){
-        Point2D p1 = nonKill(coordinate, getMConsts("up_left"));
-        Point2D p2 = nonKill(coordinate, getMConsts("up_right"));
+
+    private Set<Point2D> pNoKills(Point2D coordinate, String uord){
+        Point2D p1 = nonKill(coordinate, getMConsts(uord+"_left"));
+        Point2D p2 = nonKill(coordinate, getMConsts(uord+"_right"));
         Set<Point2D> ret = new HashSet<>();
         ret.add(p1);
         ret.add(p2);
@@ -211,82 +211,46 @@ public class CheckersBoard extends Board implements Serializable {
         ret.remove(null);
         return ret;
     }
-    private Set<Point2D> p1Kills(Point2D coordinate){
-        Point2D p3 = kill(coordinate, new HashSet<>(), getMConsts("up_left_kill"));
-        Point2D p4 = kill(coordinate, new HashSet<>(), getMConsts("up_right_kill"));
+
+    private Set<Point2D> pKills(Point2D coordinate, String uord){
+        Point2D p3 = kill(coordinate, new HashSet<>(), getMConsts(uord+"_left_kill"));
+        Point2D p4 = kill(coordinate, new HashSet<>(), getMConsts(uord+"_right_kill"));
         Set<Point2D> ret = new HashSet<>();
         ret.add(p3);
         ret.add(p4);
         Piece p = getPieceAt(coordinate);
-        getNextStepsP1(p3, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()));
-        getNextStepsP1(p4, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()));
+        getNextStepsP(p3, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()), uord);
+        getNextStepsP(p4, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()), uord);
         ret.remove(null);
         return ret;
     }
-    private void getNextStepsP1(Point2D start, Set<Point2D> ret, Piece p){
+
+    private void getNextStepsP(Point2D start, Set<Point2D> ret, Piece p, String uord){
         if(start == null){
             return;
         }
         ret.add(start);
         pieceBiMap.forcePut(start, p);
-        getNextStepsP1(kill(start, killPaths.get(start), getMConsts("up_left_kill")), ret, p);
-        getNextStepsP1(kill(start, killPaths.get(start), getMConsts("up_right_kill")), ret, p);
+        getNextStepsP(kill(start, killPaths.get(start), getMConsts(uord+"_left_kill")), ret, p, uord);
+        getNextStepsP(kill(start, killPaths.get(start), getMConsts(uord+"_right_kill")), ret, p, uord);
         pieceBiMap.forcePut(start, null);
     }
 
-    private Set<Point2D> p2(Point2D coordinate){
-        Set<Point2D> nonKills = p2NoKills(coordinate);
-        Set<Point2D> kills = p2Kills(coordinate);
-        kills.addAll(nonKills);
-        return kills;
-    }
-    private Set<Point2D> p2NoKills(Point2D coordinate){
-        Point2D p1 = nonKill(coordinate, getMConsts("down_left"));
-        Point2D p2 = nonKill(coordinate, getMConsts("down_right"));
-        Set<Point2D> ret = new HashSet<>();
-        ret.add(p1);
-        ret.add(p2);
-
-        ret.remove(null);
-        return ret;
-    }
-    private Set<Point2D> p2Kills(Point2D coordinate){
-        Point2D p3 = kill(coordinate, new HashSet<>(), getMConsts("down_left_kill"));
-        Point2D p4 = kill(coordinate, new HashSet<>(), getMConsts("down_right_kill"));
-        Set<Point2D> ret = new HashSet<>();
-        ret.add(p3);
-        ret.add(p4);
-        Piece p = getPieceAt(coordinate);
-        getNextStepsP2(p3, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()));
-        getNextStepsP2(p4, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()));
-        ret.remove(null);
-        return ret;
-    }
-    private void getNextStepsP2(Point2D start, Set<Point2D> ret, Piece p){
-        if(start == null){
-            return;
-        }
-        ret.add(start);
-        pieceBiMap.forcePut(start, p);
-        getNextStepsP2(kill(start, killPaths.get(start), getMConsts("down_left_kill")), ret, p);
-        getNextStepsP2(kill(start, killPaths.get(start), getMConsts("down_right_kill")), ret, p);
-        pieceBiMap.forcePut(start, null);
-    }
     private void getNextStepsKing(Point2D start, Set<Point2D> ret, Piece p){
         if(start == null){
             return;
         }
         ret.add(start);
         pieceBiMap.forcePut(start, p);
-        getNextStepsP1(kill(start, killPaths.get(start), getMConsts("up_left_kill")), ret, p);
-        getNextStepsP1(kill(start, killPaths.get(start), getMConsts("up_right_kill")), ret, p);
-        getNextStepsP2(kill(start, killPaths.get(start), getMConsts("down_left_kill")), ret, p);
-        getNextStepsP2(kill(start, killPaths.get(start), getMConsts("down_right_kill")), ret, p);
+        getNextStepsP(kill(start, killPaths.get(start), getMConsts("up_left_kill")), ret, p, "up");
+        getNextStepsP(kill(start, killPaths.get(start), getMConsts("up_right_kill")), ret, p, "up");
+        getNextStepsP(kill(start, killPaths.get(start), getMConsts("down_left_kill")), ret, p, "down");
+        getNextStepsP(kill(start, killPaths.get(start), getMConsts("down_right_kill")), ret, p, "down");
         pieceBiMap.forcePut(start, null);
     }
     private Set<Point2D> king(Point2D coordinate) {
-        Set<Point2D> kingNoKills = p1NoKills(coordinate);
-        kingNoKills.addAll(p2NoKills(coordinate));
+        Set<Point2D> kingNoKills = pNoKills(coordinate, "up");
+        kingNoKills.addAll(pNoKills(coordinate, "down"));
         Point2D p3 = kill(coordinate, new HashSet<>(), getMConsts("up_left_kill"));
         Point2D p4 = kill(coordinate, new HashSet<>(), getMConsts("up_right_kill"));
         Point2D p5 = kill(coordinate, new HashSet<>(), getMConsts("down_left_kill"));
