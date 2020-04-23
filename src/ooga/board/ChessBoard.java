@@ -1,6 +1,5 @@
 package ooga.board;
 
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.Serializable;
@@ -34,9 +33,10 @@ public class ChessBoard extends Board implements Serializable {
   public static final int[] diagonalJShifts = {-1, 1, -1, 1};
   public static final int[] anyIShifts = {-1, 1, 0, 0, -1, -1, 1, 1};
   public static final int[] anyJShifts = {0, 0, -1, 1, -1, 1, -1, 1};
-  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
-      Pair<String, Integer>> pieces) {
-    super(settings, locations, pieces);
+
+  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> movePatterns,
+      Map<String, Integer> scores) {
+    super(settings, locations, movePatterns, scores);
   }
 
   @Override
@@ -134,7 +134,7 @@ public class ChessBoard extends Board implements Serializable {
       // demote piece in backend
       m.getPiece().setType(PAWN);
       m.getPiece().setMovePattern("PAWN -1");
-      m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
+      m.getPiece().setValue(pieceScores.get(m.getPiece().getFullName()));
       // demote piece in frontend
       this.promoteAction.process(m.getStartLocation());
     }
@@ -160,7 +160,7 @@ public class ChessBoard extends Board implements Serializable {
     if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
       piece.setType("Queen");
       piece.setMovePattern("Any -1");
-      piece.setValue(pieceTypeMap.get(piece.getFullName()).getValue());
+      piece.setValue(pieceScores.get(piece.getFullName()));
       m.setPromote(true);
       this.promoteAction.process(m.getStartLocation());
     }
