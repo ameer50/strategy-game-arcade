@@ -76,6 +76,7 @@ public class Controller {
         processor.parse(gameXML);
 
         try {
+            System.out.println(PACKAGE_NAME + gameChoice + "Board");
             Class c = Class.forName(PACKAGE_NAME + gameChoice + "Board");
             Constructor objConstruct = c.getDeclaredConstructor(Map.class, Map.class, Map.class);
             board = (Board) objConstruct.newInstance(processor.getSettings(), processor.getInitialPieceLocations(),
@@ -151,6 +152,7 @@ public class Controller {
             Move move = new Move(startLocation, endLocation);
             doMove(move);
             removeCapturedPieces(move);
+            convertPieces(move);
             boardView.replenishIcon(move);
 
             history.addMove(move);
@@ -212,6 +214,25 @@ public class Controller {
     private void removeCapturedPieces(Move m) {
         for (Point2D location: m.getCapturedPiecesAndLocations().values()) {
             if (board.getPieceAt(location) == null) boardView.getCellAt(location).setPiece(null);
+        }
+    }
+
+//    private void convertPieces(Move m) {
+//        System.out.println("it is called");
+//        for (Point2D location: m.getConvertedPiecesAndLocations().values()) {
+//            Piece
+//            if (board.getPieceAt(location) != null) boardView.getCellAt(location).setPiece(null);
+//        }
+//    }
+
+    private void convertPieces(Move m) {
+        Map<Piece, Point2D> map = m.getConvertedPiecesAndLocations();
+
+        for (Piece piece: map.keySet()) {
+            Point2D convertedPieceLocation = map.get(piece);
+            activePlayer.addToScore(piece.getValue());
+            PieceView convertedPieceView = new PieceView(m.getConvertPieceName());
+            boardView.getCellAt(convertedPieceLocation).setPiece(convertedPieceView);
         }
     }
 

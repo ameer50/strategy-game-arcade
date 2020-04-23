@@ -44,6 +44,7 @@ public abstract class Board implements Serializable {
     pieceBiMap = HashBiMap.create();
     this.settings = settings;
     this.pieceTypeMap = pieceTypeMap;
+    System.out.println("piecetypemap " + pieceTypeMap);
     this.pieceMoves = null;
     initializePieces(locations);
   }
@@ -79,6 +80,8 @@ public abstract class Board implements Serializable {
 
       if (settings != null) {
         Pair<String, Integer> pieceInfo = pieceTypeMap.get(pieceStr);
+        System.out.println("pieceStr " + pieceStr);
+        System.out.println(pieceTypeMap.get(pieceStr));
         int score = pieceInfo.getValue();
         String pattern = pieceInfo.getKey();
         Piece piece = new Piece(pieceName, pattern, score, pieceColor);

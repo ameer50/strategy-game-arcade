@@ -4,24 +4,31 @@ import ooga.board.Piece;
 import ooga.view.PieceView;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Move {
 
     private Piece piece;
+    private List<Piece> pieces;
     private Point2D startLocation;
     private Point2D endLocation;
     private Map<Piece, Point2D> capturedPiecesAndLocations;
+    private Map<Piece, Point2D> convertedPiecesAndLocations;
     private boolean isUndo;
     private boolean isPromote;
     private boolean isPieceGenerated;
     private String color;
+    private String convertPieceName;
 
     public Move(Point2D startLocation, Point2D endLocation) {
         this.startLocation = startLocation;
         this.endLocation = endLocation;
         capturedPiecesAndLocations = new HashMap<>();
+        convertedPiecesAndLocations = new HashMap<>();
+        pieces = new ArrayList<>();
         isUndo = false;
         isPromote = false;
         isPieceGenerated = false;
@@ -74,6 +81,14 @@ public class Move {
         return capturedPiecesAndLocations;
     }
 
+    public void addConvertedPiece(Piece capturedPiece, Point2D capturedPieceLocation){
+        convertedPiecesAndLocations.put(capturedPiece, capturedPieceLocation);
+    }
+
+    public Map<Piece, Point2D> getConvertedPiecesAndLocations() {
+        return convertedPiecesAndLocations;
+    }
+
     public Piece getPiece() {
         return piece;
     }
@@ -100,5 +115,13 @@ public class Move {
 
     public String getColor(){
         return color;
+    }
+
+    public void setConvertPieceName(String name){
+        convertPieceName = name;
+    }
+
+    public String getConvertPieceName(){
+        return convertPieceName;
     }
 }
