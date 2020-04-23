@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.CustomBoard;
 import ooga.board.Piece;
-import ooga.controller.Controller.GameType;
 import ooga.controller.Controller.StrategyType;
 import ooga.history.History;
 import ooga.history.Move;
@@ -47,7 +46,6 @@ public class CustomController {
     processor.parse(fileChoice, true);
     printMessageAndTime("JSON parsed.");
     /* To be used in reflection... */
-    GameType type = GameType.valueOf(processor.getName().toUpperCase());
     int width = processor.getWidth();
     int height = processor.getHeight();
 
