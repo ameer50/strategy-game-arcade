@@ -104,15 +104,8 @@ public class Controller {
         try {
             Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
             Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
-            System.out.println(type);
-            System.out.println(processor.getSettings());
-            System.out.println(processor.getPieceLocations());
-            System.out.println(processor.getPieceMovePatterns());
-            System.out.println(processor.getPieceScores());
             board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
                 processor.getPieceMovePatterns(), processor.getPieceScores());
-//            board = new ChessBoard(processor.getSettings(), processor.getPieceLocations(), processor.getPieceMovePatterns(),
-//                processor.getPieceScores());
         } catch (Exception e) {
             System.out.println("Could not find game.");
         }
