@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 public class CheckersBoardTests{
     CheckersBoard board;
-    @BeforeEach
+    /*@BeforeEach
     public void setUp(){
         String gameXML = String.format("resources/Checkers/defaultBlack.xml");
         XMLProcessor processor = new XMLProcessor();
@@ -119,5 +119,5 @@ public class CheckersBoardTests{
         assertEquals(p.getColor(), "White");
         assertNull(origin);
         assertNull(killed);
-    }
+    }*/
 }

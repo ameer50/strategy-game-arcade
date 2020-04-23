@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 public class ChessBoardTests {
   ChessBoard board;
-  @BeforeEach
+  /*@BeforeEach
   public void setUp(){
     String gameXML = String.format("resources/Chess/chessJUnit.xml");
     XMLProcessor processor = new XMLProcessor();
@@ -298,5 +298,5 @@ public class ChessBoardTests {
     //blockers removed
     assertEquals(board.getValidMoves(new Point2D.Double(3, 4)).size(), 0);
     assertEquals(board.checkWon(), "Black");
-  }
+  }*/
 }

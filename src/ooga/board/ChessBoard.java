@@ -166,7 +166,8 @@ public class ChessBoard extends Board implements Serializable {
     if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
       piece.setType(QUEEN);
       piece.setMovePattern(QUEEN_MOVE_PATTERN);
-      piece.setValue(pieceScores.get(piece.getFullName()));
+      piece.setValue(pieceScores.get(piece.getType()));
+      System.out.println(piece.getValue());
       m.setPromote(true);
       this.promoteAction.process(m.getStartLocation());
     }

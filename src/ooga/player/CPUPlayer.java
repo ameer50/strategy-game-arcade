@@ -29,16 +29,16 @@ public class CPUPlayer extends Player {
     utility = new StringUtility();
   }
 
-  public List<Integer> generateMove() {
+  public Move generateMove() {
     long startTime = System.currentTimeMillis();
-    List<Integer> moveCoordinates = null;
+    Move moveCoordinates = null;
 
     String strategyStr = utility.strategyToString(strategy);
     String generatorName = String.format("generate%sMove", strategyStr);
     try {
       Method generator = this.getClass().getDeclaredMethod(generatorName, null);
       Object coordinateList = generator.invoke(this);
-      moveCoordinates = (List<Integer>) coordinateList;
+      moveCoordinates = (Move) coordinateList;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
       System.out.println("Error: " + generatorName);
       e.printStackTrace();
@@ -69,22 +69,20 @@ public class CPUPlayer extends Player {
     return null;
   }
 
-  public List<Integer> generateRandomMove() {
+  public Move generateRandomMove() {
     Random rng = new Random();
-    List<List<Integer>> possibleMoves = board.getPossibleMoves(color);
+    List<Move> possibleMoves = board.getPossibleMoves(color);
 
     if (possibleMoves.size() != 0) {
       int index = rng.nextInt(possibleMoves.size());
-      List<Integer> move = possibleMoves.get(index);
-      System.out.println(String.format("Generated RANDOM move: (%.1f, %.1f), (%.1f, %.1f)", (float) move.get(0),
-          (float) move.get(1), (float) move.get(2), (float) move.get(3)));
+      Move move = possibleMoves.get(index);
       return move;
     }
     System.out.println("AI could not find a piece");
     return null;
   }
 
-  public List<Integer> generateAlphaBetaMove() {
+  public Move generateAlphaBetaMove() {
     int depth = 2;
     int alpha = Integer.MIN_VALUE;
     int beta = Integer.MAX_VALUE;
@@ -92,15 +90,16 @@ public class CPUPlayer extends Player {
     /*
     The ALPHA-BETA algorithm will generate scores for each of these moves...
      */
-    List<List<Integer>> parallelMoves = board.getPossibleMoves(color);
+    List<Move> parallelMoves = board.getPossibleMoves(color);
     List<Integer> parallelScores = new ArrayList<>();
 
-    for (List<Integer> move: parallelMoves) {
+    for (Move move: parallelMoves) {
       int moveScore = alphabeta(move, depth, alpha, beta, true, board);
       parallelScores.add(moveScore);
     }
     int bestScore = 0;
-    List<Integer> bestMove = parallelMoves.get(0);
+    Move bestMove = parallelMoves.get(0);
+    System.out.println(parallelScores);
     for (int i=0; i<parallelScores.size(); i++) {
       int score = parallelScores.get(i);
       if (score > bestScore) {
@@ -111,18 +110,18 @@ public class CPUPlayer extends Player {
     return bestMove;
   }
 
-  private int alphabeta(List<Integer> currMove, int depth, int alpha, int beta, boolean maximizer, Board currBoard) {
+  private int alphabeta(Move move, int depth, int alpha, int beta, boolean maximizer, Board currBoard) {
     if (depth==0 | currBoard.isGameOver()) {
       return currBoard.getScore(color);
     }
     Board nextBoard = currBoard.getCopy();
-    Point2D startPoint = new Point2D.Double(currMove.get(0), currMove.get(1));
-    Point2D endPoint = new Point2D.Double(currMove.get(2), currMove.get(3));
+    Point2D startPoint = move.getStartLocation();
+    Point2D endPoint = move.getEndLocation();
     nextBoard.doMove(new Move(startPoint, endPoint));
     int bestValue;
     if (maximizer) {
       bestValue = Integer.MIN_VALUE;
-      for (List<Integer> nextMove : nextBoard.getPossibleMoves(color)) {
+      for (Move nextMove : nextBoard.getPossibleMoves(color)) {
         int value = alphabeta(nextMove, depth-1, alpha, beta, false, nextBoard);
         bestValue = Math.max(bestValue, value);
         alpha = Math.max(alpha, bestValue);
@@ -132,7 +131,7 @@ public class CPUPlayer extends Player {
       }
     } else {
       bestValue = Integer.MAX_VALUE;
-      for (List<Integer> nextMove : nextBoard.getPossibleMoves(color)) {
+      for (Move nextMove : nextBoard.getPossibleMoves(color)) {
         int value = alphabeta(nextMove, depth-1, alpha, beta, true, nextBoard);
         bestValue = Math.min(bestValue, value);
         beta = Math.min(beta, bestValue);

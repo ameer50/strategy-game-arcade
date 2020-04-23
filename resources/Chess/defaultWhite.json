@@ -24,11 +24,11 @@
   },
 
   "scores": {
-    "King": 4,
-    "Queen": 3,
-    "Knight": 2,
-    "Bishop": 2,
-    "Rook": 2,
+    "King": 25,
+    "Queen": 10,
+    "Knight": 3,
+    "Bishop": 5,
+    "Rook": 5,
     "Pawn": 1
   },
 

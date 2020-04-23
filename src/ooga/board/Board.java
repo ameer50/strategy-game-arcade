@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javafx.util.Pair;
 import ooga.ProcessCoordinateInterface;
 import ooga.custom.MoveNode;
@@ -225,11 +226,24 @@ public abstract class Board implements Serializable {
 
   /**
    * @param color the color of the team whose moves are desired
-   * @return a nested List of integers representing moves as {startX, startY, endX, endY}
+   * @return a list of Move objects
    */
-  public List<List<Integer>> getPossibleMoves(String color) {
-    List<Point2D> possiblePoints = getPointsOfColor(color);
-    return movesFromPoints(possiblePoints);
+  public List<Move> getPossibleMoves(String color) {
+    List<Move> moves = new ArrayList<>();
+    //switch to ArrayList to avoid concurrent modification exception
+    //because getValidMoves modifies pieceBiMap
+    List<Point2D> starts = new ArrayList<>();
+    starts.addAll(pieceBiMap.keySet());
+    for(Point2D start: starts){
+      if(pieceBiMap.get(start) != null && pieceBiMap.get(start).getColor().equals(color)){
+        for (Point2D end : getValidMoves(start)) {
+          moves.add(new Move(start, end));
+        }
+      }
+    }
+    return moves;
+    //List<Point2D> possiblePoints = getPointsOfColor(color);
+    //return movesFromPoints(possiblePoints);
   }
 
   private List<List<Integer>> movesFromPoints(List<Point2D> points) {

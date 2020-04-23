@@ -170,18 +170,10 @@ public class CustomController {
 
   private void doCPUMove() {
     //TODO: have generateMove return a Move
-    List<Integer> AIMove = CPU.generateMove();
-    int fromX = AIMove.get(0);
-    int fromY = AIMove.get(1);
-    Point2D startLocation = new Point2D.Double(fromX, fromY);
-    int toX = AIMove.get(2);
-    int toY = AIMove.get(3);
-    Point2D endLocation = new Point2D.Double(toX, toY);
-    Move m = new Move(startLocation, endLocation);
-
-    doMove(m);
-    history.addMove(m);
-    historyList.add(m);
+    Move AIMove = CPU.generateMove();
+    doMove(AIMove);
+    history.addMove(AIMove);
+    historyList.add(AIMove);
 
     toggleActivePlayer();
     board.checkWon();
