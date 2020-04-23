@@ -20,11 +20,9 @@ import ooga.player.Player;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.PieceView;
-import ooga.xml.XMLProcessor;
 
 public class CustomController {
-  private XMLProcessor XMLprocessor;
-  private JSONProcessor JSONprocessor;
+  private JSONProcessor processor;
   private Board board;
   private GameScreen gameScreen;
   private BoardView boardView;
@@ -41,26 +39,24 @@ public class CustomController {
   public CustomController(Stage stage) {
     startTime = System.currentTimeMillis();
     this.stage = stage;
-    setUpGameScreen("custom.json");
+    setUpGameScreen("exampleCustom.json");
   }
 
   private void setUpGameScreen(String fileChoice) {
-    JSONprocessor = new JSONProcessor();
-    JSONprocessor.parse(fileChoice);
+    processor = new JSONProcessor();
+    processor.parse(fileChoice, true);
     printMessageAndTime("JSON parsed.");
     /* To be used in reflection... */
-    GameType type = GameType.valueOf(JSONprocessor.getName().toUpperCase());
-
-    Map<String, Long> dimensions = JSONprocessor.getDimensions();
-    int width = Math.toIntExact(dimensions.get("width"));
-    int height = Math.toIntExact(dimensions.get("height"));
+    GameType type = GameType.valueOf(processor.getName().toUpperCase());
+    int width = processor.getWidth();
+    int height = processor.getHeight();
 
     /* Use reflection here... */
-    board = new CustomBoard(width, height, JSONprocessor.getPieceLocations(),
-        JSONprocessor.getPieceMoves(), JSONprocessor.getPieceScores());
+    board = new CustomBoard(width, height, processor.getSettings(), processor.getPieceLocations(),
+        processor.getPieceMoveNodes(), processor.getPieceScores());
     printMessageAndTime("Set up Board.");
 
-    gameScreen = new GameScreen(stage, width, height, JSONprocessor.getPieceLocations());
+    gameScreen = new GameScreen(stage, width, height, processor.getPieceLocations());
     printMessageAndTime("Set up Game Screen.");
 
     boardView = gameScreen.getBoardView();
