@@ -16,15 +16,14 @@ public class CheckersBoard extends Board implements Serializable {
     public Map<String, Map<Integer, Integer>> dict = new HashMap<String, Map<Integer, Integer>>();
     private static ResourceBundle moveConstantMap;
 
-
-    public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locs, Map<String, Pair<String, Integer>> pieces){
-        super(settings, locs, pieces);
+    public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> movePatterns,
+        Map<String, Integer> scores) {
+        super(settings, locations, movePatterns, scores);
         try {
             moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/moveConstants.properties"));
         } catch (IOException e) {
-            System.out.println("THROW A CUSTOM EXECPTION");
+            System.out.println("This should throw a custom exception.");
         }
-
     }
 
     @Override
@@ -128,14 +127,14 @@ public class CheckersBoard extends Board implements Serializable {
             // demote backend
             currPiece.setType("Coin");
             currPiece.setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
-            currPiece.setValue(pieceTypeMap.get(currPiece.getFullName()).getValue());
+            currPiece.setValue(pieceScores.get(currPiece.getFullName()));
             // demote frontend
             promoteAction.process(m.getStartLocation());
         }
         if((currPiece.getColor().equals(bottomColor) && x_f==0) || (!(currPiece.getColor().equals(bottomColor)) && x_f==height-1)){
             currPiece.setType("Monarch");
             currPiece.setMovePattern("KING 1");
-            currPiece.setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
+            currPiece.setValue(pieceScores.get(currPiece.getFullName()));
             m.setPromote(true);
             promoteAction.process(m.getStartLocation());
         }

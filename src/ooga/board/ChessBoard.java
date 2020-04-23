@@ -18,6 +18,9 @@ public class ChessBoard extends Board implements Serializable {
   public static final String KNIGHT = "Knight";
   public static final String BLACK = "Black";
   public static final String WHITE = "White";
+  public static final String QUEEN = "Queen";
+  public static final String QUEEN_MOVE_PATTERN = "Any -1";
+  public static final String PAWN_MOVE_PATTERN = "PAWN -1";
   public static final int[] upIShifts = {-1};
   public static final int[] upJShifts = {0};
   public static final int[] downIShifts = {1};
@@ -32,13 +35,10 @@ public class ChessBoard extends Board implements Serializable {
   public static final int[] diagonalJShifts = {-1, 1, -1, 1};
   public static final int[] anyIShifts = {-1, 1, 0, 0, -1, -1, 1, 1};
   public static final int[] anyJShifts = {0, 0, -1, 1, -1, 1, -1, 1};
-  public static final String QUEEN = "Queen";
-  public static final String QUEEN_MOVE_PATTERN = "Any -1";
-  public static final String PAWN_MOVE_PATTERN = "PAWN -1";
 
-  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
-      Pair<String, Integer>> pieces) {
-    super(settings, locations, pieces);
+  public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> movePatterns,
+      Map<String, Integer> scores) {
+    super(settings, locations, movePatterns, scores);
   }
 
   @Override
@@ -142,8 +142,8 @@ public class ChessBoard extends Board implements Serializable {
     // if undo and it was a promote move before
     if (m.isPromote() && m.isUndo()) {
       m.getPiece().setType(PAWN);
-      m.getPiece().setMovePattern(PAWN_MOVE_PATTERN);
-      m.getPiece().setValue(pieceTypeMap.get(m.getPiece().getFullName()).getValue());
+      m.getPiece().setMovePattern("PAWN -1");
+      m.getPiece().setValue(pieceScores.get(m.getPiece().getFullName()));
       // demote piece in frontend
       this.promoteAction.process(m.getStartLocation());
     }
@@ -166,7 +166,7 @@ public class ChessBoard extends Board implements Serializable {
     if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
       piece.setType(QUEEN);
       piece.setMovePattern(QUEEN_MOVE_PATTERN);
-      piece.setValue(pieceTypeMap.get(piece.getFullName()).getValue());
+      piece.setValue(pieceScores.get(piece.getFullName()));
       m.setPromote(true);
       this.promoteAction.process(m.getStartLocation());
     }

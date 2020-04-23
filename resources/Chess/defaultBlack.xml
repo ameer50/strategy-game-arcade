@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <game_config>
+
     <settings>
-        <name>
-            Chess
-        </name>
+        <name>Chess</name>
         <width>8</width>
         <height>8</height>
         <bottomColor>Black</bottomColor>
         <icon>Pawn</icon>
     </settings>
+
     <locations>
         <item>0,0,White_Rook</item>
         <item>0,1,White_Knight</item>
@@ -26,8 +26,6 @@
         <item>1,5,White_Pawn</item>
         <item>1,6,White_Pawn</item>
         <item>1,7,White_Pawn</item>
-
-
         <item>6,0,Black_Pawn</item>
         <item>6,1,Black_Pawn</item>
         <item>6,2,Black_Pawn</item>
@@ -44,8 +42,8 @@
         <item>7,5,Black_Bishop</item>
         <item>7,6,Black_Knight</item>
         <item>7,7,Black_Rook</item>
-
     </locations>
+
     <pieces>
         <item>
             White_Knight:KNIGHT 2 1:5
@@ -83,6 +81,6 @@
         <item>
             Black_Knight:KNIGHT 2 1:5
         </item>
-
     </pieces>
+
 </game_config>

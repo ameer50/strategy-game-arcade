@@ -8,11 +8,12 @@ import ooga.Main;
 import ooga.board.*;
 import ooga.history.History;
 import ooga.history.Move;
+import ooga.json.JSONProcessor;
 import ooga.player.HumanPlayer;
 import ooga.player.Player;
 import ooga.player.CPUPlayer;
+import ooga.utility.StringUtility;
 import ooga.view.*;
-import ooga.xml.XMLProcessor;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
@@ -20,8 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 public class Controller {
-
-    public static final int STALL_TIME = 1000;
 
     public enum StrategyType {
         TRIVIAL,
@@ -40,7 +39,6 @@ public class Controller {
         CUSTOM,
     }
 
-    private static String PACKAGE_NAME = "ooga.board.";
     private long startTime;
     private Board board;
     private GameScreen gameScreen;
@@ -54,9 +52,9 @@ public class Controller {
     private History history;
     private ObservableList<Move> historyList;
     private Stage stage;
-    private XMLProcessor processor;
+    private JSONProcessor processor;
 
-    public Controller (Stage stage) {
+    public Controller(Stage stage) {
         startTime = System.currentTimeMillis();
         this.stage = stage;
         setUpMenu();
@@ -67,28 +65,22 @@ public class Controller {
         menuScreen.setButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
-
     }
 
-    private void setUpGameScreen(String gameChoice, String fileChoice) {
-        String gameXML = String.format(fileChoice);
+    private void setUpGameScreen(String gameType, String dir) {
+        /* TODO: Change 'Preset' to something received from the UI */
+        String customOrPreset = "Preset";
+        boolean isCustom = customOrPreset.equals("Custom");
+        processor = new JSONProcessor();
+        processor.parse(dir, isCustom);
+        gameType = new StringUtility().capitalize(gameType);
+        instantiateBoard(gameType, isCustom);
 
-        processor = new XMLProcessor();
-        processor.parse(gameXML);
-
-        try {
-            Class c = Class.forName(PACKAGE_NAME + gameChoice + "Board");
-            Constructor objConstruct = c.getDeclaredConstructor(Map.class, Map.class, Map.class);
-            board = (Board) objConstruct.newInstance(processor.getSettings(), processor.getInitialPieceLocations(),
-                    processor.getMovePatterns());
-        } catch (Exception e) {
-            System.out.println("Could not find game.");
-        }
-
-        gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getInitialPieceLocations()); // ***
+        gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getPieceLocations());
 
         boardView = gameScreen.getBoardView();
-        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
+        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(),
+            menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
         dashboardView.addIcons(boardView.getIcons());
 
@@ -101,7 +93,22 @@ public class Controller {
         setUpHistory();
         setUpPlayers();
         setListeners();
+    }
 
+    private void instantiateBoard(String type, boolean isCustom) {
+        if (isCustom) {
+            board = new CustomBoard(processor.getWidth(), processor.getHeight(), processor.getSettings(),
+                processor.getPieceLocations(), processor.getPieceMoveNodes(), processor.getPieceScores());
+            return;
+        }
+        try {
+            Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
+            Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
+            board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
+                processor.getPieceMovePatterns(), processor.getPieceScores());
+        } catch (Exception e) {
+            System.out.println("Could not find game.");
+        }
     }
 
     private void setUpPlayers() {
@@ -109,11 +116,13 @@ public class Controller {
         if (!menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
+            // TODO: Determine the StrategyType dynamically.
             playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
 
+        // TODO: Change "White" to the color that the player chose
         activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
         if (activePlayer.isCPU()) doCPUMove();
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
@@ -169,13 +178,12 @@ public class Controller {
     private void setDashboardViewListeners() {
         dashboardView.setUndoMoveClicked((e) -> {
             Move prevMove = history.undo();
-            historyList.remove(historyList.size() - 1);
-            Move reverseMove = prevMove.getReverseMove(true);
+            historyList.remove(historyList.size()-1);
 
+            Move reverseMove = prevMove.getReverseMove(true);
             doMove(reverseMove);
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
-
             replenishCapturedPieces(prevMove);
         });
 
@@ -191,13 +199,13 @@ public class Controller {
         dashboardView.setNewWindowClicked((e) -> {
             newWindow();
         });
+
         dashboardView.setQuitClicked((e) -> {
             setUpMenu();
         });
 
         dashboardView.setSaveClicked((e) -> {
-            //TODO: change fileName to be an input
-            processor.write(board, gameScreen.getDashboardView().getNewFileName());
+            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
         });
     }
 
@@ -209,8 +217,8 @@ public class Controller {
         }
     }
 
-    private void removeCapturedPieces(Move m) {
-        for (Point2D location: m.getCapturedPiecesAndLocations().values()) {
+    private void removeCapturedPieces(Move move) {
+        for (Point2D location: move.getCapturedPiecesAndLocations().values()) {
             if (board.getPieceAt(location) == null) boardView.getCellAt(location).setPiece(null);
         }
     }
@@ -232,7 +240,7 @@ public class Controller {
     }
 
     private void doCPUMove() {
-        //TODO: have generateMove return a Move
+        //TODO: Have generateMove return a Move.
         List<Integer> AIMove = CPU.generateMove();
         Point2D startLocation = new Point2D.Double(AIMove.get(0), AIMove.get(1));
         Point2D endLocation = new Point2D.Double(AIMove.get(2), AIMove.get(3));
@@ -242,6 +250,25 @@ public class Controller {
         history.addMove(m);
         historyList.add(m);
         dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+    }
+
+    private void doMove(Move move) {
+        activePlayer.doMove(move);
+        boardView.doMove(move);
+        checkWon();
+    }
+
+    private void newWindow() {
+        Stage newStage = new Stage();
+        Thread thread = new Thread(() -> Platform.runLater(() -> {
+            Main newSimulation = new Main();
+            try {
+                newSimulation.start(newStage);
+            } catch (NullPointerException e) {
+                System.out.println("Null.");
+            }
+        }));
+        thread.start();
     }
 
     private void printMessageAndTime(String message) {
@@ -257,24 +284,5 @@ public class Controller {
         while (elapsed < millis) {
             elapsed = System.currentTimeMillis() - initial;
         }
-    }
-
-    private void doMove(Move m) {
-        activePlayer.doMove(m);
-        boardView.doMove(m);
-        checkWon();
-    }
-
-    private void newWindow() {
-        Stage newStage = new Stage();
-        Thread thread = new Thread(() -> Platform.runLater(() -> {
-            Main newSimul = new Main();
-            try {
-                newSimul.start(newStage);
-            } catch (NullPointerException e) {
-                System.out.println("Null.");
-            }
-        }));
-        thread.start();
     }
 }

@@ -19,10 +19,15 @@ public class BoardTest {
     locs.put(p1, "black_rook");
     locs.put(p2, "white_pawn");
 
-    Map<String, Pair<String, Integer>> pieces = new HashMap<>();
-    pieces.put("black_rook", new Pair<>("lateral -1", 5));
-    pieces.put("white_pawn", new Pair<>("left -1", 1));
-    Board board = new ChessBoard(settings, locs, pieces);
+    Map<String, String> movePatterns = new HashMap<>();
+    movePatterns.put("black_rook", "lateral -1");
+    movePatterns.put("white_pawn", "left -1");
+
+    Map<String, Integer> scores = new HashMap<>();
+    scores.put("black_rook", 5);
+    scores.put("white_pawn", 1);
+
+    Board board = new ChessBoard(settings, locs, movePatterns, scores);
 
     System.out.println("Starting board config:");
     board.print();
