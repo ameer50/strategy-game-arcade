@@ -22,9 +22,9 @@ public abstract class Board implements Serializable {
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
   public static final String BOTTOM_COLOR = "bottomColor";
-  protected Map<String, Pair<String, Integer>> pieceTypeMap;
-  protected Map<String, MoveNode> pieceMoves;
-  protected Map<String, Long> pieceScores;
+  protected Map<String, String> pieceMovePatterns;
+  protected Map<String, Integer> pieceScores;
+  protected Map<String, MoveNode> pieceMoveNodes;
   protected BiMap<Point2D, Piece> pieceBiMap;
   protected Map<String, String> settings;
   protected int height;
@@ -35,7 +35,7 @@ public abstract class Board implements Serializable {
   protected ProcessCoordinateInterface captureAction;
 
   public Board(Map<String, String> settings, Map<Point2D, String> locations,
-      Map<String, Pair<String, Integer>> pieceTypeMap) {
+      Map<String, String> pieceMovePatterns, Map<String, Integer> pieceScores) {
     width = Integer.parseInt(settings.get(WIDTH));
     height = Integer.parseInt(settings.get(HEIGHT));
     bottomColor = settings.get(BOTTOM_COLOR);
@@ -43,24 +43,23 @@ public abstract class Board implements Serializable {
 
     pieceBiMap = HashBiMap.create();
     this.settings = settings;
-    this.pieceTypeMap = pieceTypeMap;
-    System.out.println("piecetypemap " + pieceTypeMap);
-    this.pieceMoves = null;
+    this.pieceMovePatterns = pieceMovePatterns;
+    this.pieceScores = pieceScores;
+    this.pieceMoveNodes = null;
     initializePieces(locations);
   }
 
-  public Board(int width, int height, Map<Point2D, String> locations,
-      Map<String, MoveNode> pieceMoves, Map<String, Long> pieceScores) {
+  public Board(int width, int height, Map<String, String> settings, Map<Point2D, String> locations,
+      Map<String, MoveNode> pieceMoveNodes, Map<String, Integer> pieceScores) {
     this.width = width;
     this.height = height;
-    /* TODO: replace with value in JSON */
-    bottomColor = "White";
+    bottomColor = settings.get(BOTTOM_COLOR);
     over = false;
 
     pieceBiMap = HashBiMap.create();
     this.settings = null;
-    this.pieceTypeMap = null;
-    this.pieceMoves = pieceMoves;
+    this.pieceMovePatterns = null;
+    this.pieceMoveNodes = pieceMoveNodes;
     this.pieceScores = pieceScores;
     initializePieces(locations);
   }
@@ -69,6 +68,7 @@ public abstract class Board implements Serializable {
    * Set up the board from the configuration file (XML or JSON).
    **/
   private void initializePieces(Map<Point2D, String> locations) {
+    int id = 0;
     for (Point2D point : locations.keySet()) {
       int x = (int) point.getX();
       int y = (int) point.getY();
@@ -78,19 +78,17 @@ public abstract class Board implements Serializable {
       String pieceColor = pieceArr[0];
       String pieceName = pieceArr[1];
 
-      if (settings != null) {
-        Pair<String, Integer> pieceInfo = pieceTypeMap.get(pieceStr);
-        System.out.println("pieceStr " + pieceStr);
-        System.out.println(pieceTypeMap.get(pieceStr));
-        int score = pieceInfo.getValue();
-        String pattern = pieceInfo.getKey();
+      if (pieceMovePatterns != null) {
+        int score = pieceScores.get(pieceName);
+        String pattern = pieceMovePatterns.get(pieceName);
         Piece piece = new Piece(pieceName, pattern, score, pieceColor);
         pieceBiMap.put(new Point2D.Double(x, y), piece);
       } else {
-        Piece piece = new Piece(pieceName, pieceMoves.get(pieceName),
-            Math.toIntExact(pieceScores.get(pieceName)), pieceColor);
+        Piece piece = new Piece(pieceName, pieceMoveNodes.get(pieceName),
+            pieceScores.get(pieceName), pieceColor, id);
         pieceBiMap.put(new Point2D.Double(x, y), piece);
       }
+      id++;
     }
   }
 
@@ -260,8 +258,9 @@ public abstract class Board implements Serializable {
   private Board copyNotCustom() {
     CopyUtility utility = new CopyUtility();
     Map<String, String> settingsCopy = (Map<String, String>) utility.getSerializedCopy(settings);
-    Map<String, Pair<String, Integer>> pieceTypeMapCopy =
-        (Map<String, Pair<String, Integer>>) utility.getSerializedCopy(pieceTypeMap);
+    Map<String, String> pieceMovePatternsCopy = (Map<String, String>) utility.getSerializedCopy(pieceMovePatterns);
+    Map<String, Integer> pieceScoresCopy = (Map<String, Integer>) utility.getSerializedCopy(pieceScores);
+
     Map<Point2D, String> locationsCopy = new HashMap<>();
     /* Make sure that the copying mechanism below works. */
     for (Point2D point : pieceBiMap.keySet()) {
@@ -272,13 +271,13 @@ public abstract class Board implements Serializable {
     }
 
     try {
-      Constructor<? extends Board> constructor =
-          this.getClass().getDeclaredConstructor(Map.class, Map.class, Map.class);
-      Board copy = constructor.newInstance(settingsCopy, locationsCopy, pieceTypeMapCopy);
+      Constructor<? extends Board> constructor = this.getClass().getDeclaredConstructor(Map.class, Map.class,
+          Map.class, Map.class);
+      Board copy = constructor.newInstance(settingsCopy, locationsCopy, pieceMovePatternsCopy, pieceScoresCopy);
       return copy;
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
         InvocationTargetException e) {
-      // e.printStackTrace();
+      System.out.println("Copy (Preset Board) went wrong");
     }
     return null;
   }
@@ -300,15 +299,16 @@ public abstract class Board implements Serializable {
     this.captureAction = captureAction;
   }
 
-  public Map<String, Pair<String, Integer>> getPieceTypeMap() {
-    return pieceTypeMap;
+  public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
+  public Map<String, Integer> getPieceScores() {
+    return Map.copyOf(pieceScores);
   }
 
-  protected boolean isFull() {
 
+  protected boolean isFull() {
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
-        if(getPieceAt(i,j) == null){
+        if (getPieceAt(i,j) == null) {
           return false;
         }
       }

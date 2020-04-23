@@ -12,23 +12,19 @@ import java.util.List;
 public class Popup {
 
     private static final String vboxStyle = "vbox";
-    Stage stage;
-    Scene scene;
-    String stylesheet;
-    VBox popupBox;
-
-
+    private Stage stage;
+    private Scene scene;
+    private String stylesheet;
+    private VBox popupBox;
     private BorderPane root;
-    public Popup(int stageWidth, int stageHeight, String stylesheet ){
+
+    public Popup(int stageWidth, int stageHeight, String stylesheet){
         stage = new Stage();
         stage.setWidth(stageWidth);
         stage.setHeight(stageHeight);
         root = new BorderPane();
         this.stylesheet = stylesheet;
-
-
     }
-
 
     public void getNewPopup(){
         root = new BorderPane();
@@ -39,8 +35,6 @@ public class Popup {
         scene.getStylesheets().add(stylesheet);
         stage.setScene(scene);
         stage.show();
-        //return root;
-
     }
 
     public Stage getStage(){
@@ -49,29 +43,18 @@ public class Popup {
 
     public void addButtonGroup(ButtonGroup buttons){
         VBox buttonBox = new VBox();
-
         for (Button b: buttons.getButtons()) {
             buttonBox.getChildren().add(b);
         }
-
         buttonBox.getStyleClass().add(vboxStyle);
-
         popupBox.getChildren().add(buttonBox);
     }
 
     public VBox getButtonBox(){
-        return  popupBox;
+        return popupBox;
     }
 
     public void closePopup(){
         stage.close();
     }
-
-
-
-
-
-
-
-
 }

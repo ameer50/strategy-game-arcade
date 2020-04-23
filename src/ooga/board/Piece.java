@@ -6,6 +6,7 @@ import java.util.List;
 import ooga.custom.MoveNode;
 
 public class Piece implements Serializable {
+
   private String type;
   private String pattern;
   private int value;
@@ -20,7 +21,7 @@ public class Piece implements Serializable {
     this.color = color;
     this.moves = 0;
   }
-  public Piece(String type, MoveNode node, int value, String color) {
+  public Piece(String type, MoveNode node, int value, String color, int id) {
     this.type = type;
     this.pattern = null;
     this.value = value;
@@ -74,6 +75,7 @@ public class Piece implements Serializable {
   public void setMovePattern(String pattern){
     this.pattern = pattern;
   }
+
   public void setType(String type){
     this.type = type;
   }
@@ -81,7 +83,6 @@ public class Piece implements Serializable {
   public String getFullName(){
     return String.format("%s_%s", this.color, this.type);
   }
-
 
   public void setValue(int value) {
     this.value = value;

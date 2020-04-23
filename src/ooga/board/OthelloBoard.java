@@ -14,9 +14,8 @@ public class OthelloBoard extends Board implements Serializable {
             new Pair<>(1, 1), new Pair<>(1, 0), new Pair<>(1, -1), new Pair<>(0, -1));
     private boolean turn;
 
-    public OthelloBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
-            Pair<String, Integer>> pieces) {
-        super(settings, locations, pieces);
+    public OthelloBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> pieces, Map<String, Integer> pieceScores) {
+        super(settings, locations, pieces, pieceScores);
         moveToPieceTrailMap = new HashMap<>();
         turn = false;
     }

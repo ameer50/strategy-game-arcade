@@ -12,10 +12,13 @@ import java.util.ResourceBundle;
 
 public class GameScreen {
 
+    public static final String GAME_STYLE_SHEET = "GameStyleSheet";
+    public static final String GAME_STAGE_TITLE = "GameStageTitle";
+    public static final String GAME_DARK_SHEET = "GameDarkSheet";
+    public static final String STYLE_SHEET = "StyleSheet";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private static final double STAGE_HEIGHT = 800;
     private static final double STAGE_WIDTH = 1200;
-    private BorderPane root;
     private Stage stage;
     private Scene scene;
     private BoardView boardView;
@@ -23,60 +26,52 @@ public class GameScreen {
     private String gameStyle;
     private boolean isDarkMode;
 
-    public GameScreen(Stage stage, int width, int height, Map<Point2D, String> locations) {
+    public GameScreen(Stage stage, int numRows, int numCols, Map<Point2D, String> locations) {
         this.stage = stage;
-        this.gameStyle = res.getString("GameStyleSheet");
+        this.gameStyle = res.getString(GAME_STYLE_SHEET);
         this.isDarkMode = false;
-        initializeView(width, height, locations);
+        initializeView(numRows, numCols, locations);
         stage.show();
     }
 
     private void initializeView(int width, int height, Map<Point2D, String> locations){
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
-        root = new BorderPane();
+        BorderPane root = new BorderPane();
         scene = new Scene(root);
-
         stage.setScene(scene);
-        stage.setTitle(res.getString("GameStageTitle"));
+        stage.setTitle(res.getString(GAME_STAGE_TITLE));
         scene.getStylesheets().add(gameStyle);
 
         Pane canvas = new Pane();
         boardView = new BoardView(width, height, locations);
         canvas.getChildren().addAll(boardView.getCells());
         canvas.getChildren().removeAll(boardView.getIcons());
-        root.getChildren().addAll(canvas);
 
         dashboardView = new DashboardView();
-        root.getChildren().add(dashboardView.getDisplay());
+        root.getChildren().addAll(canvas, dashboardView.getDisplayBox());
     }
 
     public BoardView getBoardView() {
         return boardView;
     }
 
-    public DashboardView getDashboardView() { return dashboardView;}
+    public DashboardView getDashboardView() {
+        return dashboardView;
+    }
 
-    public void toggleGameDarkMode(){
+    public void toggleGameDarkMode() {
         scene.getStylesheets().remove(gameStyle);
-        if (gameStyle.equals(res.getString("GameStyleSheet"))){
-            gameStyle = res.getString("GameDarkSheet");
-            isDarkMode = true;
-        }else{
-            gameStyle = res.getString("GameStyleSheet");
-            isDarkMode = false;
-        }
+        gameStyle = gameStyle.equals(res.getString(GAME_STYLE_SHEET)) ? res.getString(GAME_DARK_SHEET) : res.getString(GAME_STYLE_SHEET);
+        isDarkMode = !isDarkMode;
         scene.getStylesheets().add(gameStyle);
     }
 
-    public void enableGameCSS(String cssStyle){
+    public void enableGameCSS(String cssStyle) {
         if (!isDarkMode){
             scene.getStylesheets().remove(gameStyle);
-            gameStyle = res.getString(cssStyle + "StyleSheet");
+            gameStyle = res.getString(cssStyle + STYLE_SHEET);
             scene.getStylesheets().add(gameStyle);
         }
     }
-
-
-
 }

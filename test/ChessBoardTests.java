@@ -26,7 +26,7 @@ public class ChessBoardTests {
     String gameXML = String.format("resources/Chess/chessJUnit.xml");
     XMLProcessor processor = new XMLProcessor();
     processor.parse(gameXML);
-    board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+    //board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
   }
 
   @Test
@@ -62,7 +62,7 @@ public class ChessBoardTests {
   @Test
   public void testGetValidMovesEmptyCell(){
     List<Point2D> moves = board.getValidMoves(new Point2D.Double(4,7));
-    assertNull(moves);
+    assertEquals(moves.size(), 0);
   }
 
 
@@ -256,7 +256,7 @@ public class ChessBoardTests {
   }
 
   @Test
-  public void testBlocking(){
+  public void testBlockingLateral(){
     board.placePiece(new Point2D.Double(4, 4), new Piece("King", "any 1", 25, "White"));
     board.placePiece(new Point2D.Double(7, 3), null);
     board.placePiece(new Point2D.Double(4, 0), new Piece("Rook", "lateral -1", 55, "Black"));
@@ -273,6 +273,16 @@ public class ChessBoardTests {
     assertEquals(board.getValidMoves(new Point2D.Double(5, 3)).size(), 1);
     assertEquals(board.getValidMoves(new Point2D.Double(6, 1)).size(), 1);
     assertEquals(board.getValidMoves(new Point2D.Double(6, 2)).size(), 1);
+    assertNull(board.checkWon());
+  }
+  @Test
+  public void testBlockingDiagonal(){
+    board.placePiece(new Point2D.Double(6, 4), null);
+    board.placePiece(new Point2D.Double(4, 6), new Piece("Bishop", "diagonal -1", 55, "Black"));
+
+    //white pawns can block
+    assertEquals(board.getValidMoves(new Point2D.Double(6, 6)).size(), 0);
+    assertEquals(board.getValidMoves(new Point2D.Double(6, 5)).size(), 1);
     assertNull(board.checkWon());
   }
 

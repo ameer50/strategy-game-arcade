@@ -15,9 +15,9 @@ public class ConnectFourBoard extends Board implements Serializable {
     private static final List<Pair<Integer, Integer>> DELTA_PAIR = List.of(new Pair<>(-1, -1), new Pair<>(-1, 0), new Pair<>(-1, 1), new Pair<>(0, 1),
             new Pair<>(1, 1), new Pair<>(1, 0), new Pair<>(1, -1), new Pair<>(0, -1));
 
-    public ConnectFourBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
-            Pair<String, Integer>> pieces) {
-        super(settings, locations, pieces);
+    public ConnectFourBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> movePatterns,
+        Map<String, Integer> scores) {
+        super(settings, locations, movePatterns, scores);
     }
 
     @Override
@@ -62,12 +62,12 @@ public class ConnectFourBoard extends Board implements Serializable {
 
     @Override
     public void doMove(Move move) {
-        if(!move.isUndo()){
+        if (! move.isUndo()){
             Piece piece = new Piece("Coin", "", 1, move.getColor());
             move.setPiece(piece);
             pieceBiMap.forcePut(move.getEndLocation(), piece);
             move.setPieceGenerated(true);
-        }else{
+        } else {
             putPieceAt(move.getStartLocation(), null);
         }
     }

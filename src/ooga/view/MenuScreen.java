@@ -20,8 +20,48 @@ import java.util.*;
 
 public class MenuScreen {
 
-    public static final String DEFAULT_XML = "Default Game";
+    public static final String DEFAULT_GAME = "Default Game";
     public static final int IMAGE_SIZE = 220;
+    public static final String MENU_STYLE_SHEET = "MenuStyleSheet";
+    public static final String POPUP_STYLE_SHEET = "PopupStyleSheet";
+    public static final String MENU_STAGE_TITLE = "MenuStageTitle";
+    public static final String DARK_MODE = "Dark Mode";
+    public static final String DARK_MODE_STYLE = "darkmode";
+    public static final int POPUP_WIDTH = 500;
+    public static final int POPUP_HEIGHT = 600;
+    public static final String SETTINGS_BUTTONS = "SettingsButtons";
+    public static final String ONE_PLAYER = "One Player";
+    public static final String TWO_PLAYER = "Two Player";
+    public static final String WHITE = "White";
+    public static final String BLACK = "Black";
+    public static final String PLAYER_ONE_COLOR_PROMPT = "Player One Color: ";
+    public static final String PLAYERNAME = "playername";
+    public static final String ENTER_PLAYER_NAMES = "Enter Player Name(s)";
+    public static final String PLAYER_ONE = "Player One";
+    public static final String PLAYER_TWO = "Player Two";
+    public static final String FILE_TEXT_FIELD = "file-text-field";
+    public static final int PLAYER_TEXT_MAX_WIDTH = 200;
+    public static final String VBOX = "vbox";
+    public static final String NEXT = "Next";
+    public static final String CUSTOM_GAME = "Custom Game";
+    public static final String GO = "Go!";
+    public static final String GO_BUTTON_STYLE = "GoButton";
+    public static final String MENU_SCREEN_TITLE = "STRATEGY GAME ARCADE";
+    public static final String LOGO_STYLE = "logo";
+    public static final String LOGO_BOX_STYLE = "logobox";
+    public static final String CHECKERS_ICON = "CheckersIcon";
+    public static final String CHESS_ICON = "ChessIcon";
+    public static final int BACKGROUND_OFFSET = 20;
+    public static final String BACKGROUND_STYLE = "picture-background";
+    public static final String HBOX = "hbox";
+    public static final String CHESS = "Chess";
+    public static final String CHECKERS = "Checkers";
+    public static final String CONNECT_FOUR = "ConnectFour";
+    public static final String OTHELLO = "Othello";
+    public static final String BUTTONS_STYLE = "buttons";
+    public static final String ASSIGNED_FILE_PATH = "resources/%s/default%s.json";
+    public static final String MENU_DARK_SHEET = "MenuDarkSheet";
+    public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private final FileChooser fileChooser = new FileChooser();
     private static final double STAGE_HEIGHT = 800;
@@ -45,13 +85,12 @@ public class MenuScreen {
     private Button darkButton;
     private boolean isDarkMode;
 
-
     public MenuScreen(Stage stage){
         this.stage = stage;
         this.menuVBox = new VBox();
         this.isDarkMode = false;
-        menuStyle = res.getString("MenuStyleSheet");
-        popupStyle = res.getString("PopupStyleSheet");
+        menuStyle = res.getString(MENU_STYLE_SHEET);
+        popupStyle = res.getString(POPUP_STYLE_SHEET);
         startView();
         stage.show();
     }
@@ -62,7 +101,7 @@ public class MenuScreen {
         stage.setWidth(STAGE_WIDTH);
         scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle(res.getString("MenuStageTitle"));
+        stage.setTitle(res.getString(MENU_STAGE_TITLE));
         scene.getStylesheets().add(menuStyle);
 
         arrangeLogo();
@@ -73,37 +112,33 @@ public class MenuScreen {
         root.setCenter(menuVBox);
 
         arrangeDarkModeButton();
-
-
     }
 
     private void arrangeDarkModeButton() {
         VBox darkButtonBox = new VBox();
-        darkButton = new Button("Dark Mode");
-        darkButton.getStyleClass().add("darkmode");
+        darkButton = new Button(DARK_MODE);
+        darkButton.getStyleClass().add(DARK_MODE_STYLE);
         darkButtonBox.getChildren().add(darkButton);
         darkButtonBox.setAlignment(Pos.TOP_RIGHT);
         root.setTop(darkButtonBox);
-        listenDarkModeButton();
+        setDarkModeListener();
     }
 
-    public void setButtonListener(EventHandler<ActionEvent> e) {
+    public void setGameButtonListener(EventHandler<ActionEvent> e) {
         for (Button b: buttons.getButtons()) {
             b.setOnAction(event -> {
                 gameChoice = b.getText();
                 this.goAction = e;
-                myPopupScreen = new Popup(500, 600, popupStyle);
+                myPopupScreen = new Popup(POPUP_WIDTH, POPUP_HEIGHT, popupStyle);
                 setUpPlayerPopUp();
-
             });
         }
     }
 
-
     private void setUpPlayerPopUp() {
         myPopupScreen.getNewPopup();
-        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"));
-        playerOption.addStyle(res.getString("SettingsButtons"));
+        ButtonGroup playerOption = new ButtonGroup(List.of(ONE_PLAYER, TWO_PLAYER));
+        playerOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(playerOption);
 
         playerOption.getButtons().get(0).setOnAction(e -> {
@@ -117,16 +152,15 @@ public class MenuScreen {
     }
 
     private void setUpColorPopUp() {
-
         myPopupScreen.getNewPopup();
-        ButtonGroup colorOption = new ButtonGroup(List.of("White", "Black"));
+        ButtonGroup colorOption = new ButtonGroup(List.of(WHITE, BLACK));
 
-        colorOption.addStyle(res.getString("SettingsButtons"));
+        colorOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(colorOption);
         VBox textFieldBox = myPopupScreen.getButtonBox();
 
-        Text enterColorText = new Text("Player One Color: ");
-        enterColorText.getStyleClass().add("playername");
+        Text enterColorText = new Text(PLAYER_ONE_COLOR_PROMPT);
+        enterColorText.getStyleClass().add(PLAYERNAME);
 
         if (!isOnePlayer) textFieldBox.getChildren().add(0, enterColorText);
 
@@ -141,21 +175,21 @@ public class MenuScreen {
             });
         }
 
-        Text nameText = new Text("Enter Player Name(s)");
-        nameText.getStyleClass().add("playername");
+        Text nameText = new Text(ENTER_PLAYER_NAMES);
+        nameText.getStyleClass().add(PLAYERNAME);
 
-        TextField playerOneText = makeTextField("Player One", 200, "file-text-field");
-        TextField playerTwoText = makeTextField("Player Two", 200, "file-text-field");
+        TextField playerOneText = makeTextField(PLAYER_ONE, PLAYER_TEXT_MAX_WIDTH, FILE_TEXT_FIELD);
+        TextField playerTwoText = makeTextField(PLAYER_TWO, PLAYER_TEXT_MAX_WIDTH, FILE_TEXT_FIELD);
 
         textFieldBox.getChildren().addAll(nameText, playerOneText);
         textFieldBox.setAlignment(Pos.CENTER);
-        textFieldBox.getStyleClass().add("vbox");
+        textFieldBox.getStyleClass().add(VBOX);
 
 
         if (!isOnePlayer) textFieldBox.getChildren().add(playerTwoText);
 
-        Button next = new Button("Next");
-        next.getStyleClass().add(res.getString("SettingsButtons"));
+        Button next = new Button(NEXT);
+        next.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
         next.setOnAction(e -> {
             playerOneName = playerOneText.getText();
             playerTwoName = playerTwoText.getText();
@@ -174,9 +208,9 @@ public class MenuScreen {
 
     private void setUpLoadGamePopUp() {
         myPopupScreen.getNewPopup();
-        ButtonGroup loadGameOption = new ButtonGroup(List.of("Default Game", "Custom Game"));
+        ButtonGroup loadGameOption = new ButtonGroup(List.of(DEFAULT_GAME, CUSTOM_GAME));
 
-        loadGameOption.addStyle(res.getString("SettingsButtons"));
+        loadGameOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(loadGameOption);
         VBox vBox = myPopupScreen.getButtonBox();
 
@@ -185,45 +219,43 @@ public class MenuScreen {
                 b.setDisable(true);
                 Button otherButton = loadGameOption.getButtons().get(loadGameOption.getButtons().indexOf(b) ^ 1);
                 otherButton.setDisable(false);
-                assignXMLFile(b.getText());
+                assignFile(b.getText());
             });
         }
 
-        Button goButton = new Button("Go!");
-        goButton.getStyleClass().add(res.getString("GoButton"));
+        Button goButton = new Button(GO);
+        goButton.getStyleClass().add(res.getString(GO_BUTTON_STYLE));
         goButton.setOnAction(e -> {
             myPopupScreen.getStage().close();
             goAction.handle(e);
         });
 
-        vBox.getStyleClass().add("vbox");
+        vBox.getStyleClass().add(VBOX);
         vBox.getChildren().add(goButton);
     }
 
     private void arrangeLogo() {
         Text logo = new Text();
-        logo.setId("banana");
-        logo.setText("STRATEGY GAME ARCADE");
-        logo.getStyleClass().add("logo");
+        logo.setText(MENU_SCREEN_TITLE);
+        logo.getStyleClass().add(LOGO_STYLE);
         logo.setFill(Color.AZURE);
         HBox logoBox = new HBox();
         logoBox.getChildren().add(logo);
-        logoBox.getStyleClass().add("logobox");
+        logoBox.getStyleClass().add(LOGO_BOX_STYLE);
         menuVBox.getChildren().add(logoBox);
     }
 
     private void arrangeMenuImages() {
         HBox hBox = new HBox();
-
         int[] dimensions = {IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE};
         int i = 0;
         int colIndex = 0;
-        for (String s: List.of("CheckersIcon", "ChessIcon")) {
+        for (String s: List.of(CHECKERS_ICON, CHESS_ICON)) {
             StackPane stack = new StackPane();
             int width = dimensions[i++];
             int height = dimensions[i++];
-            Rectangle background = new Rectangle(width+20, height+20);
-            background.getStyleClass().add("picture-background");
+            Rectangle background = new Rectangle(width + BACKGROUND_OFFSET, height + BACKGROUND_OFFSET);
+            background.getStyleClass().add(BACKGROUND_STYLE);
             ImageView picture = new ImageView(new Image(res.getString(s), width, height, false, true));
 
             stack.getChildren().addAll(background, picture);
@@ -231,28 +263,28 @@ public class MenuScreen {
             hBox.getChildren().add(stack);
             colIndex += 2;
         }
-        hBox.getStyleClass().add("hbox");
+        hBox.getStyleClass().add(HBOX);
         menuVBox.getChildren().add(hBox);
     }
 
     private void arrangeButtons(){
 
-        buttons = new ButtonGroup(List.of("Chess", "Checkers", "ConnectFour", "Othello"));
+        buttons = new ButtonGroup(List.of(CHESS, CHECKERS, CONNECT_FOUR, OTHELLO));
 
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
-            b.getStyleClass().add("buttons");
+            b.getStyleClass().add(BUTTONS_STYLE);
             vbox.getChildren().add(b);
 
         }
-        vbox.getStyleClass().add("vbox");
+        vbox.getStyleClass().add(VBOX);
         menuVBox.getChildren().add(vbox);
     }
 
 
-    private void assignXMLFile(String choice) {
-        if (choice.equals(DEFAULT_XML)) {
-            this.fileChoice = String.format("resources/%s/default%s.xml", gameChoice, playerOneColor);
+    private void assignFile(String choice) {
+        if (choice.equals(DEFAULT_GAME)) {
+            this.fileChoice = String.format(ASSIGNED_FILE_PATH, gameChoice, playerOneColor);
         } else {
             File file = fileChooser.showOpenDialog(new Stage());
             if (file != null) {
@@ -261,7 +293,7 @@ public class MenuScreen {
         }
     }
 
-    private void listenDarkModeButton(){
+    private void setDarkModeListener(){
         darkButton.setOnAction(event -> {
             toggleMenuDarkMode();
         });
@@ -290,14 +322,13 @@ public class MenuScreen {
     public void toggleMenuDarkMode(){
         isDarkMode = !isDarkMode;
         scene.getStylesheets().remove(menuStyle);
-        menuStyle = isDarkMode ? res.getString("MenuDarkSheet") : res.getString("MenuStyleSheet");
-        popupStyle = isDarkMode ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
+        menuStyle = isDarkMode ? res.getString(MENU_DARK_SHEET) : res.getString(MENU_STYLE_SHEET);
+        popupStyle = isDarkMode ? res.getString(POPUP_DARK_SHEET) : res.getString(POPUP_STYLE_SHEET);
         scene.getStylesheets().add(menuStyle);
 
     }
 
-    public boolean isDarkMode(){
+    public boolean isDarkMode() {
         return isDarkMode;
     }
-
 }

@@ -27,7 +27,7 @@ public class CheckersBoardTests{
         String gameXML = String.format("resources/Checkers/defaultBlack.xml");
         XMLProcessor processor = new XMLProcessor();
         processor.parse(gameXML);
-        board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+        //board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
     }
 
     @Test

@@ -9,7 +9,6 @@ import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.CustomBoard;
 import ooga.board.Piece;
-import ooga.controller.Controller.GameType;
 import ooga.controller.Controller.StrategyType;
 import ooga.history.History;
 import ooga.history.Move;
@@ -20,11 +19,9 @@ import ooga.player.Player;
 import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.PieceView;
-import ooga.xml.XMLProcessor;
 
 public class CustomController {
-  private XMLProcessor XMLprocessor;
-  private JSONProcessor JSONprocessor;
+  private JSONProcessor processor;
   private Board board;
   private GameScreen gameScreen;
   private BoardView boardView;
@@ -41,26 +38,23 @@ public class CustomController {
   public CustomController(Stage stage) {
     startTime = System.currentTimeMillis();
     this.stage = stage;
-    setUpGameScreen("custom.json");
+    setUpGameScreen("exampleCustom.json");
   }
 
   private void setUpGameScreen(String fileChoice) {
-    JSONprocessor = new JSONProcessor();
-    JSONprocessor.parse(fileChoice);
+    processor = new JSONProcessor();
+    processor.parse(fileChoice, true);
     printMessageAndTime("JSON parsed.");
     /* To be used in reflection... */
-    GameType type = GameType.valueOf(JSONprocessor.getName().toUpperCase());
-
-    Map<String, Long> dimensions = JSONprocessor.getDimensions();
-    int width = Math.toIntExact(dimensions.get("width"));
-    int height = Math.toIntExact(dimensions.get("height"));
+    int width = processor.getWidth();
+    int height = processor.getHeight();
 
     /* Use reflection here... */
-    board = new CustomBoard(width, height, JSONprocessor.getPieceLocations(),
-        JSONprocessor.getPieceMoves(), JSONprocessor.getPieceScores());
+    board = new CustomBoard(width, height, processor.getSettings(), processor.getPieceLocations(),
+        processor.getPieceMoveNodes(), processor.getPieceScores());
     printMessageAndTime("Set up Board.");
 
-    gameScreen = new GameScreen(stage, width, height, JSONprocessor.getPieceLocations());
+    gameScreen = new GameScreen(stage, width, height, processor.getPieceLocations());
     printMessageAndTime("Set up Game Screen.");
 
     boardView = gameScreen.getBoardView();
@@ -93,8 +87,8 @@ public class CustomController {
   private void setListeners() {
     /* X and Y are the indices of the cell clicked to move FROM */
     boardView.setOnPieceClicked((coordinate) -> {
-      System.out.println(boardView.getCellAt(coordinate).getPiece().getColor()); // ***
-      if (! boardView.getCellAt(coordinate).getPiece().getColor().equals(activePlayer.getColor())) {
+      System.out.println(boardView.getCellAt(coordinate).getPieceView().getColor()); // ***
+      if (! boardView.getCellAt(coordinate).getPieceView().getColor().equals(activePlayer.getColor())) {
         return;
       }
       boardView.setSelectedLocation(coordinate);
@@ -141,7 +135,7 @@ public class CustomController {
         board.putPieceAt(capturedPieceLocation, capturedPiece);
         activePlayer.addToScore(-capturedPiece.getValue());
         PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-        boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
+        boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
       }
     });
 
@@ -165,7 +159,7 @@ public class CustomController {
 
     board.setOnPiecePromoted((coordinate) -> {
       board.getPieceAt(coordinate);
-      boardView.getCellAt(coordinate).setPiece(new PieceView(board.getPieceAt(coordinate).getFullName()));
+      boardView.getCellAt(coordinate).setPieceView(new PieceView(board.getPieceAt(coordinate).getFullName()));
     });
   }
 

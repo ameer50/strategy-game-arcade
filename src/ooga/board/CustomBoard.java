@@ -11,9 +11,9 @@ import ooga.history.Move;
 
 public class CustomBoard extends Board {
 
-  public CustomBoard(int width, int height, Map<Point2D, String> locations,
-      Map<String, MoveNode> pieceMoves, Map<String, Long> pieceScores) {
-    super(width, height, locations, pieceMoves, pieceScores);
+  public CustomBoard(int width, int height, Map<String, String> settings, Map<Point2D, String> locations,
+      Map<String, MoveNode> pieceMoves, Map<String, Integer> pieceScores) {
+    super(width, height, settings, locations, pieceMoves, pieceScores);
   }
 
   public String checkWon() {

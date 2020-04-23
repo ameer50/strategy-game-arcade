@@ -13,8 +13,6 @@ import javafx.scene.text.Font;
 
 public class ButtonGroup {
 
-    private static ResourceBundle myResources =
-            ResourceBundle.getBundle("resources", Locale.getDefault());
     private List<Button> buttons;
 
     public ButtonGroup(List<String> buttonNames) {
@@ -25,7 +23,6 @@ public class ButtonGroup {
     private void createButtons(List<String> buttonNames) {
         for (String buttonName : buttonNames) {
             Button button = new Button(buttonName);
-
             buttons.add(button);
         }
     }
