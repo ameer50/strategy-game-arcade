@@ -99,6 +99,7 @@ public class CPUPlayer extends Player {
     }
     int bestScore = 0;
     Move bestMove = parallelMoves.get(0);
+    System.out.println(parallelScores);
     for (int i=0; i<parallelScores.size(); i++) {
       int score = parallelScores.get(i);
       if (score > bestScore) {
