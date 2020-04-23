@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ooga.history.Move;
@@ -22,19 +21,57 @@ import java.util.ResourceBundle;
 
 public class DashboardView {
 
+    public static final int DISPLAY_LAYOUT_X = 900;
+    public static final int DISPLAY_LAYOUT_Y = 400;
+    public static final String POPUP_STYLE_SHEET = "PopupStyleSheet";
+    public static final String DISPLAY_STYLE = "display";
+    public static final String SCORES_STYLE = "scoreshbox";
+    public static final int HISTORY_MIN_HEIGHT = 400;
+    public static final int HISTORY_MIN_WIDTH = 300;
+    public static final String HISTORY_STYLE = "listview";
+    public static final String HISTORY_BOX_STYLE = "hboxlist";
+    public static final String UNDO = "Undo";
+    public static final String REDO = "Redo";
+    public static final String SAVE_GAME = "Save Game";
+    public static final String RETURN_TO_MENU = "Return to Menu";
+    public static final String NEW_WINDOW = "New Window";
+    public static final String AUXILIARY_BUTTON_STYLE = "AuxiliaryButton";
+    public static final String GPANE_STYLE = "gpane";
+    public static final String TURN = "Turn: ";
+    public static final String ACTIVE_PLAYER_BOX_STYLE = "scoreshbox";
+    public static final String FILE_ENTER_TITLE = "FileEnterTitle";
+    public static final int FILE_STAGE_HEIGHT = 500;
+    public static final int FILE_STAGE_WIDTH = 500;
+    public static final String ENTER_XML_FILENAME = "Enter XML Filename:";
+    public static final String SAVE_FILE_STYLE = "savefile";
+    public static final int FILE_SAVE_TEXT_FIELD_MAX_WIDTH = 200;
+    public static final String FILE_TEXT_FIELD_STYLE = "file-text-field";
+    public static final String GO = "Go!";
+    public static final String SETTINGS_BUTTONS = "SettingsButtons";
+    public static final String WINNER = "Winner!";
+    public static final int WINNER_POP_UP_HEIGHT = 500;
+    public static final int WINNER_POP_UP_WIDTH = 500;
+    public static final String WINNER_TEXT = "The winner is: ";
+    public static final String PREFER = "prefer";
+    public static final String QUIT = "Quit";
+    public static final String VBOX = "vbox";
+    public static final String SAVED_XML_PATH = "savedXML/%s.xml";
+    public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-    private VBox display;
+    private VBox displayBox;
     private Text playerOneName;
     private Text playerTwoName;
     private IntegerProperty playerOneScore;
     private IntegerProperty playerTwoScore;
     private Text playerOneScoreText;
     private Text playerTwoScoreText;
-    private HBox scores;
-    private GridPane auxiliaryButtons;
-    private HBox bottom;
+    private HBox scoresBox;
+    private ButtonGroup auxiliaryButtons;
+    private GridPane auxiliaryButtonPane;
+    private HBox activePlayerBox;
     private Text activePlayerText;
     private ListView<Move> history;
+    private HBox historyBox;
     private EventHandler<ActionEvent> undoMoveFunction;
     private EventHandler<ActionEvent> redoMoveFunction;
     private EventHandler<ActionEvent> quitFunction;
@@ -46,32 +83,19 @@ public class DashboardView {
     private Button redoButton;
     private String popupStyle;
 
-    public DashboardView(){
-        display = new VBox();
-        popupStyle = res.getString("PopupStyleSheet");
+    public DashboardView() {
+        displayBox = new VBox();
+        popupStyle = res.getString(POPUP_STYLE_SHEET);
+        displayBox.setLayoutX(DISPLAY_LAYOUT_X);
+        displayBox.setLayoutY(DISPLAY_LAYOUT_Y);
 
-        createDisplay();
         createScoreBoxes();
-        createAuxiliaryButtons();
-        createBottom();
+        createHistoryBox();
+        createActivePlayerBox();
+        createAuxiliaryButtonPane();
 
-        history = new ListView<>();
-
-        history.getStyleClass().add("listview");
-        history.setMinHeight(400);
-        history.setMinWidth(300);
-        HBox hbox = new HBox();
-        hbox.getChildren().add(history);
-        hbox.getStyleClass().add("hboxlist");
-
-        display.getChildren().addAll(scores, hbox, bottom, auxiliaryButtons);
-        display.getStyleClass().add("display");
-
-    }
-
-    private void createDisplay(){
-        display.setLayoutX(900);
-        display.setLayoutY(400);
+        displayBox.getChildren().addAll(scoresBox, historyBox, activePlayerBox, auxiliaryButtonPane);
+        displayBox.getStyleClass().add(DISPLAY_STYLE);
     }
 
     private void createScoreBoxes() {
@@ -90,12 +114,21 @@ public class DashboardView {
         playerOneScoreBox.getChildren().addAll(playerOneName, playerOneScoreText);
         playerTwoScoreBox.getChildren().addAll(playerTwoName, playerTwoScoreText);
 
-        scores = new HBox();
+        scoresBox = new HBox();
+        applyStyle(playerOneScoreBox, SCORES_STYLE);
+        applyStyle(playerTwoScoreBox, SCORES_STYLE);
+        scoresBox.getChildren().addAll(playerOneScoreBox, playerTwoScoreBox);
+        applyStyle(scoresBox, SCORES_STYLE);
+    }
 
-        applyStyle(playerOneScoreBox, "scoreshbox");
-        applyStyle(playerTwoScoreBox, "scoreshbox");
-        scores.getChildren().addAll(playerOneScoreBox, playerTwoScoreBox);
-        applyStyle(scores, "scoreshbox");
+    private void createHistoryBox() {
+        history = new ListView<>();
+        history.getStyleClass().add(HISTORY_STYLE);
+        history.setMinHeight(HISTORY_MIN_HEIGHT);
+        history.setMinWidth(HISTORY_MIN_WIDTH);
+        historyBox = new HBox();
+        historyBox.getChildren().add(history);
+        historyBox.getStyleClass().add(HISTORY_BOX_STYLE);
     }
 
     public Text getPlayerOneScoreText() {
@@ -111,28 +144,31 @@ public class DashboardView {
         this.playerTwoScore.bind(playerTwoScore);
     }
 
-    private void createAuxiliaryButtons() {
-        auxiliaryButtons = new GridPane();
-        ButtonGroup buttons = new ButtonGroup(List.of("Undo", "Redo", "Save Game", "Return to Menu", "New Window"));
-        buttons.addStyle(res.getString("AuxiliaryButton"));
-        // 115 35
+    private void createAuxiliaryButtonPane() {
+        auxiliaryButtonPane = new GridPane();
+        auxiliaryButtons = new ButtonGroup(List.of(UNDO, REDO, SAVE_GAME, RETURN_TO_MENU, NEW_WINDOW));
+        auxiliaryButtons.addStyle(res.getString(AUXILIARY_BUTTON_STYLE));
         HBox buttonBox = new HBox();
-        buttonBox.getChildren().addAll(buttons.getButtons());
+        buttonBox.getChildren().addAll(auxiliaryButtons.getButtons());
 
         int[] position = {0, 0, 1, 0, 0, 1, 1, 1, 0, 2};
         int i = 0;
-        for(Button b: buttons.getButtons()){
+        for(Button b: auxiliaryButtons.getButtons()){
             addGPaneElement(b, position[i++], position[i++]);
         }
-        auxiliaryButtons.getStyleClass().add("gpane");
-        //auxiliaryButtons.setLayoutX(750);
-        //auxiliaryButtons.setLayoutY(750);
+        auxiliaryButtonPane.getStyleClass().add(GPANE_STYLE);
+        auxiliaryButtonPane.setAlignment(Pos.CENTER);
 
-        auxiliaryButtons.setAlignment(Pos.CENTER);
+        setUpUndoRedoButtons();
+        setUpSaveGameButton();
+        setUpQuitGameButton();
+        setUpNewWindowButton();
+    }
 
-        undoButton = buttons.getButtons().get(0);
+    private void setUpUndoRedoButtons() {
+        undoButton = auxiliaryButtons.getButtons().get(0);
         undoButton.setDisable(true);
-        redoButton = buttons.getButtons().get(1);
+        redoButton = auxiliaryButtons.getButtons().get(1);
         redoButton.setDisable(true);
 
         undoButton.setOnAction(e -> {
@@ -142,32 +178,35 @@ public class DashboardView {
         redoButton.setOnAction(e -> {
             redoMoveFunction.handle(e);
         });
+    }
 
-        Button saveGame = buttons.getButtons().get(2);
-
+    private void setUpSaveGameButton() {
+        Button saveGame = auxiliaryButtons.getButtons().get(2);
         saveGame.setOnAction(e -> {
-            textFieldPopUp(saveFunction);
+            setUpSaveFileStage(saveFunction);
         });
+    }
 
-        Button quitGame = buttons.getButtons().get(3);
-
+    private void setUpQuitGameButton() {
+        Button quitGame = auxiliaryButtons.getButtons().get(3);
         quitGame.setOnAction(e -> {
             quitFunction.handle(e);
         });
+    }
 
-        Button newWindow = buttons.getButtons().get(4);
-
+    private void setUpNewWindowButton() {
+        Button newWindow = auxiliaryButtons.getButtons().get(4);
         newWindow.setOnAction(e -> {
             newWindowFunction.handle(e);
         });
     }
 
-    private void createBottom() {
-        bottom = new HBox();
-        Text turnText = new Text("Turn: ");
+    private void createActivePlayerBox() {
+        activePlayerBox = new HBox();
+        Text turnText = new Text(TURN);
         activePlayerText = new Text();
-        bottom.getChildren().addAll(turnText, activePlayerText);
-        bottom.getStyleClass().add("scoreshbox");
+        activePlayerBox.getChildren().addAll(turnText, activePlayerText);
+        activePlayerBox.getStyleClass().add(ACTIVE_PLAYER_BOX_STYLE);
     }
 
     public void setPlayerNames(String playerOneName, String playerTwoName) {
@@ -179,12 +218,12 @@ public class DashboardView {
         this.activePlayerText.setText(String.format("%s (%s)", activePlayerName, activePlayerColor));
     }
 
-    public VBox getDisplay(){
-        return display;
+    public VBox getDisplayBox(){
+        return displayBox;
     }
 
     private void addGPaneElement(Node b, int col, int row){
-        auxiliaryButtons.add(b, col, row);
+        auxiliaryButtonPane.add(b, col, row);
         GridPane.setHalignment(b, HPos.LEFT);
         GridPane.setValignment(b, VPos.CENTER);
     }
@@ -195,31 +234,31 @@ public class DashboardView {
         }
     }
 
-    public void textFieldPopUp(EventHandler<ActionEvent> e) {
+    public void setUpSaveFileStage(EventHandler<ActionEvent> e) {
         Stage fileNameStage = new Stage();
-        fileNameStage.setTitle(res.getString("FileEnterTitle"));
-        fileNameStage.setHeight(500);
-        fileNameStage.setWidth(500);
+        fileNameStage.setTitle(res.getString(FILE_ENTER_TITLE));
+        fileNameStage.setHeight(FILE_STAGE_HEIGHT);
+        fileNameStage.setWidth(FILE_STAGE_WIDTH);
         BorderPane fileRoot = new BorderPane();
         Scene settingsScene = new Scene(fileRoot);
         settingsScene.getStylesheets().add(popupStyle);
         fileNameStage.setScene(settingsScene);
         fileNameStage.show();
-        setUpTextFieldPopUp(fileNameStage, fileRoot, e);
+        createSaveFilePopUp(fileNameStage, fileRoot, e);
     }
 
-    private void setUpTextFieldPopUp(Stage settingsStage, BorderPane fileRoot, EventHandler<ActionEvent> event) {
+    private void createSaveFilePopUp(Stage settingsStage, BorderPane fileRoot, EventHandler<ActionEvent> event) {
         Text prefer = new Text();
-        prefer.setText("Enter XML Filename:");
-        prefer.getStyleClass().add("savefile");
+        prefer.setText(ENTER_XML_FILENAME);
+        prefer.getStyleClass().add(SAVE_FILE_STYLE);
 
         TextField textField = new TextField();
-        textField.setMaxWidth(200);
-        textField.getStyleClass().add("file-text-field");
+        textField.setMaxWidth(FILE_SAVE_TEXT_FIELD_MAX_WIDTH);
+        textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
         VBox textFieldBox = new VBox();
 
-        Button goButton = new Button("Go!");
-        goButton.getStyleClass().add(res.getString("SettingsButtons"));
+        Button goButton = new Button(GO);
+        goButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
 
         textFieldBox.getChildren().addAll(prefer, textField, goButton);
         textFieldBox.setAlignment(Pos.CENTER);
@@ -232,30 +271,31 @@ public class DashboardView {
         });
     }
 
-    public void winnerPopUp() {
-        Stage fileNameStage = new Stage();
-        fileNameStage.setTitle("Winner!");
-        fileNameStage.setHeight(500);
-        fileNameStage.setWidth(500);
-        BorderPane fileRoot = new BorderPane();
-        Scene settingsScene = new Scene(fileRoot);
+    public void setUpWinnerStage() {
+        Stage winnerPopUpStage = new Stage();
+        winnerPopUpStage.setTitle(WINNER);
+        winnerPopUpStage.setHeight(WINNER_POP_UP_HEIGHT);
+        winnerPopUpStage.setWidth(WINNER_POP_UP_WIDTH);
+        BorderPane pane = new BorderPane();
+        Scene settingsScene = new Scene(pane);
         settingsScene.getStylesheets().add(popupStyle);
-        fileNameStage.setScene(settingsScene);
-        fileNameStage.show();
-        setUpWinnerPopUp(fileNameStage, fileRoot);
+        winnerPopUpStage.setScene(settingsScene);
+        winnerPopUpStage.show();
+        createWinnerPopUp(winnerPopUpStage, pane);
     }
 
-    private void setUpWinnerPopUp(Stage settingsStage, BorderPane fileRoot) {
+    private void createWinnerPopUp(Stage settingsStage, BorderPane fileRoot) {
         Text prefer = new Text();
-        prefer.setText("The winner is: " + winner);
-        prefer.getStyleClass().add("prefer");
+        prefer.setText(WINNER_TEXT + winner);
+        prefer.getStyleClass().add(PREFER);
 
         VBox textFieldBox = new VBox();
 
-        Button quitButton = new Button("Quit");
-        quitButton.getStyleClass().add(res.getString("SettingsButtons"));
+        Button quitButton = new Button(QUIT);
+        quitButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
         textFieldBox.getChildren().addAll(prefer, quitButton);
-        textFieldBox.getStyleClass().add("vbox");
+
+        textFieldBox.getStyleClass().add(VBOX);
         fileRoot.setCenter(textFieldBox);
 
         quitButton.setOnAction(e -> {
@@ -299,13 +339,12 @@ public class DashboardView {
     }
 
     private void setNewFileName(String str){
-        newFileName = "savedXML/" + str + ".xml";
+        newFileName = String.format(SAVED_XML_PATH, str);
     }
     
     public void setWinner(String winner){
         this.winner = winner;
     }
-
 
     public Button getUndoButton() {
         return undoButton;
@@ -316,13 +355,13 @@ public class DashboardView {
     }
 
     public void toggleDarkMode(){
-        popupStyle = (popupStyle.equals(res.getString("PopupStyleSheet"))) ? res.getString("PopupDarkSheet") : res.getString("PopupStyleSheet");
+        popupStyle = (popupStyle.equals(res.getString(POPUP_STYLE_SHEET))) ? res.getString(POPUP_DARK_SHEET) : res.getString(POPUP_STYLE_SHEET);
     }
 
     public void addIcons(List<CellView> icons) {
         HBox iconBox = new HBox();
         iconBox.getChildren().addAll(icons);
         iconBox.setAlignment(Pos.CENTER);
-        display.getChildren().add(0, iconBox);
+        displayBox.getChildren().add(0, iconBox);
     }
 }

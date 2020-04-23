@@ -51,6 +51,6 @@ public class Popup {
     }
 
     public VBox getButtonBox(){
-        return  popupBox;
+        return popupBox;
     }
 }

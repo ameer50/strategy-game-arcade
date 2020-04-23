@@ -49,7 +49,7 @@ public class GameScreen {
         canvas.getChildren().removeAll(boardView.getIcons());
 
         dashboardView = new DashboardView();
-        root.getChildren().addAll(canvas, dashboardView.getDisplay());
+        root.getChildren().addAll(canvas, dashboardView.getDisplayBox());
     }
 
     public BoardView getBoardView() {
