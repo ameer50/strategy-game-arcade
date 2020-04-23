@@ -45,6 +45,7 @@ public class DashboardView {
     private Button undoButton;
     private Button redoButton;
     private String popupStyle;
+    private Popup saveGamePopupScreen;
 
     public DashboardView(){
         display = new VBox();
@@ -125,9 +126,6 @@ public class DashboardView {
             addGPaneElement(b, position[i++], position[i++]);
         }
         auxiliaryButtons.getStyleClass().add("gpane");
-        //auxiliaryButtons.setLayoutX(750);
-        //auxiliaryButtons.setLayoutY(750);
-
         auxiliaryButtons.setAlignment(Pos.CENTER);
 
         undoButton = buttons.getButtons().get(0);
@@ -146,6 +144,7 @@ public class DashboardView {
         Button saveGame = buttons.getButtons().get(2);
 
         saveGame.setOnAction(e -> {
+            saveGamePopupScreen = new Popup(500, 600, popupStyle);
             textFieldPopUp(saveFunction);
         });
 
@@ -195,20 +194,9 @@ public class DashboardView {
         }
     }
 
-    public void textFieldPopUp(EventHandler<ActionEvent> e) {
-        Stage fileNameStage = new Stage();
-        fileNameStage.setTitle(res.getString("FileEnterTitle"));
-        fileNameStage.setHeight(500);
-        fileNameStage.setWidth(500);
-        BorderPane fileRoot = new BorderPane();
-        Scene settingsScene = new Scene(fileRoot);
-        settingsScene.getStylesheets().add(popupStyle);
-        fileNameStage.setScene(settingsScene);
-        fileNameStage.show();
-        setUpTextFieldPopUp(fileNameStage, fileRoot, e);
-    }
+    public void textFieldPopUp(EventHandler<ActionEvent> event) {
+        saveGamePopupScreen.getNewPopup();
 
-    private void setUpTextFieldPopUp(Stage settingsStage, BorderPane fileRoot, EventHandler<ActionEvent> event) {
         Text prefer = new Text();
         prefer.setText("Enter XML Filename:");
         prefer.getStyleClass().add("savefile");
@@ -216,36 +204,47 @@ public class DashboardView {
         TextField textField = new TextField();
         textField.setMaxWidth(200);
         textField.getStyleClass().add("file-text-field");
-        VBox textFieldBox = new VBox();
+        VBox textFieldBox = saveGamePopupScreen.getButtonBox();
 
         Button goButton = new Button("Go!");
         goButton.getStyleClass().add(res.getString("SettingsButtons"));
 
         textFieldBox.getChildren().addAll(prefer, textField, goButton);
         textFieldBox.setAlignment(Pos.CENTER);
-        fileRoot.setCenter(textFieldBox);
+        //fileRoot.setCenter(textFieldBox);
 
         goButton.setOnAction(e -> {
             setNewFileName(textField.getText());
-            settingsStage.close();
+            saveGamePopupScreen.closePopup();
             event.handle(e);
         });
+
     }
 
     public void winnerPopUp() {
-        Stage fileNameStage = new Stage();
-        fileNameStage.setTitle("Winner!");
-        fileNameStage.setHeight(500);
-        fileNameStage.setWidth(500);
-        BorderPane fileRoot = new BorderPane();
-        Scene settingsScene = new Scene(fileRoot);
-        settingsScene.getStylesheets().add(popupStyle);
-        fileNameStage.setScene(settingsScene);
-        fileNameStage.show();
-        setUpWinnerPopUp(fileNameStage, fileRoot);
+        Popup winnerPopup = new Popup(500, 600, popupStyle);
+        winnerPopup.getNewPopup();
+
+        Text prefer = new Text();
+        prefer.setText("The winner is: " + winner);
+        prefer.getStyleClass().add("prefer");
+
+        VBox textFieldBox = winnerPopup.getButtonBox();
+
+        Button quitButton = new Button("Quit");
+        quitButton.getStyleClass().add(res.getString("SettingsButtons"));
+        textFieldBox.getChildren().addAll(prefer, quitButton);
+
+        quitButton.setOnAction(e -> {
+            winnerPopup.closePopup();
+            quitFunction.handle(e);
+        });
+
     }
 
     private void setUpWinnerPopUp(Stage settingsStage, BorderPane fileRoot) {
+
+
         Text prefer = new Text();
         prefer.setText("The winner is: " + winner);
         prefer.getStyleClass().add("prefer");

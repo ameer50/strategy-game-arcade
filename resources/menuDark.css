@@ -13,11 +13,11 @@
     -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
-    -fx-font-size: 30px;
+    -fx-font-size: 20px;
     -fx-font-family: "Trebuchet MS";
     -fx-padding: 10 20 10 20;
-    -fx-min-width: 250;
-    -fx-min-height: 60;
+    -fx-min-width: 180;
+    -fx-min-height: 50;
 
 }
 

@@ -63,6 +63,10 @@ public class Popup {
         return  popupBox;
     }
 
+    public void closePopup(){
+        stage.close();
+    }
+
 
 
 
