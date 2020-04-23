@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class BoardViewTests extends DukeApplicationTest {
 
-    Board board;
+    /*Board board;
     BoardView boardView;
     Stage stage;
 
@@ -99,7 +99,7 @@ public class BoardViewTests extends DukeApplicationTest {
 
         CellView cell = boardView.getCellAt(-1, -1);
         assertNull(cell);
-    }
+    }*/
 
 
 }

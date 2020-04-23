@@ -227,9 +227,21 @@ public abstract class Board implements Serializable {
    * @param color the color of the team whose moves are desired
    * @return a nested List of integers representing moves as {startX, startY, endX, endY}
    */
-  public List<List<Integer>> getPossibleMoves(String color) {
-    List<Point2D> possiblePoints = getPointsOfColor(color);
-    return movesFromPoints(possiblePoints);
+  public List<Move> getPossibleMoves(String color) {
+    List<Move> moves = new ArrayList<>();
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < width; j++){
+        Point2D start = new Point2D.Double(i, j);
+        if(getPieceAt(start) != null && getPieceAt(start).getColor().equals(color)) {
+          for (Point2D end : getValidMoves(start)) {
+            moves.add(new Move(start, end));
+          }
+        }
+      }
+    }
+    return moves;
+    //List<Point2D> possiblePoints = getPointsOfColor(color);
+    //return movesFromPoints(possiblePoints);
   }
 
   private List<List<Integer>> movesFromPoints(List<Point2D> points) {

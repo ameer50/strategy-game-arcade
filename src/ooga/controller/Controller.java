@@ -232,9 +232,9 @@ public class Controller {
 
     private void doCPUMove() {
         //TODO: Have generateMove return a Move.
-        List<Integer> AIMove = CPU.generateMove();
-        Point2D startLocation = new Point2D.Double(AIMove.get(0), AIMove.get(1));
-        Point2D endLocation = new Point2D.Double(AIMove.get(2), AIMove.get(3));
+        Move AIMove = CPU.generateMove();
+        Point2D startLocation = AIMove.getStartLocation();
+        Point2D endLocation = AIMove.getEndLocation();
         Move m = new Move(startLocation, endLocation);
 
         doMove(m);
