@@ -2,8 +2,6 @@ package ooga.view;
 
 import javafx.scene.image.ImageView;
 
-import java.awt.*;
-import java.lang.reflect.Field;
 import java.util.Locale;
 import java.util.ResourceBundle;
 

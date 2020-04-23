@@ -22,6 +22,16 @@ public class MenuScreen {
 
     public static final String DEFAULT_XML = "Default Game";
     public static final int IMAGE_SIZE = 220;
+    public static final String MENU_STYLE_SHEET = "MenuStyleSheet";
+    public static final String POPUP_STYLE_SHEET = "PopupStyleSheet";
+    public static final String MENU_STAGE_TITLE = "MenuStageTitle";
+    public static final String DARK_MODE = "Dark Mode";
+    public static final String DARK_MODE_STYLE = "darkmode";
+    public static final int POPUP_WIDTH = 500;
+    public static final int POPUP_HEIGHT = 600;
+    public static final String SETTINGS_BUTTONS = "SettingsButtons";
+    public static final String ONE_PLAYER = "One Player";
+    public static final String TWO_PLAYER = "Two Player";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private final FileChooser fileChooser = new FileChooser();
     private static final double STAGE_HEIGHT = 800;
@@ -45,13 +55,12 @@ public class MenuScreen {
     private Button darkButton;
     private boolean isDarkMode;
 
-
     public MenuScreen(Stage stage){
         this.stage = stage;
         this.menuVBox = new VBox();
         this.isDarkMode = false;
-        menuStyle = res.getString("MenuStyleSheet");
-        popupStyle = res.getString("PopupStyleSheet");
+        menuStyle = res.getString(MENU_STYLE_SHEET);
+        popupStyle = res.getString(POPUP_STYLE_SHEET);
         startView();
         stage.show();
     }
@@ -62,7 +71,7 @@ public class MenuScreen {
         stage.setWidth(STAGE_WIDTH);
         scene = new Scene(root);
         stage.setScene(scene);
-        stage.setTitle(res.getString("MenuStageTitle"));
+        stage.setTitle(res.getString(MENU_STAGE_TITLE));
         scene.getStylesheets().add(menuStyle);
 
         arrangeLogo();
@@ -73,37 +82,33 @@ public class MenuScreen {
         root.setCenter(menuVBox);
 
         arrangeDarkModeButton();
-
-
     }
 
     private void arrangeDarkModeButton() {
         VBox darkButtonBox = new VBox();
-        darkButton = new Button("Dark Mode");
-        darkButton.getStyleClass().add("darkmode");
+        darkButton = new Button(DARK_MODE);
+        darkButton.getStyleClass().add(DARK_MODE_STYLE);
         darkButtonBox.getChildren().add(darkButton);
         darkButtonBox.setAlignment(Pos.TOP_RIGHT);
         root.setTop(darkButtonBox);
-        listenDarkModeButton();
+        setDarkModeListener();
     }
 
-    public void setButtonListener(EventHandler<ActionEvent> e) {
+    public void setGameButtonListener(EventHandler<ActionEvent> e) {
         for (Button b: buttons.getButtons()) {
             b.setOnAction(event -> {
                 gameChoice = b.getText();
                 this.goAction = e;
-                myPopupScreen = new Popup(500, 600, popupStyle);
+                myPopupScreen = new Popup(POPUP_WIDTH, POPUP_HEIGHT, popupStyle);
                 setUpPlayerPopUp();
-
             });
         }
     }
 
-
     private void setUpPlayerPopUp() {
         myPopupScreen.getNewPopup();
-        ButtonGroup playerOption = new ButtonGroup(List.of("One Player", "Two Player"));
-        playerOption.addStyle(res.getString("SettingsButtons"));
+        ButtonGroup playerOption = new ButtonGroup(List.of(ONE_PLAYER, TWO_PLAYER));
+        playerOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(playerOption);
 
         playerOption.getButtons().get(0).setOnAction(e -> {
@@ -117,11 +122,10 @@ public class MenuScreen {
     }
 
     private void setUpColorPopUp() {
-
         myPopupScreen.getNewPopup();
         ButtonGroup colorOption = new ButtonGroup(List.of("White", "Black"));
 
-        colorOption.addStyle(res.getString("SettingsButtons"));
+        colorOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(colorOption);
         VBox textFieldBox = myPopupScreen.getButtonBox();
 
@@ -202,7 +206,6 @@ public class MenuScreen {
 
     private void arrangeLogo() {
         Text logo = new Text();
-        logo.setId("banana");
         logo.setText("STRATEGY GAME ARCADE");
         logo.getStyleClass().add("logo");
         logo.setFill(Color.AZURE);
@@ -214,7 +217,6 @@ public class MenuScreen {
 
     private void arrangeMenuImages() {
         HBox hBox = new HBox();
-
         int[] dimensions = {IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE};
         int i = 0;
         int colIndex = 0;
@@ -261,7 +263,7 @@ public class MenuScreen {
         }
     }
 
-    private void listenDarkModeButton(){
+    private void setDarkModeListener(){
         darkButton.setOnAction(event -> {
             toggleMenuDarkMode();
         });

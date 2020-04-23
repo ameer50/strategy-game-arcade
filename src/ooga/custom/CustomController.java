@@ -93,8 +93,8 @@ public class CustomController {
   private void setListeners() {
     /* X and Y are the indices of the cell clicked to move FROM */
     boardView.setOnPieceClicked((coordinate) -> {
-      System.out.println(boardView.getCellAt(coordinate).getPiece().getColor()); // ***
-      if (! boardView.getCellAt(coordinate).getPiece().getColor().equals(activePlayer.getColor())) {
+      System.out.println(boardView.getCellAt(coordinate).getPieceView().getColor()); // ***
+      if (! boardView.getCellAt(coordinate).getPieceView().getColor().equals(activePlayer.getColor())) {
         return;
       }
       boardView.setSelectedLocation(coordinate);
@@ -141,7 +141,7 @@ public class CustomController {
         board.putPieceAt(capturedPieceLocation, capturedPiece);
         activePlayer.addToScore(-capturedPiece.getValue());
         PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-        boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
+        boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
       }
     });
 
@@ -165,7 +165,7 @@ public class CustomController {
 
     board.setOnPiecePromoted((coordinate) -> {
       board.getPieceAt(coordinate);
-      boardView.getCellAt(coordinate).setPiece(new PieceView(board.getPieceAt(coordinate).getFullName()));
+      boardView.getCellAt(coordinate).setPieceView(new PieceView(board.getPieceAt(coordinate).getFullName()));
     });
   }
 

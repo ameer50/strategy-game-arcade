@@ -64,7 +64,7 @@ public class Controller {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
-        menuScreen.setButtonListener(e -> {
+        menuScreen.setGameButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
 
@@ -133,13 +133,13 @@ public class Controller {
 
     private void setBoardListeners() {
         board.setOnPiecePromoted((coordinate) -> {
-            boardView.getCellAt(coordinate).setPiece(new PieceView(board.getPieceAt(coordinate).getFullName()));
+            boardView.getCellAt(coordinate).setPieceView(new PieceView(board.getPieceAt(coordinate).getFullName()));
         });
     }
 
     private void setBoardViewListeners() {
         boardView.setOnPieceClicked((coordinate) -> {
-            PieceView pieceView = boardView.getCellAt(coordinate).getPiece();
+            PieceView pieceView = boardView.getCellAt(coordinate).getPieceView();
             if (pieceView.getColor().equals(activePlayer.getColor())) {
                 boardView.setSelectedLocation(coordinate);
                 boardView.highlightValidMoves(board.getValidMoves(coordinate));
@@ -211,7 +211,7 @@ public class Controller {
 
     private void removeCapturedPieces(Move m) {
         for (Point2D location: m.getCapturedPiecesAndLocations().values()) {
-            if (board.getPieceAt(location) == null) boardView.getCellAt(location).setPiece(null);
+            if (board.getPieceAt(location) == null) boardView.getCellAt(location).setPieceView(null);
         }
     }
 
@@ -222,7 +222,7 @@ public class Controller {
             board.putPieceAt(capturedPieceLocation, capturedPiece);
             activePlayer.addToScore(-capturedPiece.getValue());
             PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-            boardView.getCellAt(capturedPieceLocation).setPiece(capturedPieceView);
+            boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
         }
     }
 

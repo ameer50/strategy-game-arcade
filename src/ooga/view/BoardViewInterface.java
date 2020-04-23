@@ -11,7 +11,7 @@ public interface BoardViewInterface {
 
     void initialize();
 
-    void checkeredColor();
+    void createBoardColors();
 
     StackPane[] getCells();
 

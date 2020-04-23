@@ -34,8 +34,8 @@ public class BoardViewTests extends DukeApplicationTest {
 
     @Test
     public void testBoardDimensions() throws Exception {
-        int height = boardView.getHeight();
-        int width = boardView.getWidth();
+        int height = boardView.getNumRows();
+        int width = boardView.getNumCols();
         assertEquals(height, 8);
         assertEquals(width, 8);
         tearDown();
@@ -43,7 +43,7 @@ public class BoardViewTests extends DukeApplicationTest {
 
     @Test
     public void testValidPieceName() throws Exception {
-        String pieceName = boardView.getCellAt(7,7).getPiece().getPieceName();
+        String pieceName = boardView.getCellAt(7,7).getPieceView().getPieceName();
         assertEquals(pieceName, "White_Rook");
         tearDown();
     }
@@ -53,8 +53,8 @@ public class BoardViewTests extends DukeApplicationTest {
         List<Point2D> validMoves = board.getValidMoves(new Point2D.Double(6,7));
         boardView.highlightValidMoves(validMoves);
 
-        assertEquals(true, boardView.getCellAt(5,7).isYellow());
-        assertEquals(true, boardView.getCellAt(4,7).isYellow());
+        assertEquals(true, boardView.getCellAt(5,7).isHasYellowBorder());
+        assertEquals(true, boardView.getCellAt(4,7).isHasYellowBorder());
         tearDown();
     }
 
@@ -62,18 +62,18 @@ public class BoardViewTests extends DukeApplicationTest {
     public void testToggleRed() throws Exception {
         Point2D point = new Point2D.Double(6,7);
         boardView.setSelectedLocation(point);
-        assertEquals(true, boardView.getCellAt(point).isRed());
+        assertEquals(true, boardView.getCellAt(point).isHasRedBorder());
 
         tearDown();
     }
 
     @Test
     public void testdoMove() throws Exception {
-        PieceView currPiece = boardView.getCellAt(6,7).getPiece();
+        PieceView currPiece = boardView.getCellAt(6,7).getPieceView();
         Move move = new Move(new Point2D.Double(6,7), new Point2D.Double(5,7));
         boardView.doMove(move);
-        assertEquals(null ,boardView.getCellAt(6,7).getPiece());
-        assertEquals(currPiece, boardView.getCellAt(5,7).getPiece());
+        assertEquals(null ,boardView.getCellAt(6,7).getPieceView());
+        assertEquals(currPiece, boardView.getCellAt(5,7).getPieceView());
         tearDown();
     }
 
@@ -81,17 +81,17 @@ public class BoardViewTests extends DukeApplicationTest {
     public void testToggleNoBorder() throws Exception {
         boardView.getCellAt(6,7).toggleNoBorder();
 
-        assertEquals(false, boardView.getCellAt(6,7).isRed());
-        assertEquals(false, boardView.getCellAt(6,7).isYellow());
+        assertEquals(false, boardView.getCellAt(6,7).isHasRedBorder());
+        assertEquals(false, boardView.getCellAt(6,7).isHasYellowBorder());
     }
 
     @Test
     public void testSetPiece() throws Exception {
 
-        assertEquals(null, boardView.getCellAt(5,7).getPiece());
+        assertEquals(null, boardView.getCellAt(5,7).getPieceView());
         PieceView piece = new PieceView("White_Pawn");
-        boardView.getCellAt(5,7).setPiece(piece);
-        assertEquals(piece, boardView.getCellAt(5,7).getPiece());
+        boardView.getCellAt(5,7).setPieceView(piece);
+        assertEquals(piece, boardView.getCellAt(5,7).getPieceView());
     }
 
     @Test
