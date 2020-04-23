@@ -27,6 +27,8 @@ public abstract class Player {
         for (Piece capturedPiece: m.getCapturedPiecesAndLocations().keySet()) {
             addToScore(capturedPiece.getValue());
         }
+
+        //TODO: change score for converted pieces
     }
 
     public void addToScore(int amount) {

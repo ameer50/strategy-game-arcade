@@ -12,6 +12,8 @@ import java.util.Map;
 public class ConnectFourBoard extends Board implements Serializable {
 
     private static final int PIECES_NEEDED = 3;
+    private static final List<Pair<Integer, Integer>> DELTA_PAIR = List.of(new Pair<>(-1, -1), new Pair<>(-1, 0), new Pair<>(-1, 1), new Pair<>(0, 1),
+            new Pair<>(1, 1), new Pair<>(1, 0), new Pair<>(1, -1), new Pair<>(0, -1));
 
     public ConnectFourBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String,
             Pair<String, Integer>> pieces) {
@@ -37,12 +39,10 @@ public class ConnectFourBoard extends Board implements Serializable {
         StringBuilder winner = new StringBuilder();
         // iterating through this array accessing every two elements, allows for checking of all eight locations
         // surrounding a cell
-        List<Pair> deltaPair = List.of(new Pair(-1, -1), new Pair(-1, 0), new Pair(-1, 1), new Pair(0, 1),
-        new Pair(1, 1), new Pair(1, 0), new Pair(1, -1), new Pair(0, -1));
 
-        for(Pair pair: deltaPair){
-            int deltaX = (int) pair.getKey();
-            int deltaY = (int) pair.getValue();
+        for(Pair<Integer, Integer> pair: DELTA_PAIR){
+            int deltaX = pair.getKey();
+            int deltaY = pair.getValue();
             winner.append(check(i, j, deltaX, deltaY, PIECES_NEEDED));
         }
         return winner.toString();

@@ -152,7 +152,7 @@ public class Controller {
             Move move = new Move(startLocation, endLocation);
             doMove(move);
             removeCapturedPieces(move);
-            convertPieces(move);
+            //convertPieces(move);
             boardView.replenishIcon(move);
 
             history.addMove(move);
@@ -225,16 +225,16 @@ public class Controller {
 //        }
 //    }
 
-    private void convertPieces(Move m) {
-        Map<Piece, Point2D> map = m.getConvertedPiecesAndLocations();
-
-        for (Piece piece: map.keySet()) {
-            Point2D convertedPieceLocation = map.get(piece);
-            activePlayer.addToScore(piece.getValue());
-            PieceView convertedPieceView = new PieceView(m.getPiece().getFullName());
-            boardView.getCellAt(convertedPieceLocation).setPiece(convertedPieceView);
-        }
-    }
+//    private void convertPieces(Move m) {
+//        Map<Piece, Point2D> map = m.getConvertedPiecesAndLocations();
+//
+//        for (Piece piece: map.keySet()) {
+//            Point2D convertedPieceLocation = map.get(piece);
+//            activePlayer.addToScore(piece.getValue());
+//            PieceView convertedPieceView = new PieceView(m.getPiece().getFullName());
+//            boardView.getCellAt(convertedPieceLocation).setPiece(convertedPieceView);
+//        }
+//    }
 
     private void replenishCapturedPieces(Move prevMove) {
         Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
