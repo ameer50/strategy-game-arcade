@@ -20,7 +20,7 @@ import java.util.*;
 
 public class MenuScreen {
 
-    public static final String DEFAULT_XML = "Default Game";
+    public static final String DEFAULT_GAME = "Default Game";
     public static final int IMAGE_SIZE = 220;
     public static final String MENU_STYLE_SHEET = "MenuStyleSheet";
     public static final String POPUP_STYLE_SHEET = "PopupStyleSheet";
@@ -189,7 +189,7 @@ public class MenuScreen {
                 b.setDisable(true);
                 Button otherButton = loadGameOption.getButtons().get(loadGameOption.getButtons().indexOf(b) ^ 1);
                 otherButton.setDisable(false);
-                assignXMLFile(b.getText());
+                assignFile(b.getText());
             });
         }
 
@@ -252,9 +252,9 @@ public class MenuScreen {
     }
 
 
-    private void assignXMLFile(String choice) {
-        if (choice.equals(DEFAULT_XML)) {
-            this.fileChoice = String.format("resources/%s/default%s.xml", gameChoice, playerOneColor);
+    private void assignFile(String choice) {
+        if (choice.equals(DEFAULT_GAME)) {
+            this.fileChoice = String.format("resources/%s/default%s.json", gameChoice, playerOneColor);
         } else {
             File file = fileChooser.showOpenDialog(new Stage());
             if (file != null) {
