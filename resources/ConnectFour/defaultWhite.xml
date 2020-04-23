@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <game_config>
+
     <settings>
-        <name>
-            ConnectFour
-        </name>
-        <width>7</width>
-        <height>7</height>
-        <icon>Coin</icon>
+        <name> ConnectFour </name>
+        <width> 7 </width>
+        <height> 7 </height>
+        <icon> Coin </icon>
     </settings>
+
     <locations>
 
     </locations>
+
     <pieces>
 
-
     </pieces>
+
 </game_config>
