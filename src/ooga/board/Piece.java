@@ -64,6 +64,11 @@ public class Piece implements Serializable {
     return this.color;
   }
 
+  public void setColor(String color){
+
+    this.color = color;
+  }
+
   public List<Point2D> getDisplacements() { return List.copyOf(displacements); }
 
   public void setMovePattern(String pattern){

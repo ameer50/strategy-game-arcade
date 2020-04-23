@@ -64,7 +64,10 @@ public class OthelloBoard extends Board implements Serializable {
         int i =  (int) point.getX();
         int j = (int) point.getY();
 
-        pieceTrail.add(point);
+        if(!firstPass){
+            pieceTrail.add(point);
+        }
+
 
         if (!isCellInBounds(i + deltaX, j + deltaY) || checkStartCell(point, firstPass, deltaX, deltaY)) return null;
 
@@ -108,20 +111,24 @@ public class OthelloBoard extends Board implements Serializable {
             List<Point2D> pieceTrail = moveToPieceTrailMap.get(move.getEndLocation());
             System.out.println("the piece trail " + pieceTrail);
 
-            List<Piece> pieces = new ArrayList<>();
+
 
             // the first piece in a piece trail is always the original piece that begins the trail
             // it is this piece's color (i.e. full name) which we wish to convert the other pieces to
-            move.setConvertPieceName(getPieceAt(pieceTrail.get(0)).getFullName());
-            pieceTrail.add(move.getEndLocation()); // place a piece in the valid move location at the beginning since it
+            //move.setConvertPieceName(getPieceAt(pieceTrail.get(0)).getFullName());
+            //pieceTrail.add(move.getEndLocation()); // place a piece in the valid move location at the beginning since it
             // contains the color that the rest of the images must convert to
             for(Point2D point: pieceTrail){
-                Piece piece = new Piece("Coin", "", 1, move.getColor());
-                pieceBiMap.forcePut(point, piece);
-                pieces.add(piece);
+                //Piece piece = new Piece("Coin", "", 1, move.getColor());
+                getPieceAt(point).setColor(move.getColor());
+                //pieceBiMap.forcePut(point, piece);
+                Piece piece = getPieceAt(point);
                 move.addConvertedPiece(piece, point);
             }
 
+            Piece piece = new Piece("Coin", "", 1, move.getColor());
+            move.setPiece(piece);
+            pieceBiMap.forcePut(move.getEndLocation(), piece);
             move.setPieceGenerated(true);
         }else{
             putPieceAt(move.getStartLocation(), null);
@@ -135,6 +142,8 @@ public class OthelloBoard extends Board implements Serializable {
 
         List<Point2D> validMoves = new ArrayList<>();
        //String clickedPieceColor = getPieceAt(coordinate).getColor();
+
+        // TODO: Fix this problem
         String clickedPieceColor;
         if (turn){
             clickedPieceColor = "Black";
