@@ -4,6 +4,8 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import ooga.custom.MoveNode;
 
 public class Piece implements Serializable {
@@ -22,16 +24,29 @@ public class Piece implements Serializable {
     this.color = color;
     this.moves = 0;
     displacements = new ArrayList<>();
-    if (pattern.contains("(")) {
-      for (String pointStr: pattern.split("), ")) {
-        int x = Integer.parseInt(pointStr.substring(1, 2));
-        int y = Integer.parseInt(pointStr.substring(4, 5));
+    if (pattern.substring(0, 2).contains("(")) {
+      System.out.println("Matched.");
+
+      for (String pointStr: pattern.split("[)], ")) {
+        pointStr = pointStr.substring(1);
+        System.out.println(pointStr);
+
+        Pattern regexp = Pattern.compile("(-?\\d), (-?\\d)");
+        Matcher matcher = regexp.matcher(pointStr);
+        matcher.matches();
+
+        int x = Integer.parseInt(matcher.group(1));
+        System.out.println(matcher.group(1));
+
+        int y = Integer.parseInt(matcher.group(2));
+        System.out.println(matcher.group(2));
+
         displacements.add(new Point2D.Double(x, y));
       }
     }
   }
 
-  public boolean isSameColor(Piece that){
+  public boolean isSameColor(Piece that) {
     return (this.getColor().equals(that.getColor()));
   }
 
@@ -40,9 +55,7 @@ public class Piece implements Serializable {
     return String.format("%s %s", this.color, this.type);
   }
 
-  public boolean hasMoved(){
-    return (this.moves != 0);
-  }
+  public boolean hasMoved() { return (this.moves != 0); }
 
   public void incrementMoveCount(boolean isUndo) {
     if (isUndo) moves--; else moves++;
@@ -52,14 +65,8 @@ public class Piece implements Serializable {
   public String getMovePattern() { return this.pattern; }
   public int getValue() { return this.value; }
   public String getColor() { return this.color; }
-
-
+  public String getFullName() { return String.format("%s_%s", this.color, this.type); }
   public List<Point2D> getDisplacements() { return List.copyOf(displacements); }
-
-  
-  public String getFullName() {
-    return String.format("%s_%s", this.color, this.type);
-  }
 
   public void setType(String type){ this.type = type; }
   public void setColor(String color) { this.color = color; }

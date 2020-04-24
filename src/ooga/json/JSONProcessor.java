@@ -34,15 +34,6 @@ public class JSONProcessor {
   public static final String LOCATIONS = "locations";
   public static final String SCORES = "scores";
   public static final String CUSTOM = "CUSTOM";
-
-  public JSONProcessor() {
-    settings = new HashMap<>();
-    pieceLocations = new HashMap<>();
-    pieceMoveNodes = new HashMap<>();
-    pieceMovePatterns = new HashMap<>();
-    pieceScores = new HashMap<>();
-  }
-
   public static final String ERROR_MSG = "Error parsing JSON.";
   public static final String AND = " AND ";
   public static final String OR = " OR ";
@@ -57,17 +48,13 @@ public class JSONProcessor {
   protected Map<String, Integer> pieceScores;
   protected JSONObject jo;
 
-  public String getName() { return name; }
-  public int getWidth() {
-    return Math.toIntExact(Long.parseLong(settings.get("width")));
+  public JSONProcessor() {
+    settings = new HashMap<>();
+    pieceLocations = new HashMap<>();
+    pieceMoveNodes = new HashMap<>();
+    pieceMovePatterns = new HashMap<>();
+    pieceScores = new HashMap<>();
   }
-  public int getHeight() {
-    return Math.toIntExact(Long.parseLong(settings.get("height")));
-  }
-  public Map<String, String> getSettings() { return Map.copyOf(settings); }
-  public Map<Point2D, String> getPieceLocations() { return Map.copyOf(pieceLocations); }
-  public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
-  public Map<String, Integer> getPieceScores() { return Map.copyOf(pieceScores); }
 
   public void parse(String dir) {
     clearAll();
@@ -83,6 +70,16 @@ public class JSONProcessor {
       System.out.println(ERROR_MSG);
     }
   }
+
+  public String getName() { return name; }
+  public int getWidth() { return Math.toIntExact(Long.parseLong(settings.get("width"))); }
+  public int getHeight() {
+    return Math.toIntExact(Long.parseLong(settings.get("height")));
+  }
+  public Map<String, String> getSettings() { return Map.copyOf(settings); }
+  public Map<Point2D, String> getPieceLocations() { return Map.copyOf(pieceLocations); }
+  public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
+  public Map<String, Integer> getPieceScores() { return Map.copyOf(pieceScores); }
 
   private void parsePieceScores() {
     Map<String, Long> scores = (Map) jo.get(SCORES);
@@ -118,6 +115,7 @@ public class JSONProcessor {
       addToPieceMoves(moves.get(PIECES));
       for (String piece: pieceMoveNodes.keySet()) {
         pieceMovePatterns.put(piece, pieceMoveNodes.get(piece).toString());
+        System.out.println(String.format("put %s : %s", piece, pieceMoveNodes.get(piece).toString()));
       }
     }
   }

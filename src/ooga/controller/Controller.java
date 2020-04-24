@@ -62,11 +62,10 @@ public class Controller {
     private void setUpGameScreen(String gameType, String dir) {
         /* TODO: Change 'Preset' to something received from the UI */
         String customOrPreset = "Preset";
-        boolean isCustom = customOrPreset.equals("Custom");
         processor = new JSONProcessor();
-        processor.parse(dir, isCustom);
+        processor.parse(dir);
         gameType = new StringUtility().capitalize(gameType);
-        instantiateBoard(gameType, isCustom);
+        instantiateBoard(gameType);
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getPieceLocations());
 
@@ -87,12 +86,7 @@ public class Controller {
         setListeners();
     }
 
-    private void instantiateBoard(String type, boolean isCustom) {
-        if (isCustom) {
-            board = new CustomBoard(processor.getWidth(), processor.getHeight(), processor.getSettings(),
-                processor.getPieceLocations(), processor.getPieceMoveNodes(), processor.getPieceScores());
-            return;
-        }
+    private void instantiateBoard(String type) {
         try {
             Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
             Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
