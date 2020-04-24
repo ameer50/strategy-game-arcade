@@ -20,7 +20,6 @@ public class CheckersBoard extends Board implements Serializable {
 
   private static ResourceBundle moveConstantMap;
   public Map<Point2D, Set<Point2D>> killPaths = new HashMap<>();
-  public Map<String, Map<Integer, Integer>> dict = new HashMap<String, Map<Integer, Integer>>();
 
   public CheckersBoard(Map<String, String> settings, Map<Point2D, String> locations,
       Map<String, String> movePatterns,
