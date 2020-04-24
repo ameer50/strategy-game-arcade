@@ -51,17 +51,9 @@ public class CPUPlayer extends Player {
 
   public Move generateTrivialMove() {
     Board board = this.getBoard();
-    for (int i=0; i<board.getWidth(); i++) {
-      for (int j=0; j<board.getHeight(); j++) {
-        Point2D point = new Point2D.Double(i, j);
-        List<Point2D> validMoves = board.getValidMoves(point);
-        if (validMoves.size() != 0 && board.getPieceAt(point).getColor().equals(color)) {
-            Point2D moveTo = validMoves.get(0);
-            System.out.println(String.format("Generated TRIVIAL move: (%.1f, %.1f), (%.1f, %.1f)",
-                (float) i, (float) j, (float) moveTo.getX(), (float) moveTo.getY()));
-            return new Move(new Point2D.Double(i, j), moveTo);
-        }
-      }
+    List<Move> possibleMoves = board.getPossibleMoves(color);
+    if(possibleMoves.size() != 0){
+      return possibleMoves.get(0);
     }
     System.out.println("AI could not find a piece");
     return null;

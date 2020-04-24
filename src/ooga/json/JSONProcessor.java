@@ -3,8 +3,10 @@ package ooga.json;
 import com.google.common.collect.BiMap;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -67,6 +69,7 @@ public class JSONProcessor {
       parsePieceScores();
       parsePieceLocations();
     } catch (ParseException | IOException e) {
+      e.printStackTrace();
       System.out.println(ERROR_MSG);
     }
   }
@@ -222,11 +225,12 @@ public class JSONProcessor {
     jo.put("locations", locations);
 
     try {
-      PrintWriter writer = new PrintWriter(filename);
+      FileWriter writer = new FileWriter(new File(filename));
       writer.write(jo.toJSONString());
       writer.flush();
       writer.close();
-    } catch (FileNotFoundException e) {
+    } catch (IOException e) {
+      e.printStackTrace();
       System.out.println(String.format("Could not find file: %s", filename));
     }
   }
