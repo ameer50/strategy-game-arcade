@@ -43,15 +43,15 @@ public class CustomController {
 
   private void setUpGameScreen(String fileChoice) {
     processor = new JSONProcessor();
-    processor.parse(fileChoice, true);
+    processor.parse(fileChoice);
     printMessageAndTime("JSON parsed.");
     /* To be used in reflection... */
     int width = processor.getWidth();
     int height = processor.getHeight();
 
     /* Use reflection here... */
-    board = new CustomBoard(width, height, processor.getSettings(), processor.getPieceLocations(),
-        processor.getPieceMoveNodes(), processor.getPieceScores());
+    board = new CustomBoard(processor.getSettings(), processor.getPieceLocations(),
+        processor.getPieceMovePatterns(), processor.getPieceScores());
     printMessageAndTime("Set up Board.");
 
     gameScreen = new GameScreen(stage, width, height, processor.getPieceLocations());

@@ -2,6 +2,7 @@ package ooga.board;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import ooga.custom.MoveNode;
 
@@ -14,20 +15,20 @@ public class Piece implements Serializable {
   private int moves;
   private List<Point2D> displacements;
 
-  public Piece (String type, String pattern, int value, String color) {
+  public Piece(String type, String pattern, int value, String color) {
     this.type = type;
     this.pattern = pattern;
     this.value = value;
     this.color = color;
     this.moves = 0;
-  }
-  public Piece(String type, MoveNode node, int value, String color, int id) {
-    this.type = type;
-    this.pattern = null;
-    this.value = value;
-    this.color = color;
-    this.moves = 0;
-    this.displacements = node.generatePoints();
+    displacements = new ArrayList<>();
+    if (pattern.contains("(")) {
+      for (String pointStr: pattern.split("), ")) {
+        int x = Integer.parseInt(pointStr.substring(1, 2));
+        int y = Integer.parseInt(pointStr.substring(4, 5));
+        displacements.add(new Point2D.Double(x, y));
+      }
+    }
   }
 
   public boolean isSameColor(Piece that){
@@ -39,10 +40,6 @@ public class Piece implements Serializable {
     return String.format("%s %s", this.color, this.type);
   }
 
-  public String getType() {
-    return type;
-  }
-
   public boolean hasMoved(){
     return (this.moves != 0);
   }
@@ -51,36 +48,21 @@ public class Piece implements Serializable {
     if (isUndo) moves--; else moves++;
   }
 
-  public String getMovePattern(){
-    return this.pattern;
-  }
-  public int getValue(){
-    return this.value;
-  }
-  public String getColor(){
-    return this.color;
-  }
+  public String getType() { return type; }
+  public String getMovePattern() { return this.pattern; }
+  public int getValue() { return this.value; }
+  public String getColor() { return this.color; }
 
-  public void setColor(String color){
-
-    this.color = color;
-  }
 
   public List<Point2D> getDisplacements() { return List.copyOf(displacements); }
 
-  public void setMovePattern(String pattern){
-    this.pattern = pattern;
-  }
-
-  public void setType(String type){
-    this.type = type;
-  }
   
-  public String getFullName(){
+  public String getFullName() {
     return String.format("%s_%s", this.color, this.type);
   }
 
-  public void setValue(int value) {
-    this.value = value;
-  }
+  public void setType(String type){ this.type = type; }
+  public void setColor(String color) { this.color = color; }
+  public void setValue(int value) { this.value = value; }
+  public void setMovePattern(String pattern){ this.pattern = pattern; }
 }

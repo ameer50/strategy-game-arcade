@@ -18,6 +18,17 @@ public abstract class MoveNode implements Serializable {
     this.value = value;
   }
 
+  @Override
+  public String toString() {
+    List<Point2D> points = generatePoints();
+    StringBuilder builder = new StringBuilder();
+    for (Point2D point: points) {
+      builder.append(String.format("(%d, %d), ", (int) point.getX(), (int) point.getY()));
+    }
+    String str = builder.toString();
+    return str.substring(0, str.length()-2);
+  }
+
   public abstract List<Point2D> generatePoints();
 
   public void multiply(int multiplier) {
