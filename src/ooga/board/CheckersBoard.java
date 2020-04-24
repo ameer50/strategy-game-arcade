@@ -40,13 +40,13 @@ public class CheckersBoard extends Board implements Serializable {
     }
 
     public String checkOneColor(){
-        int numWhite = 0;
+        int numRed = 0;
         int numBlack = 0;
         for(int i = 0; i<width; i++){
             for(int j = 0; j<height; j++){
                 if(getPieceAt(i, j) != null){
-                    if(getPieceAt(i,j).getColor().equals("White")){
-                        numWhite++;
+                    if(getPieceAt(i,j).getColor().equals("Red")){
+                        numRed++;
                     }
                     else if(getPieceAt(i,j).getColor().equals("Black")){
                         numBlack++;
@@ -55,23 +55,23 @@ public class CheckersBoard extends Board implements Serializable {
             }
         }
         if(numBlack==0){
-            return "White";
+            return "Red";
         }
-        else if(numWhite==0){
+        else if(numRed==0){
             return "Black";
         }
         return null;
     }
 
     public String checkTrapped(){
-        int numWhite = 0;
+        int numRed = 0;
         int numBlack = 0;
         for(int i = 0; i<width; i++){
             for(int j = 0; j<height; j++){
                 if(getPieceAt(i, j) != null){
                     List<Point2D> temp = getValidMoves(new Point2D.Double(i, j));
-                    if(getPieceAt(i,j).getColor().equals("White")){
-                        numWhite+=temp.size();
+                    if(getPieceAt(i,j).getColor().equals("Red")){
+                        numRed+=temp.size();
                     }
                     else if(getPieceAt(i,j).getColor().equals("Black")){
                         numBlack+=temp.size();
@@ -80,9 +80,9 @@ public class CheckersBoard extends Board implements Serializable {
             }
         }
         if(numBlack==0){
-            return "White";
+            return "Red";
         }
-        else if(numWhite==0){
+        else if(numRed==0){
             return "Black";
         }
         return null;

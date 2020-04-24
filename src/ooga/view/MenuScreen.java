@@ -32,8 +32,6 @@ public class MenuScreen {
     public static final String SETTINGS_BUTTONS = "SettingsButtons";
     public static final String ONE_PLAYER = "One Player";
     public static final String TWO_PLAYER = "Two Player";
-    public static final String WHITE = "White";
-    public static final String BLACK = "Black";
     public static final String PLAYER_ONE_COLOR_PROMPT = "Player One Color: ";
     public static final String PLAYERNAME = "playername";
     public static final String ENTER_PLAYER_NAMES = "Enter Player Name(s)";
@@ -153,7 +151,7 @@ public class MenuScreen {
 
     private void setUpColorPopUp() {
         myPopupScreen.getNewPopup();
-        ButtonGroup colorOption = new ButtonGroup(List.of(WHITE, BLACK));
+        ButtonGroup colorOption = new ButtonGroup(List.of(res.getString(gameChoice + "Color1"), res.getString(gameChoice + "Color2")));
 
         colorOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(colorOption);

@@ -1,0 +1,17 @@
+{
+  "settings" : {
+    "name" : "ConnectFour",
+    "width" : "7",
+    "height" : "7",
+    "bottomColor" : "Red",
+    "icon" : "Coin"
+  },
+
+  "locations" : { },
+
+  "moves" : {
+    "pieces" : { }
+  },
+
+  "scores" : { }
+}
