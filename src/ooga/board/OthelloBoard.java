@@ -12,29 +12,30 @@ public class OthelloBoard extends Board implements Serializable {
     private Map<Point2D, List<Point2D>> moveToPieceTrailMap;
     private static final List<Pair<Integer, Integer>> DELTA_PAIR = List.of(new Pair<>(-1, -1), new Pair<>(-1, 0), new Pair<>(-1, 1), new Pair<>(0, 1),
             new Pair<>(1, 1), new Pair<>(1, 0), new Pair<>(1, -1), new Pair<>(0, -1));
-    private boolean turn;
 
     public OthelloBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> pieces, Map<String, Integer> pieceScores) {
         super(settings, locations, pieces, pieceScores);
         moveToPieceTrailMap = new HashMap<>();
-        turn = false;
     }
 
     @Override
     public String checkWon() {
-        String winner;
-//        for (int i = 0; i < width; i++) {
-//            for (int j = 0; j < height; j++) {
-//                winner = checkAllDirections(i, j);
-//                if (winner.length() > 0) return winner;
-//            }
-//        }
-//        if (this.isFull()){
-//            return "Tie";
-//        }
-        return null;
+        if (getValidMoves(new Point2D.Double(height, 0)).size() > 0 || getValidMoves(new Point2D.Double(height, 1)).size() > 0) {
+            return null;
+        }
+        int whiteCount = 0;
+        int blackCount = 0;
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                Piece piece = getPieceAt(i, j);
+                if (piece == null) continue;
+                if (piece.getColor().equals("White")) whiteCount++;
+                else if (piece.getColor().equals("Black")) blackCount++;
+            }
+        }
+        if (whiteCount == blackCount) return "Tie";
+        return whiteCount > blackCount ? "White" : "Black";
     }
-
 
     private List<Point2D> checkAllDirections(Point2D coordinate) {
         List<Point2D> possibleMoves = new ArrayList<>();
