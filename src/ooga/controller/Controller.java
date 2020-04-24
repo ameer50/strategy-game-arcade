@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import ooga.Main;
 import ooga.board.*;
 import ooga.history.History;
@@ -150,8 +151,8 @@ public class Controller {
             Point2D startLocation = boardView.getSelectedLocation();
             Move move = new Move(startLocation, endLocation);
             doMove(move);
+            convertPieces(move);
             removeCapturedPieces(move);
-            //convertPieces(move);
             boardView.replenishIcon(move);
 
             history.addMove(move);
@@ -172,10 +173,13 @@ public class Controller {
             Move prevMove = history.undo();
             historyList.remove(historyList.size()-1);
 
-            Move reverseMove = prevMove.getReverseMove(true);
+            Move reverseMove = prevMove.getReverseMove();
+            convertPieces(reverseMove);
             doMove(reverseMove);
+
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
+
             replenishCapturedPieces(prevMove);
         });
 
@@ -183,7 +187,9 @@ public class Controller {
             Move prevMove = history.redo();
             historyList.add(prevMove);
             doMove(prevMove);
+            convertPieces(prevMove);
             removeCapturedPieces(prevMove);
+
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
         });
@@ -210,38 +216,31 @@ public class Controller {
     }
 
     private void removeCapturedPieces(Move move) {
-        for (Point2D location: move.getCapturedPiecesAndLocations().values()) {
+        for (Point2D location: move.getCapturedPiecesAndLocations().keySet()) {
             if (board.getPieceAt(location) == null) boardView.getCellAt(location).setPieceView(null);
         }
     }
 
-//    private void convertPieces(Move m) {
-//        System.out.println("it is called");
-//        for (Point2D location: m.getConvertedPiecesAndLocations().values()) {
-//            Piece
-//            if (board.getPieceAt(location) != null) boardView.getCellAt(location).setPiece(null);
-//        }
-//    }
-
-//    private void convertPieces(Move m) {
-//        Map<Piece, Point2D> map = m.getConvertedPiecesAndLocations();
-//
-//        for (Piece piece: map.keySet()) {
-//            Point2D convertedPieceLocation = map.get(piece);
-//            activePlayer.addToScore(piece.getValue());
-//            PieceView convertedPieceView = new PieceView(m.getPiece().getFullName());
-//            boardView.getCellAt(convertedPieceLocation).setPiece(convertedPieceView);
-//        }
-//    }
-
     private void replenishCapturedPieces(Move prevMove) {
-        Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
-        for (Piece capturedPiece: map.keySet()) {
-            Point2D capturedPieceLocation = map.get(capturedPiece);
+        Map<Point2D, Piece> map = prevMove.getCapturedPiecesAndLocations();
+        System.out.println(map);
+        for (Point2D capturedPieceLocation: map.keySet()) {
+            Piece capturedPiece = map.get(capturedPieceLocation);
             board.putPieceAt(capturedPieceLocation, capturedPiece);
             activePlayer.addToScore(-capturedPiece.getValue());
             PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
             boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
+        }
+    }
+
+    private void convertPieces(Move m) {
+        Map<Point2D, Pair<Piece, Piece>> map = m.getConvertedPiecesAndLocations();
+
+        for (Point2D convertedPieceLocation: map.keySet()) {
+            Piece convertedPiece = m.isUndo() ? map.get(convertedPieceLocation).getKey() : map.get(convertedPieceLocation).getValue();
+            board.getPieceBiMap().forcePut(convertedPieceLocation, convertedPiece);
+            PieceView convertedPieceView = new PieceView(convertedPiece.getFullName());
+            boardView.getCellAt(convertedPieceLocation).setPieceView(convertedPieceView);
         }
     }
 

@@ -47,12 +47,8 @@ public class Piece implements Serializable {
     return (this.moves != 0);
   }
 
-  public void move(){
-    this.moves++;
-  }
-
-  public void unMove(){
-    this.moves--;
+  public void incrementMoveCount(boolean isUndo) {
+    if (isUndo) moves--; else moves++;
   }
 
   public String getMovePattern(){

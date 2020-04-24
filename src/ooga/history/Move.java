@@ -1,5 +1,6 @@
 package ooga.history;
 
+import javafx.util.Pair;
 import ooga.board.Piece;
 import ooga.view.PieceView;
 
@@ -12,13 +13,11 @@ import java.util.Map;
 public class Move {
 
     private Piece piece;
-    private List<Piece> pieces;
     private Point2D startLocation;
     private Point2D endLocation;
-    private Map<Piece, Point2D> capturedPiecesAndLocations;
-    private Map<Piece, Point2D> convertedPiecesAndLocations;
+    private Map<Point2D, Piece> capturedPiecesAndLocations;
+    private Map<Point2D, Pair<Piece, Piece>> convertedPiecesAndLocations;
     private boolean isUndo;
-    private boolean isPromote;
     private boolean isPieceGenerated;
     private String color;
     private String convertPieceName;
@@ -28,27 +27,22 @@ public class Move {
         this.endLocation = endLocation;
         capturedPiecesAndLocations = new HashMap<>();
         convertedPiecesAndLocations = new HashMap<>();
-        pieces = new ArrayList<>();
         isUndo = false;
-        isPromote = false;
         isPieceGenerated = false;
     }
 
     public Move getReverseMove() {
-        return new Move(endLocation, startLocation);
-    }
-
-    public Move getReverseMove(boolean isUndo) {
-        Move m = getReverseMove();
-        m.setUndo(isUndo);
-        if (this.isPromote) m.setPromote(true);
-        return m;
+        Move reverseMove = new Move(endLocation, startLocation);
+        reverseMove.setUndo(true);
+        reverseMove.setConvertedPiecesAndLocations(convertedPiecesAndLocations);
+        return reverseMove;
     }
 
     public Point2D getStartLocation() {
         return (Point2D) startLocation.clone();
     }
     public Point2D getEndLocation() { return (Point2D) endLocation.clone(); }
+
     /* TODO: replace instances of the above with instances of the below */
     public int getStartX() { return (int) startLocation.getX(); }
     public int getStartY() { return (int) startLocation.getY(); }
@@ -63,10 +57,6 @@ public class Move {
         return isUndo;
     }
 
-    public boolean isPromote() {
-        return isPromote;
-    }
-
     @Override
     public String toString() {
         if (isPieceGenerated) return String.format("%s added at (%d, %d)", piece, (int) endLocation.getX(), (int) endLocation.getY());
@@ -74,19 +64,23 @@ public class Move {
     }
 
     public void addCapturedPiece(Piece capturedPiece, Point2D capturedPieceLocation){
-        capturedPiecesAndLocations.put(capturedPiece, capturedPieceLocation);
+        capturedPiecesAndLocations.put(capturedPieceLocation, capturedPiece);
     }
 
-    public Map<Piece, Point2D> getCapturedPiecesAndLocations() {
+    public Map<Point2D, Piece> getCapturedPiecesAndLocations() {
         return capturedPiecesAndLocations;
     }
 
-    public void addConvertedPiece(Piece capturedPiece, Point2D capturedPieceLocation){
-        convertedPiecesAndLocations.put(capturedPiece, capturedPieceLocation);
+    public void addConvertedPiece(Pair<Piece, Piece> piecePair, Point2D convertedPieceLocation){
+        convertedPiecesAndLocations.put(convertedPieceLocation, piecePair);
     }
 
-    public Map<Piece, Point2D> getConvertedPiecesAndLocations() {
+    public Map<Point2D, Pair<Piece, Piece>> getConvertedPiecesAndLocations() {
         return convertedPiecesAndLocations;
+    }
+
+    private void setConvertedPiecesAndLocations(Map<Point2D, Pair<Piece, Piece>> convertedPiecesAndLocations) {
+        this.convertedPiecesAndLocations = convertedPiecesAndLocations;
     }
 
     public Piece getPiece() {
@@ -95,10 +89,6 @@ public class Move {
 
     public void setPiece(Piece piece){
         this.piece = piece;
-    }
-
-    public void setPromote(boolean isPromote) {
-        this.isPromote = isPromote;
     }
 
     public boolean isPieceGenerated() {
@@ -113,15 +103,7 @@ public class Move {
         this.color = color;
     }
 
-    public String getColor(){
+    public String getColor() {
         return color;
-    }
-
-    public void setConvertPieceName(String name){
-        convertPieceName = name;
-    }
-
-    public String getConvertPieceName(){
-        return convertPieceName;
     }
 }

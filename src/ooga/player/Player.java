@@ -24,7 +24,7 @@ public abstract class Player {
     public void doMove(Move m) {
         m.setColor(color);
         board.doMove(m);
-        for (Piece capturedPiece: m.getCapturedPiecesAndLocations().keySet()) {
+        for (Piece capturedPiece: m.getCapturedPiecesAndLocations().values()) {
             addToScore(capturedPiece.getValue());
         }
 

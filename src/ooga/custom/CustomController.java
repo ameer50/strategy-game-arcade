@@ -129,14 +129,14 @@ public class CustomController {
       doMove(reverseMove);
       toggleActivePlayer();
 
-      Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
-      for (Piece capturedPiece: map.keySet()) {
-        Point2D capturedPieceLocation = map.get(capturedPiece);
-        board.putPieceAt(capturedPieceLocation, capturedPiece);
-        activePlayer.addToScore(-capturedPiece.getValue());
-        PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-        boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
-      }
+//      Map<Piece, Point2D> map = prevMove.getCapturedPiecesAndLocations();
+//      for (Piece capturedPiece: map.keySet()) {
+//        Point2D capturedPieceLocation = map.get(capturedPiece);
+//        board.putPieceAt(capturedPieceLocation, capturedPiece);
+//        activePlayer.addToScore(-capturedPiece.getValue());
+//        PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
+//        boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
+//      }
     });
 
     gameScreen.getDashboardView().setRedoMoveClicked((e) -> {

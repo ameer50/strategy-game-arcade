@@ -126,34 +126,18 @@ public class ChessBoard extends Board implements Serializable {
 
   @Override
   public void doMove(Move m) {
-    int startX = (int) m.getStartLocation().getX();
-    int startY = (int) m.getStartLocation().getY();
-    int endX = (int) m.getEndLocation().getX();
-    int endY = (int) m.getEndLocation().getY();
-    Piece currPiece = getPieceAt(startX, startY);
-    Piece hitPiece = getPieceAt(endX, endY);
-    if (!m.isUndo()) {
-      currPiece.move();
-    } else {
-      currPiece.unMove();
-    }
+    Piece currPiece = getPieceAt(m.getStartLocation());
+    Piece hitPiece = getPieceAt(m.getEndLocation());
+    currPiece.incrementMoveCount(m.isUndo());
 
     m.setPiece(currPiece);
-    // if undo and it was a promote move before
-    if (m.isPromote() && m.isUndo()) {
-      m.getPiece().setType(PAWN);
-      m.getPiece().setMovePattern("PAWN -1");
-      m.getPiece().setValue(pieceScores.get(m.getPiece().getFullName()));
-      // demote piece in frontend
-      this.promoteAction.process(m.getStartLocation());
-    }
-    promote(m);
-    pieceBiMap.forcePut(new Point2D.Double(endX, endY), currPiece);
+    pieceBiMap.forcePut(m.getEndLocation(), currPiece);
 
     if (hitPiece != null) {
       m.addCapturedPiece(hitPiece, m.getEndLocation());
       pieceBiMap.remove(hitPiece);
     }
+    promote(m);
   }
 
   private void promote(Move m) {
@@ -164,12 +148,8 @@ public class ChessBoard extends Board implements Serializable {
     int inc = getPawnInc(piece);
     int endX = (int) m.getEndLocation().getX();
     if ((inc == -1 && endX == 0) || (inc == 1 && endX == height - 1)) {
-      piece.setType(QUEEN);
-      piece.setMovePattern(QUEEN_MOVE_PATTERN);
-      piece.setValue(pieceScores.get(piece.getType()));
-      System.out.println(piece.getValue());
-      m.setPromote(true);
-      this.promoteAction.process(m.getStartLocation());
+      Piece promotedPiece = new Piece(QUEEN, QUEEN_MOVE_PATTERN, pieceScores.get(QUEEN), piece.getColor());
+      m.addConvertedPiece(new Pair<>(piece, promotedPiece), m.getEndLocation());
     }
   }
 

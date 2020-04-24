@@ -154,11 +154,11 @@ public class CheckersBoard extends Board implements Serializable {
             }
         }
 
-        for (Point2D location : m.getCapturedPiecesAndLocations().values()) {
-            if(location!= null){
-                removePiece(location);
-            }
-        }
+//        for (Point2D location : m.getCapturedPiecesAndLocations().values()) {
+//            if(location!= null){
+//                removePiece(location);
+//            }
+//        }
     }
     private Point2D nonKill(Point2D coordinate, List<Integer> moveDirs){
         int x = (int) coordinate.getX();
