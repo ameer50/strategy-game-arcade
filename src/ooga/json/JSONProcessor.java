@@ -18,6 +18,7 @@ import ooga.custom.MoveNode;
 import ooga.custom.MoveNodeAnd;
 import ooga.custom.MoveNodeLeaf;
 import ooga.custom.MoveNodeOr;
+import ooga.view.DisplayError;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -227,7 +228,7 @@ public class JSONProcessor {
       writer.flush();
       writer.close();
     } catch (FileNotFoundException e) {
-      System.out.println(String.format("Could not find file: %s", filename));
+      new DisplayError("Could not find/load in the file");
     }
   }
 }

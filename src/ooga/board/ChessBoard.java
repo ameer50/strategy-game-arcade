@@ -11,7 +11,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import javafx.util.Pair;
+import ooga.exceptions.ReflectionException;
 import ooga.history.Move;
+import ooga.view.DisplayError;
 
 public class ChessBoard extends Board implements Serializable {
 
@@ -99,8 +101,8 @@ public class ChessBoard extends Board implements Serializable {
       Object ret = moveMethod.invoke(this, coord, params, piece);
       return (List<Point2D>) ret;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException g) {
-      System.out.println("Error: " + moveType);
-      return new ArrayList<>();
+      new DisplayError("ReflectionException");
+      throw new ReflectionException("Could not apply reflection");
     }
   }
 

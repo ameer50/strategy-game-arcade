@@ -14,7 +14,9 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.util.Pair;
+import ooga.exceptions.ResourceBundleException;
 import ooga.history.Move;
+import ooga.view.DisplayError;
 
 public class CheckersBoard extends Board implements Serializable {
 
@@ -26,10 +28,10 @@ public class CheckersBoard extends Board implements Serializable {
       Map<String, Integer> scores) {
     super(settings, locations, movePatterns, scores);
     try {
-      moveConstantMap = new PropertyResourceBundle(
-          new FileInputStream("src/properties/moveConstants.properties"));
+      moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/moveConstantss.properties"));
     } catch (IOException e) {
-      System.out.println("This should throw a custom exception.");
+      new DisplayError("ResourceBundleException");
+      throw new ResourceBundleException("Could not create User Input resource bundles");
     }
   }
 
