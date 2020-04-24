@@ -1,0 +1,45 @@
+{
+  "scores": {
+    "Triangle": 3,
+    "Square": 2,
+    "Circle": 2
+  },
+
+  "moves": {
+    "compound": {
+      "vertical": "up 1 OR down 1",
+      "horizontal": "right 1 OR left 1",
+      "diagonal": "vertical 1 AND horizontal 1",
+      "hook": "vertical 2 AND horizontal 1"
+    },
+    "basic": {
+      "up": "0, 1",
+      "down": "0, -1",
+      "right": "1, 0",
+      "left": "-1, 0"
+    },
+    "pieces": {
+      "Triangle": "diagonal 2:3",
+      "Square": "vertical 1:4",
+      "Circle": "horizontal 2:7"
+    }
+  },
+
+  "locations": {
+    "White_Triangle": ["5, 0", "4, 3"],
+    "White_Square": ["5, 1", "4, 4"],
+    "White_Circle": ["5, 2", "4, 5"],
+    "Black_Triangle": ["1, 0", "0, 3"],
+    "Black_Square": ["1, 1", "0, 4"],
+    "Black_Circle": ["1, 2", "0, 5"]
+  },
+
+  "settings": {
+    "type": "Custom",
+    "name": "Custom",
+    "width": "6",
+    "height": "6",
+    "bottomColor": "Black",
+    "icon": "Triangle"
+  }
+}

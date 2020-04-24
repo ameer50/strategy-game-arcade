@@ -56,6 +56,7 @@ public class MenuScreen {
     public static final String CHECKERS = "Checkers";
     public static final String CONNECT_FOUR = "ConnectFour";
     public static final String OTHELLO = "Othello";
+    public static final String CUSTOM = "Custom";
     public static final String BUTTONS_STYLE = "buttons";
     public static final String ASSIGNED_FILE_PATH = "resources/%s/default%s.json";
     public static final String MENU_DARK_SHEET = "MenuDarkSheet";
@@ -305,7 +306,7 @@ public class MenuScreen {
 
     private void arrangeButtons(){
 
-        buttons = new ButtonGroup(List.of(CHESS, CHECKERS, CONNECT_FOUR, OTHELLO));
+        buttons = new ButtonGroup(List.of(CHESS, CHECKERS, CONNECT_FOUR, OTHELLO, CUSTOM));
 
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {

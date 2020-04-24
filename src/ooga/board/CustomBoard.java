@@ -43,7 +43,7 @@ public class CustomBoard extends Board {
 
   public List<Point2D> getValidMoves(Point2D coordinate) {
     Piece piece = getPieceAt(coordinate);
-    if (piece == null) return null;
+    if (piece == null) return new ArrayList<>();
 
     Point2DUtility utility = new Point2DUtility();
     List<Point2D> displacements = piece.getDisplacements();
