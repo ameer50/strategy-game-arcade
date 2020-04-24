@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "type": "preset",
+    "name": "Othello",
+    "height": "8",
+    "width": "8",
+    "bottomColor": "White",
+    "icon": "Coin"
+  },
+
+  "locations": {
+    "White_Coin": ["3, 3", "4, 4"],
+    "Black_Coin": ["3, 4", "4, 3"]
+  },
+
+  "scores": {
+    "Coin": 5
+  },
+
+  "moves": {
+    "pieces" : {
+      "Coin": "LATERAL -1"
+    }
+  }
+}

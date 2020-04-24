@@ -28,8 +28,7 @@ public class CustomBoard extends Board {
     Piece currPiece = getPieceAt(startX, startY);
     Piece hitPiece = getPieceAt(endX, endY);
 
-    if (! move.isUndo()) currPiece.move();
-    else currPiece.unMove();
+    currPiece.incrementMoveCount(move.isUndo());
 
     if (hitPiece != null) {
       move.addCapturedPiece(hitPiece, move.getEndLocation());

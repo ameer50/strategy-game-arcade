@@ -93,23 +93,29 @@ public class OthelloBoard extends Board implements Serializable {
     @Override
     public void doMove(Move move) {
         if (!move.isUndo()) {
-            List<Point2D> pieceTrail = moveToPieceTrailMap.get(move.getEndLocation());
-            move.setPromote(true);
-
-            for (Point2D point: pieceTrail) {
-                getPieceAt(point).setColor(move.getColor());
-                this.promoteAction.process(point);
-            }
+            List<Point2D> pieceTrail = moveToPieceTrailMap.getOrDefault(move.getEndLocation(), new ArrayList<>());
+            //move.setPromote(true);
 
             Piece piece = new Piece("Coin", "", 1, move.getColor());
             move.setPiece(piece);
             pieceBiMap.forcePut(move.getEndLocation(), piece);
             move.setPieceGenerated(true);
-        } else {
-            putPieceAt(move.getStartLocation(), null);
-            if (move.isPromote()) {
+
+            for (Point2D point: pieceTrail) {
+                Piece oldPiece = getPieceAt(point);
+                Piece trailPiece = new Piece(oldPiece.getType(), oldPiece.getMovePattern(),  oldPiece.getValue(), move.getColor());
+                move.addConvertedPiece(new Pair(oldPiece, trailPiece), point);
 
             }
+
+//            for(Point2D point: move.getConvertedPiecesAndLocations().keySet()){
+//                Piece oldPiece = getPieceAt(point);
+//                Piece trailPiece = new Piece(oldPiece.getType(), oldPiece.getMovePattern(),  oldPiece.getValue(), move.getColor());
+//                move.addConvertedPiece(new Pair(oldPiece, trailPiece), point);
+//            }
+
+        } else {
+            putPieceAt(move.getStartLocation(), null);
         }
 
         moveToPieceTrailMap.clear();
@@ -119,17 +125,14 @@ public class OthelloBoard extends Board implements Serializable {
     public List<Point2D> getValidMoves(Point2D coordinate) {
 
         List<Point2D> validMoves = new ArrayList<>();
-       //String clickedPieceColor = getPieceAt(coordinate).getColor();
+       String clickedPieceColor = "White";
 
-        // TODO: Fix this problem
-        String clickedPieceColor;
-        if (turn){
-            clickedPieceColor = "Black";
-        }else{
-            clickedPieceColor = "White";
+        int x = (int) coordinate.getX();
+        int y = (int) coordinate.getY();
+
+        if(!isCellInBounds(coordinate) && x == width && (y == 0 || y == 1)){
+            clickedPieceColor = (y == 0) ? "White": "Black";
         }
-
-        turn = !turn;
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {

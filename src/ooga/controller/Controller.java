@@ -188,8 +188,9 @@ public class Controller {
             historyList.add(prevMove);
             doMove(prevMove);
             convertPieces(prevMove);
-            removeCapturedPieces(prevMove);
 
+            removeCapturedPieces(prevMove);
+            boardView.replenishIcon(prevMove);
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
         });
@@ -223,7 +224,6 @@ public class Controller {
 
     private void replenishCapturedPieces(Move prevMove) {
         Map<Point2D, Piece> map = prevMove.getCapturedPiecesAndLocations();
-        System.out.println(map);
         for (Point2D capturedPieceLocation: map.keySet()) {
             Piece capturedPiece = map.get(capturedPieceLocation);
             board.putPieceAt(capturedPieceLocation, capturedPiece);
@@ -238,11 +238,12 @@ public class Controller {
 
         for (Point2D convertedPieceLocation: map.keySet()) {
             Piece convertedPiece = m.isUndo() ? map.get(convertedPieceLocation).getKey() : map.get(convertedPieceLocation).getValue();
-            board.getPieceBiMap().forcePut(convertedPieceLocation, convertedPiece);
+            board.putPieceAt(convertedPieceLocation, convertedPiece);
             PieceView convertedPieceView = new PieceView(convertedPiece.getFullName());
             boardView.getCellAt(convertedPieceLocation).setPieceView(convertedPieceView);
         }
     }
+
 
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;

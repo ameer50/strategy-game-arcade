@@ -123,30 +123,22 @@ public class CheckersBoard extends Board implements Serializable {
         Piece currPiece = getPieceAt(m.getStartLocation());
         m.setPiece(currPiece);
 
-        if (m.isPromote() && m.isUndo()) {
-            // demote backend
-            currPiece.setType("Coin");
-            currPiece.setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
-            currPiece.setValue(pieceScores.get(currPiece.getFullName()));
-            // demote frontend
-            promoteAction.process(m.getStartLocation());
-        }
-        if((currPiece.getColor().equals(bottomColor) && x_f==0) || (!(currPiece.getColor().equals(bottomColor)) && x_f==height-1)){
-            currPiece.setType("Monarch");
-            currPiece.setMovePattern("KING 1");
-            currPiece.setValue(pieceScores.get(currPiece.getFullName()));
-            m.setPromote(true);
-            promoteAction.process(m.getStartLocation());
-        }
+//        if (m.isPromote() && m.isUndo()) {
+//            // demote backend
+//            currPiece.setType("Coin");
+//            currPiece.setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
+//            currPiece.setValue(pieceScores.get(currPiece.getFullName()));
+//            // demote frontend
+//            promoteAction.process(m.getStartLocation());
+//        }
 
         placePiece(m.getStartLocation(), null);
         placePiece(m.getEndLocation(), currPiece);
-
         pieceBiMap.forcePut(m.getEndLocation(), currPiece);
+
 
         if (killPaths.containsKey(m.getEndLocation())) {
             for (Point2D point : killPaths.get(m.getEndLocation())) {
-                System.out.println("inside redo");
                 if(getPieceAt(point) != null) {
                     m.addCapturedPiece(getPieceAt(point), point);
                 }
@@ -154,11 +146,17 @@ public class CheckersBoard extends Board implements Serializable {
             }
         }
 
-//        for (Point2D location : m.getCapturedPiecesAndLocations().values()) {
-//            if(location!= null){
-//                removePiece(location);
-//            }
-//        }
+        if((currPiece.getColor().equals(bottomColor) && x_f==0) || (!(currPiece.getColor().equals(bottomColor)) && x_f==height-1)){
+             Piece promotedPiece = new Piece("Monarch", "KING 1", pieceScores.get("King"), currPiece.getColor());
+
+            m.addConvertedPiece(new Pair(currPiece, promotedPiece), m.getEndLocation());
+        }
+
+        for (Point2D location : m.getCapturedPiecesAndLocations().keySet()) {
+            if(location != null){
+                removePiece(location);
+            }
+        }
     }
     private Point2D nonKill(Point2D coordinate, List<Integer> moveDirs){
         int x = (int) coordinate.getX();
