@@ -3,6 +3,7 @@ package ooga.xml;
 import javafx.util.Pair;
 import ooga.board.Board;
 import ooga.board.Piece;
+import ooga.view.DisplayError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -68,7 +69,7 @@ public class XMLProcessor {
                 node = node.getNextSibling();
             }
         } catch (Exception e) {
-            System.out.println(ERROR_MESSAGE);
+            new DisplayError(ERROR_MESSAGE);
         }
     }
 
@@ -99,6 +100,7 @@ public class XMLProcessor {
             writer.close();
 
         } catch (TransformerException | IOException ignored) {
+            new DisplayError("Unable to transform");
         }
     }
 

@@ -80,6 +80,7 @@ public class ChessBoard extends Board implements Serializable {
     try {
       return getMovesFromShift(coord, moveType, params, piece);
     } catch (IllegalAccessException | NoSuchFieldException e) {
+      new DisplayError("Unable to get moves from shift");
       return getMovesFromMethodName(coord, moveType, params, piece);
     }
   }

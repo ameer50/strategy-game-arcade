@@ -11,6 +11,7 @@ import ooga.board.Board;
 import ooga.controller.Controller.StrategyType;
 import ooga.utility.StringUtility;
 import ooga.history.Move;
+import ooga.view.DisplayError;
 
 public class CPUPlayer extends Player {
   private StrategyType strategy;
@@ -40,9 +41,7 @@ public class CPUPlayer extends Player {
       Object coordinateList = generator.invoke(this);
       moveCoordinates = (Move) coordinateList;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      System.out.println("Error: " + generatorName);
-      e.printStackTrace();
-      // FIXME: Don't print stack trace.
+      new DisplayError("Error in: " + generatorName);
     }
 
     moveTimes.add((double) (startTime - System.currentTimeMillis()));

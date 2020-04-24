@@ -68,7 +68,7 @@ public class JSONProcessor {
       parsePieceScores();
       parsePieceLocations();
     } catch (ParseException | IOException e) {
-      System.out.println(ERROR_MSG);
+      new DisplayError("Unable to parse/load in file.");
     }
   }
 
