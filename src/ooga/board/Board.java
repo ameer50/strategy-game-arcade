@@ -288,8 +288,6 @@ public abstract class Board implements Serializable {
   public void addPlayerIcons(String playerOneColor, String playerTwoColor) {
     pieceBiMap.forcePut(new Point2D.Double(height, 0), new Piece(iconType, "", 0, playerOneColor));
     pieceBiMap.forcePut(new Point2D.Double(height, 1), new Piece(iconType, "", 0, playerTwoColor));
-    System.out.println("playerOneColor = " + playerOneColor);
-    System.out.println("playerTwoColor = " + playerTwoColor);
   }
 }
 

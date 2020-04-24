@@ -18,11 +18,13 @@ import java.util.ResourceBundle;
 
 public class DashboardView {
 
-    public static final int DISPLAY_LAYOUT_X = 900;
-    public static final int DISPLAY_LAYOUT_Y = 400;
+    public static final int DISPLAY_LAYOUT_X = 920;
+    public static final int DISPLAY_LAYOUT_Y = 380;
     public static final String POPUP_STYLE_SHEET = "PopupStyleSheet";
     public static final String DISPLAY_STYLE = "display";
-    public static final String SCORES_STYLE = "scoreshbox";
+    public static final String SCORES_HBOX_STYLE = "scoreshbox";
+    public static final String SCORES_STYLE = "scores";
+    public static final String ICON_STYLE = "icons";
     public static final int HISTORY_MIN_HEIGHT = 400;
     public static final int HISTORY_MIN_WIDTH = 300;
     public static final String HISTORY_STYLE = "listview";
@@ -112,10 +114,10 @@ public class DashboardView {
         playerTwoScoreBox.getChildren().addAll(playerTwoName, playerTwoScoreText);
 
         scoresBox = new HBox();
-        applyStyle(playerOneScoreBox, SCORES_STYLE);
-        applyStyle(playerTwoScoreBox, SCORES_STYLE);
+        playerOneScoreBox.getStyleClass().add(SCORES_HBOX_STYLE);
+        playerTwoScoreBox.getStyleClass().add(SCORES_HBOX_STYLE);
         scoresBox.getChildren().addAll(playerOneScoreBox, playerTwoScoreBox);
-        applyStyle(scoresBox, SCORES_STYLE);
+        scoresBox.getStyleClass().add(SCORES_STYLE);
     }
 
     private void createHistoryBox() {
@@ -232,13 +234,6 @@ public class DashboardView {
         GridPane.setHalignment(b, HPos.LEFT);
         GridPane.setValignment(b, VPos.CENTER);
     }
-
-    private void applyStyle(Pane p, String style){
-        for(Node a: p.getChildren()){
-            a.getStyleClass().add(style);
-        }
-    }
-
     public void setUpSaveFilePopup(EventHandler<ActionEvent> event) {
         Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
         pop.getNewPopup();
@@ -350,6 +345,7 @@ public class DashboardView {
         HBox iconBox = new HBox();
         iconBox.getChildren().addAll(icons);
         iconBox.setAlignment(Pos.CENTER);
+        iconBox.getStyleClass().add(ICON_STYLE);
         displayBox.getChildren().add(0, iconBox);
     }
 }

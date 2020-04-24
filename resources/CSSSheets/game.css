@@ -150,15 +150,24 @@
     -fx-spacing: 15;
     -fx-background-radius: 5;
     -fx-alignment: center;
-    /*-fx-border-width: 5;*/
-    /*-fx-border-radius: 5;*/
-    /*-fx-border-color: #fadcc8;*/
     -fx-background-color: #fad2a0;
     -fx-padding: 5 10 5 10;
     -fx-fill: BLACK;
     -fx-font-size: 20pt;
     -fx-font-family: "Trebuchet MS";
     -fx-vgap: 10;
+}
+
+.scores {
+    -fx-spacing: 10;
+    -fx-alignment: center;
+    -fx-vgap: 10;
+    -fx-padding: 10;
+}
+
+.icons {
+    -fx-spacing: 10;
+    -fx-alignment: center;
 }
 
 .hboxlist {

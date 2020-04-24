@@ -10,12 +10,11 @@
     -fx-background-color:
             linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
     -fx-font-family: "Trebuchet MS";
-    -fx-padding: 10 20 10 20;
+    -fx-alignment: center;
 
 }
 
