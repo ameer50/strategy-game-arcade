@@ -1,5 +1,5 @@
 .root {
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #808000, #6B8E23);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #808000, BLACK);
     -fx-padding: 10;
     -fx-box-border: #000000;
     -fx-border-width: 10;
@@ -7,7 +7,7 @@
 
 .button {
     -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #808000, #6B8E23);
+            linear-gradient(from 0% 0% to 50% 100%, #8FBC8F, #A9A9A9);
     -fx-background-radius: 10;
     -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: #ffffff;
@@ -101,20 +101,20 @@
     -fx-border-style: solid inside;
     -fx-border-width: 3;
     -fx-border-insets: 3;
-    -fx-border-color: #4169E1;
+    -fx-border-color: #BLACK;
 }
 
 .cellcolor1 {
-    -fx-fill: #FFFFFF;
+    -fx-fill: GREEN;
 }
 
 .cellcolor2 {
-    -fx-fill: #FFFFFF;
+    -fx-fill: GREEN;
 }
 
 .auxbuttons {
     -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+            linear-gradient(from 0% 0% to 50% 100%, #8FBC8F, #A9A9A9);
     -fx-background-radius: 10;
     -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
@@ -168,7 +168,7 @@
     -fx-border-width: 5px;
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #808000, #6B8E23);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #8FBC8F, #A9A9A9);
     -fx-alignment: center;
 }
 
@@ -186,7 +186,7 @@
 }
 
 .list-cell:even { /* changed to even */
-    -fx-background-color: OLIVE;
+    -fx-background-color: #FFF5EE;
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;

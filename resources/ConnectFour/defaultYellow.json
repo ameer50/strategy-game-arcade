@@ -3,8 +3,8 @@
     "name" : "ConnectFour",
     "width" : "7",
     "height" : "7",
-    "bottomColor" : "Red",
-    "icon" : "Coin"
+    "bottomColor" : "Yellow",
+    "icon" : "Marker"
   },
 
   "locations" : { },

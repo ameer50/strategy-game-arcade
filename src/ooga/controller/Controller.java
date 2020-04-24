@@ -84,6 +84,7 @@ public class Controller {
             dashboardView.toggleDarkMode();
         }
 
+        System.out.println("chocie " + menuScreen.getGameChoice());
         gameScreen.enableGameCSS(menuScreen.getGameChoice());
         setUpHistory();
         setUpPlayers();
@@ -111,14 +112,16 @@ public class Controller {
         if (!menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            // TODO: Determine the StrategyType dynamically.
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
+            String strategyType = menuScreen.getStrategyType();
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.valueOf(strategyType));
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
 
         // TODO: Change "White" to the color that the player chose
-        activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
+        System.out.println("p1 " + playerOne.getName() + playerOne.getColor());
+
+        activePlayer = playerOne;
         if (activePlayer.isCPU()) {
             doCPUMove();
             toggleActivePlayer();

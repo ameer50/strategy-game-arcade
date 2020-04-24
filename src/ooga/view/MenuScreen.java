@@ -82,6 +82,7 @@ public class MenuScreen {
     private String popupStyle;
     private Button darkButton;
     private boolean isDarkMode;
+    private String strategyType;
 
     public MenuScreen(Stage stage){
         this.stage = stage;
@@ -188,11 +189,20 @@ public class MenuScreen {
 
         Button next = new Button(NEXT);
         next.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
-        next.setOnAction(e -> {
-            playerOneName = playerOneText.getText();
-            playerTwoName = playerTwoText.getText();
-            setUpLoadGamePopUp();
-        });
+
+        if (isOnePlayer){
+            next.setOnAction(e -> {
+                playerOneName = playerOneText.getText();
+                setUpAIDifficultyPopUp();
+            });
+
+        }else{
+            next.setOnAction(e -> {
+                playerOneName = playerOneText.getText();
+                playerTwoName = playerTwoText.getText();
+                setUpLoadGamePopUp();
+            });
+        }
         textFieldBox.getChildren().addAll(next);
     }
 
@@ -202,6 +212,34 @@ public class MenuScreen {
         textField.setMaxWidth(maxWidth);
         textField.getStyleClass().add(style);
         return textField;
+    }
+
+    private void setUpAIDifficultyPopUp(){
+        myPopupScreen.getNewPopup();
+        ButtonGroup AIDifficulty = new ButtonGroup(List.of("Easy", "Medium", "Hard"));
+
+        AIDifficulty.addStyle(res.getString(SETTINGS_BUTTONS));
+        myPopupScreen.addButtonGroup(AIDifficulty);
+        VBox vBox = myPopupScreen.getButtonBox();
+
+        for (Button b: AIDifficulty.getButtons()) {
+            b.setOnAction((newEvent) -> {
+                for(Button button: AIDifficulty.getButtons()){
+                    button.setDisable(false);
+                }
+                b.setDisable(true);
+                setStrategyType(res.getString(b.getText()));
+            });
+        }
+
+        Button goButton = new Button(GO);
+        goButton.getStyleClass().add(res.getString(GO_BUTTON_STYLE));
+        goButton.setOnAction(e -> {
+            setUpLoadGamePopUp();
+        });
+
+        vBox.getStyleClass().add(VBOX);
+        vBox.getChildren().add(goButton);
     }
 
     private void setUpLoadGamePopUp() {
@@ -328,5 +366,13 @@ public class MenuScreen {
 
     public boolean isDarkMode() {
         return isDarkMode;
+    }
+
+    public String getStrategyType() {
+        return strategyType;
+    }
+
+    private void setStrategyType(String type){
+        strategyType = type;
     }
 }

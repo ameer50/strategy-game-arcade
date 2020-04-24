@@ -43,7 +43,7 @@ public class DashboardView {
     public static final String FILE_ENTER_TITLE = "FileEnterTitle";
     public static final int FILE_STAGE_HEIGHT = 500;
     public static final int FILE_STAGE_WIDTH = 500;
-    public static final String ENTER_XML_FILENAME = "Enter XML Filename:";
+    public static final String ENTER_JSON_FILENAME = "Enter JSON Filename:";
     public static final String SAVE_FILE_STYLE = "savefile";
     public static final int FILE_SAVE_TEXT_FIELD_MAX_WIDTH = 200;
     public static final String FILE_TEXT_FIELD_STYLE = "file-text-field";
@@ -56,7 +56,7 @@ public class DashboardView {
     public static final String PREFER = "prefer";
     public static final String QUIT = "Quit";
     public static final String VBOX = "vbox";
-    public static final String SAVED_XML_PATH = "savedXML/%s.xml";
+    public static final String SAVED_JSON_PATH = "savedJSON/%s.json";
     public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
     public static final String SKIP_TURN = "Skip Turn";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
@@ -188,6 +188,7 @@ public class DashboardView {
     private void setUpSaveGameButton() {
         Button saveGame = auxiliaryButtons.getButtons().get(2);
         saveGame.setOnAction(e -> {
+            System.out.println("save game");
             setUpSaveFileStage(saveFunction);
         });
     }
@@ -246,22 +247,48 @@ public class DashboardView {
         }
     }
 
-    public void setUpSaveFileStage(EventHandler<ActionEvent> e) {
-        Stage fileNameStage = new Stage();
-        fileNameStage.setTitle(res.getString(FILE_ENTER_TITLE));
-        fileNameStage.setHeight(FILE_STAGE_HEIGHT);
-        fileNameStage.setWidth(FILE_STAGE_WIDTH);
-        BorderPane fileRoot = new BorderPane();
-        Scene settingsScene = new Scene(fileRoot);
-        settingsScene.getStylesheets().add(popupStyle);
-        fileNameStage.setScene(settingsScene);
-        fileNameStage.show();
-        createSaveFilePopUp(fileNameStage, fileRoot, e);
+    public void setUpSaveFileStage(EventHandler<ActionEvent> event) {
+        Popup pop = new Popup(FILE_STAGE_WIDTH, FILE_STAGE_HEIGHT, popupStyle);
+        pop.getNewPopup();
+
+        Text prefer = new Text();
+        prefer.setText(ENTER_JSON_FILENAME);
+        prefer.getStyleClass().add(SAVE_FILE_STYLE);
+
+        TextField textField = new TextField();
+        textField.setMaxWidth(FILE_SAVE_TEXT_FIELD_MAX_WIDTH);
+        textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
+        VBox textFieldBox = pop.getButtonBox();
+
+        Button goButton = new Button(GO);
+        goButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
+
+        textFieldBox.getChildren().addAll(prefer, textField, goButton);
+        textFieldBox.setAlignment(Pos.CENTER);
+        //fileRoot.setCenter(textFieldBox);
+
+        goButton.setOnAction(e -> {
+            setNewFileName(textField.getText());
+            pop.closePopup();
+            event.handle(e);
+        });
+
+
+//        Stage fileNameStage = new Stage();
+//        fileNameStage.setTitle(res.getString(FILE_ENTER_TITLE));
+//        fileNameStage.setHeight(FILE_STAGE_HEIGHT);
+//        fileNameStage.setWidth(FILE_STAGE_WIDTH);
+//        BorderPane fileRoot = new BorderPane();
+//        Scene settingsScene = new Scene(fileRoot);
+//        settingsScene.getStylesheets().add(popupStyle);
+//        fileNameStage.setScene(settingsScene);
+//        fileNameStage.show();
+//        createSaveFilePopUp(fileNameStage, fileRoot, e);
     }
 
     private void createSaveFilePopUp(Stage settingsStage, BorderPane fileRoot, EventHandler<ActionEvent> event) {
         Text prefer = new Text();
-        prefer.setText(ENTER_XML_FILENAME);
+        prefer.setText(ENTER_JSON_FILENAME);
         prefer.getStyleClass().add(SAVE_FILE_STYLE);
 
         TextField textField = new TextField();
@@ -355,7 +382,7 @@ public class DashboardView {
     }
 
     private void setNewFileName(String str){
-        newFileName = String.format(SAVED_XML_PATH, str);
+        newFileName = String.format(SAVED_JSON_PATH, str);
     }
     
     public void setWinner(String winner){

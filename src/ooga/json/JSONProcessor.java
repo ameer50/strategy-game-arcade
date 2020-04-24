@@ -206,8 +206,8 @@ public class JSONProcessor {
     BiMap<Point2D, Piece> pieceBiMap = board.getPieceBiMap();
     Map locations = new LinkedHashMap();
     for (Point2D point : pieceBiMap.keySet()) {
-      String piece = pieceBiMap.get(point).getFullName();
-      locations.put(piece, String.format("%d, %d", (int) point.getX(), (int) point.getY()));
+        String piece = pieceBiMap.get(point).getFullName();
+        locations.put(piece, String.format("%d, %d", (int) point.getX(), (int) point.getY()));
     }
     jo.put("locations", locations);
 
