@@ -7,7 +7,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import javafx.util.Pair;
 import ooga.history.Move;
 
@@ -16,8 +18,9 @@ public class ChessBoard extends Board implements Serializable {
   public static final String KING = "King";
   public static final String PAWN = "Pawn";
   public static final String KNIGHT = "Knight";
-  public static final String BLACK = "Black";
-  public static final String WHITE = "White";
+  private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
+  public static final String WHITE = res.getString("ChessColor1");
+  public static final String BLACK = res.getString("ChessColor2");
   public static final String QUEEN = "Queen";
   public static final String QUEEN_MOVE_PATTERN = "Any -1";
   public static final String PAWN_MOVE_PATTERN = "PAWN -1";

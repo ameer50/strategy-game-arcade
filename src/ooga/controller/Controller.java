@@ -54,6 +54,7 @@ public class Controller {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
+
         menuScreen.setGameButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
@@ -62,9 +63,11 @@ public class Controller {
     private void setUpGameScreen(String gameType, String dir) {
         /* TODO: Change 'Preset' to something received from the UI */
         String customOrPreset = "Preset";
+
         boolean isCustom = customOrPreset.equals("Custom");
         processor = new JSONProcessor();
         processor.parse(dir, isCustom);
+
         gameType = new StringUtility().capitalize(gameType);
         instantiateBoard(gameType, isCustom);
 
