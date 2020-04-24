@@ -101,7 +101,7 @@
     -fx-border-style: solid inside;
     -fx-border-width: 3;
     -fx-border-insets: 3;
-    -fx-border-color: #BLACK;
+    -fx-border-color: BLACK;
 }
 
 .cellcolor1 {
@@ -150,9 +150,6 @@
     -fx-spacing: 15;
     -fx-background-radius: 5;
     -fx-alignment: center;
-    /*-fx-border-width: 5;*/
-    /*-fx-border-radius: 5;*/
-    /*-fx-border-color: #fadcc8;*/
     -fx-background-color: #FFF5EE;
     -fx-padding: 5 10 5 10;
     -fx-fill: BLACK;
@@ -160,6 +157,20 @@
     -fx-font-family: "Trebuchet MS";
     -fx-vgap: 10;
     -fx-hgap: 15;
+}
+
+.scores {
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-vgap: 10;
+    -fx-padding: 10;
+}
+
+.icons {
+    -fx-spacing: 25;
+    -fx-alignment: center;
+    -fx-vgap: 10;
+    -fx-padding: 10;
 }
 
 .hboxlist {

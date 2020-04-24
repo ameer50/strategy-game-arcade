@@ -36,6 +36,20 @@
     -fx-alignment: center;
 }
 
+.scores {
+    -fx-spacing: 15;
+    -fx-alignment: center;
+    -fx-vgap: 10;
+    -fx-padding: 10;
+}
+
+.icons {
+    -fx-spacing: 25;
+    -fx-alignment: center;
+    -fx-vgap: 10;
+    -fx-padding: 10;
+}
+
 .display {
     -fx-alignment: center;
     -fx-border-color: #e1ebff;
@@ -150,9 +164,6 @@
     -fx-spacing: 15;
     -fx-background-radius: 5;
     -fx-alignment: center;
-    /*-fx-border-width: 5;*/
-    /*-fx-border-radius: 5;*/
-    /*-fx-border-color: #fadcc8;*/
     -fx-background-color: #FFF5EE;
     -fx-padding: 5 10 5 10;
     -fx-fill: BLACK;

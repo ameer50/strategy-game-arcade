@@ -43,7 +43,7 @@ public class MenuScreen {
     public static final String NEXT = "Next";
     public static final String CUSTOM_GAME = "Custom Game";
     public static final String GO = "Go!";
-    public static final String GO_BUTTON_STYLE = "GoButton";
+    public static final String SELECT_BUTTON_STYLE = "GoButton";
     public static final String MENU_SCREEN_TITLE = "STRATEGY GAME ARCADE";
     public static final String LOGO_STYLE = "logo";
     public static final String LOGO_BOX_STYLE = "logobox";
@@ -193,7 +193,7 @@ public class MenuScreen {
         if (isOnePlayer){
             next.setOnAction(e -> {
                 playerOneName = playerOneText.getText();
-                setUpAIDifficultyPopUp();
+                setUpCPUDifficultyPopUp();
             });
 
         }else{
@@ -214,17 +214,24 @@ public class MenuScreen {
         return textField;
     }
 
-    private void setUpAIDifficultyPopUp(){
+    private void setUpCPUDifficultyPopUp(){
         myPopupScreen.getNewPopup();
-        ButtonGroup AIDifficulty = new ButtonGroup(List.of("Easy", "Medium", "Hard"));
 
-        AIDifficulty.addStyle(res.getString(SETTINGS_BUTTONS));
-        myPopupScreen.addButtonGroup(AIDifficulty);
+        Text difficultText = new Text("CPU Difficulty: ");
+        difficultText.getStyleClass().add(PLAYERNAME);
+
+        ButtonGroup cpuDifficulty = new ButtonGroup(List.of("Easy", "Medium", "Hard"));
+
+        cpuDifficulty.addStyle(res.getString(SETTINGS_BUTTONS));
+        myPopupScreen.addButtonGroup(cpuDifficulty);
         VBox vBox = myPopupScreen.getButtonBox();
 
-        for (Button b: AIDifficulty.getButtons()) {
+
+        vBox.getChildren().add(0, difficultText);
+
+        for (Button b: cpuDifficulty.getButtons()) {
             b.setOnAction((newEvent) -> {
-                for(Button button: AIDifficulty.getButtons()){
+                for(Button button: cpuDifficulty.getButtons()){
                     button.setDisable(false);
                 }
                 b.setDisable(true);
@@ -232,14 +239,14 @@ public class MenuScreen {
             });
         }
 
-        Button goButton = new Button(GO);
-        goButton.getStyleClass().add(res.getString(GO_BUTTON_STYLE));
-        goButton.setOnAction(e -> {
+        Button nextButton = new Button(NEXT);
+        nextButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
+        nextButton.setOnAction(e -> {
             setUpLoadGamePopUp();
         });
 
         vBox.getStyleClass().add(VBOX);
-        vBox.getChildren().add(goButton);
+        vBox.getChildren().add(nextButton);
     }
 
     private void setUpLoadGamePopUp() {
@@ -260,7 +267,7 @@ public class MenuScreen {
         }
 
         Button goButton = new Button(GO);
-        goButton.getStyleClass().add(res.getString(GO_BUTTON_STYLE));
+        goButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
         goButton.setOnAction(e -> {
             myPopupScreen.getStage().close();
             goAction.handle(e);
