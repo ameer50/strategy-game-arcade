@@ -1,11 +1,11 @@
 package ooga.controller;
 
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import ooga.Main;
 import ooga.board.*;
 import ooga.history.History;
 import ooga.history.Move;
@@ -20,7 +20,7 @@ import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
-public class Controller {
+public class Controller extends Application {
 
     public enum StrategyType {
         TRIVIAL,
@@ -45,9 +45,17 @@ public class Controller {
     private Stage stage;
     private JSONProcessor processor;
 
-    public Controller(Stage stage) {
+    /**
+     * Start of the program.
+     */
+    public static void main (String[] args) {
+        launch();
+    }
+
+    @Override
+    public void start(Stage primaryStage) {
         startTime = System.currentTimeMillis();
-        this.stage = stage;
+        stage = primaryStage;
         setUpMenu();
     }
 
@@ -269,7 +277,7 @@ public class Controller {
     private void newWindow() {
         Stage newStage = new Stage();
         Thread thread = new Thread(() -> Platform.runLater(() -> {
-            Main newSimulation = new Main();
+            Controller newSimulation = new Controller();
             try {
                 newSimulation.start(newStage);
             } catch (NullPointerException e) {

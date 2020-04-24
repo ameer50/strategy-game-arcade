@@ -3,7 +3,7 @@ package ooga.view;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import ooga.ProcessCoordinateInterface;
+import ooga.controller.ProcessCoordinateInterface;
 
 import java.awt.geom.Point2D;
 
