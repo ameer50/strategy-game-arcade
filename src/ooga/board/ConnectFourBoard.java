@@ -64,6 +64,7 @@ public class ConnectFourBoard extends Board implements Serializable {
     public void doMove(Move move) {
         if (! move.isUndo()){
             Piece piece = new Piece("Coin", "", 1, move.getColor());
+            System.out.println("piece.getColor() = " + piece.getColor());
             move.setPiece(piece);
             pieceBiMap.forcePut(move.getEndLocation(), piece);
             move.setPieceGenerated(true);

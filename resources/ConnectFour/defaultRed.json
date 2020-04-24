@@ -13,5 +13,7 @@
     "pieces" : { }
   },
 
-  "scores" : { }
+  "scores" : {
+    "Coin": 0
+  }
 }
