@@ -52,7 +52,7 @@ public class JSONWriter {
     locations.put("Black_Circle", "0, 4");
     jo.put("locations", locations);
 
-    PrintWriter writer = new PrintWriter("exampleCustom.json");
+    PrintWriter writer = new PrintWriter("Custom/defaultBlack.json");
     writer.write(jo.toJSONString());
     writer.flush();
     writer.close();

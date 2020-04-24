@@ -60,8 +60,6 @@ public class Controller {
     }
 
     private void setUpGameScreen(String gameType, String dir) {
-        /* TODO: Change 'Preset' to something received from the UI */
-        String customOrPreset = "Preset";
         processor = new JSONProcessor();
         processor.parse(dir);
 
@@ -82,7 +80,6 @@ public class Controller {
             dashboardView.toggleDarkMode();
         }
 
-        System.out.println("chocie " + menuScreen.getGameChoice());
         gameScreen.enableGameCSS(menuScreen.getGameChoice());
         setUpHistory();
         setUpPlayers();
@@ -111,8 +108,6 @@ public class Controller {
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
 
-        // TODO: Change "White" to the color that the player chose
-        System.out.println("p1 " + playerOne.getName() + playerOne.getColor());
 
         activePlayer = playerOne;
         if (activePlayer.isCPU()) {

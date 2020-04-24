@@ -77,6 +77,7 @@ public class ConnectFourBoard extends Board implements Serializable {
     public List<Point2D> getValidMoves(Point2D coordinate) {
 
         List<Point2D> validMoves = new ArrayList<>();
+        if (isCellInBounds(coordinate)) return validMoves;
         for (int x = 0; x < width; x++ ){
             for (int y = height - 1; y >=0; y --){
                 if (getPieceAt(y,x) == null){

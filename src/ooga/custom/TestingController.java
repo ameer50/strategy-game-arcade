@@ -36,7 +36,7 @@ public class TestingController {
   public TestingController(Stage stage) {
     startTime = System.currentTimeMillis();
     this.stage = stage;
-    setUpGameScreen("resources/exampleCustom.json");
+    setUpGameScreen("resources/defaultBlack.json");
   }
 
   private void setUpGameScreen(String fileChoice) {
