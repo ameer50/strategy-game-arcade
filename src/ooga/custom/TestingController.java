@@ -20,7 +20,7 @@ import ooga.view.BoardView;
 import ooga.view.GameScreen;
 import ooga.view.PieceView;
 
-public class CustomController {
+public class TestingController {
   private JSONProcessor processor;
   private Board board;
   private GameScreen gameScreen;
@@ -35,10 +35,10 @@ public class CustomController {
   private boolean isCPU = false;
   private long startTime;
 
-  public CustomController(Stage stage) {
+  public TestingController(Stage stage) {
     startTime = System.currentTimeMillis();
     this.stage = stage;
-    setUpGameScreen("exampleCustom.json");
+    setUpGameScreen("resources/exampleCustom.json");
   }
 
   private void setUpGameScreen(String fileChoice) {

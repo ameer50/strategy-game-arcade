@@ -4,6 +4,7 @@
     "Square": 2,
     "Circle": 2
   },
+
   "moves": {
     "compound": {
       "vertical": "up 1 OR down 1",
@@ -23,19 +24,21 @@
       "Circle": "horizontal 2:7"
     }
   },
+
   "locations": {
-    "White_Triangle": "5, 1",
-    "White_Square": "5, 3",
-    "White_Circle": "5, 5",
-    "Black_Triangle": "0, 0",
-    "Black_Square": "0, 2",
-    "Black_Circle": "0, 4"
+    "White_Triangle": ["5, 0", "4, 3"],
+    "White_Square": ["5, 1", "4, 4"],
+    "White_Circle": ["5, 2", "4, 5"],
+    "Black_Triangle": ["1, 0", "0, 3"],
+    "Black_Square": ["1, 1", "0, 4"],
+    "Black_Circle": ["1, 2", "0, 5"]
   },
+
   "settings": {
     "type": "Custom",
     "name": "Custom",
-    "width": 6,
-    "height": 6,
+    "width": "6",
+    "height": "6",
     "bottomColor": "White",
     "icon": "Triangle"
   }
