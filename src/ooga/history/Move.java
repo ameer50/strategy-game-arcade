@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Move {
+public class Move implements Cloneable {
 
     private Piece piece;
     private Point2D startLocation;
@@ -20,7 +20,6 @@ public class Move {
     private boolean isUndo;
     private boolean isPieceGenerated;
     private String color;
-    private String convertPieceName;
 
     public Move(Point2D startLocation, Point2D endLocation) {
         this.startLocation = startLocation;
@@ -32,16 +31,31 @@ public class Move {
     }
 
     public Move getReverseMove() {
-        Move reverseMove = new Move(endLocation, startLocation);
-        reverseMove.setUndo(true);
-        reverseMove.setConvertedPiecesAndLocations(convertedPiecesAndLocations);
-        return reverseMove;
+        try {
+            Move reverseMove = (Move) this.clone();
+            reverseMove.setStartLocation(endLocation);
+            reverseMove.setEndLocation(startLocation);
+            reverseMove.setUndo(true);
+            return reverseMove;
+        } catch (CloneNotSupportedException e) {
+            System.out.println("Cannot get reverse move.");
+            return null;
+        }
     }
 
     public Point2D getStartLocation() {
         return (Point2D) startLocation.clone();
     }
+
+    public void setStartLocation(Point2D location) {
+        startLocation = (Point2D) location.clone();
+    }
+
     public Point2D getEndLocation() { return (Point2D) endLocation.clone(); }
+
+    public void setEndLocation(Point2D location) {
+        endLocation = (Point2D) location.clone();
+    }
 
     /* TODO: replace instances of the above with instances of the below */
     public int getStartX() { return (int) startLocation.getX(); }
@@ -77,10 +91,6 @@ public class Move {
 
     public Map<Point2D, Pair<Piece, Piece>> getConvertedPiecesAndLocations() {
         return convertedPiecesAndLocations;
-    }
-
-    private void setConvertedPiecesAndLocations(Map<Point2D, Pair<Piece, Piece>> convertedPiecesAndLocations) {
-        this.convertedPiecesAndLocations = convertedPiecesAndLocations;
     }
 
     public Piece getPiece() {

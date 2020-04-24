@@ -57,4 +57,8 @@ public class Popup {
     public void closePopup(){
         stage.close();
     }
+
+    public void setPopupStageTitle(String title){
+        stage.setTitle(title);
+    }
 }

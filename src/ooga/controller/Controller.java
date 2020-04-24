@@ -18,7 +18,6 @@ import ooga.view.*;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
-import java.util.List;
 import java.util.Map;
 
 public class Controller {
@@ -54,6 +53,7 @@ public class Controller {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
+
         menuScreen.setGameButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
@@ -64,6 +64,7 @@ public class Controller {
         String customOrPreset = "Preset";
         processor = new JSONProcessor();
         processor.parse(dir);
+
         gameType = new StringUtility().capitalize(gameType);
         instantiateBoard(gameType);
 
@@ -74,12 +75,14 @@ public class Controller {
             menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
         dashboardView.addIcons(boardView.getIcons());
+        board.addPlayerIcons(menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
 
         if (menuScreen.isDarkMode()){
             gameScreen.toggleGameDarkMode();
             dashboardView.toggleDarkMode();
         }
 
+        System.out.println("chocie " + menuScreen.getGameChoice());
         gameScreen.enableGameCSS(menuScreen.getGameChoice());
         setUpHistory();
         setUpPlayers();
@@ -102,15 +105,20 @@ public class Controller {
         if (!menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            // TODO: Determine the StrategyType dynamically.
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.ALPHA_BETA);
+            String strategyType = menuScreen.getStrategyType();
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.valueOf(strategyType));
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
 
         // TODO: Change "White" to the color that the player chose
-        activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
-        if (activePlayer.isCPU()) doCPUMove();
+        System.out.println("p1 " + playerOne.getName() + playerOne.getColor());
+
+        activePlayer = playerOne;
+        if (activePlayer.isCPU()) {
+            doCPUMove();
+            toggleActivePlayer();
+        }
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
@@ -121,19 +129,12 @@ public class Controller {
     }
 
     private void setListeners() {
-        setBoardListeners();
         setBoardViewListeners();
         setDashboardViewListeners();
     }
 
-    private void setBoardListeners() {
-        board.setOnPiecePromoted((coordinate) -> {
-            boardView.getCellAt(coordinate).setPieceView(new PieceView(board.getPieceAt(coordinate).getFullName()));
-        });
-    }
-
     private void setBoardViewListeners() {
-        boardView.setOnPieceClicked((coordinate) -> {
+        boardView.setOnPieceClicked(coordinate -> {
             PieceView pieceView = boardView.getCellAt(coordinate).getPieceView();
             if (pieceView.getColor().equals(activePlayer.getColor())) {
                 boardView.setSelectedLocation(coordinate);
@@ -141,7 +142,7 @@ public class Controller {
             }
         });
 
-        boardView.setOnMoveClicked((endLocation) -> {
+        boardView.setOnMoveClicked(endLocation -> {
             Point2D startLocation = boardView.getSelectedLocation();
             Move move = new Move(startLocation, endLocation);
             doMove(move);
@@ -163,42 +164,50 @@ public class Controller {
     }
 
     private void setDashboardViewListeners() {
-        dashboardView.setUndoMoveClicked((e) -> {
-            Move prevMove = history.undo();
-            historyList.remove(historyList.size()-1);
+        dashboardView.setUndoMoveClicked(e -> {
+            toggleActivePlayer();
 
+            Move prevMove = history.undo();
+            historyList.remove(historyList.size() - 1);
             Move reverseMove = prevMove.getReverseMove();
             convertPieces(reverseMove);
             doMove(reverseMove);
 
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
-            toggleActivePlayer();
 
-            replenishCapturedPieces(prevMove);
+            replenishCapturedPieces(reverseMove);
         });
 
-        dashboardView.setRedoMoveClicked((e) -> {
+        dashboardView.setRedoMoveClicked(e -> {
             Move prevMove = history.redo();
             historyList.add(prevMove);
             doMove(prevMove);
             convertPieces(prevMove);
-
             removeCapturedPieces(prevMove);
             boardView.replenishIcon(prevMove);
+
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
         });
 
-        dashboardView.setNewWindowClicked((e) -> {
+        dashboardView.setSaveClicked(e -> {
+            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
+        });
+
+        dashboardView.setSkipTurnClicked(e -> {
+            toggleActivePlayer();
+            if (activePlayer.isCPU()) {
+                doCPUMove();
+                toggleActivePlayer();
+            }
+        });
+
+        dashboardView.setNewWindowClicked(e -> {
             newWindow();
         });
 
-        dashboardView.setQuitClicked((e) -> {
+        dashboardView.setReturnToMenuClicked(e -> {
             setUpMenu();
-        });
-
-        dashboardView.setSaveClicked((e) -> {
-            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
         });
     }
 
@@ -206,7 +215,7 @@ public class Controller {
         String winner = board.checkWon();
         if (winner != null) {
             dashboardView.setWinner(winner);
-            dashboardView.setUpWinnerStage();
+            dashboardView.setUpWinnerPopup();
         }
     }
 
@@ -220,22 +229,22 @@ public class Controller {
         Map<Point2D, Piece> map = prevMove.getCapturedPiecesAndLocations();
         for (Point2D capturedPieceLocation: map.keySet()) {
             Piece capturedPiece = map.get(capturedPieceLocation);
-            board.putPieceAt(capturedPieceLocation, capturedPiece);
-            activePlayer.addToScore(-capturedPiece.getValue());
-            PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-            boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
+            insertPiece(capturedPiece, capturedPieceLocation);
         }
     }
 
     private void convertPieces(Move m) {
         Map<Point2D, Pair<Piece, Piece>> map = m.getConvertedPiecesAndLocations();
-
         for (Point2D convertedPieceLocation: map.keySet()) {
             Piece convertedPiece = m.isUndo() ? map.get(convertedPieceLocation).getKey() : map.get(convertedPieceLocation).getValue();
-            board.putPieceAt(convertedPieceLocation, convertedPiece);
-            PieceView convertedPieceView = new PieceView(convertedPiece.getFullName());
-            boardView.getCellAt(convertedPieceLocation).setPieceView(convertedPieceView);
+            insertPiece(convertedPiece, convertedPieceLocation);
         }
+    }
+
+    private void insertPiece(Piece piece, Point2D location) {
+        board.putPieceAt(location, piece);
+        PieceView pieceView = new PieceView(piece.getFullName());
+        boardView.getCellAt(location).setPieceView(pieceView);
     }
 
 
@@ -252,6 +261,10 @@ public class Controller {
         Move m = new Move(startLocation, endLocation);
 
         doMove(m);
+        convertPieces(m);
+        removeCapturedPieces(m);
+        boardView.replenishIcon(m);
+
         history.addMove(m);
         historyList.add(m);
         dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());

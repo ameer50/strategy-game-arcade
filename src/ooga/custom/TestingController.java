@@ -1,14 +1,12 @@
 package ooga.custom;
 
 import java.awt.geom.Point2D;
-import java.util.List;
-import java.util.Map;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.CustomBoard;
-import ooga.board.Piece;
 import ooga.controller.Controller.StrategyType;
 import ooga.history.History;
 import ooga.history.Move;
@@ -147,7 +145,7 @@ public class TestingController {
       toggleActivePlayer();
     });
 
-    gameScreen.getDashboardView().setQuitClicked((e) -> {
+    gameScreen.getDashboardView().setReturnToMenuClicked((e) -> {
       // FIXME: restore this later
       // setUpMenu();
     });

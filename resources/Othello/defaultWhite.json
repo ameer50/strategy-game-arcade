@@ -5,21 +5,21 @@
     "height": "8",
     "width": "8",
     "bottomColor": "White",
-    "icon": "Coin"
+    "icon": "Othello"
   },
 
   "locations": {
-    "White_Coin": ["3, 3", "4, 4"],
-    "Black_Coin": ["3, 4", "4, 3"]
+    "White_Othello": ["3, 3", "4, 4"],
+    "Black_Othello": ["3, 4", "4, 3"]
   },
 
   "scores": {
-    "Coin": 5
+    "Othello": 5
   },
 
   "moves": {
     "pieces" : {
-      "Coin": "LATERAL -1"
+      "Othello": "LATERAL -1"
     }
   }
 }

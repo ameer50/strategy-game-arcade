@@ -115,7 +115,7 @@ public class JSONProcessor {
       addToPieceMoves(moves.get(PIECES));
       for (String piece: pieceMoveNodes.keySet()) {
         pieceMovePatterns.put(piece, pieceMoveNodes.get(piece).toString());
-        System.out.println(String.format("put %s : %s", piece, pieceMoveNodes.get(piece).toString()));
+        // System.out.println(String.format("put %s : %s", piece, pieceMoveNodes.get(piece).toString()));
       }
     }
   }
@@ -216,8 +216,8 @@ public class JSONProcessor {
     BiMap<Point2D, Piece> pieceBiMap = board.getPieceBiMap();
     Map locations = new LinkedHashMap();
     for (Point2D point : pieceBiMap.keySet()) {
-      String piece = pieceBiMap.get(point).getFullName();
-      locations.put(piece, String.format("%d, %d", (int) point.getX(), (int) point.getY()));
+        String piece = pieceBiMap.get(point).getFullName();
+        locations.put(piece, String.format("%d, %d", (int) point.getX(), (int) point.getY()));
     }
     jo.put("locations", locations);
 
