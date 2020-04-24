@@ -25,7 +25,7 @@ public class Piece implements Serializable {
     this.moves = 0;
 
     displacements = new ArrayList<>();
-      if (pattern.length() > 2 && pattern.substring(0, 2).contains("(")) {
+      if (pattern != null && pattern.length() > 2 && pattern.substring(0, 2).contains("(")) {
         for (String pointStr : pattern.split("[)], ")) {
           pointStr = pointStr.substring(1);
           // System.out.println(pointStr);
