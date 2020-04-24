@@ -11,12 +11,13 @@ import ooga.history.Move;
 
 public class CustomBoard extends Board {
 
-  public CustomBoard(int width, int height, Map<String, String> settings, Map<Point2D, String> locations,
-      Map<String, MoveNode> pieceMoves, Map<String, Integer> pieceScores) {
-    super(width, height, settings, locations, pieceMoves, pieceScores);
+  public CustomBoard(Map<String, String> settings, Map<Point2D, String> locations,
+      Map<String, String> movePatterns, Map<String, Integer> pieceScores) {
+      super(settings, locations, movePatterns, pieceScores);
   }
 
   public String checkWon() {
+    // TODO: check for sides of the board with no more pieces
     return null;
   }
 
