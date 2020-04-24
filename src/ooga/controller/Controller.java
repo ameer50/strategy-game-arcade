@@ -93,7 +93,7 @@ public class Controller {
             board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
                 processor.getPieceMovePatterns(), processor.getPieceScores());
         } catch (Exception e) {
-            System.out.println("Could not find game.");
+            new DisplayError("Could not find game");
         }
     }
 
@@ -273,7 +273,7 @@ public class Controller {
             try {
                 newSimulation.start(newStage);
             } catch (NullPointerException e) {
-                System.out.println("Null.");
+                new DisplayError("No simulation created");
             }
         }));
         thread.start();

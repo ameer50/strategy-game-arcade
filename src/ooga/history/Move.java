@@ -2,6 +2,7 @@ package ooga.history;
 
 import javafx.util.Pair;
 import ooga.board.Piece;
+import ooga.view.DisplayError;
 import ooga.view.PieceView;
 
 import java.awt.geom.Point2D;
@@ -38,7 +39,7 @@ public class Move implements Cloneable {
             reverseMove.setUndo(true);
             return reverseMove;
         } catch (CloneNotSupportedException e) {
-            System.out.println("Cannot get reverse move.");
+            new DisplayError("Cannot get reverse move!");
             return null;
         }
     }

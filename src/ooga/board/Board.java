@@ -17,6 +17,7 @@ import ooga.ProcessCoordinateInterface;
 import ooga.custom.MoveNode;
 import ooga.history.Move;
 import ooga.utility.CopyUtility;
+import ooga.view.DisplayError;
 
 public abstract class Board implements Serializable {
 
@@ -252,10 +253,8 @@ public abstract class Board implements Serializable {
           Map.class, Map.class);
       Board copy = constructor.newInstance(settingsCopy, locationsCopy, pieceMovePatternsCopy, pieceScoresCopy);
       return copy;
-    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
-        InvocationTargetException e) {
-      e.printStackTrace();
-      System.out.println("Copy (Preset Board) went wrong");
+    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
+      new DisplayError("Copy (Preset Board) went wrong");
     }
     return null;
   }
