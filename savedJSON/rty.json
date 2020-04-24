@@ -1,5 +1,0 @@
-{"settings":{"name":"Checkers","width":"8","icon":"Coin","height":"8","bottomColor":"Red"},
-
-  "scores":{"Coin":1,"King":3},"moves":{"pieces":{"Coin":"P1 1","King":"KING 1"}},
-
-  "locations":{"Black_Coin":"3, 2","Red_Coin":"4, 5"}}

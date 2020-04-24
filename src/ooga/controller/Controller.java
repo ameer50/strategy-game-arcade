@@ -222,7 +222,7 @@ public class Controller {
         String winner = board.checkWon();
         if (winner != null) {
             dashboardView.setWinner(winner);
-            dashboardView.setUpWinnerStage();
+            dashboardView.setUpWinnerPopup();
         }
     }
 

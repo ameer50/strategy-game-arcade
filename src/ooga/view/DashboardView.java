@@ -2,20 +2,16 @@ package ooga.view;
 
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 import ooga.history.Move;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -40,9 +36,9 @@ public class DashboardView {
     public static final String GPANE_STYLE = "gpane";
     public static final String TURN = "Turn: ";
     public static final String ACTIVE_PLAYER_BOX_STYLE = "scoreshbox";
-    public static final String FILE_ENTER_TITLE = "FileEnterTitle";
-    public static final int FILE_STAGE_HEIGHT = 500;
-    public static final int FILE_STAGE_WIDTH = 500;
+    public static final String FILE_ENTER_TITLE = "Enter File Name";
+    public static final int POPUP_STAGE_HEIGHT = 500;
+    public static final int POPUP_STAGE_WIDTH = 500;
     public static final String ENTER_JSON_FILENAME = "Enter JSON Filename:";
     public static final String SAVE_FILE_STYLE = "savefile";
     public static final int FILE_SAVE_TEXT_FIELD_MAX_WIDTH = 200;
@@ -50,13 +46,11 @@ public class DashboardView {
     public static final String GO = "Go!";
     public static final String SETTINGS_BUTTONS = "SettingsButtons";
     public static final String WINNER = "Winner!";
-    public static final int WINNER_POP_UP_HEIGHT = 500;
-    public static final int WINNER_POP_UP_WIDTH = 500;
     public static final String WINNER_TEXT = "The winner is: ";
     public static final String PREFER = "prefer";
     public static final String QUIT = "Quit";
     public static final String VBOX = "vbox";
-    public static final String SAVED_JSON_PATH = "savedJSON/%s.json";
+    public static final String SAVED_JSON_PATH = "JSON_PATH";
     public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
     public static final String SKIP_TURN = "Skip Turn";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
@@ -85,7 +79,6 @@ public class DashboardView {
     private Button undoButton;
     private Button redoButton;
     private String popupStyle;
-    private Popup saveGamePopupScreen;
 
     public DashboardView() {
         displayBox = new VBox();
@@ -188,8 +181,7 @@ public class DashboardView {
     private void setUpSaveGameButton() {
         Button saveGame = auxiliaryButtons.getButtons().get(2);
         saveGame.setOnAction(e -> {
-            System.out.println("save game");
-            setUpSaveFileStage(saveFunction);
+            setUpSaveFilePopup(saveFunction);
         });
     }
 
@@ -247,9 +239,10 @@ public class DashboardView {
         }
     }
 
-    public void setUpSaveFileStage(EventHandler<ActionEvent> event) {
-        Popup pop = new Popup(FILE_STAGE_WIDTH, FILE_STAGE_HEIGHT, popupStyle);
+    public void setUpSaveFilePopup(EventHandler<ActionEvent> event) {
+        Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
         pop.getNewPopup();
+        pop.setPopupStageTitle(FILE_ENTER_TITLE);
 
         Text prefer = new Text();
         prefer.setText(ENTER_JSON_FILENAME);
@@ -265,81 +258,33 @@ public class DashboardView {
 
         textFieldBox.getChildren().addAll(prefer, textField, goButton);
         textFieldBox.setAlignment(Pos.CENTER);
-        //fileRoot.setCenter(textFieldBox);
 
         goButton.setOnAction(e -> {
             setNewFileName(textField.getText());
             pop.closePopup();
             event.handle(e);
         });
-
-
-//        Stage fileNameStage = new Stage();
-//        fileNameStage.setTitle(res.getString(FILE_ENTER_TITLE));
-//        fileNameStage.setHeight(FILE_STAGE_HEIGHT);
-//        fileNameStage.setWidth(FILE_STAGE_WIDTH);
-//        BorderPane fileRoot = new BorderPane();
-//        Scene settingsScene = new Scene(fileRoot);
-//        settingsScene.getStylesheets().add(popupStyle);
-//        fileNameStage.setScene(settingsScene);
-//        fileNameStage.show();
-//        createSaveFilePopUp(fileNameStage, fileRoot, e);
     }
 
-    private void createSaveFilePopUp(Stage settingsStage, BorderPane fileRoot, EventHandler<ActionEvent> event) {
-        Text prefer = new Text();
-        prefer.setText(ENTER_JSON_FILENAME);
-        prefer.getStyleClass().add(SAVE_FILE_STYLE);
+    public void setUpWinnerPopup() {
+        Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
+        pop.getNewPopup();
+        pop.setPopupStageTitle(WINNER);
 
-        TextField textField = new TextField();
-        textField.setMaxWidth(FILE_SAVE_TEXT_FIELD_MAX_WIDTH);
-        textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
-        VBox textFieldBox = new VBox();
-
-        Button goButton = new Button(GO);
-        goButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
-
-        textFieldBox.getChildren().addAll(prefer, textField, goButton);
-        textFieldBox.setAlignment(Pos.CENTER);
-        //fileRoot.setCenter(textFieldBox);
-
-        goButton.setOnAction(e -> {
-            setNewFileName(textField.getText());
-            saveGamePopupScreen.closePopup();
-            event.handle(e);
-        });
-
-    }
-
-    public void setUpWinnerStage() {
-        Stage winnerPopUpStage = new Stage();
-        winnerPopUpStage.setTitle(WINNER);
-        winnerPopUpStage.setHeight(WINNER_POP_UP_HEIGHT);
-        winnerPopUpStage.setWidth(WINNER_POP_UP_WIDTH);
-        BorderPane pane = new BorderPane();
-        Scene settingsScene = new Scene(pane);
-        settingsScene.getStylesheets().add(popupStyle);
-        winnerPopUpStage.setScene(settingsScene);
-        winnerPopUpStage.show();
-        createWinnerPopUp(winnerPopUpStage, pane);
-    }
-
-    private void createWinnerPopUp(Stage settingsStage, BorderPane fileRoot) {
         Text prefer = new Text();
         prefer.setText(WINNER_TEXT + winner);
         prefer.getStyleClass().add(PREFER);
 
-        VBox textFieldBox = new VBox();
+        VBox textFieldBox = pop.getButtonBox();
 
         Button quitButton = new Button(QUIT);
         quitButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
         textFieldBox.getChildren().addAll(prefer, quitButton);
 
         textFieldBox.getStyleClass().add(VBOX);
-        fileRoot.setCenter(textFieldBox);
 
         quitButton.setOnAction(e -> {
-            settingsStage.close();
+            pop.closePopup();
             returnToMenuFunction.handle(e);
         });
     }
@@ -382,7 +327,7 @@ public class DashboardView {
     }
 
     private void setNewFileName(String str){
-        newFileName = String.format(SAVED_JSON_PATH, str);
+        newFileName = String.format(res.getString(SAVED_JSON_PATH), str);
     }
     
     public void setWinner(String winner){
