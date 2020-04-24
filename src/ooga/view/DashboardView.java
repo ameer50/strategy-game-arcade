@@ -2,6 +2,7 @@ package ooga.view;
 
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
@@ -57,6 +58,7 @@ public class DashboardView {
     public static final String VBOX = "vbox";
     public static final String SAVED_XML_PATH = "savedXML/%s.xml";
     public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
+    public static final String SKIP_TURN = "Skip Turn";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private VBox displayBox;
     private Text playerOneName;
@@ -74,8 +76,9 @@ public class DashboardView {
     private HBox historyBox;
     private EventHandler<ActionEvent> undoMoveFunction;
     private EventHandler<ActionEvent> redoMoveFunction;
-    private EventHandler<ActionEvent> quitFunction;
+    private EventHandler<ActionEvent> returnToMenuFunction;
     private EventHandler<ActionEvent> saveFunction;
+    private EventHandler<ActionEvent> skipTurnFunction;
     private EventHandler<ActionEvent> newWindowFunction;
     private String newFileName;
     private String winner;
@@ -147,12 +150,12 @@ public class DashboardView {
 
     private void createAuxiliaryButtonPane() {
         auxiliaryButtonPane = new GridPane();
-        auxiliaryButtons = new ButtonGroup(List.of(UNDO, REDO, SAVE_GAME, RETURN_TO_MENU, NEW_WINDOW));
+        auxiliaryButtons = new ButtonGroup(List.of(UNDO, REDO, SAVE_GAME, SKIP_TURN, NEW_WINDOW, RETURN_TO_MENU));
         auxiliaryButtons.addStyle(res.getString(AUXILIARY_BUTTON_STYLE));
         HBox buttonBox = new HBox();
         buttonBox.getChildren().addAll(auxiliaryButtons.getButtons());
 
-        int[] position = {0, 0, 1, 0, 0, 1, 1, 1, 0, 2};
+        int[] position = {0, 0, 1, 0, 0, 1, 1, 1, 0, 2, 1, 2};
         int i = 0;
         for(Button b: auxiliaryButtons.getButtons()){
             addGPaneElement(b, position[i++], position[i++]);
@@ -162,8 +165,9 @@ public class DashboardView {
 
         setUpUndoRedoButtons();
         setUpSaveGameButton();
-        setUpQuitGameButton();
+        setUpSkipTurnButton();
         setUpNewWindowButton();
+        setUpReturnToMenuButton();
     }
 
     private void setUpUndoRedoButtons() {
@@ -188,10 +192,10 @@ public class DashboardView {
         });
     }
 
-    private void setUpQuitGameButton() {
-        Button quitGame = auxiliaryButtons.getButtons().get(3);
-        quitGame.setOnAction(e -> {
-            quitFunction.handle(e);
+    private void setUpSkipTurnButton() {
+        Button skipTurnButton = auxiliaryButtons.getButtons().get(3);
+        skipTurnButton.setOnAction(e -> {
+            skipTurnFunction.handle(e);
         });
     }
 
@@ -199,6 +203,13 @@ public class DashboardView {
         Button newWindow = auxiliaryButtons.getButtons().get(4);
         newWindow.setOnAction(e -> {
             newWindowFunction.handle(e);
+        });
+    }
+
+    private void setUpReturnToMenuButton() {
+        Button quitGame = auxiliaryButtons.getButtons().get(5);
+        quitGame.setOnAction(e -> {
+            returnToMenuFunction.handle(e);
         });
     }
 
@@ -302,7 +313,7 @@ public class DashboardView {
 
         quitButton.setOnAction(e -> {
             settingsStage.close();
-            quitFunction.handle(e);
+            returnToMenuFunction.handle(e);
         });
     }
 
@@ -323,17 +334,20 @@ public class DashboardView {
         redoButton.setDisable(redoDisabled);
     }
 
-    public void setQuitClicked(EventHandler<ActionEvent> quit) {
-        quitFunction = quit;
+    public void setReturnToMenuClicked(EventHandler<ActionEvent> quit) {
+        returnToMenuFunction = quit;
     }
 
     public void setNewWindowClicked(EventHandler<ActionEvent> newWindow) {
         newWindowFunction = newWindow;
     }
 
-
     public void setSaveClicked(EventHandler<ActionEvent> save) {
         saveFunction = save;
+    }
+
+    public void setSkipTurnClicked(EventHandler<ActionEvent> skipTurn) {
+        skipTurnFunction = skipTurn;
     }
 
     public String getNewFileName(){

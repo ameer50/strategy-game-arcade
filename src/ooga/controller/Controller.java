@@ -18,7 +18,6 @@ import ooga.view.*;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
-import java.util.List;
 import java.util.Map;
 
 public class Controller {
@@ -195,16 +194,24 @@ public class Controller {
             toggleActivePlayer();
         });
 
+        dashboardView.setSaveClicked(e -> {
+            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
+        });
+
+        dashboardView.setSkipTurnClicked(e -> {
+            toggleActivePlayer();
+            if (activePlayer.isCPU()) {
+                doCPUMove();
+                toggleActivePlayer();
+            }
+        });
+
         dashboardView.setNewWindowClicked(e -> {
             newWindow();
         });
 
-        dashboardView.setQuitClicked(e -> {
+        dashboardView.setReturnToMenuClicked(e -> {
             setUpMenu();
-        });
-
-        dashboardView.setSaveClicked(e -> {
-            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
         });
     }
 
