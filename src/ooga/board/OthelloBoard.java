@@ -99,7 +99,7 @@ public class OthelloBoard extends Board implements Serializable {
             List<Point2D> pieceTrail = moveToPieceTrailMap.getOrDefault(move.getEndLocation(), new ArrayList<>());
             //move.setPromote(true);
 
-            Piece piece = new Piece("Coin", "", 1, move.getColor());
+            Piece piece = new Piece("Othello", "", 1, move.getColor());
             move.setPiece(piece);
             pieceBiMap.forcePut(move.getEndLocation(), piece);
             move.setPieceGenerated(true);

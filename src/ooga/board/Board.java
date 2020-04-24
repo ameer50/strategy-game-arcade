@@ -83,6 +83,7 @@ public abstract class Board implements Serializable {
       String pieceName = pieceArr[1];
 
       if (pieceMovePatterns != null) {
+        System.out.println("pieceName = " + pieceName);
         int score = pieceScores.get(pieceName);
         String pattern = pieceMovePatterns.get(pieceName);
         Piece piece = new Piece(pieceName, pattern, score, pieceColor);
@@ -296,6 +297,7 @@ public abstract class Board implements Serializable {
       return copy;
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
         InvocationTargetException e) {
+      e.printStackTrace();
       System.out.println("Copy (Preset Board) went wrong");
     }
     return null;
