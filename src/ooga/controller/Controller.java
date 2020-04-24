@@ -169,17 +169,17 @@ public class Controller {
 
     private void setDashboardViewListeners() {
         dashboardView.setUndoMoveClicked(e -> {
-            Move prevMove = history.undo();
-            historyList.remove(historyList.size()-1);
+            toggleActivePlayer();
 
+            Move prevMove = history.undo();
+            historyList.remove(historyList.size() - 1);
             Move reverseMove = prevMove.getReverseMove();
             convertPieces(reverseMove);
             doMove(reverseMove);
 
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
-            toggleActivePlayer();
 
-            replenishCapturedPieces(prevMove);
+            replenishCapturedPieces(reverseMove);
         });
 
         dashboardView.setRedoMoveClicked(e -> {
@@ -233,10 +233,7 @@ public class Controller {
         Map<Point2D, Piece> map = prevMove.getCapturedPiecesAndLocations();
         for (Point2D capturedPieceLocation: map.keySet()) {
             Piece capturedPiece = map.get(capturedPieceLocation);
-            board.putPieceAt(capturedPieceLocation, capturedPiece);
-            activePlayer.addToScore(-capturedPiece.getValue());
-            PieceView capturedPieceView = new PieceView(capturedPiece.getFullName());
-            boardView.getCellAt(capturedPieceLocation).setPieceView(capturedPieceView);
+            insertPiece(capturedPiece, capturedPieceLocation);
         }
     }
 
@@ -244,10 +241,14 @@ public class Controller {
         Map<Point2D, Pair<Piece, Piece>> map = m.getConvertedPiecesAndLocations();
         for (Point2D convertedPieceLocation: map.keySet()) {
             Piece convertedPiece = m.isUndo() ? map.get(convertedPieceLocation).getKey() : map.get(convertedPieceLocation).getValue();
-            board.putPieceAt(convertedPieceLocation, convertedPiece);
-            PieceView convertedPieceView = new PieceView(convertedPiece.getFullName());
-            boardView.getCellAt(convertedPieceLocation).setPieceView(convertedPieceView);
+            insertPiece(convertedPiece, convertedPieceLocation);
         }
+    }
+
+    private void insertPiece(Piece piece, Point2D location) {
+        board.putPieceAt(location, piece);
+        PieceView pieceView = new PieceView(piece.getFullName());
+        boardView.getCellAt(location).setPieceView(pieceView);
     }
 
 
@@ -264,10 +265,13 @@ public class Controller {
         Move m = new Move(startLocation, endLocation);
 
         doMove(m);
+        convertPieces(m);
+        removeCapturedPieces(m);
+        boardView.replenishIcon(m);
+
         history.addMove(m);
         historyList.add(m);
         dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
-        boardView.replenishIcon(m);
     }
 
     private void doMove(Move move) {

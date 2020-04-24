@@ -25,7 +25,7 @@ public abstract class Player {
         m.setColor(color);
         board.doMove(m);
         for (Piece capturedPiece: m.getCapturedPiecesAndLocations().values()) {
-            addToScore(capturedPiece.getValue());
+            addToScore(m.isUndo() ? -capturedPiece.getValue() : capturedPiece.getValue());
         }
 
         //TODO: change score for converted pieces
