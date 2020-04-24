@@ -51,7 +51,6 @@ public class OthelloBoard extends Board implements Serializable {
     }
 
     private boolean piecesMatch(int x1, int y1, int x2, int y2) {
-        System.out.println(String.format("%d %d %d %d", x1, y1, x2, y2));
         return getPieceAt(x1, y1).getColor().equals(getPieceAt(x2, y2).getColor());
     }
 

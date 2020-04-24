@@ -70,7 +70,6 @@ public class GameScreen {
     public void enableGameCSS(String cssStyle) {
         if (!isDarkMode){
             scene.getStylesheets().remove(gameStyle);
-            System.out.println(cssStyle + STYLE_SHEET);
             gameStyle = res.getString(cssStyle + STYLE_SHEET);
             scene.getStylesheets().add(gameStyle);
         }
