@@ -25,14 +25,15 @@ import org.json.simple.parser.ParseException;
 
 public class JSONProcessor {
 
-  public JSONProcessor() {
-    settings = new HashMap<>();
-    pieceLocations = new HashMap<>();
-    pieceMoveNodes = new HashMap<>();
-    pieceMovePatterns = new HashMap<>();
-    pieceScores = new HashMap<>();
-  }
-
+  public static final String SETTINGS = "settings";
+  public static final String NAME = "name";
+  public static final String MOVES = "moves";
+  public static final String PIECES = "pieces";
+  public static final String BASIC = "basic";
+  public static final String COMPOUND = "compound";
+  public static final String LOCATIONS = "locations";
+  public static final String SCORES = "scores";
+  public static final String CUSTOM = "CUSTOM";
   public static final String ERROR_MSG = "Error parsing JSON.";
   public static final String AND = " AND ";
   public static final String OR = " OR ";
@@ -47,27 +48,22 @@ public class JSONProcessor {
   protected Map<String, Integer> pieceScores;
   protected JSONObject jo;
 
-  public String getName() { return name; }
-  public int getWidth() {
-    return Math.toIntExact(Long.parseLong(settings.get("width")));
+  public JSONProcessor() {
+    settings = new HashMap<>();
+    pieceLocations = new HashMap<>();
+    pieceMoveNodes = new HashMap<>();
+    pieceMovePatterns = new HashMap<>();
+    pieceScores = new HashMap<>();
   }
-  public int getHeight() {
-    return Math.toIntExact(Long.parseLong(settings.get("height")));
-  }
-  public Map<String, String> getSettings() { return Map.copyOf(settings); }
-  public Map<Point2D, String> getPieceLocations() { return Map.copyOf(pieceLocations); }
-  public Map<String, MoveNode> getPieceMoveNodes() { return Map.copyOf(pieceMoveNodes); }
-  public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
-  public Map<String, Integer> getPieceScores() { return Map.copyOf(pieceScores); }
 
-  public void parse(String dir, boolean isCustom) {
+  public void parse(String dir) {
     clearAll();
     try {
       Object obj = new JSONParser().parse(new FileReader(dir));
       jo = (JSONObject) obj;
-      settings = (Map) jo.get("settings");
-      name = settings.get("name");
-      parsePieceMoves(isCustom);
+      settings = (Map) jo.get(SETTINGS);
+      name = settings.get(NAME);
+      parsePieceMoves();
       parsePieceScores();
       parsePieceLocations();
     } catch (ParseException | IOException e) {
@@ -75,8 +71,18 @@ public class JSONProcessor {
     }
   }
 
+  public String getName() { return name; }
+  public int getWidth() { return Math.toIntExact(Long.parseLong(settings.get("width"))); }
+  public int getHeight() {
+    return Math.toIntExact(Long.parseLong(settings.get("height")));
+  }
+  public Map<String, String> getSettings() { return Map.copyOf(settings); }
+  public Map<Point2D, String> getPieceLocations() { return Map.copyOf(pieceLocations); }
+  public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
+  public Map<String, Integer> getPieceScores() { return Map.copyOf(pieceScores); }
+
   private void parsePieceScores() {
-    Map<String, Long> scores = (Map) jo.get("scores");
+    Map<String, Long> scores = (Map) jo.get(SCORES);
     for (String piece: scores.keySet()) {
       Long toInt = scores.get(piece);
       pieceScores.put(piece, Math.toIntExact(toInt));
@@ -84,7 +90,7 @@ public class JSONProcessor {
   }
 
   private void parsePieceLocations() {
-    Map<String, JSONArray> locations = (Map) jo.get("locations");
+    Map<String, JSONArray> locations = (Map) jo.get(LOCATIONS);
     for (String pieceName: locations.keySet()) {
       JSONArray coordinates = locations.get(pieceName);
       for (int i=0; i<coordinates.size(); i++) {
@@ -98,15 +104,19 @@ public class JSONProcessor {
     }
   }
 
-  protected void parsePieceMoves(boolean isCustom) {
-    Map<String, Map<String, String>> moves = (Map) jo.get("moves");
-    pieceMovePatterns = moves.get("pieces");
-    if (isCustom) {
+  protected void parsePieceMoves() {
+    Map<String, Map<String, String>> moves = (Map) jo.get(MOVES);
+    pieceMovePatterns = moves.get(PIECES);
+    if (name.toUpperCase().equals(CUSTOM)) {
       basicMoves = new HashMap<>();
       compoundMoves = new HashMap<>();
-      generateBasicMoves(moves.get("basic"));
-      generateCompoundMoves(moves.get("compound"));
-      addToPieceMoves(moves.get("pieces"));
+      generateBasicMoves(moves.get(BASIC));
+      generateCompoundMoves(moves.get(COMPOUND));
+      addToPieceMoves(moves.get(PIECES));
+      for (String piece: pieceMoveNodes.keySet()) {
+        pieceMovePatterns.put(piece, pieceMoveNodes.get(piece).toString());
+        // System.out.println(String.format("put %s : %s", piece, pieceMoveNodes.get(piece).toString()));
+      }
     }
   }
 

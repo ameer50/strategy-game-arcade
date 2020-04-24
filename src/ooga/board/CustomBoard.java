@@ -11,12 +11,13 @@ import ooga.history.Move;
 
 public class CustomBoard extends Board {
 
-  public CustomBoard(int width, int height, Map<String, String> settings, Map<Point2D, String> locations,
-      Map<String, MoveNode> pieceMoves, Map<String, Integer> pieceScores) {
-    super(width, height, settings, locations, pieceMoves, pieceScores);
+  public CustomBoard(Map<String, String> settings, Map<Point2D, String> locations,
+      Map<String, String> movePatterns, Map<String, Integer> pieceScores) {
+      super(settings, locations, movePatterns, pieceScores);
   }
 
   public String checkWon() {
+    // TODO: check for sides of the board with no more pieces
     return null;
   }
 
@@ -46,8 +47,8 @@ public class CustomBoard extends Board {
 
     Point2DUtility utility = new Point2DUtility();
     List<Point2D> displacements = piece.getDisplacements();
-    List<Point2D> originalCoordinates = List.of(coordinate);
-    List<Point2D> displacedCoordinates = utility.concatPointLists(displacements, originalCoordinates);
+    List<Point2D> originalCoordinate = List.of(coordinate);
+    List<Point2D> displacedCoordinates = utility.concatPointLists(displacements, originalCoordinate);
     List<Point2D> validCoordinates = new ArrayList<>();
     for (Point2D point: displacedCoordinates) {
       if (canMoveToPoint(point, piece.getColor())) {
@@ -59,14 +60,9 @@ public class CustomBoard extends Board {
 
   private boolean canMoveToPoint(Point2D point, String color) {
     Piece pieceAtPoint = getPieceAt(point);
-    if (! isCellInBounds(point)) {
-      return false;
-    } else if (pieceAtPoint==null) {
-      return true;
-    } else if (pieceAtPoint.getColor().equals(color)) {
-      return false;
-    } else {
-      return true;
-    }
+    if (! isCellInBounds(point)) return false;
+    if (pieceAtPoint==null) return true;
+    if (pieceAtPoint.getColor().equals(color)) return false;
+    return true;
   }
 }

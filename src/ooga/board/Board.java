@@ -23,12 +23,11 @@ public abstract class Board implements Serializable {
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
   public static final String BOTTOM_COLOR = "bottomColor";
+  protected Map<String, String> settings;
   public static final String ICON = "icon";
   protected Map<String, String> pieceMovePatterns;
   protected Map<String, Integer> pieceScores;
-  protected Map<String, MoveNode> pieceMoveNodes;
   protected BiMap<Point2D, Piece> pieceBiMap;
-  protected Map<String, String> settings;
   protected int height;
   protected int width;
   protected String bottomColor;
@@ -49,30 +48,13 @@ public abstract class Board implements Serializable {
     this.settings = settings;
     this.pieceMovePatterns = pieceMovePatterns;
     this.pieceScores = pieceScores;
-    this.pieceMoveNodes = null;
-    initializePieces(locations);
-  }
-
-  public Board(int width, int height, Map<String, String> settings, Map<Point2D, String> locations,
-      Map<String, MoveNode> pieceMoveNodes, Map<String, Integer> pieceScores) {
-    this.width = width;
-    this.height = height;
-    bottomColor = settings.get(BOTTOM_COLOR);
-    over = false;
-
-    pieceBiMap = HashBiMap.create();
-    this.settings = null;
-    this.pieceMovePatterns = null;
-    this.pieceMoveNodes = pieceMoveNodes;
-    this.pieceScores = pieceScores;
     initializePieces(locations);
   }
 
   /**
-   * Set up the board from the configuration file (XML or JSON).
+   * Set up the board with the configuration file (JSON).
    **/
   private void initializePieces(Map<Point2D, String> locations) {
-    int id = 0;
     for (Point2D point : locations.keySet()) {
       int x = (int) point.getX();
       int y = (int) point.getY();
@@ -82,36 +64,29 @@ public abstract class Board implements Serializable {
       String pieceColor = pieceArr[0];
       String pieceName = pieceArr[1];
 
-      if (pieceMovePatterns != null) {
-        System.out.println("pieceName = " + pieceName);
-        int score = pieceScores.get(pieceName);
-        String pattern = pieceMovePatterns.get(pieceName);
-        Piece piece = new Piece(pieceName, pattern, score, pieceColor);
-        pieceBiMap.put(new Point2D.Double(x, y), piece);
-      } else {
-        Piece piece = new Piece(pieceName, pieceMoveNodes.get(pieceName),
-            pieceScores.get(pieceName), pieceColor, id);
-        pieceBiMap.put(new Point2D.Double(x, y), piece);
-      }
-      id++;
+      System.out.println("pieceName = " + pieceName);
+      int score = pieceScores.get(pieceName);
+      String pattern = pieceMovePatterns.get(pieceName);
+      Piece piece = new Piece(pieceName, pattern, score, pieceColor);
+      pieceBiMap.put(new Point2D.Double(x, y), piece);
     }
   }
 
   @Override
   public String toString() {
-    String str = "";
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        str += getPieceAt(i, j);
-        if (j != width - 1) {
-          str += ", ";
+    StringBuilder builder = new StringBuilder();
+    for (int i=0; i<height; i++) {
+      for (int j=0; j<width; j++) {
+        builder.append(getPieceAt(i, j));
+        if (j != width-1) {
+          builder.append(", ");
         }
       }
-      if (i != height - 1) {
-        str += "\n";
+      if (i != height-1) {
+        builder.append(", ");
       }
     }
-    return str;
+    return builder.toString();
   }
 
   public void print() {
@@ -120,7 +95,6 @@ public abstract class Board implements Serializable {
 
   /**
    * Get the piece at the specified coordinates.
-   *
    * @return the Piece object at x, y; null if no piece in the cell.
    **/
   public Piece getPieceAt(int i, int j) {
@@ -190,20 +164,14 @@ public abstract class Board implements Serializable {
     return width;
   }
 
-  public void setOnPiecePromoted(ProcessCoordinateInterface promoteAction) {
-    this.promoteAction = promoteAction;
-  }
-
   /**
    * Check the board to see if the game has been completed and a winner has been found.
-   *
    * @return true if there was a winner.
    **/
   public abstract String checkWon();
 
   /**
    * Execute the desired move, represented by a Move object.
-   *
    * @param move the object which will be used to operate on a piece
    * @return the score from completing the move
    **/
@@ -234,8 +202,8 @@ public abstract class Board implements Serializable {
    */
   public List<Move> getPossibleMoves(String color) {
     List<Move> moves = new ArrayList<>();
-    //switch to ArrayList to avoid concurrent modification exception
-    //because getValidMoves modifies pieceBiMap
+    /* switch to ArrayList to avoid concurrent modification exception
+    because getValidMoves modifies pieceBiMap */
     List<Point2D> starts = new ArrayList<>();
     starts.addAll(pieceBiMap.keySet());
     for(Point2D start: starts){
@@ -248,8 +216,6 @@ public abstract class Board implements Serializable {
       }
     }
     return moves;
-    //List<Point2D> possiblePoints = getPointsOfColor(color);
-    //return movesFromPoints(possiblePoints);
   }
 
   private List<List<Integer>> movesFromPoints(List<Point2D> points) {
@@ -267,15 +233,6 @@ public abstract class Board implements Serializable {
   }
 
   public Board getCopy() {
-    /* A test for a non-custom board */
-    if ((settings != null) & (settings.size() != 0)) {
-      return copyNotCustom();
-    } else {
-      return copyCustom();
-    }
-  }
-
-  private Board copyNotCustom() {
     CopyUtility utility = new CopyUtility();
     Map<String, String> settingsCopy = (Map<String, String>) utility.getSerializedCopy(settings);
     Map<String, String> pieceMovePatternsCopy = (Map<String, String>) utility.getSerializedCopy(pieceMovePatterns);
@@ -303,33 +260,24 @@ public abstract class Board implements Serializable {
     return null;
   }
 
-  private Board copyCustom() {
-    /* FIXME: implement */
-    return null;
-  }
+  public void setOnPiecePromoted(ProcessCoordinateInterface promoteAction) { this.promoteAction = promoteAction; }
+  public void setOnPieceCaptured(ProcessCoordinateInterface captureAction) { this.captureAction = captureAction; }
 
   public boolean isGameOver() {
     return over;
   }
-
   public BiMap<Point2D, Piece> getPieceBiMap() {
     return pieceBiMap;
   }
-
-  public void setOnPieceCaptured(ProcessCoordinateInterface captureAction) {
-    this.captureAction = captureAction;
-  }
-
   public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
   public Map<String, Integer> getPieceScores() {
     return Map.copyOf(pieceScores);
   }
 
-
   protected boolean isFull() {
-    for (int i = 0; i < height; i++) {
-      for (int j = 0; j < width; j++) {
-        if (getPieceAt(i,j) == null) {
+    for (int i=0; i<height; i++) {
+      for (int j=0; j<width; j++) {
+        if (getPieceAt(i, j) == null) {
           return false;
         }
       }
