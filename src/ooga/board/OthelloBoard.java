@@ -51,6 +51,7 @@ public class OthelloBoard extends Board implements Serializable {
     }
 
     private boolean piecesMatch(int x1, int y1, int x2, int y2) {
+        System.out.println(String.format("%d %d %d %d", x1, y1, x2, y2));
         return getPieceAt(x1, y1).getColor().equals(getPieceAt(x2, y2).getColor());
     }
 
@@ -61,12 +62,13 @@ public class OthelloBoard extends Board implements Serializable {
         if (firstPass) {
             if (!checkFirstNeighborValid(point, deltaX, deltaY)) return null;
         } else {
+            if (!isCellInBounds(i + deltaX, j + deltaY)) return null;
             pieceTrail.add(point);
 
             // exit condition, if the surrounding cell is empty, then that cell is a valid move, and all pieces to
             // the right of it are added to the pieceTrail
             // Thus, the valid move and its pieceTrail are added to the map
-            if (isCellInBounds(i + deltaX, j + deltaY) && getPieceAt(i + deltaX, j + deltaY) == null) {
+            if (getPieceAt(i + deltaX, j + deltaY) == null) {
                 Point2D validMove = new Point2D.Double(i + deltaX, j + deltaY);
                 addToMap(validMove, pieceTrail);
                 return validMove;
