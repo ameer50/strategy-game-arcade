@@ -75,6 +75,7 @@ public class Controller {
             menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
         dashboardView.addIcons(boardView.getIcons());
+        board.addPlayerIcons(menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
 
         if (menuScreen.isDarkMode()){
             gameScreen.toggleGameDarkMode();
@@ -116,7 +117,10 @@ public class Controller {
 
         // TODO: Change "White" to the color that the player chose
         activePlayer = (playerOne.getColor().equals("White")) ? playerOne : playerTwo;
-        if (activePlayer.isCPU()) doCPUMove();
+        if (activePlayer.isCPU()) {
+            doCPUMove();
+            toggleActivePlayer();
+        }
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
@@ -127,19 +131,12 @@ public class Controller {
     }
 
     private void setListeners() {
-        setBoardListeners();
         setBoardViewListeners();
         setDashboardViewListeners();
     }
 
-    private void setBoardListeners() {
-        board.setOnPiecePromoted((coordinate) -> {
-            boardView.getCellAt(coordinate).setPieceView(new PieceView(board.getPieceAt(coordinate).getFullName()));
-        });
-    }
-
     private void setBoardViewListeners() {
-        boardView.setOnPieceClicked((coordinate) -> {
+        boardView.setOnPieceClicked(coordinate -> {
             PieceView pieceView = boardView.getCellAt(coordinate).getPieceView();
             if (pieceView.getColor().equals(activePlayer.getColor())) {
                 boardView.setSelectedLocation(coordinate);
@@ -147,7 +144,7 @@ public class Controller {
             }
         });
 
-        boardView.setOnMoveClicked((endLocation) -> {
+        boardView.setOnMoveClicked(endLocation -> {
             Point2D startLocation = boardView.getSelectedLocation();
             Move move = new Move(startLocation, endLocation);
             doMove(move);
@@ -169,7 +166,7 @@ public class Controller {
     }
 
     private void setDashboardViewListeners() {
-        dashboardView.setUndoMoveClicked((e) -> {
+        dashboardView.setUndoMoveClicked(e -> {
             Move prevMove = history.undo();
             historyList.remove(historyList.size()-1);
 
@@ -183,27 +180,27 @@ public class Controller {
             replenishCapturedPieces(prevMove);
         });
 
-        dashboardView.setRedoMoveClicked((e) -> {
+        dashboardView.setRedoMoveClicked(e -> {
             Move prevMove = history.redo();
             historyList.add(prevMove);
             doMove(prevMove);
             convertPieces(prevMove);
-
             removeCapturedPieces(prevMove);
             boardView.replenishIcon(prevMove);
+
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
             toggleActivePlayer();
         });
 
-        dashboardView.setNewWindowClicked((e) -> {
+        dashboardView.setNewWindowClicked(e -> {
             newWindow();
         });
 
-        dashboardView.setQuitClicked((e) -> {
+        dashboardView.setQuitClicked(e -> {
             setUpMenu();
         });
 
-        dashboardView.setSaveClicked((e) -> {
+        dashboardView.setSaveClicked(e -> {
             processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
         });
     }
@@ -235,7 +232,6 @@ public class Controller {
 
     private void convertPieces(Move m) {
         Map<Point2D, Pair<Piece, Piece>> map = m.getConvertedPiecesAndLocations();
-
         for (Point2D convertedPieceLocation: map.keySet()) {
             Piece convertedPiece = m.isUndo() ? map.get(convertedPieceLocation).getKey() : map.get(convertedPieceLocation).getValue();
             board.putPieceAt(convertedPieceLocation, convertedPiece);

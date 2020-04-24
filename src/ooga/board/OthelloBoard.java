@@ -105,15 +105,7 @@ public class OthelloBoard extends Board implements Serializable {
                 Piece oldPiece = getPieceAt(point);
                 Piece trailPiece = new Piece(oldPiece.getType(), oldPiece.getMovePattern(),  oldPiece.getValue(), move.getColor());
                 move.addConvertedPiece(new Pair(oldPiece, trailPiece), point);
-
             }
-
-//            for(Point2D point: move.getConvertedPiecesAndLocations().keySet()){
-//                Piece oldPiece = getPieceAt(point);
-//                Piece trailPiece = new Piece(oldPiece.getType(), oldPiece.getMovePattern(),  oldPiece.getValue(), move.getColor());
-//                move.addConvertedPiece(new Pair(oldPiece, trailPiece), point);
-//            }
-
         } else {
             putPieceAt(move.getStartLocation(), null);
         }
@@ -123,16 +115,9 @@ public class OthelloBoard extends Board implements Serializable {
 
     @Override
     public List<Point2D> getValidMoves(Point2D coordinate) {
-
         List<Point2D> validMoves = new ArrayList<>();
-       String clickedPieceColor = "White";
-
-        int x = (int) coordinate.getX();
-        int y = (int) coordinate.getY();
-
-        if(!isCellInBounds(coordinate) && x == width && (y == 0 || y == 1)){
-            clickedPieceColor = (y == 0) ? "White": "Black";
-        }
+        if (isCellInBounds(coordinate)) return validMoves;
+        String clickedPieceColor = pieceBiMap.get(coordinate).getColor();
 
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
@@ -144,10 +129,8 @@ public class OthelloBoard extends Board implements Serializable {
             }
         }
 
-        validMoves = removeDuplicates(validMoves);
+        removeDuplicates(validMoves);
         return validMoves;
-
-
     }
 
     private void addToMap(Point2D validMove, List<Point2D> pieceTrail){
@@ -158,13 +141,9 @@ public class OthelloBoard extends Board implements Serializable {
         }
     }
 
-    private List<Point2D> removeDuplicates(List<Point2D> validMoves){
-        Set<Point2D> set = new LinkedHashSet<>();
-
-        set.addAll(validMoves);
+    private void removeDuplicates(List<Point2D> validMoves){
+        Set<Point2D> set = new LinkedHashSet<>(validMoves);
         validMoves.clear();
         validMoves.addAll(set);
-
-        return validMoves;
     }
 }

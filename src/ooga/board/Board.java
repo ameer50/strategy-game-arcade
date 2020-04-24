@@ -329,5 +329,10 @@ public abstract class Board implements Serializable {
     }
     return true;
   }
+
+  public void addPlayerIcons(String playerOneColor, String playerTwoColor) {
+    pieceBiMap.forcePut(new Point2D.Double(height, 0), new Piece("", "", 0, playerOneColor));
+    pieceBiMap.forcePut(new Point2D.Double(height, 1), new Piece("", "", 0, playerTwoColor));
+  }
 }
 
