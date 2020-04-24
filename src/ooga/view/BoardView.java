@@ -1,7 +1,7 @@
 package ooga.view;
 
 import javafx.scene.layout.StackPane;
-import ooga.ProcessCoordinateInterface;
+import ooga.controller.ProcessCoordinateInterface;
 import ooga.history.Move;
 
 import java.awt.geom.Point2D;

@@ -52,11 +52,11 @@ public class MenuScreen {
     public static final int BACKGROUND_OFFSET = 20;
     public static final String BACKGROUND_STYLE = "picture-background";
     public static final String HBOX = "hbox";
-    public static final String CHESS = "Chess";
-    public static final String CHECKERS = "Checkers";
-    public static final String CONNECT_FOUR = "ConnectFour";
-    public static final String OTHELLO = "Othello";
-    public static final String CUSTOM = "Custom";
+    public static final String CHESS = "chess";
+    public static final String CHECKERS = "checkers";
+    public static final String CONNECT_FOUR = "connect_four";
+    public static final String OTHELLO = "othello";
+    public static final String CUSTOM = "custom";
     public static final String BUTTONS_STYLE = "buttons";
     public static final String ASSIGNED_FILE_PATH = "resources/%s/default%s.json";
     public static final String MENU_DARK_SHEET = "MenuDarkSheet";

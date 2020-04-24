@@ -11,10 +11,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javafx.util.Pair;
-import ooga.ProcessCoordinateInterface;
-import ooga.custom.MoveNode;
+
+import ooga.controller.ProcessCoordinateInterface;
 import ooga.history.Move;
 import ooga.utility.CopyUtility;
 
