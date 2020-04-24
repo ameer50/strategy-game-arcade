@@ -260,6 +260,7 @@ public class Controller {
         history.addMove(m);
         historyList.add(m);
         dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+        boardView.replenishIcon(m);
     }
 
     private void doMove(Move move) {

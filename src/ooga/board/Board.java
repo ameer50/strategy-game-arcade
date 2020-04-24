@@ -23,6 +23,7 @@ public abstract class Board implements Serializable {
   public static final String HEIGHT = "height";
   public static final String WIDTH = "width";
   public static final String BOTTOM_COLOR = "bottomColor";
+  public static final String ICON = "icon";
   protected Map<String, String> pieceMovePatterns;
   protected Map<String, Integer> pieceScores;
   protected Map<String, MoveNode> pieceMoveNodes;
@@ -31,6 +32,7 @@ public abstract class Board implements Serializable {
   protected int height;
   protected int width;
   protected String bottomColor;
+  protected String iconType;
   protected boolean over;
   protected ProcessCoordinateInterface promoteAction;
   protected ProcessCoordinateInterface captureAction;
@@ -40,6 +42,7 @@ public abstract class Board implements Serializable {
     width = Integer.parseInt(settings.get(WIDTH));
     height = Integer.parseInt(settings.get(HEIGHT));
     bottomColor = settings.get(BOTTOM_COLOR);
+    iconType = settings.get(ICON);
     over = false;
 
     pieceBiMap = HashBiMap.create();
@@ -235,6 +238,8 @@ public abstract class Board implements Serializable {
     List<Point2D> starts = new ArrayList<>();
     starts.addAll(pieceBiMap.keySet());
     for(Point2D start: starts){
+      System.out.println("start = " + start);
+      System.out.println("pieceBiMap.get(start) = " + pieceBiMap.get(start));
       if(pieceBiMap.get(start) != null && pieceBiMap.get(start).getColor().equals(color)){
         for (Point2D end : getValidMoves(start)) {
           moves.add(new Move(start, end));
@@ -331,8 +336,10 @@ public abstract class Board implements Serializable {
   }
 
   public void addPlayerIcons(String playerOneColor, String playerTwoColor) {
-    pieceBiMap.forcePut(new Point2D.Double(height, 0), new Piece("", "", 0, playerOneColor));
-    pieceBiMap.forcePut(new Point2D.Double(height, 1), new Piece("", "", 0, playerTwoColor));
+    pieceBiMap.forcePut(new Point2D.Double(height, 0), new Piece(iconType, "", 0, playerOneColor));
+    pieceBiMap.forcePut(new Point2D.Double(height, 1), new Piece(iconType, "", 0, playerTwoColor));
+    System.out.println("playerOneColor = " + playerOneColor);
+    System.out.println("playerTwoColor = " + playerTwoColor);
   }
 }
 

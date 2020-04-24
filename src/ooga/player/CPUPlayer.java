@@ -115,9 +115,8 @@ public class CPUPlayer extends Player {
       return currBoard.getScore(color);
     }
     Board nextBoard = currBoard.getCopy();
-    Point2D startPoint = move.getStartLocation();
-    Point2D endPoint = move.getEndLocation();
-    nextBoard.doMove(new Move(startPoint, endPoint));
+    move.setColor(color);
+    nextBoard.doMove(move);
     int bestValue;
     if (maximizer) {
       bestValue = Integer.MIN_VALUE;
