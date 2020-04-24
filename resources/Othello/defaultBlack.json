@@ -1,0 +1,25 @@
+{
+  "settings": {
+    "type": "preset",
+    "name": "Othello",
+    "height": "8",
+    "width": "8",
+    "bottomColor": "Black",
+    "icon": "Othello"
+  },
+
+  "locations": {
+    "White_Othello": ["3, 4", "4, 3"],
+    "Black_Othello": ["3, 3", "4, 4"]
+  },
+
+  "scores": {
+    "Othello": 5
+  },
+
+  "moves": {
+    "pieces" : {
+      "Othello": "LATERAL -1"
+    }
+  }
+}

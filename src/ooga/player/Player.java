@@ -1,6 +1,7 @@
 package ooga.player;
 
 import javafx.beans.property.*;
+import javafx.util.Pair;
 import ooga.board.Board;
 import ooga.board.Piece;
 import ooga.history.Move;
@@ -28,7 +29,14 @@ public abstract class Player {
             addToScore(m.isUndo() ? -capturedPiece.getValue() : capturedPiece.getValue());
         }
 
-        //TODO: change score for converted pieces
+        // score updating for converted pieces
+
+//        for (Pair<Piece, Piece> convertedPiece: m.getConvertedPiecesAndLocations().values()) {
+//            Piece oldPiece = convertedPiece.getKey();
+//            Piece newPiece = convertedPiece.getValue();
+//            addToScore(m.isUndo() ? -newPiece.getValue() : newPiece.getValue());
+//        }
+
     }
 
     public void addToScore(int amount) {
