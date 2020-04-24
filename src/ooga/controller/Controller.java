@@ -110,15 +110,8 @@ public class Controller {
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
-
-        // TODO: Change "White" to the color that the player chose
-        System.out.println("p1 " + playerOne.getName() + playerOne.getColor());
-
+        
         activePlayer = playerOne;
-        if (activePlayer.isCPU()) {
-            doCPUMove();
-            toggleActivePlayer();
-        }
         gameScreen.getDashboardView().setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
