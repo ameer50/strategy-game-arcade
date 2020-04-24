@@ -35,8 +35,8 @@ public class MenuScreen {
     public static final String PLAYER_ONE_COLOR_PROMPT = "Player One Color: ";
     public static final String PLAYERNAME = "playername";
     public static final String ENTER_PLAYER_NAMES = "Enter Player Name(s)";
-    public static final String PLAYER_ONE = "Player One";
-    public static final String PLAYER_TWO = "Player Two";
+    public static final String PLAYER_ONE = "Player 1";
+    public static final String PLAYER_TWO = "Player 2";
     public static final String FILE_TEXT_FIELD = "file-text-field";
     public static final int PLAYER_TEXT_MAX_WIDTH = 200;
     public static final String VBOX = "vbox";
@@ -52,11 +52,11 @@ public class MenuScreen {
     public static final int BACKGROUND_OFFSET = 20;
     public static final String BACKGROUND_STYLE = "picture-background";
     public static final String HBOX = "hbox";
-    public static final String CHESS = "chess";
+    public static final String CHESS = "Chess";
     public static final String CHECKERS = "Checkers";
     public static final String CONNECT_FOUR = "ConnectFour";
-    public static final String OTHELLO = "othello";
-    public static final String CUSTOM = "custom";
+    public static final String OTHELLO = "Othello";
+    public static final String CUSTOM = "Custom";
     public static final String BUTTONS_STYLE = "buttons";
     public static final String ASSIGNED_FILE_PATH = "resources/%s/default%s.json";
     public static final String MENU_DARK_SHEET = "MenuDarkSheet";
@@ -124,16 +124,7 @@ public class MenuScreen {
         setDarkModeListener();
     }
 
-    public void setGameButtonListener(EventHandler<ActionEvent> e) {
-        for (Button b: buttons.getButtons()) {
-            b.setOnAction(event -> {
-                gameChoice = b.getText();
-                this.goAction = e;
-                myPopupScreen = new Popup(POPUP_WIDTH, POPUP_HEIGHT, popupStyle);
-                setUpPlayerPopUp();
-            });
-        }
-    }
+
 
     private void setUpPlayerPopUp() {
         myPopupScreen.getNewPopup();
@@ -164,6 +155,10 @@ public class MenuScreen {
 
         if (!isOnePlayer) textFieldBox.getChildren().add(0, enterColorText);
 
+        Button next = new Button(NEXT);
+        next.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
+        next.setDisable(true);
+
         for (Button b: colorOption.getButtons()) {
             b.setOnAction(e -> {
                 b.setDisable(true);
@@ -171,6 +166,7 @@ public class MenuScreen {
                 otherButton.setDisable(false);
                 playerOneColor = b.getText();
                 playerTwoColor = otherButton.getText();
+                next.setDisable(false);
 
             });
         }
@@ -188,17 +184,21 @@ public class MenuScreen {
 
         if (!isOnePlayer) textFieldBox.getChildren().add(playerTwoText);
 
-        Button next = new Button(NEXT);
-        next.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
+
+
 
         if (isOnePlayer){
             next.setOnAction(e -> {
+
+                assignTextIfEmpty(playerOneText, PLAYER_ONE);
                 playerOneName = playerOneText.getText();
                 setUpCPUDifficultyPopUp();
             });
 
         }else{
             next.setOnAction(e -> {
+                assignTextIfEmpty(playerOneText, PLAYER_ONE);
+                assignTextIfEmpty(playerTwoText, PLAYER_TWO);
                 playerOneName = playerOneText.getText();
                 playerTwoName = playerTwoText.getText();
                 setUpLoadGamePopUp();
@@ -230,18 +230,22 @@ public class MenuScreen {
 
         vBox.getChildren().add(0, difficultText);
 
+        Button nextButton = new Button(NEXT);
+        nextButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
+        nextButton.setDisable(true);
+
         for (Button b: cpuDifficulty.getButtons()) {
             b.setOnAction((newEvent) -> {
                 for(Button button: cpuDifficulty.getButtons()){
                     button.setDisable(false);
                 }
                 b.setDisable(true);
+                nextButton.setDisable(false);
                 setStrategyType(res.getString(b.getText()));
             });
         }
 
-        Button nextButton = new Button(NEXT);
-        nextButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
+
         nextButton.setOnAction(e -> {
             setUpLoadGamePopUp();
         });
@@ -258,17 +262,20 @@ public class MenuScreen {
         myPopupScreen.addButtonGroup(loadGameOption);
         VBox vBox = myPopupScreen.getButtonBox();
 
+        Button goButton = new Button(GO);
+        goButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
+        goButton.setDisable(true);
+
         for (Button b: loadGameOption.getButtons()) {
             b.setOnAction((newEvent) -> {
                 b.setDisable(true);
                 Button otherButton = loadGameOption.getButtons().get(loadGameOption.getButtons().indexOf(b) ^ 1);
                 otherButton.setDisable(false);
                 assignFile(b.getText());
+                goButton.setDisable(false);
             });
         }
 
-        Button goButton = new Button(GO);
-        goButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
         goButton.setOnAction(e -> {
             myPopupScreen.getStage().close();
             goAction.handle(e);
@@ -343,6 +350,16 @@ public class MenuScreen {
         });
     }
 
+    private void setStrategyType(String type){
+        strategyType = type;
+    }
+
+    private void assignTextIfEmpty(TextField tf, String text){
+        if(tf.getText().equals("")){
+            tf.setText(text);
+        }
+    }
+
     public String getGameChoice() {
         return gameChoice;
     }
@@ -372,15 +389,22 @@ public class MenuScreen {
 
     }
 
+    public void setGameButtonListener(EventHandler<ActionEvent> e) {
+        for (Button b: buttons.getButtons()) {
+            b.setOnAction(event -> {
+                gameChoice = b.getText();
+                this.goAction = e;
+                myPopupScreen = new Popup(POPUP_WIDTH, POPUP_HEIGHT, popupStyle);
+                setUpPlayerPopUp();
+            });
+        }
+    }
+
     public boolean isDarkMode() {
         return isDarkMode;
     }
-
     public String getStrategyType() {
         return strategyType;
     }
 
-    private void setStrategyType(String type){
-        strategyType = type;
-    }
 }
