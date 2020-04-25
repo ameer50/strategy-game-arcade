@@ -11,7 +11,7 @@ public class CellView extends StackPane {
 
     public static final String YELLOW_BORDER = "yellowborder";
     public static final String RED_BORDER = "redborder";
-    public static final String BLACK_BORDER = "blackborder";
+    public static String BLACK_BORDER = "blackborder";
     private boolean hasYellowBorder;
     private boolean hasRedBorder;
     private double width;
@@ -136,5 +136,10 @@ public class CellView extends StackPane {
 
     public boolean isHasRedBorder() {
         return hasRedBorder;
+    }
+
+    public void setBlackBorderStyle(String style){
+        BLACK_BORDER = style;
+
     }
 }

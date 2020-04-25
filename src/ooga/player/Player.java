@@ -31,11 +31,10 @@ public abstract class Player {
 
         // score updating for converted pieces
 
-//        for (Pair<Piece, Piece> convertedPiece: m.getConvertedPiecesAndLocations().values()) {
-//            Piece oldPiece = convertedPiece.getKey();
-//            Piece newPiece = convertedPiece.getValue();
-//            addToScore(m.isUndo() ? -newPiece.getValue() : newPiece.getValue());
-//        }
+        for (Pair<Piece, Piece> convertedPiece: m.getConvertedPiecesAndLocations().values()) {
+            Piece newPiece = convertedPiece.getValue();
+            addToScore(m.isUndo() ? -newPiece.getValue() : newPiece.getValue());
+        }
 
     }
 

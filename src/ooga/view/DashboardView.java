@@ -41,11 +41,12 @@ public class DashboardView {
     public static final String FILE_ENTER_TITLE = "Enter File Name";
     public static final int POPUP_STAGE_HEIGHT = 500;
     public static final int POPUP_STAGE_WIDTH = 500;
-    public static final String ENTER_JSON_FILENAME = "Enter JSON Filename:";
+    public static final String ENTER_JSON_FILENAME = "Type JSON Filename and press ENTER to save.";
     public static final String SAVE_FILE_STYLE = "savefile";
     public static final int FILE_SAVE_TEXT_FIELD_MAX_WIDTH = 200;
     public static final String FILE_TEXT_FIELD_STYLE = "file-text-field";
     public static final String GO = "Go!";
+    public static final String SAVE = "Save";
     public static final String SETTINGS_BUTTONS = "SettingsButtons";
     public static final String WINNER = "Winner!";
     public static final String WINNER_TEXT = "The winner is: ";
@@ -237,6 +238,7 @@ public class DashboardView {
     public void setUpSaveFilePopup(EventHandler<ActionEvent> event) {
         Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
         pop.getNewPopup();
+        pop.getStage().show();
         pop.setPopupStageTitle(FILE_ENTER_TITLE);
 
         Text prefer = new Text();
@@ -246,15 +248,19 @@ public class DashboardView {
         TextField textField = new TextField();
         textField.setMaxWidth(FILE_SAVE_TEXT_FIELD_MAX_WIDTH);
         textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
-        VBox textFieldBox = pop.getButtonBox();
+        VBox textFieldBox = pop.getPopupBox();
 
-        Button goButton = new Button(GO);
-        goButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
+//        Button saveButton = new Button(SAVE);
+//        saveButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
+//        saveButton.setDisable(true);
 
-        textFieldBox.getChildren().addAll(prefer, textField, goButton);
+
+
+        textFieldBox.getChildren().addAll(prefer, textField);
         textFieldBox.setAlignment(Pos.CENTER);
 
-        goButton.setOnAction(e -> {
+
+        textField.setOnAction(e -> {
             setNewFileName(textField.getText());
             pop.closePopup();
             event.handle(e);
@@ -264,13 +270,14 @@ public class DashboardView {
     public void setUpWinnerPopup() {
         Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
         pop.getNewPopup();
+        pop.getStage().show();
         pop.setPopupStageTitle(WINNER);
 
         Text prefer = new Text();
         prefer.setText(WINNER_TEXT + winner);
         prefer.getStyleClass().add(PREFER);
 
-        VBox textFieldBox = pop.getButtonBox();
+        VBox textFieldBox = pop.getPopupBox();
 
         Button quitButton = new Button(QUIT);
         quitButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
@@ -322,7 +329,12 @@ public class DashboardView {
     }
 
     private void setNewFileName(String str){
-        newFileName = String.format(res.getString(SAVED_JSON_PATH), str);
+
+        if (str.equals("")){
+            newFileName = String.format(res.getString(SAVED_JSON_PATH), "example");
+        }else{
+            newFileName = String.format(res.getString(SAVED_JSON_PATH), str);
+        }
     }
     
     public void setWinner(String winner){

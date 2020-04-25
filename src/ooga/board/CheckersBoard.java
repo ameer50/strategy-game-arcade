@@ -7,9 +7,8 @@ import java.io.Serializable;
 import java.util.*;
 
 import javafx.util.Pair;
-import ooga.exceptions.ResourceBundleException;
 import ooga.history.Move;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 
 public class CheckersBoard extends Board implements Serializable {
 
@@ -21,9 +20,9 @@ public class CheckersBoard extends Board implements Serializable {
       Map<String, Integer> scores) {
     super(settings, locations, movePatterns, scores);
     try {
-      moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/moveConstants.properties"));
+      moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/checkersMoveConstants.properties"));
     } catch (IOException e) {
-      new DisplayError("ResourceBundleException");
+      throw new SetUpError("Could not find resource bundle");
     }
   }
 
@@ -140,8 +139,8 @@ public class CheckersBoard extends Board implements Serializable {
     Piece currPiece = getPieceAt(m.getStartLocation());
     m.setPiece(currPiece);
 
-    placePiece(m.getStartLocation(), null);
-    placePiece(m.getEndLocation(), currPiece);
+    placePieceAt(m.getStartLocation(), null);
+    placePieceAt(m.getEndLocation(), currPiece);
 
     if (killPaths.containsKey(m.getEndLocation())) {
       for (Point2D point : killPaths.get(m.getEndLocation())) {

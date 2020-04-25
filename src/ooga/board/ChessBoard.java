@@ -1,49 +1,50 @@
 package ooga.board;
 
 import java.awt.geom.Point2D;
-import java.awt.geom.Point2D.Double;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import javafx.util.Pair;
-import ooga.exceptions.ReflectionException;
 import ooga.history.Move;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 
 public class ChessBoard extends Board implements Serializable {
 
   public static final String KING = "King";
   public static final String PAWN = "Pawn";
   public static final String KNIGHT = "Knight";
+  public static final String RESOURCE_BUNDLE_EXCEPTION = "Could not find resource bundle";
+  public static final String MOVES_DIR = "src/properties/chessMoveConstants.properties";
+  public static final String ISHIFTS = "IShifts";
+  public static final String JSHIFTS = "JShifts";
+  public static final String MOVE_SPLIT = ", ";
+  public static final String REFLECTION_EXCEPTION = "ReflectionException";
   private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
-  public static final String WHITE = res.getString("ChessColor1");
-  public static final String BLACK = res.getString("ChessColor2");
+  private static ResourceBundle moveConstantMap;
+  public static final String COLOR1 = res.getString("ChessColor1");
+  public static final String COLOR2 = res.getString("ChessColor2");
   public static final String QUEEN = "Queen";
   public static final String QUEEN_MOVE_PATTERN = "Any -1";
-  public static final String PAWN_MOVE_PATTERN = "PAWN -1";
-  public static final int[] upIShifts = {-1};
-  public static final int[] upJShifts = {0};
-  public static final int[] downIShifts = {1};
-  public static final int[] downJShifts = {0};
-  public static final int[] rightIShifts = {0};
-  public static final int[] rightJShifts = {1};
-  public static final int[] leftIShifts = {0};
-  public static final int[] leftJShifts = {-1};
-  public static final int[] lateralIShifts = {-1, 1, 0, 0};
-  public static final int[] lateralJShifts = {0, 0, -1, 1};
-  public static final int[] diagonalIShifts = {-1, -1, 1, 1};
-  public static final int[] diagonalJShifts = {-1, 1, -1, 1};
-  public static final int[] anyIShifts = {-1, 1, 0, 0, -1, -1, 1, 1};
-  public static final int[] anyJShifts = {0, 0, -1, 1, -1, 1, -1, 1};
 
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> movePatterns,
       Map<String, Integer> scores) {
     super(settings, locations, movePatterns, scores);
+    try {
+      moveConstantMap = new PropertyResourceBundle(new FileInputStream(
+          MOVES_DIR));
+    } catch (IOException e) {
+      throw new SetUpError(RESOURCE_BUNDLE_EXCEPTION);
+    }
   }
 
   @Override
@@ -79,15 +80,16 @@ public class ChessBoard extends Board implements Serializable {
     }
     try {
       return getMovesFromShift(coord, moveType, params, piece);
-    } catch (IllegalAccessException | NoSuchFieldException e) {
+    } catch (MissingResourceException e) {
       return getMovesFromMethodName(coord, moveType, params, piece);
     }
   }
 
   private List<Point2D> getMovesFromShift(Point2D coord, String moveType, List<Integer> params,
-      Piece piece) throws NoSuchFieldException, IllegalAccessException {
-    int[] iShift = (int[]) this.getClass().getDeclaredField(moveType + "IShifts").get(null);
-    int[] jShift = (int[]) this.getClass().getDeclaredField(moveType + "JShifts").get(null);
+      Piece piece) throws MissingResourceException {
+    List<String> iShift = Arrays.asList(moveConstantMap.getString(moveType + ISHIFTS).split(MOVE_SPLIT));
+    List<String> jShift = Arrays.asList(moveConstantMap.getString(moveType + JSHIFTS).split(
+        MOVE_SPLIT));
 
     return move(coord, iShift, jShift, params, piece);
   }
@@ -101,8 +103,7 @@ public class ChessBoard extends Board implements Serializable {
       Object ret = moveMethod.invoke(this, coord, params, piece);
       return (List<Point2D>) ret;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException g) {
-      new DisplayError("ReflectionException");
-      throw new ReflectionException("Could not apply reflection");
+      throw new SetUpError(REFLECTION_EXCEPTION);
     }
   }
 
@@ -136,11 +137,10 @@ public class ChessBoard extends Board implements Serializable {
     currPiece.incrementMoveCount(m.isUndo());
 
     m.setPiece(currPiece);
-    pieceBiMap.forcePut(m.getEndLocation(), currPiece);
+    putPieceAt(m.getEndLocation(), currPiece);
 
     if (hitPiece != null) {
       m.addCapturedPiece(hitPiece, m.getEndLocation());
-      pieceBiMap.remove(hitPiece);
     }
     promote(m);
   }
@@ -162,7 +162,7 @@ public class ChessBoard extends Board implements Serializable {
       List<Point2D> checkPieces) {
     Piece blocker = getPieceAt(blockPoint);
     String blockColor = blocker.getColor();
-    pieceBiMap.forcePut(blockPoint, null);
+    removePieceAt(blockPoint);
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -175,22 +175,22 @@ public class ChessBoard extends Board implements Serializable {
         List<Point2D> path = getPath(threatPoint, kingPoint);
         path.add(threatPoint);
         if (path.contains(blockPoint)) {
-          pieceBiMap.forcePut(blockPoint, blocker);
+          placePieceAt(blockPoint, blocker);
           return path;
         }
       }
     }
-    pieceBiMap.forcePut(blockPoint, blocker);
+    placePieceAt(blockPoint, blocker);
     return new ArrayList<>();
   }
 
   @Override
   public String checkWon() {
-    if (getCheckmate(WHITE, BLACK)) {
-      return BLACK;
+    if (getCheckmate(COLOR1, COLOR2)) {
+      return COLOR2;
     }
-    if (getCheckmate(BLACK, WHITE)) {
-      return WHITE;
+    if (getCheckmate(COLOR2, COLOR1)) {
+      return COLOR1;
     }
     return null;
   }
@@ -242,9 +242,7 @@ public class ChessBoard extends Board implements Serializable {
   private List<Point2D> checkDanger(List<Point2D> safeMoves, Point2D kingPoint) {
     List<Point2D> hiddenDangerMoves = new ArrayList<>();
     for (Point2D p : safeMoves) {
-      int x = (int) p.getX();
-      int y = (int) p.getY();
-      if (isSpotInDanger(x, y, kingPoint)) {
+      if (isSpotInDanger(p, kingPoint)) {
         hiddenDangerMoves.add(p);
       }
     }
@@ -284,12 +282,12 @@ public class ChessBoard extends Board implements Serializable {
     Piece storedKing = getPieceAt(kingPoint);
 
     if (ignoreTheirKing) {
-      pieceBiMap.forcePut(kingPoint, null);
+      removePieceAt(kingPoint);
     }
     updatePawnAndMoveLists(pawnList, checkPieces, allPossibleMoves, kingPoint, targetColor,
         ignoreTheirKing);
     if (ignoreTheirKing) {
-      pieceBiMap.forcePut(kingPoint, storedKing);
+      placePieceAt(kingPoint, storedKing);
     }
 
     checkPossiblePawnMoves(pawnList, checkPieces, allPossibleMoves, kingPoint, ignoreTheirKing);
@@ -351,14 +349,13 @@ public class ChessBoard extends Board implements Serializable {
     return safePoints;
   }
 
-  private boolean isSpotInDanger(int potentialI, int potentialJ, Point2D kingPoint) {
-    Point2D potentialPoint = new Point2D.Double(potentialI, potentialJ);
-    Piece storedPiece = getPieceAt(potentialI, potentialJ);
+  private boolean isSpotInDanger(Point2D potentialPoint, Point2D kingPoint) {
+    Piece storedPiece = getPieceAt(potentialPoint);
     Piece storedKing = getPieceAt(kingPoint);
+    System.out.println("storedKing = " + storedKing);
     String color = storedKing.getColor();
-
-    pieceBiMap.forcePut(kingPoint, null);
-    pieceBiMap.forcePut(new Double(potentialI, potentialJ), null);
+    removePieceAt(kingPoint);
+    removePieceAt(potentialPoint);
 
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
@@ -374,19 +371,19 @@ public class ChessBoard extends Board implements Serializable {
         } else {
           thisPieceMoves = getValidMovesIgnoreCheck(new Point2D.Double(i, j));
         }
-        if ((i == potentialI && j == potentialJ) || color
+        if (new Point2D.Double(i, j).equals(potentialPoint) || color
             .equals(thisPiece.getColor())) {
           continue;
         }
         if (thisPieceMoves.contains(potentialPoint)) {
-          pieceBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
-          pieceBiMap.forcePut(kingPoint, storedKing);
+          placePieceAt(potentialPoint, storedPiece);
+          placePieceAt(kingPoint, storedPiece);
           return true;
         }
       }
     }
-    pieceBiMap.forcePut(new Double(potentialI, potentialJ), storedPiece);
-    pieceBiMap.forcePut(kingPoint, storedKing);
+    placePieceAt(potentialPoint, storedPiece);
+    placePieceAt(kingPoint, storedKing);
     return false;
   }
 
@@ -525,17 +522,17 @@ public class ChessBoard extends Board implements Serializable {
     return ret;
   }
 
-  private List<Point2D> move(Point2D coords, int[] iShifts, int[] jShifts, List<Integer> params,
+  private List<Point2D> move(Point2D coords, List<String> iShifts, List<String> jShifts, List<Integer> params,
       Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int i = (int) coords.getX();
     int j = (int) coords.getY();
     int distance = params.get(0);
-    for (int shift = 0; shift < iShifts.length; shift++) {
+    for (int shift = 0; shift < iShifts.size(); shift++) {
       int inc = 1;
       while (inc <= distance || distance < 0) {
-        int newI = i + iShifts[shift] * inc;
-        int newJ = j + jShifts[shift] * inc;
+        int newI = i + Integer.parseInt(iShifts.get(shift)) * inc;
+        int newJ = j + Integer.parseInt(jShifts.get(shift)) * inc;
         Point2D newPoint = getPointIfValid(newI, newJ, piece);
         if (newPoint != null) {
           ret.add(newPoint);

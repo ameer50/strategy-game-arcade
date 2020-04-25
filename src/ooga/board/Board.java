@@ -15,7 +15,7 @@ import java.util.Map;
 import ooga.controller.ProcessCoordinateInterface;
 import ooga.history.Move;
 import ooga.utility.CopyUtility;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 
 public abstract class Board implements Serializable {
 
@@ -63,7 +63,6 @@ public abstract class Board implements Serializable {
       String pieceColor = pieceArr[0];
       String pieceName = pieceArr[1];
 
-      System.out.println("pieceName = " + pieceName);
       int score = pieceScores.get(pieceName);
       String pattern = pieceMovePatterns.get(pieceName);
       Piece piece = new Piece(pieceName, pattern, score, pieceColor);
@@ -82,7 +81,7 @@ public abstract class Board implements Serializable {
         }
       }
       if (i != height-1) {
-        builder.append(", ");
+        builder.append("\n");
       }
     }
     return builder.toString();
@@ -110,6 +109,19 @@ public abstract class Board implements Serializable {
     }
   }
 
+  public List<Point2D> getPieceLocations(){
+    ArrayList<Point2D> pieces = new ArrayList<>();
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < width; j++){
+        Point2D point = new Point2D.Double(i, j);
+        Piece piece = getPieceAt(point);
+        if(piece != null){
+          pieces.add(point);
+        }
+      }
+    }
+    return pieces;
+  }
   public Piece getPieceAt(Point2D location) {
     if (isCellInBounds((int) location.getX(), (int) location.getY())) {
       return pieceBiMap.get(location);
@@ -127,7 +139,7 @@ public abstract class Board implements Serializable {
     }
   }
 
-  public void placePiece(Point2D coordinate, Piece piece) {
+  public void placePieceAt(Point2D coordinate, Piece piece) {
     pieceBiMap.forcePut(coordinate, piece);
   }
 
@@ -212,8 +224,6 @@ public abstract class Board implements Serializable {
     List<Point2D> starts = new ArrayList<>();
     starts.addAll(pieceBiMap.keySet());
     for(Point2D start: starts){
-      System.out.println("start = " + start);
-      System.out.println("pieceBiMap.get(start) = " + pieceBiMap.get(start));
       if(pieceBiMap.get(start) != null && pieceBiMap.get(start).getColor().equals(color)){
         for (Point2D end : getValidMoves(start)) {
           moves.add(new Move(start, end));
@@ -258,9 +268,8 @@ public abstract class Board implements Serializable {
       Board copy = constructor.newInstance(settingsCopy, locationsCopy, pieceMovePatternsCopy, pieceScoresCopy);
       return copy;
     } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      new DisplayError("Copy (Preset Board) went wrong");
+      throw new SetUpError("Copy (Preset Board) went wrong");
     }
-    return null;
   }
 
   public void setOnPiecePromoted(ProcessCoordinateInterface promoteAction) { this.promoteAction = promoteAction; }
@@ -268,9 +277,6 @@ public abstract class Board implements Serializable {
 
   public boolean isGameOver() {
     return over;
-  }
-  public BiMap<Point2D, Piece> getPieceBiMap() {
-    return pieceBiMap;
   }
   public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
   public Map<String, Integer> getPieceScores() {

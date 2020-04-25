@@ -21,15 +21,7 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 
 public class Controller extends Application {
-
-    public enum StrategyType {
-        TRIVIAL,
-        RANDOM,
-        BRUTE_FORCE,
-        SINGLE_BRANCH,
-        ALPHA_BETA,;
-    }
-
+    
     private long startTime;
     private Board board;
     private GameScreen gameScreen;
@@ -61,24 +53,30 @@ public class Controller extends Application {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
-
         menuScreen.setGameButtonListener(e -> {
-            setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
+            try {
+                parseFile(menuScreen.getFileChoice());
+                setUpGameScreen(menuScreen.getGameChoice());
+            } catch (SetUpError error) {
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
+            }
         });
     }
 
-    private void setUpGameScreen(String gameType, String dir) {
+    private void parseFile(String file) {
         processor = new JSONProcessor();
-        processor.parse(dir);
+        processor.parse(file);
+    }
 
+    private void setUpGameScreen(String gameType) {
         gameType = new StringUtility().capitalize(gameType);
         instantiateBoard(gameType);
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getPieceLocations());
 
         boardView = gameScreen.getBoardView();
-        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(),
-            menuScreen.getPlayerTwoColor());
+        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
         dashboardView.addIcons(boardView.getIcons());
         board.addPlayerIcons(menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
@@ -91,7 +89,7 @@ public class Controller extends Application {
         gameScreen.enableGameCSS(menuScreen.getGameChoice());
         setUpHistory();
         setUpPlayers();
-        setListeners();
+        setUpListeners();
     }
 
     private void instantiateBoard(String type) {
@@ -99,9 +97,9 @@ public class Controller extends Application {
             Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
             Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
             board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
-                processor.getPieceMovePatterns(), processor.getPieceScores());
+                    processor.getPieceMovePatterns(), processor.getPieceScores());
         } catch (Exception e) {
-            new DisplayError("Could not find game");
+            throw new SetUpError("Error creating board");
         }
     }
 
@@ -110,8 +108,7 @@ public class Controller extends Application {
         if (!menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            String strategyType = menuScreen.getStrategyType();
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.valueOf(strategyType));
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, menuScreen.getStrategyType());
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
@@ -126,7 +123,7 @@ public class Controller extends Application {
         dashboardView.getHistoryDisplay().setItems(historyList);
     }
 
-    private void setListeners() {
+    private void setUpListeners() {
         setBoardViewListeners();
         setDashboardViewListeners();
     }
@@ -142,15 +139,9 @@ public class Controller extends Application {
 
         boardView.setOnMoveClicked(endLocation -> {
             Point2D startLocation = boardView.getSelectedLocation();
-            Move move = new Move(startLocation, endLocation);
-            doMove(move);
-            convertPieces(move);
-            removeCapturedPieces(move);
-            boardView.replenishIcon(move);
+            performStandardMove(startLocation, endLocation);
 
-            history.addMove(move);
-            historyList.add(move);
-            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+            if (checkWon()) return;
 
             toggleActivePlayer();
 
@@ -182,9 +173,12 @@ public class Controller extends Application {
             doMove(prevMove);
             convertPieces(prevMove);
             removeCapturedPieces(prevMove);
-            boardView.replenishIcon(prevMove);
 
+            boardView.replenishIcon(prevMove);
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+
+            if (checkWon()) return;
+
             toggleActivePlayer();
         });
 
@@ -209,12 +203,14 @@ public class Controller extends Application {
         });
     }
 
-    private void checkWon() {
+    private boolean checkWon() {
         String winner = board.checkWon();
         if (winner != null) {
             dashboardView.setWinner(winner);
             dashboardView.setUpWinnerPopup();
+            return true;
         }
+        return false;
     }
 
     private void removeCapturedPieces(Move move) {
@@ -245,17 +241,21 @@ public class Controller extends Application {
         boardView.getCellAt(location).setPieceView(pieceView);
     }
 
-
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
         dashboardView.setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
     private void doCPUMove() {
-        //TODO: Have generateMove return a Move.
         Move AIMove = CPU.generateMove();
         Point2D startLocation = AIMove.getStartLocation();
         Point2D endLocation = AIMove.getEndLocation();
+        performStandardMove(startLocation, endLocation);
+
+        checkWon();
+    }
+
+    private void performStandardMove(Point2D startLocation, Point2D endLocation) {
         Move m = new Move(startLocation, endLocation);
 
         doMove(m);
@@ -271,7 +271,6 @@ public class Controller extends Application {
     private void doMove(Move move) {
         activePlayer.doMove(move);
         boardView.doMove(move);
-        checkWon();
     }
 
     private void newWindow() {
@@ -281,7 +280,9 @@ public class Controller extends Application {
             try {
                 newSimulation.start(newStage);
             } catch (NullPointerException e) {
-                new DisplayError("No simulation created");
+                SetUpError error = new SetUpError("Error creating new window");
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
             }
         }));
         thread.start();

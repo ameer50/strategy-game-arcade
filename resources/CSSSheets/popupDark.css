@@ -36,14 +36,13 @@
     -fx-background-color:
             linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
     -fx-text-fill: BLACK;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
     -fx-font-family: "Trebuchet MS";
-    -fx-padding: 10 40 10 20;
     -fx-min-width: 200;
     -fx-min-height: 50;
+    -fx-alignment: center;
 }
 
 .button:hover {

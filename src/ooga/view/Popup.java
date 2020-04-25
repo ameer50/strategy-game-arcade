@@ -34,7 +34,7 @@ public class Popup {
         scene = new Scene(root);
         scene.getStylesheets().add(stylesheet);
         stage.setScene(scene);
-        stage.show();
+        //stage.show();
     }
 
     public Stage getStage(){
@@ -50,7 +50,7 @@ public class Popup {
         popupBox.getChildren().add(buttonBox);
     }
 
-    public VBox getButtonBox(){
+    public VBox getPopupBox(){
         return popupBox;
     }
 

@@ -1,6 +1,6 @@
 package ooga.utility;
 
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -21,8 +21,7 @@ public class CopyUtility {
       ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
       return objInputStream.readObject();
     } catch (ClassNotFoundException | IOException e) {
-      new DisplayError("Unable to find class");
+      throw new SetUpError("Unable to find class");
     }
-    return null;
   }
 }

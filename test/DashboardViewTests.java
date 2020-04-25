@@ -5,8 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import ooga.history.History;
 import ooga.history.Move;
+import ooga.json.JSONProcessor;
 import ooga.view.DashboardView;
-import ooga.xml.XMLProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -24,9 +24,9 @@ public class DashboardViewTests extends DukeApplicationTest {
 
     @BeforeEach
     public void setUp() {
-        String gameXML = String.format("resources/Chess/chessJUnit.xml");
-        XMLProcessor processor = new XMLProcessor();
-        processor.parse(gameXML);
+        String gameJSON = String.format("resources/Chess/chessJUnit.json");
+        JSONProcessor processor = new JSONProcessor();
+        processor.parse(gameJSON);
         dashboardView = new DashboardView();
 
         history = new History();

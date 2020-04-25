@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.CustomBoard;
-import ooga.controller.Controller.StrategyType;
 import ooga.history.History;
 import ooga.history.Move;
 import ooga.json.JSONProcessor;
@@ -66,7 +65,7 @@ public class TestingController {
     if (! isCPU) {
       playerTwo = new HumanPlayer("P2", "Black", board);
     } else {
-      playerTwo = CPU = new CPUPlayer("CPU", "Black", board, StrategyType.TRIVIAL);
+      playerTwo = CPU = new CPUPlayer("CPU", "Black", board, "Trivial");
     }
     gameScreen.getDashboardView().setPlayerNames("P1", "P2");
     gameScreen.getDashboardView().bindScores(playerOne.getScore(), playerTwo.getScore());

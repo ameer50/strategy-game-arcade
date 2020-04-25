@@ -1,6 +1,5 @@
 package ooga.json;
 
-import com.google.common.collect.BiMap;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.File;
@@ -18,7 +17,7 @@ import ooga.custom.MoveNode;
 import ooga.custom.MoveNodeAnd;
 import ooga.custom.MoveNodeLeaf;
 import ooga.custom.MoveNodeOr;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -68,8 +67,8 @@ public class JSONProcessor {
       parsePieceScores();
       parsePieceLocations();
     } catch (ParseException | IOException e) {
-      new DisplayError("Unable to parse/load in file.");
       System.out.println(ERROR_MSG);
+      throw new SetUpError("Unable to parse/load in file.");
     }
   }
 
@@ -102,41 +101,53 @@ public class JSONProcessor {
   }
 
   private void parsePieceScores() {
-    Map<String, Long> scores = (Map) jo.get(SCORES);
-    for (String piece : scores.keySet()) {
-      Long toInt = scores.get(piece);
-      pieceScores.put(piece, Math.toIntExact(toInt));
+    try {
+      Map<String, Long> scores = (Map) jo.get(SCORES);
+      for (String piece : scores.keySet()) {
+        Long toInt = scores.get(piece);
+        pieceScores.put(piece, Math.toIntExact(toInt));
+      }
+    } catch (Exception e) {
+      throw new SetUpError("Error parsing piece scores");
     }
   }
 
   private void parsePieceLocations() {
-    Map<String, JSONArray> locations = (Map) jo.get(LOCATIONS);
-    for (String pieceName : locations.keySet()) {
-      JSONArray coordinates = locations.get(pieceName);
-      for (int i = 0; i < coordinates.size(); i++) {
-        String coordinate = (String) coordinates.get(i);
-        String[] coordinateArr = coordinate.split(", ");
-        int x = Integer.parseInt(coordinateArr[0]);
-        int y = Integer.parseInt(coordinateArr[1]);
-        Point2D point = new Point2D.Double(x, y);
-        pieceLocations.put(point, pieceName);
+    try {
+      Map<String, JSONArray> locations = (Map) jo.get(LOCATIONS);
+      for (String pieceName : locations.keySet()) {
+        JSONArray coordinates = locations.get(pieceName);
+        for (int i = 0; i < coordinates.size(); i++) {
+          String coordinate = (String) coordinates.get(i);
+          String[] coordinateArr = coordinate.split(", ");
+          int x = Integer.parseInt(coordinateArr[0]);
+          int y = Integer.parseInt(coordinateArr[1]);
+          Point2D point = new Point2D.Double(x, y);
+          pieceLocations.put(point, pieceName);
+        }
       }
+    } catch (Exception e) {
+      throw new SetUpError("Error parsing piece locations");
     }
   }
 
   protected void parsePieceMoves() {
-    Map<String, Map<String, String>> moves = (Map) jo.get(MOVES);
-    pieceMovePatterns = moves.get(PIECES);
-    if (name.toUpperCase().equals(CUSTOM)) {
-      basicMoves = new HashMap<>();
-      compoundMoves = new HashMap<>();
-      generateBasicMoves(moves.get(BASIC));
-      generateCompoundMoves(moves.get(COMPOUND));
-      addToPieceMoves(moves.get(PIECES));
-      for (String piece : pieceMoveNodes.keySet()) {
-        pieceMovePatterns.put(piece, pieceMoveNodes.get(piece).toString());
-        // System.out.println(String.format("put %s : %s", piece, pieceMoveNodes.get(piece).toString()));
+    try {
+      Map<String, Map<String, String>> moves = (Map) jo.get(MOVES);
+      pieceMovePatterns = moves.get(PIECES);
+      if (name.toUpperCase().equals(CUSTOM)) {
+        basicMoves = new HashMap<>();
+        compoundMoves = new HashMap<>();
+        generateBasicMoves(moves.get(BASIC));
+        generateCompoundMoves(moves.get(COMPOUND));
+        addToPieceMoves(moves.get(PIECES));
+        for (String piece : pieceMoveNodes.keySet()) {
+          pieceMovePatterns.put(piece, pieceMoveNodes.get(piece).toString());
+          // System.out.println(String.format("put %s : %s", piece, pieceMoveNodes.get(piece).toString()));
+        }
       }
+    } catch (Exception e) {
+      throw new SetUpError("Error parsing piece moves");
     }
   }
 
@@ -235,11 +246,14 @@ public class JSONProcessor {
 
   public void writeLocations(Board board, String filename) {
     jo.remove("locations");
-    BiMap<Point2D, Piece> pieceBiMap = board.getPieceBiMap();
-    Map locations = new LinkedHashMap();
-    for (Point2D point : pieceBiMap.keySet()) {
-      String piece = pieceBiMap.get(point).getFullName();
-      locations.put(piece, String.format("%d, %d", (int) point.getX(), (int) point.getY()));
+    Map<String, ArrayList<String>> locations = new LinkedHashMap();
+    List<Point2D> pieces = board.getPieceLocations();
+    for (Point2D point : pieces) {
+      String piece = board.getPieceAt(point).getFullName();
+      if(!locations.containsKey(piece)){
+        locations.put(piece, new ArrayList<>());
+      }
+      locations.get(piece).add(String.format("%d, %d", (int) point.getX(), (int) point.getY()));
     }
     jo.put("locations", locations);
 
@@ -249,7 +263,7 @@ public class JSONProcessor {
       writer.flush();
       writer.close();
     } catch (IOException e) {
-      new DisplayError("Could not find/load in the file");
+      throw new SetUpError("Could not find/load in the file");
     }
   }
 }
