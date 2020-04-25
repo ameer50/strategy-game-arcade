@@ -17,4 +17,5 @@ public class IconView extends CellView {
     public String getIconName() {
         return iconName;
     }
+
 }
