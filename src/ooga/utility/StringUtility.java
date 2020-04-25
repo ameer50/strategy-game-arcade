@@ -1,13 +1,13 @@
 package ooga.utility;
 
-import ooga.controller.Controller.StrategyType;
+import ooga.player.CPUPlayer;
 
 public class StringUtility {
 
   public StringUtility() { }
 
   // TODO: Move this to a different class.
-  public String strategyToString(StrategyType strategy) {
+  public String strategyToString(CPUPlayer.StrategyType strategy) {
     String[] arr = strategy.toString().toLowerCase().split("_");
     String ret = "";
     for (String word: arr) {
