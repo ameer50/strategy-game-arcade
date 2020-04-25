@@ -18,7 +18,6 @@ import ooga.view.*;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public class Controller extends Application {
@@ -55,22 +54,24 @@ public class Controller extends Application {
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
         menuScreen.setGameButtonListener(e -> {
-            setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
+            try {
+                parseFile(menuScreen.getFileChoice());
+                setUpGameScreen(menuScreen.getGameChoice());
+            } catch (SetUpError error) {
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
+            }
         });
     }
 
-    private void setUpGameScreen(String gameType, String dir) {
+    private void parseFile(String file) {
         processor = new JSONProcessor();
-        processor.parse(dir);
-
-        gameType = new StringUtility().capitalize(gameType);
-
-        try{
-            instantiateBoard(gameType);
-        } catch (Exception e) {
-        new DisplayError("Could not find game");
+        processor.parse(file);
     }
 
+    private void setUpGameScreen(String gameType) {
+        gameType = new StringUtility().capitalize(gameType);
+        instantiateBoard(gameType);
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getPieceLocations());
 
@@ -88,14 +89,18 @@ public class Controller extends Application {
         gameScreen.enableGameCSS(menuScreen.getGameChoice());
         setUpHistory();
         setUpPlayers();
-        setListeners();
+        setUpListeners();
     }
 
-    private void instantiateBoard(String type) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException, ClassNotFoundException {
+    private void instantiateBoard(String type) {
+        try {
             Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
             Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
             board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
-                processor.getPieceMovePatterns(), processor.getPieceScores());
+                    processor.getPieceMovePatterns(), processor.getPieceScores());
+        } catch (Exception e) {
+            throw new SetUpError("Error creating board");
+        }
     }
 
     private void setUpPlayers() {
@@ -118,7 +123,7 @@ public class Controller extends Application {
         dashboardView.getHistoryDisplay().setItems(historyList);
     }
 
-    private void setListeners() {
+    private void setUpListeners() {
         setBoardViewListeners();
         setDashboardViewListeners();
     }
@@ -275,7 +280,9 @@ public class Controller extends Application {
             try {
                 newSimulation.start(newStage);
             } catch (NullPointerException e) {
-                new DisplayError("No simulation created");
+                SetUpError error = new SetUpError("Error creating new window");
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
             }
         }));
         thread.start();

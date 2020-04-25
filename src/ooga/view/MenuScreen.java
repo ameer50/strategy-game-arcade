@@ -128,6 +128,7 @@ public class MenuScreen {
 
     private void setUpPlayerPopUp() {
         myPopupScreen.getNewPopup();
+        myPopupScreen.getStage().show();
         ButtonGroup playerOption = new ButtonGroup(List.of(ONE_PLAYER, TWO_PLAYER));
         playerOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(playerOption);
@@ -144,6 +145,7 @@ public class MenuScreen {
 
     private void setUpColorPopUp() {
         myPopupScreen.getNewPopup();
+        myPopupScreen.getStage().show();
         ButtonGroup colorOption = new ButtonGroup(List.of(res.getString(gameChoice + "Color1"), res.getString(gameChoice + "Color2")));
 
         colorOption.addStyle(res.getString(SETTINGS_BUTTONS));
@@ -217,6 +219,7 @@ public class MenuScreen {
 
     private void setUpCPUDifficultyPopUp(){
         myPopupScreen.getNewPopup();
+        myPopupScreen.getStage().show();
 
         Text difficultText = new Text("CPU Difficulty: ");
         difficultText.getStyleClass().add(PLAYERNAME);
@@ -256,6 +259,7 @@ public class MenuScreen {
 
     private void setUpLoadGamePopUp() {
         myPopupScreen.getNewPopup();
+        myPopupScreen.getStage().show();
         ButtonGroup loadGameOption = new ButtonGroup(List.of(DEFAULT_GAME, CUSTOM_GAME));
 
         loadGameOption.addStyle(res.getString(SETTINGS_BUTTONS));
