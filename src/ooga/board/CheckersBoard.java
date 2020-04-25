@@ -122,8 +122,8 @@ public class CheckersBoard extends Board implements Serializable {
     Piece currPiece = getPieceAt(m.getStartLocation());
     m.setPiece(currPiece);
 
-    placePiece(m.getStartLocation(), null);
-    placePiece(m.getEndLocation(), currPiece);
+    placePieceAt(m.getStartLocation(), null);
+    placePieceAt(m.getEndLocation(), currPiece);
 
     if (killPaths.containsKey(m.getEndLocation())) {
       for (Point2D point : killPaths.get(m.getEndLocation())) {
