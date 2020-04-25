@@ -254,6 +254,7 @@ public class DashboardView {
 
         textFieldBox.getChildren().addAll(prefer, textField);
         textFieldBox.setAlignment(Pos.CENTER);
+        textFieldBox.getStyleClass().add(VBOX);
 
         textField.setOnAction(e -> {
             setNewFileName(textField.getText());
