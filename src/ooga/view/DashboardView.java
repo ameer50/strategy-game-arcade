@@ -46,6 +46,7 @@ public class DashboardView {
     public static final int FILE_SAVE_TEXT_FIELD_MAX_WIDTH = 200;
     public static final String FILE_TEXT_FIELD_STYLE = "file-text-field";
     public static final String GO = "Go!";
+    public static final String SAVE = "Save";
     public static final String SETTINGS_BUTTONS = "SettingsButtons";
     public static final String WINNER = "Winner!";
     public static final String WINNER_TEXT = "The winner is: ";
@@ -248,7 +249,7 @@ public class DashboardView {
         textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
         VBox textFieldBox = pop.getPopupBox();
 
-        Button goButton = new Button(GO);
+        Button goButton = new Button(SAVE);
         goButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
 
         textFieldBox.getChildren().addAll(prefer, textField, goButton);
