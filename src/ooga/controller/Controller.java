@@ -22,14 +22,6 @@ import java.util.Map;
 
 public class Controller extends Application {
 
-    public enum StrategyType {
-        TRIVIAL,
-        RANDOM,
-        BRUTE_FORCE,
-        SINGLE_BRANCH,
-        ALPHA_BETA,
-    }
-
     private long startTime;
     private Board board;
     private GameScreen gameScreen;
@@ -61,7 +53,6 @@ public class Controller extends Application {
 
     private void setUpMenu() {
         menuScreen = new MenuScreen(this.stage);
-
         menuScreen.setGameButtonListener(e -> {
             setUpGameScreen(menuScreen.getGameChoice(), menuScreen.getFileChoice());
         });
@@ -77,8 +68,7 @@ public class Controller extends Application {
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getPieceLocations());
 
         boardView = gameScreen.getBoardView();
-        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(),
-            menuScreen.getPlayerTwoColor());
+        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
         dashboardView.addIcons(boardView.getIcons());
         board.addPlayerIcons(menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
@@ -110,8 +100,7 @@ public class Controller extends Application {
         if (!menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            String strategyType = menuScreen.getStrategyType();
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, StrategyType.valueOf(strategyType));
+            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, menuScreen.getStrategyType());
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
@@ -142,15 +131,9 @@ public class Controller extends Application {
 
         boardView.setOnMoveClicked(endLocation -> {
             Point2D startLocation = boardView.getSelectedLocation();
-            Move move = new Move(startLocation, endLocation);
-            doMove(move);
-            convertPieces(move);
-            removeCapturedPieces(move);
-            boardView.replenishIcon(move);
+            performStandardMove(startLocation, endLocation);
 
-            history.addMove(move);
-            historyList.add(move);
-            dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+            if (checkWon()) return;
 
             toggleActivePlayer();
 
@@ -182,9 +165,12 @@ public class Controller extends Application {
             doMove(prevMove);
             convertPieces(prevMove);
             removeCapturedPieces(prevMove);
-            boardView.replenishIcon(prevMove);
 
+            boardView.replenishIcon(prevMove);
             dashboardView.setUndoRedoButtonsDisabled(history.isUndoDisabled(), history.isRedoDisabled());
+
+            if (checkWon()) return;
+
             toggleActivePlayer();
         });
 
@@ -209,12 +195,14 @@ public class Controller extends Application {
         });
     }
 
-    private void checkWon() {
+    private boolean checkWon() {
         String winner = board.checkWon();
         if (winner != null) {
             dashboardView.setWinner(winner);
             dashboardView.setUpWinnerPopup();
+            return true;
         }
+        return false;
     }
 
     private void removeCapturedPieces(Move move) {
@@ -245,17 +233,21 @@ public class Controller extends Application {
         boardView.getCellAt(location).setPieceView(pieceView);
     }
 
-
     private void toggleActivePlayer() {
         activePlayer = (activePlayer == playerOne) ? playerTwo : playerOne;
         dashboardView.setActivePlayerText(activePlayer.getName(), activePlayer.getColor());
     }
 
     private void doCPUMove() {
-        //TODO: Have generateMove return a Move.
         Move AIMove = CPU.generateMove();
         Point2D startLocation = AIMove.getStartLocation();
         Point2D endLocation = AIMove.getEndLocation();
+        performStandardMove(startLocation, endLocation);
+
+        checkWon();
+    }
+
+    private void performStandardMove(Point2D startLocation, Point2D endLocation) {
         Move m = new Move(startLocation, endLocation);
 
         doMove(m);
@@ -271,7 +263,6 @@ public class Controller extends Application {
     private void doMove(Move move) {
         activePlayer.doMove(move);
         boardView.doMove(move);
-        checkWon();
     }
 
     private void newWindow() {

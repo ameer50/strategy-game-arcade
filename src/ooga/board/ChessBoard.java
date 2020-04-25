@@ -136,11 +136,10 @@ public class ChessBoard extends Board implements Serializable {
     currPiece.incrementMoveCount(m.isUndo());
 
     m.setPiece(currPiece);
-    pieceBiMap.forcePut(m.getEndLocation(), currPiece);
+    putPieceAt(m.getEndLocation(), currPiece);
 
     if (hitPiece != null) {
       m.addCapturedPiece(hitPiece, m.getEndLocation());
-      pieceBiMap.remove(hitPiece);
     }
     promote(m);
   }

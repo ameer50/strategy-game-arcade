@@ -8,19 +8,27 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import ooga.board.Board;
-import ooga.controller.Controller.StrategyType;
 import ooga.utility.StringUtility;
 import ooga.history.Move;
 import ooga.view.DisplayError;
 
 public class CPUPlayer extends Player {
-  private StrategyType strategy;
+
+  public enum StrategyType {
+    TRIVIAL,
+    RANDOM,
+    BRUTE_FORCE,
+    SINGLE_BRANCH,
+    ALPHA_BETA,
+  }
+
+  private String strategy;
   private Board board;
   private String color;
   private List<Double> moveTimes;
   private StringUtility utility;
 
-  public CPUPlayer(String name, String color, Board board, StrategyType strategy) {
+  public CPUPlayer(String name, String color, Board board, String strategy) {
     super(name, color, board);
     this.strategy = strategy;
     this.board = board;
@@ -34,7 +42,7 @@ public class CPUPlayer extends Player {
     long startTime = System.currentTimeMillis();
     Move moveCoordinates = null;
 
-    String strategyStr = utility.strategyToString(strategy);
+    String strategyStr = utility.strategyToString(StrategyType.valueOf(strategy));
     String generatorName = String.format("generate%sMove", strategyStr);
     try {
       Method generator = this.getClass().getDeclaredMethod(generatorName, null);
