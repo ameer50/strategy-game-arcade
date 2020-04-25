@@ -100,12 +100,16 @@ public class CheckersBoard extends Board implements Serializable {
    * @return
    */
   public List<Integer> getMConsts(String moveType) {
-    List<String> rawMoveData = Arrays.asList(moveConstantMap.getString(moveType).split(","));
-    List<Integer> moveDataParsed = new ArrayList<Integer>();
-    for (int i = 0; i < rawMoveData.size(); i++) {
-      moveDataParsed.add(Integer.parseInt(rawMoveData.get(i)));
+    try {
+      List<String> rawMoveData = Arrays.asList(moveConstantMap.getString(moveType).split(","));
+      List<Integer> moveDataParsed = new ArrayList<Integer>();
+      for (int i = 0; i < rawMoveData.size(); i++) {
+        moveDataParsed.add(Integer.parseInt(rawMoveData.get(i)));
+      }
+      return moveDataParsed;
+    } catch (Exception e) {
+      throw new SetUpError("Error in JSON file");
     }
-    return moveDataParsed;
   }
 
   /**

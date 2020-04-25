@@ -28,7 +28,7 @@ public class ChessBoard extends Board implements Serializable {
   public static final String ISHIFTS = "IShifts";
   public static final String JSHIFTS = "JShifts";
   public static final String MOVE_SPLIT = ", ";
-  public static final String REFLECTION_EXCEPTION = "ReflectionException";
+  public static final String JSON_EXCEPTION = "Error in JSON File";
   private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
   private static ResourceBundle moveConstantMap;
   public static final String COLOR1 = res.getString("ChessColor1");
@@ -103,7 +103,7 @@ public class ChessBoard extends Board implements Serializable {
       Object ret = moveMethod.invoke(this, coord, params, piece);
       return (List<Point2D>) ret;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException g) {
-      throw new SetUpError(REFLECTION_EXCEPTION);
+      throw new SetUpError(JSON_EXCEPTION);
     }
   }
 

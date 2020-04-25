@@ -128,10 +128,15 @@ public class Controller extends Application {
 
     private void setBoardViewListeners() {
         boardView.setOnPieceClicked(coordinate -> {
-            PieceView pieceView = boardView.getCellAt(coordinate).getPieceView();
-            if (pieceView.getColor().equals(activePlayer.getColor())) {
-                boardView.setSelectedLocation(coordinate);
-                boardView.highlightValidMoves(board.getValidMoves(coordinate));
+            try {
+                PieceView pieceView = boardView.getCellAt(coordinate).getPieceView();
+                if (pieceView.getColor().equals(activePlayer.getColor())) {
+                    boardView.setSelectedLocation(coordinate);
+                    boardView.highlightValidMoves(board.getValidMoves(coordinate));
+                }
+            } catch (SetUpError error) {
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
             }
         });
 
@@ -206,11 +211,17 @@ public class Controller extends Application {
     }
 
     private boolean checkWon() {
-        String winner = board.checkWon();
-        if (winner != null) {
-            dashboardView.setWinner(winner);
-            dashboardView.setUpWinnerPopup();
-            return true;
+        try {
+            String winner = board.checkWon();
+            if (winner != null) {
+                dashboardView.setWinner(winner);
+                dashboardView.setUpWinnerPopup();
+                return true;
+            }
+        } catch (Exception e) {
+            SetUpError error = new SetUpError(e.getMessage());
+            error.show();
+            error.setReturnToMenuFunction(event -> setUpMenu());
         }
         return false;
     }
@@ -271,9 +282,14 @@ public class Controller extends Application {
     }
 
     private void doMove(Move move) {
-        activePlayer.doMove(move);
-        boardView.doMove(move);
-        board.print();
+        try {
+            activePlayer.doMove(move);
+            boardView.doMove(move);
+        } catch (Exception e) {
+            SetUpError error = new SetUpError(e.getMessage());
+            error.show();
+            error.setReturnToMenuFunction(event -> setUpMenu());
+        }
     }
 
     private void newWindow() {
