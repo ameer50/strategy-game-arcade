@@ -10,7 +10,7 @@ public class JSONWriter {
 
   public static void main(String[] args) throws FileNotFoundException {
     JSONObject jo = new JSONObject();
-    jo.put("name", "custom");
+    jo.put("name", "Custom");
 
     Map dimensions = new LinkedHashMap(2);
     dimensions.put("height", 6);
@@ -52,7 +52,7 @@ public class JSONWriter {
     locations.put("Black_Circle", "0, 4");
     jo.put("locations", locations);
 
-    PrintWriter writer = new PrintWriter("custom/defaultBlack.json");
+    PrintWriter writer = new PrintWriter("Custom/defaultBlack.json");
     writer.write(jo.toJSONString());
     writer.flush();
     writer.close();

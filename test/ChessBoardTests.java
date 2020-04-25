@@ -13,6 +13,7 @@ import ooga.board.Board;
 import ooga.board.ChessBoard;
 import ooga.board.Piece;
 import ooga.history.Move;
+import ooga.json.JSONProcessor;
 import ooga.view.PieceView;
 import ooga.xml.XMLProcessor;
 import org.junit.jupiter.api.BeforeAll;
@@ -21,12 +22,12 @@ import org.junit.jupiter.api.Test;
 
 public class ChessBoardTests {
   ChessBoard board;
-  /*@BeforeEach
+  @BeforeEach
   public void setUp(){
-    String gameXML = String.format("resources/Chess/chessJUnit.xml");
-    XMLProcessor processor = new XMLProcessor();
-    processor.parse(gameXML);
-    //board = new ChessBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+    String gameJSON = String.format("resources/Chess/chessJUnit.json");
+    JSONProcessor processor = new JSONProcessor();
+    processor.parse(gameJSON);
+    board = new ChessBoard(processor.getSettings(), processor.getPieceLocations(), processor.getPieceMovePatterns(), processor.getPieceScores());
   }
 
   @Test
@@ -298,5 +299,5 @@ public class ChessBoardTests {
     //blockers removed
     assertEquals(board.getValidMoves(new Point2D.Double(3, 4)).size(), 0);
     assertEquals(board.checkWon(), "Black");
-  }*/
+  }
 }
