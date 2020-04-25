@@ -27,7 +27,7 @@ public class Controller extends Application {
         RANDOM,
         BRUTE_FORCE,
         SINGLE_BRANCH,
-        ALPHA_BETA,
+        ALPHA_BETA,;
     }
 
     private long startTime;

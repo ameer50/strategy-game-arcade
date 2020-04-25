@@ -4,15 +4,8 @@ import java.awt.geom.Point2D;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
+
 import javafx.util.Pair;
 import ooga.exceptions.ResourceBundleException;
 import ooga.history.Move;
@@ -36,13 +29,7 @@ public class CheckersBoard extends Board implements Serializable {
 
   @Override
   public String checkWon() {
-    String result = checkOneColor();
-    String result2 = checkTrapped();
-    if (result != null) {
-      return result;
-    } else {
-      return result2;
-    }
+    return checkWun();
   }
 
   public String checkOneColor() {
@@ -64,6 +51,36 @@ public class CheckersBoard extends Board implements Serializable {
     } else if (numRed == 0) {
       return "Black";
     }
+    return null;
+  }
+
+  public String checkWun(){
+    int numRed = 0;
+    int numBlack = 0;
+    int numTrappedRed = 0;
+    int numTrappedBlack = 0;
+
+    //List<Point2D> temp = new ArrayList<Point2D>(pieceBiMap.keySet());
+    //temp.removeAll(Collections.singleton(null));
+    for(Point2D key: pieceBiMap.keySet()){
+      if(getPieceAt(key)==null){
+        continue;
+      }
+      List<Point2D> tempValidMoves = getValidMoves(new Point2D.Double(key.getX(), key.getY()));
+      if(getPieceAt(key).getColor().equals("Red")){
+        numRed++;
+        numTrappedRed+=tempValidMoves.size();
+      } else if(getPieceAt(key).getColor().equals("Black")){
+        numBlack++;
+        numTrappedBlack+=tempValidMoves.size();
+      }
+    }
+
+    if(numBlack==0){return "Red";}
+    if(numRed==0){return "Black";}
+    if(numTrappedBlack==0){return "Red";}
+    if(numTrappedRed==0){return "Black";}
+
     return null;
   }
 
