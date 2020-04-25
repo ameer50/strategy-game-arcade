@@ -1,0 +1,1 @@
+{"settings":{"name":"Othello","width":"8","icon":"Othello","type":"preset","height":"8","bottomColor":"White"},"scores":{"Othello":5},"moves":{"pieces":{"Othello":"LATERAL -1"}},"locations":{"Black_Othello":"4, 3","White_Othello":"4, 4"}}

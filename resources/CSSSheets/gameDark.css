@@ -151,7 +151,7 @@
     -fx-background-radius: 5;
     -fx-alignment: center;
     -fx-background-color: #FFFAF0;
-    -fx-padding: 5 10 5 10;
+    -fx-padding: 5 10 5 10;lo
     -fx-fill: BLACK;
     -fx-text-fill: WHITE;
     -fx-font-size: 20pt;
@@ -161,17 +161,15 @@
 }
 
 .scores {
-    -fx-spacing: 15;
+    -fx-spacing: 10;
     -fx-alignment: center;
     -fx-vgap: 10;
     -fx-padding: 10;
 }
 
 .icons {
-    -fx-spacing: 25;
+    -fx-spacing: 10;
     -fx-alignment: center;
-    -fx-vgap: 10;
-    -fx-padding: 10;
 }
 
 .hboxlist {
