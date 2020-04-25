@@ -290,7 +290,7 @@ public class MenuScreen {
         Text logo = new Text();
         logo.setText(MENU_SCREEN_TITLE);
         logo.getStyleClass().add(LOGO_STYLE);
-        logo.setFill(Color.AZURE);
+        logo.setFill(Color.BLACK);
         HBox logoBox = new HBox();
         logoBox.getChildren().add(logo);
         logoBox.getStyleClass().add(LOGO_BOX_STYLE);

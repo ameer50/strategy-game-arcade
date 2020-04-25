@@ -25,13 +25,14 @@ public class SetUpError extends RuntimeException {
         pop.getNewPopup();
         VBox box = pop.getPopupBox();
 
-        String errorMessage = String.format("ERROR: %s", errorType);
+        String errorMessage = String.format("%s", errorType);
         Text text = new Text(errorMessage);
         text.getStyleClass().add(textStyle);
 
         returnToMenuButton = new Button("Return to Menu");
         returnToMenuButton.getStyleClass().add("close");
         box.getChildren().addAll(text, returnToMenuButton);
+        box.getStyleClass().add("vbox");
     }
 
     public void show() {
