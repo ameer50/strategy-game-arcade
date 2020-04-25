@@ -19,13 +19,11 @@ public class History {
         moveHistory.add(m);
     }
 
-    public Move undo() throws IndexOutOfBoundsException {
-        if (movePointer < 0) throw new IndexOutOfBoundsException();
+    public Move undo() {
         return moveHistory.get(movePointer--);
     }
 
-    public Move redo() throws IndexOutOfBoundsException {
-        if (movePointer >= moveHistory.size() - 1) throw new IndexOutOfBoundsException();
+    public Move redo() {
         return moveHistory.get(++movePointer);
     }
 

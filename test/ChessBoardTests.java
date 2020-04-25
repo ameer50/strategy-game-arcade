@@ -17,7 +17,7 @@ public class ChessBoardTests {
   ChessBoard board;
   @BeforeEach
   public void setUp(){
-    String gameJSON = String.format("resources/Chess/chessJUnit.json");
+    String gameJSON = String.format("resources/Chess/defaultWhite.json");
     JSONProcessor processor = new JSONProcessor();
     processor.parse(gameJSON);
     board = new ChessBoard(processor.getSettings(), processor.getPieceLocations(), processor.getPieceMovePatterns(), processor.getPieceScores());

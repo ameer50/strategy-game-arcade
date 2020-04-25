@@ -38,22 +38,6 @@ public class MoveNodeTest {
         "MULTIPLICATION incorrect: " + points.get(0));
   }
 
-  @Test
-  public void andNodeTree() {
-    int[] ints1 = {0, 1, 2, 3};
-    int[] ints2 = {3, 2, 1, 0};
-    MoveNodeAnd sub1 = createAndFromInts(ints1);
-    MoveNodeAnd sub2 = createAndFromInts(ints2);
-    MoveNodeAnd rootNode = new MoveNodeAnd(sub1, sub2);
-
-    Point2D point = rootNode.generatePoints().get(0);
-    Point2D sub1Point = sub1.generatePoints().get(0);
-    Point2D sub2Point = sub2.generatePoints().get(0);
-    assertEquals(new Point2D.Double(6, 6), point, "AND incorrect:"+point);
-    assertEquals(new Point2D.Double(2, 4), sub1Point, "SUB1 incorrect:"+sub1Point);
-    assertEquals(new Point2D.Double(4, 2), sub2Point, "SUB2 incorrect:"+sub2Point);
-  }
-
   private MoveNodeAnd createAndFromInts(int[] ints) {
     return new MoveNodeAnd(createPrimitivesFromInts(ints));
   }

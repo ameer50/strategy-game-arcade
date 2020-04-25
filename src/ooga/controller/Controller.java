@@ -21,8 +21,7 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 
 public class Controller extends Application {
-
-    private long startTime;
+    
     private Board board;
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
@@ -46,7 +45,6 @@ public class Controller extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        startTime = System.currentTimeMillis();
         stage = primaryStage;
         setUpMenu();
     }
@@ -153,6 +151,30 @@ public class Controller extends Application {
     }
 
     private void setDashboardViewListeners() {
+        setUndoRedoListeners();
+
+        dashboardView.setSaveClicked(e -> {
+            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
+        });
+
+        dashboardView.setSkipTurnClicked(e -> {
+            toggleActivePlayer();
+            if (activePlayer.isCPU()) {
+                doCPUMove();
+                toggleActivePlayer();
+            }
+        });
+
+        dashboardView.setNewWindowClicked(e -> {
+            newWindow();
+        });
+
+        dashboardView.setReturnToMenuClicked(e -> {
+            setUpMenu();
+        });
+    }
+
+    private void setUndoRedoListeners() {
         dashboardView.setUndoMoveClicked(e -> {
             toggleActivePlayer();
 
@@ -180,26 +202,6 @@ public class Controller extends Application {
             if (checkWon()) return;
 
             toggleActivePlayer();
-        });
-
-        dashboardView.setSaveClicked(e -> {
-            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
-        });
-
-        dashboardView.setSkipTurnClicked(e -> {
-            toggleActivePlayer();
-            if (activePlayer.isCPU()) {
-                doCPUMove();
-                toggleActivePlayer();
-            }
-        });
-
-        dashboardView.setNewWindowClicked(e -> {
-            newWindow();
-        });
-
-        dashboardView.setReturnToMenuClicked(e -> {
-            setUpMenu();
         });
     }
 
@@ -286,20 +288,5 @@ public class Controller extends Application {
             }
         }));
         thread.start();
-    }
-
-    private void printMessageAndTime(String message) {
-        long endTime = System.currentTimeMillis();
-        System.out.println(message);
-        System.out.println(String.format("time: %.2f", (float)(endTime-startTime)));
-    }
-
-    @Deprecated
-    private void stall(double millis) {
-        double initial = System.currentTimeMillis();
-        double elapsed = 0;
-        while (elapsed < millis) {
-            elapsed = System.currentTimeMillis() - initial;
-        }
     }
 }

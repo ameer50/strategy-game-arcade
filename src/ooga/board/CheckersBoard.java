@@ -4,15 +4,8 @@ import java.awt.geom.Point2D;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
+
 import javafx.util.Pair;
 import ooga.history.Move;
 import ooga.view.SetUpError;
