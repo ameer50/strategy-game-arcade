@@ -19,10 +19,9 @@ public class BoardViewTests extends DukeApplicationTest {
     Board board;
     BoardView boardView;
 
-
     @BeforeEach
     public void setUp() {
-        String gameJSON = String.format("resources/Chess/chessJUnit.json");
+        String gameJSON = String.format("resources/Chess/defaultWhite.json");
         JSONProcessor processor = new JSONProcessor();
         processor.parse(gameJSON);
         board = new ChessBoard(processor.getSettings(), processor.getPieceLocations(), processor.getPieceMovePatterns(), processor.getPieceScores());
@@ -30,7 +29,7 @@ public class BoardViewTests extends DukeApplicationTest {
     }
 
     @Test
-    public void testBoardDimensions() throws Exception {
+    public void testBoardDimensions() {
         int height = boardView.getNumRows();
         int width = boardView.getNumCols();
         assertEquals(height, 8);
@@ -38,13 +37,13 @@ public class BoardViewTests extends DukeApplicationTest {
     }
 
     @Test
-    public void testValidPieceName() throws Exception {
+    public void testValidPieceName() {
         String pieceName = boardView.getCellAt(7,7).getPieceView().getPieceName();
         assertEquals(pieceName, "White_Rook");
     }
 
     @Test
-    public void testHighlightValidMoves() throws Exception {
+    public void testHighlightValidMoves() {
         List<Point2D> validMoves = board.getValidMoves(new Point2D.Double(6,7));
         boardView.highlightValidMoves(validMoves);
 
@@ -53,16 +52,14 @@ public class BoardViewTests extends DukeApplicationTest {
     }
 
     @Test
-    public void testToggleRed() throws Exception {
+    public void testToggleRed() {
         Point2D point = new Point2D.Double(6,7);
         boardView.setSelectedLocation(point);
         assertEquals(true, boardView.getCellAt(point).isHasRedBorder());
-
-        tearDown();
     }
 
     @Test
-    public void testdoMove() throws Exception {
+    public void testdoMove() {
         PieceView currPiece = boardView.getCellAt(6,7).getPieceView();
         Move move = new Move(new Point2D.Double(6,7), new Point2D.Double(5,7));
         boardView.doMove(move);
@@ -71,7 +68,7 @@ public class BoardViewTests extends DukeApplicationTest {
     }
 
     @Test
-    public void testToggleNoBorder() throws Exception {
+    public void testToggleNoBorder() {
         boardView.getCellAt(6,7).toggleNoBorder();
 
         assertEquals(false, boardView.getCellAt(6,7).isHasRedBorder());
@@ -79,8 +76,7 @@ public class BoardViewTests extends DukeApplicationTest {
     }
 
     @Test
-    public void testSetPiece() throws Exception {
-
+    public void testSetPiece() {
         assertEquals(null, boardView.getCellAt(5,7).getPieceView());
         PieceView piece = new PieceView("White_Pawn");
         boardView.getCellAt(5,7).setPieceView(piece);
@@ -88,11 +84,8 @@ public class BoardViewTests extends DukeApplicationTest {
     }
 
     @Test
-    public void testOutsideCell() throws Exception {
-
+    public void testOutsideCell() {
         CellView cell = boardView.getCellAt(-1, -1);
         assertNull(cell);
     }
-
-
 }

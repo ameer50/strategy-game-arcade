@@ -24,7 +24,7 @@ public class DashboardViewTests extends DukeApplicationTest {
 
     @BeforeEach
     public void setUp() {
-        String gameJSON = String.format("resources/Chess/chessJUnit.json");
+        String gameJSON = String.format("resources/Chess/defaultWhite.json");
         JSONProcessor processor = new JSONProcessor();
         processor.parse(gameJSON);
         dashboardView = new DashboardView();
