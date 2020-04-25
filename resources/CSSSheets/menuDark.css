@@ -37,7 +37,7 @@
 }
 
 .button:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #696969, #A9A9A9);
 }
 
 .vbox {
