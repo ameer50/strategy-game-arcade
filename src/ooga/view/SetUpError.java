@@ -36,6 +36,9 @@ public class SetUpError extends RuntimeException {
     }
 
     public void setReturnToMenuFunction(EventHandler<ActionEvent> e) {
-        returnToMenuButton.setOnAction(e);
+        returnToMenuButton.setOnAction(event -> {
+            pop.closePopup();
+            e.handle(event);
+        });
     }
 }
