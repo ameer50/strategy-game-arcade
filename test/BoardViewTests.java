@@ -4,7 +4,6 @@ import ooga.board.ChessBoard;
 import ooga.history.Move;
 import ooga.json.JSONProcessor;
 import ooga.view.*;
-import ooga.xml.XMLProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -22,7 +21,7 @@ public class BoardViewTests extends DukeApplicationTest {
 
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp() {
         String gameJSON = String.format("resources/Chess/chessJUnit.json");
         JSONProcessor processor = new JSONProcessor();
         processor.parse(gameJSON);

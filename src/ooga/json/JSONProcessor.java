@@ -1,6 +1,5 @@
 package ooga.json;
 
-import com.google.common.collect.BiMap;
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
 import java.io.File;
@@ -247,10 +246,10 @@ public class JSONProcessor {
 
   public void writeLocations(Board board, String filename) {
     jo.remove("locations");
-    BiMap<Point2D, Piece> pieceBiMap = board.getPieceBiMap();
     Map locations = new LinkedHashMap();
-    for (Point2D point : pieceBiMap.keySet()) {
-      String piece = pieceBiMap.get(point).getFullName();
+    List<Point2D> pieces = board.getPieceLocations();
+    for (Point2D point : pieces) {
+      String piece = board.getPieceAt(point).getFullName();
       locations.put(piece, String.format("%d, %d", (int) point.getX(), (int) point.getY()));
     }
     jo.put("locations", locations);

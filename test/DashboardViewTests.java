@@ -7,7 +7,6 @@ import ooga.history.History;
 import ooga.history.Move;
 import ooga.json.JSONProcessor;
 import ooga.view.DashboardView;
-import ooga.xml.XMLProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;

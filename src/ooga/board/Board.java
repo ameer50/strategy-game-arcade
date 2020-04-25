@@ -109,6 +109,19 @@ public abstract class Board implements Serializable {
     }
   }
 
+  public List<Point2D> getPieceLocations(){
+    ArrayList<Point2D> pieces = new ArrayList<>();
+    for(int i = 0; i < height; i++){
+      for(int j = 0; j < width; j++){
+        Point2D point = new Point2D.Double(i, j);
+        Piece piece = getPieceAt(point);
+        if(piece != null){
+          pieces.add(point);
+        }
+      }
+    }
+    return pieces;
+  }
   public Piece getPieceAt(Point2D location) {
     if (isCellInBounds((int) location.getX(), (int) location.getY())) {
       return pieceBiMap.get(location);
@@ -264,9 +277,6 @@ public abstract class Board implements Serializable {
 
   public boolean isGameOver() {
     return over;
-  }
-  public BiMap<Point2D, Piece> getPieceBiMap() {
-    return pieceBiMap;
   }
   public Map<String, String> getPieceMovePatterns() { return Map.copyOf(pieceMovePatterns); }
   public Map<String, Integer> getPieceScores() {
