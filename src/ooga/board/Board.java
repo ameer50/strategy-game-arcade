@@ -63,7 +63,6 @@ public abstract class Board implements Serializable {
       String pieceColor = pieceArr[0];
       String pieceName = pieceArr[1];
 
-      System.out.println("pieceName = " + pieceName);
       int score = pieceScores.get(pieceName);
       String pattern = pieceMovePatterns.get(pieceName);
       Piece piece = new Piece(pieceName, pattern, score, pieceColor);

@@ -18,6 +18,7 @@ import ooga.view.*;
 
 import java.awt.geom.Point2D;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 public class Controller extends Application {
@@ -72,7 +73,13 @@ public class Controller extends Application {
         processor.parse(dir);
 
         gameType = new StringUtility().capitalize(gameType);
-        instantiateBoard(gameType);
+
+        try{
+            instantiateBoard(gameType);
+        } catch (Exception e) {
+        new DisplayError("Could not find game");
+    }
+
 
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getPieceLocations());
 
@@ -94,15 +101,11 @@ public class Controller extends Application {
         setListeners();
     }
 
-    private void instantiateBoard(String type) {
-        try {
-            Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
+    private void instantiateBoard(String type) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException, ClassNotFoundException {
+            Class boardClass = Class.forName(String.format("ooga.boar.%sBoard", type));
             Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
             board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
                 processor.getPieceMovePatterns(), processor.getPieceScores());
-        } catch (Exception e) {
-            new DisplayError("Could not find game");
-        }
     }
 
     private void setUpPlayers() {

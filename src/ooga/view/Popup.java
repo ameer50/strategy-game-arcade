@@ -50,7 +50,7 @@ public class Popup {
         popupBox.getChildren().add(buttonBox);
     }
 
-    public VBox getButtonBox(){
+    public VBox getPopupBox(){
         return popupBox;
     }
 

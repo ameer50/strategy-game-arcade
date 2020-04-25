@@ -1,15 +1,29 @@
 package ooga.view;
 
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+
+import java.util.Locale;
 import java.util.ResourceBundle;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 public class DisplayError {
+
+    private static final int STAGE_WIDTH = 500;
+    private static final int STAGE_HEIGHT = 500;
+    private static final String popupStyle = "PopupStyleSheet";
+    private static final String textStyle = "prefer";
+    private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
+
     
     public DisplayError(String errorType) {
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Program Error!");
-        alert.setContentText(errorType);
-        alert.showAndWait();
+        Popup pop = new Popup(STAGE_WIDTH, STAGE_HEIGHT, res.getString(popupStyle));
+        pop.getNewPopup();
+        VBox box = pop.getPopupBox();
+
+        String errorMessage = String.format("ERROR: %s", errorType);
+        Text text = new Text(errorMessage);
+        text.getStyleClass().add(textStyle);
+        box.getChildren().add(text);
+
     }
 }

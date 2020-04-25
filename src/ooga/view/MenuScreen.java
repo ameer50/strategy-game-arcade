@@ -148,7 +148,7 @@ public class MenuScreen {
 
         colorOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(colorOption);
-        VBox textFieldBox = myPopupScreen.getButtonBox();
+        VBox textFieldBox = myPopupScreen.getPopupBox();
 
         Text enterColorText = new Text(PLAYER_ONE_COLOR_PROMPT);
         enterColorText.getStyleClass().add(PLAYERNAME);
@@ -225,7 +225,7 @@ public class MenuScreen {
 
         cpuDifficulty.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(cpuDifficulty);
-        VBox vBox = myPopupScreen.getButtonBox();
+        VBox vBox = myPopupScreen.getPopupBox();
 
 
         vBox.getChildren().add(0, difficultText);
@@ -260,7 +260,7 @@ public class MenuScreen {
 
         loadGameOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(loadGameOption);
-        VBox vBox = myPopupScreen.getButtonBox();
+        VBox vBox = myPopupScreen.getPopupBox();
 
         Button goButton = new Button(GO);
         goButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));

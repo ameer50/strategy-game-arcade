@@ -246,7 +246,7 @@ public class DashboardView {
         TextField textField = new TextField();
         textField.setMaxWidth(FILE_SAVE_TEXT_FIELD_MAX_WIDTH);
         textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
-        VBox textFieldBox = pop.getButtonBox();
+        VBox textFieldBox = pop.getPopupBox();
 
         Button goButton = new Button(GO);
         goButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
@@ -270,7 +270,7 @@ public class DashboardView {
         prefer.setText(WINNER_TEXT + winner);
         prefer.getStyleClass().add(PREFER);
 
-        VBox textFieldBox = pop.getButtonBox();
+        VBox textFieldBox = pop.getPopupBox();
 
         Button quitButton = new Button(QUIT);
         quitButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
