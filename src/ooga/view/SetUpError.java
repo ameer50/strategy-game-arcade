@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -18,9 +19,10 @@ public class SetUpError extends RuntimeException {
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private Popup pop;
     private Button returnToMenuButton;
-    
+
     public SetUpError(String errorType) {
         pop = new Popup(STAGE_WIDTH, STAGE_HEIGHT, res.getString(popupStyle));
+        pop.getNewPopup();
         VBox box = pop.getPopupBox();
 
         String errorMessage = String.format("ERROR: %s", errorType);
@@ -28,11 +30,12 @@ public class SetUpError extends RuntimeException {
         text.getStyleClass().add(textStyle);
 
         returnToMenuButton = new Button("Return to Menu");
+        returnToMenuButton.getStyleClass().add("close");
         box.getChildren().addAll(text, returnToMenuButton);
     }
 
     public void show() {
-        pop.getNewPopup();
+        pop.getStage().show();
     }
 
     public void setReturnToMenuFunction(EventHandler<ActionEvent> e) {
