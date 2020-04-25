@@ -14,6 +14,7 @@ import ooga.board.CheckersBoard;
 import ooga.board.ChessBoard;
 import ooga.board.Piece;
 import ooga.history.Move;
+import ooga.json.JSONProcessor;
 import ooga.view.PieceView;
 import ooga.xml.XMLProcessor;
 import org.junit.jupiter.api.BeforeAll;
@@ -22,19 +23,20 @@ import org.junit.jupiter.api.Test;
 
 public class CheckersBoardTests{
     CheckersBoard board;
-    /*@BeforeEach
+    @BeforeEach
     public void setUp(){
-        String gameXML = String.format("resources/Checkers/defaultBlack.xml");
-        XMLProcessor processor = new XMLProcessor();
-        processor.parse(gameXML);
-        //board = new CheckersBoard(processor.getSettings(), processor.getInitialPieceLocations(), processor.getMovePatterns());
+        String gameJSON = String.format("resources/Checkers/defaultBlack.json");
+        JSONProcessor processor = new JSONProcessor();
+        processor.parse(gameJSON);
+        board = new CheckersBoard(processor.getSettings(), processor.getPieceLocations(), processor.getPieceMovePatterns(), processor.getPieceScores());
+
     }
 
     @Test
     public void testSelectedPiecePos(){
         Piece white = board.getPieceAt(1, 0);
         Piece black = board.getPieceAt(5, 0);
-        assertEquals(white.getColor(), "White");
+        assertEquals(white.getColor(), "Red");
         assertEquals(black.getColor(), "Black");
     }
 
@@ -51,8 +53,8 @@ public class CheckersBoardTests{
         board.doMove(mov);
         Piece afterPiece = board.getPieceAt(3, 2);
         Piece origin = board.getPieceAt(2, 1);
-        assertEquals(wh.getColor(), "White");
-        assertEquals(afterPiece.getColor(), "White");
+        assertEquals(wh.getColor(), "Red");
+        assertEquals(afterPiece.getColor(), "Red");
         assertNull(origin);
         assertEquals(wh, afterPiece);
     }
@@ -92,7 +94,7 @@ public class CheckersBoardTests{
     @Test
     public void blackKillWhite(){
         Point2D point = new Point2D.Double(4,3);
-        board.placePiece(point, new Piece("Coin", "P2 1", 5, "White"));
+        board.placePiece(point, new Piece("Coin", "P2 1", 5, "Red"));
         System.out.println(board);
         Move m = new Move(new Point2D.Double(5, 2), new Point2D.Double(3, 4));
         board.doMove(m);
@@ -116,8 +118,8 @@ public class CheckersBoardTests{
         Piece p = board.getPieceAt(4, 3);
         Piece origin = board.getPieceAt(2, 1);
         Piece killed = board.getPieceAt(3, 2);
-        assertEquals(p.getColor(), "White");
+        assertEquals(p.getColor(), "Red");
         assertNull(origin);
         assertNull(killed);
-    }*/
+    }
 }
