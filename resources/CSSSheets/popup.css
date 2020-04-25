@@ -119,6 +119,7 @@
 
 .textfieldbox {
     -fx-alignment: center;
+    -fx-vgap: 10;
 }
 
 .file-pop-up {
@@ -151,4 +152,5 @@
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 20px;
     -fx-alignment: center;
+
 }
