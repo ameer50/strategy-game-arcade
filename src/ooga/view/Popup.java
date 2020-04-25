@@ -34,7 +34,7 @@ public class Popup {
         scene = new Scene(root);
         scene.getStylesheets().add(stylesheet);
         stage.setScene(scene);
-        stage.show();
+        //stage.show();
     }
 
     public Stage getStage(){

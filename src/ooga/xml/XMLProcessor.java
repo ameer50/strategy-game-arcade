@@ -3,7 +3,7 @@ package ooga.xml;
 import javafx.util.Pair;
 import ooga.board.Board;
 import ooga.board.Piece;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -69,7 +69,7 @@ public class XMLProcessor {
                 node = node.getNextSibling();
             }
         } catch (Exception e) {
-            new DisplayError(ERROR_MESSAGE);
+            throw new SetUpError(ERROR_MESSAGE);
         }
     }
 
@@ -100,7 +100,7 @@ public class XMLProcessor {
             writer.close();
 
         } catch (TransformerException | IOException ignored) {
-            new DisplayError("Unable to transform");
+            throw new SetUpError("Unable to transform");
         }
     }
 
@@ -111,37 +111,49 @@ public class XMLProcessor {
     }
 
     private void parseSettings(Node node) {
-        node = node.getFirstChild();
-        while (node != null) {
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                settings.put(node.getNodeName(), node.getTextContent().strip());
+        try {
+            node = node.getFirstChild();
+            while (node != null) {
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    settings.put(node.getNodeName(), node.getTextContent().strip());
+                }
+                node = node.getNextSibling();
             }
-            node = node.getNextSibling();
+        } catch (Exception e) {
+            throw new SetUpError("Error parsing settings");
         }
     }
 
     private void parseLocations(Node node) {
-        node = node.getFirstChild();
-        while (node != null) {
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                String info = node.getTextContent().strip();
-                String[] arr = info.split(",");
-                Point2D.Double location = new Point2D.Double(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]));
-                initialPieceLocations.put(location, arr[2]);
+        try {
+            node = node.getFirstChild();
+            while (node != null) {
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    String info = node.getTextContent().strip();
+                    String[] arr = info.split(",");
+                    Point2D.Double location = new Point2D.Double(Integer.parseInt(arr[0]), Integer.parseInt(arr[1]));
+                    initialPieceLocations.put(location, arr[2]);
+                }
+                node = node.getNextSibling();
             }
-            node = node.getNextSibling();
+        } catch (Exception e) {
+            throw new SetUpError("Error parsing locations");
         }
     }
 
     private void parsePieces(Node node) {
-        node = node.getFirstChild();
-        while (node != null) {
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                String pieceAndPattern = node.getTextContent().strip();
-                String[] arr = pieceAndPattern.split(":");
-                movePatterns.put(arr[0], new Pair<>(arr[1], Integer.parseInt(arr[2])));
+        try {
+            node = node.getFirstChild();
+            while (node != null) {
+                if (node.getNodeType() == Node.ELEMENT_NODE) {
+                    String pieceAndPattern = node.getTextContent().strip();
+                    String[] arr = pieceAndPattern.split(":");
+                    movePatterns.put(arr[0], new Pair<>(arr[1], Integer.parseInt(arr[2])));
+                }
+                node = node.getNextSibling();
             }
-            node = node.getNextSibling();
+        } catch (Exception e) {
+            throw new SetUpError("Error parsing pieces");
         }
     }
 }

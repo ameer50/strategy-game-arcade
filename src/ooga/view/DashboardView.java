@@ -238,6 +238,7 @@ public class DashboardView {
     public void setUpSaveFilePopup(EventHandler<ActionEvent> event) {
         Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
         pop.getNewPopup();
+        pop.getStage().show();
         pop.setPopupStageTitle(FILE_ENTER_TITLE);
 
         Text prefer = new Text();
@@ -265,6 +266,7 @@ public class DashboardView {
     public void setUpWinnerPopup() {
         Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
         pop.getNewPopup();
+        pop.getStage().show();
         pop.setPopupStageTitle(WINNER);
 
         Text prefer = new Text();

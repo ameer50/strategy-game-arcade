@@ -14,9 +14,8 @@ import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.Set;
 import javafx.util.Pair;
-import ooga.exceptions.ResourceBundleException;
 import ooga.history.Move;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 
 public class CheckersBoard extends Board implements Serializable {
 
@@ -30,7 +29,7 @@ public class CheckersBoard extends Board implements Serializable {
     try {
       moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/checkersMoveConstants.properties"));
     } catch (IOException e) {
-      new DisplayError("ResourceBundleException");
+      throw new SetUpError("Could not find resource bundle");
     }
   }
 
