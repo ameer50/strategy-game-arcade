@@ -273,6 +273,7 @@ public class Controller extends Application {
     private void doMove(Move move) {
         activePlayer.doMove(move);
         boardView.doMove(move);
+        board.print();
     }
 
     private void newWindow() {

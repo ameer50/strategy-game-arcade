@@ -115,7 +115,7 @@ public class CheckersBoard extends Board implements Serializable {
     Piece currPiece = getPieceAt(m.getStartLocation());
     m.setPiece(currPiece);
 
-    placePieceAt(m.getStartLocation(), null);
+    removePieceAt(m.getStartLocation());
     placePieceAt(m.getEndLocation(), currPiece);
 
     if (killPaths.containsKey(m.getEndLocation())) {
@@ -127,12 +127,12 @@ public class CheckersBoard extends Board implements Serializable {
       }
     }
 
-    if ((currPiece.getColor().equals(bottomColor) && x_f == 0) || (
-        !(currPiece.getColor().equals(bottomColor)) && x_f == height - 1)) {
+    if (currPiece.getType().equals("Coin") && ((currPiece.getColor().equals(bottomColor) && x_f == 0) || (
+        !(currPiece.getColor().equals(bottomColor)) && x_f == height - 1))) {
       Piece promotedPiece = new Piece("Monarch", "KING 1", pieceScores.get("King"),
           currPiece.getColor());
 
-      m.addConvertedPiece(new Pair(currPiece, promotedPiece), m.getEndLocation());
+      m.addConvertedPiece(new Pair<>(currPiece, promotedPiece), m.getEndLocation());
     }
 
     for (Point2D location : m.getCapturedPiecesAndLocations().keySet()) {
