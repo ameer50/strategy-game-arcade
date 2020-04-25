@@ -5,8 +5,8 @@ import javafx.stage.Stage;
 
 public class TestingMain extends Application {
 
-    public static void main (String[] args) {
-      launch();
+    public static void main(String[] args) {
+        launch();
     }
 
     @Override

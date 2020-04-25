@@ -1,22 +1,22 @@
 <?xml version="1.0"?>
 <company>
-	<type id="chess">
-		<game_type>chess</game_type>
-		<width>20</width>
-		<height>10</height>
-		<s1>01010101011010010011</s1>
-		<s2>01010101011010010011</s2>
-		<s3>01010101011010010011</s3>
-		<s4>01010101011010010011</s4>
-		<s5>01010101011010010011</s5>
-		<s6>01010101011010010011</s6>
-		<s7>01010101011010010011</s7>
-		<s8>01010101011010010011</s8>
-		<s9>01010101011010010011</s9>
-		<s10>01010101011010010011</s10>
-		<color>default</color>
-		<neighborColIndex>0 1 0 -1</neighborColIndex>
-		<neighborRowIndex>-1 0 1 0</neighborRowIndex>
-		<author>Eric, Amjad, Karthik, Ameer, Michael</author>
-	</type>
+    <type id="chess">
+        <game_type>chess</game_type>
+        <width>20</width>
+        <height>10</height>
+        <s1>01010101011010010011</s1>
+        <s2>01010101011010010011</s2>
+        <s3>01010101011010010011</s3>
+        <s4>01010101011010010011</s4>
+        <s5>01010101011010010011</s5>
+        <s6>01010101011010010011</s6>
+        <s7>01010101011010010011</s7>
+        <s8>01010101011010010011</s8>
+        <s9>01010101011010010011</s9>
+        <s10>01010101011010010011</s10>
+        <color>default</color>
+        <neighborColIndex>0 1 0 -1</neighborColIndex>
+        <neighborRowIndex>-1 0 1 0</neighborRowIndex>
+        <author>Eric, Amjad, Karthik, Ameer, Michael</author>
+    </type>
 </company>

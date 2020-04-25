@@ -32,7 +32,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     private Point2D selectedLocation;
     private List<CellView> icons;
 
-    public BoardView (int numRows, int numCols, Map<Point2D, String> locations) {
+    public BoardView(int numRows, int numCols, Map<Point2D, String> locations) {
         this.numRows = numRows;
         this.numCols = numCols;
         this.pieceLocations = locations;
@@ -57,7 +57,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         }
         // special case that checks to return icon views located in indices not on the board itself
         int cellListIndex = x * numCols + y;
-        if (cellListIndex < cellList.length && cellListIndex >= 0){
+        if (cellListIndex < cellList.length && cellListIndex >= 0) {
             return (CellView) cellList[cellListIndex];
         }
         return null;
@@ -69,7 +69,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     public void createBoardColors() {
         firstColorSequence = new ArrayList<>();
-        for (int i = 0; i < numCols; i++){
+        for (int i = 0; i < numCols; i++) {
             if (i % 2 == 0) firstColorSequence.add(CELL_COLOR_2);
             else firstColorSequence.add(CELL_COLOR_1);
         }
@@ -82,7 +82,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         for (int i = 0; i < numRows; i++) {
             for (int j = 0; j < numCols; j++) {
                 String color = (i % 2 == 0) ? secondColorSequence.get(j) : firstColorSequence.get(j);
-                CellView cell = cellArray[i][j] = new CellView(new Point2D.Double(i,j), cellSize, cellSize, color);
+                CellView cell = cellArray[i][j] = new CellView(new Point2D.Double(i, j), cellSize, cellSize, color);
                 cell.setLayoutX(BOARD_X_OFFSET + (cellSpan * j));
                 cell.setLayoutY(BOARD_Y_OFFSET + (cellSpan * i));
                 cellList[index] = cell;
@@ -94,10 +94,10 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     }
 
     private void createIcons() {
-        CellView playerOneIcon = new IconView(new Point2D.Double(numRows, 0), cellSize/2,
-            cellSize/2, CELL_COLOR_1);
-        CellView playerTwoIcon = new IconView(new Point2D.Double(numRows, 1), cellSize/2,
-            cellSize/2, CELL_COLOR_1);
+        CellView playerOneIcon = new IconView(new Point2D.Double(numRows, 0), cellSize / 2,
+                cellSize / 2, CELL_COLOR_1);
+        CellView playerTwoIcon = new IconView(new Point2D.Double(numRows, 1), cellSize / 2,
+                cellSize / 2, CELL_COLOR_1);
         cellList[cellList.length - 2] = playerOneIcon;
         cellList[cellList.length - 1] = playerTwoIcon;
         icons = List.of(playerOneIcon, playerTwoIcon);
@@ -128,7 +128,7 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         createPlayerIcon(icon, playerTwoColor, 1);
     }
 
-    private void createPlayerIcon(String icon, String playerColor, int index){
+    private void createPlayerIcon(String icon, String playerColor, int index) {
         IconView playerIcon = (IconView) getCellAt(numRows, index);
         String playerIconName = String.format("%s_%s", playerColor, icon);
 
@@ -161,13 +161,13 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
     }
 
     public void setOnPieceClicked(ProcessCoordinateInterface function) {
-        for (CellView cell: this) {
+        for (CellView cell : this) {
             cell.setPieceClicked(function);
         }
     }
 
     public void setOnMoveClicked(ProcessCoordinateInterface function) {
-        for (CellView cell: this) {
+        for (CellView cell : this) {
             cell.setMoveClicked(function);
         }
     }
@@ -185,17 +185,24 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
         this.getCellAt(coordinate).toggleRed();
     }
 
-    public Point2D getSelectedLocation() { return selectedLocation; }
+    public Point2D getSelectedLocation() {
+        return selectedLocation;
+    }
 
     @Override
     public Iterator<CellView> iterator() {
         return new Iterator<>() {
             private int i = 0;
-            @Override
-            public boolean hasNext() {  return i < cellList.length;  }
 
             @Override
-            public CellView next() { return (CellView) cellList[i++]; }
+            public boolean hasNext() {
+                return i < cellList.length;
+            }
+
+            @Override
+            public CellView next() {
+                return (CellView) cellList[i++];
+            }
         };
     }
 

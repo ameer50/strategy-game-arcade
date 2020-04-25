@@ -7,10 +7,9 @@
 }
 
 .button {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
@@ -20,10 +19,9 @@
 }
 
 .settingsbuttons {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
@@ -34,8 +32,7 @@
 }
 
 .gobutton {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, LIGHTGREEN, GREEN);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, LIGHTGREEN, GREEN);
     -fx-background-radius: 10;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
@@ -47,8 +44,7 @@
 }
 
 .close {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #FFF8DC, #DC143C);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #FFF8DC, #DC143C);
     -fx-background-radius: 10;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
@@ -110,8 +106,8 @@
 }
 
 .file-text-field {
-    -fx-border-width: 0 0 1 0; // top, right, bottom, left
-    -fx-background-color: #F8F8FF;
+    -fx-border-width: 0 0 1 0;
+/ / top, right, bottom, left -fx-background-color: #F8F8FF;
     -fx-font: 20px "Helvatica";
     -fx-font-weight: bold;
     -fx-text-fill: BLACK;

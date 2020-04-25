@@ -6,10 +6,9 @@
 }
 
 .button {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #8FBC8F, #A9A9A9);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #8FBC8F, #A9A9A9);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
@@ -113,8 +112,7 @@
 }
 
 .auxbuttons {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #8FBC8F, #A9A9A9);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #8FBC8F, #A9A9A9);
     -fx-background-radius: 10;
     -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;

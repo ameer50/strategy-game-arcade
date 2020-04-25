@@ -2,7 +2,6 @@ package ooga.history;
 
 import javafx.util.Pair;
 import ooga.board.Piece;
-import ooga.view.SetUpError;
 
 import java.awt.geom.Point2D;
 import java.util.HashMap;
@@ -50,16 +49,29 @@ public class Move implements Cloneable {
         startLocation = (Point2D) location.clone();
     }
 
-    public Point2D getEndLocation() { return (Point2D) endLocation.clone(); }
+    public Point2D getEndLocation() {
+        return (Point2D) endLocation.clone();
+    }
 
     public void setEndLocation(Point2D location) {
         endLocation = (Point2D) location.clone();
     }
 
-    public int getStartX() { return (int) startLocation.getX(); }
-    public int getStartY() { return (int) startLocation.getY(); }
-    public int getEndX() { return (int) endLocation.getX(); }
-    public int getEndY() { return (int) endLocation.getY(); }
+    public int getStartX() {
+        return (int) startLocation.getX();
+    }
+
+    public int getStartY() {
+        return (int) startLocation.getY();
+    }
+
+    public int getEndX() {
+        return (int) endLocation.getX();
+    }
+
+    public int getEndY() {
+        return (int) endLocation.getY();
+    }
 
     public void setUndo(boolean isUndo) {
         this.isUndo = isUndo;
@@ -71,11 +83,12 @@ public class Move implements Cloneable {
 
     @Override
     public String toString() {
-        if (isPieceGenerated) return String.format("%s added at (%d, %d)", piece, (int) endLocation.getX(), (int) endLocation.getY());
+        if (isPieceGenerated)
+            return String.format("%s added at (%d, %d)", piece, (int) endLocation.getX(), (int) endLocation.getY());
         return String.format("%s from (%d, %d) to (%d, %d)", piece, (int) startLocation.getX(), (int) startLocation.getY(), (int) endLocation.getX(), (int) endLocation.getY());
     }
 
-    public void addCapturedPiece(Piece capturedPiece, Point2D capturedPieceLocation){
+    public void addCapturedPiece(Piece capturedPiece, Point2D capturedPieceLocation) {
         capturedPiecesAndLocations.put(capturedPieceLocation, capturedPiece);
     }
 
@@ -83,7 +96,7 @@ public class Move implements Cloneable {
         return capturedPiecesAndLocations;
     }
 
-    public void addConvertedPiece(Pair<Piece, Piece> piecePair, Point2D convertedPieceLocation){
+    public void addConvertedPiece(Pair<Piece, Piece> piecePair, Point2D convertedPieceLocation) {
         convertedPiecesAndLocations.put(convertedPieceLocation, piecePair);
     }
 
@@ -95,7 +108,7 @@ public class Move implements Cloneable {
         return piece;
     }
 
-    public void setPiece(Piece piece){
+    public void setPiece(Piece piece) {
         this.piece = piece;
     }
 

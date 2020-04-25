@@ -23,7 +23,11 @@ public class PieceView {
         return color;
     }
 
-    public ImageView getImage() { return pieceImage; }
+    public ImageView getImage() {
+        return pieceImage;
+    }
 
-    public String getPieceName(){ return pieceName; }
+    public String getPieceName() {
+        return pieceName;
+    }
 }

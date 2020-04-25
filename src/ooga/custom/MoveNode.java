@@ -7,64 +7,67 @@ import java.util.List;
 
 public abstract class MoveNode implements Serializable {
 
-  private List<MoveNode> children;
-  private Point2D value;
+    private List<MoveNode> children;
+    private Point2D value;
 
-  public MoveNode(List<MoveNode> children) {
-    this.children = children;
-  }
-  public MoveNode(List<MoveNode> children, Point2D value) {
-    this.children = children;
-    this.value = value;
-  }
-
-  @Override
-  public String toString() {
-    List<Point2D> points = generatePoints();
-    StringBuilder builder = new StringBuilder();
-    for (Point2D point: points) {
-      builder.append(String.format("(%d, %d), ", (int) point.getX(), (int) point.getY()));
-      System.out.println(String.format("(%d, %d), ", (int) point.getX(), (int) point.getY()));
+    public MoveNode(List<MoveNode> children) {
+        this.children = children;
     }
-    String str = builder.toString();
-    return str.substring(0, str.length()-3);
-  }
 
-  public abstract List<Point2D> generatePoints();
-
-  public void multiply(int multiplier) {
-    for (MoveNode node: children) {
-      node.multiply(multiplier);
+    public MoveNode(List<MoveNode> children, Point2D value) {
+        this.children = children;
+        this.value = value;
     }
-  }
 
-  public int size() {
-    if (children == null) return 0;
-    return children.size();
-  }
-
-  public Point2D getValue() {
-    return (Point2D) value.clone();
-  }
-
-  public void setValue(Point2D point) {
-    this.value = point;
-  }
-
-  public List<MoveNode> getChildren() { return List.copyOf(children); }
-
-  public MoveNode copy() {
-    // Base case.
-    if (children == null) {
-      return new MoveNodeLeaf(getValue());
+    @Override
+    public String toString() {
+        List<Point2D> points = generatePoints();
+        StringBuilder builder = new StringBuilder();
+        for (Point2D point : points) {
+            builder.append(String.format("(%d, %d), ", (int) point.getX(), (int) point.getY()));
+            System.out.println(String.format("(%d, %d), ", (int) point.getX(), (int) point.getY()));
+        }
+        String str = builder.toString();
+        return str.substring(0, str.length() - 3);
     }
-    // Recursion.
-    List<MoveNode> newChildren = new ArrayList<>();
-    for (MoveNode child: children) {
-      newChildren.add(child.copy());
-    }
-    return invokeConstructor(newChildren);
-  }
 
-  public abstract MoveNode invokeConstructor(List<MoveNode> children);
+    public abstract List<Point2D> generatePoints();
+
+    public void multiply(int multiplier) {
+        for (MoveNode node : children) {
+            node.multiply(multiplier);
+        }
+    }
+
+    public int size() {
+        if (children == null) return 0;
+        return children.size();
+    }
+
+    public Point2D getValue() {
+        return (Point2D) value.clone();
+    }
+
+    public void setValue(Point2D point) {
+        this.value = point;
+    }
+
+    public List<MoveNode> getChildren() {
+        return List.copyOf(children);
+    }
+
+    public MoveNode copy() {
+        // Base case.
+        if (children == null) {
+            return new MoveNodeLeaf(getValue());
+        }
+        // Recursion.
+        List<MoveNode> newChildren = new ArrayList<>();
+        for (MoveNode child : children) {
+            newChildren.add(child.copy());
+        }
+        return invokeConstructor(newChildren);
+    }
+
+    public abstract MoveNode invokeConstructor(List<MoveNode> children);
 }

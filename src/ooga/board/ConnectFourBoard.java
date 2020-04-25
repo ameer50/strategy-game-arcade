@@ -14,9 +14,11 @@ public class ConnectFourBoard extends Board implements Serializable {
     private static final int PIECES_NEEDED = 3;
     private static final List<Pair<Integer, Integer>> DELTA_PAIR = List.of(new Pair<>(-1, -1), new Pair<>(-1, 0), new Pair<>(-1, 1), new Pair<>(0, 1),
             new Pair<>(1, 1), new Pair<>(1, 0), new Pair<>(1, -1), new Pair<>(0, -1));
+    public static final String TIE = "Tie";
+    public static final String ICON = "Marker";
 
     public ConnectFourBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> movePatterns,
-        Map<String, Integer> scores) {
+                            Map<String, Integer> scores) {
         super(settings, locations, movePatterns, scores);
     }
 
@@ -29,18 +31,15 @@ public class ConnectFourBoard extends Board implements Serializable {
                 if (winner.length() > 0) return winner;
             }
         }
-        if (this.isFull()){
-            return "Tie";
+        if (this.isFull()) {
+            return TIE;
         }
         return null;
     }
 
     private String checkAllDirections(int i, int j) {
         StringBuilder winner = new StringBuilder();
-        // iterating through this array accessing every two elements, allows for checking of all eight locations
-        // surrounding a cell
-
-        for(Pair<Integer, Integer> pair: DELTA_PAIR){
+        for (Pair<Integer, Integer> pair : DELTA_PAIR) {
             int deltaX = pair.getKey();
             int deltaY = pair.getValue();
             winner.append(check(i, j, deltaX, deltaY, PIECES_NEEDED));
@@ -57,13 +56,13 @@ public class ConnectFourBoard extends Board implements Serializable {
         if (getPieceAt(i, j) == null || getPieceAt(i + deltaX, j + deltaY) == null) return "";
         if (!piecesMatch(i, j, i + deltaX, j + deltaY)) return "";
         if (piecesNeeded == 1) return getPieceAt(i, j).getColor();
-        return check(i + deltaX, j + deltaY,deltaX, deltaY, piecesNeeded - 1);
+        return check(i + deltaX, j + deltaY, deltaX, deltaY, piecesNeeded - 1);
     }
 
     @Override
     public void doMove(Move move) {
-        if (! move.isUndo()){
-            Piece piece = new Piece("Marker", "", 1, move.getColor());
+        if (!move.isUndo()) {
+            Piece piece = new Piece(ICON, "", 1, move.getColor());
             move.setPiece(piece);
             pieceBiMap.forcePut(move.getEndLocation(), piece);
             move.setPieceGenerated(true);
@@ -74,12 +73,11 @@ public class ConnectFourBoard extends Board implements Serializable {
 
     @Override
     public List<Point2D> getValidMoves(Point2D coordinate) {
-
         List<Point2D> validMoves = new ArrayList<>();
         if (isCellInBounds(coordinate)) return validMoves;
-        for (int x = 0; x < width; x++ ){
-            for (int y = height - 1; y >=0; y --){
-                if (getPieceAt(y,x) == null){
+        for (int x = 0; x < width; x++) {
+            for (int y = height - 1; y >= 0; y--) {
+                if (getPieceAt(y, x) == null) {
                     validMoves.add(new Point2D.Double(y, x));
                     break;
                 }

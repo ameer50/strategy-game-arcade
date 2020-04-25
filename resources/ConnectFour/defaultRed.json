@@ -1,19 +1,16 @@
 {
-  "settings" : {
-    "name" : "ConnectFour",
-    "width" : "7",
-    "height" : "7",
-    "bottomColor" : "Red",
-    "icon" : "Marker"
+  "settings": {
+    "name": "ConnectFour",
+    "width": "7",
+    "height": "7",
+    "bottomColor": "Red",
+    "icon": "Marker"
   },
-
-  "locations" : { },
-
-  "moves" : {
-    "pieces" : { }
+  "locations": {},
+  "moves": {
+    "pieces": {}
   },
-
-  "scores" : {
+  "scores": {
     "Marker": 0
   }
 }

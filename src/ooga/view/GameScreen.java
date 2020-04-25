@@ -34,7 +34,7 @@ public class GameScreen {
         stage.show();
     }
 
-    private void initializeView(int width, int height, Map<Point2D, String> locations){
+    private void initializeView(int width, int height, Map<Point2D, String> locations) {
         stage.setHeight(STAGE_HEIGHT);
         stage.setWidth(STAGE_WIDTH);
         BorderPane root = new BorderPane();
@@ -68,7 +68,7 @@ public class GameScreen {
     }
 
     public void enableGameCSS(String cssStyle) {
-        if (!isDarkMode){
+        if (!isDarkMode) {
             scene.getStylesheets().remove(gameStyle);
             gameStyle = res.getString(cssStyle + STYLE_SHEET);
             scene.getStylesheets().add(gameStyle);

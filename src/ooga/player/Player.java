@@ -1,6 +1,7 @@
 package ooga.player;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.util.Pair;
 import ooga.board.Board;
 import ooga.board.Piece;
@@ -25,10 +26,10 @@ public abstract class Player {
     public void doMove(Move m) {
         m.setColor(color);
         board.doMove(m);
-        for (Piece capturedPiece: m.getCapturedPiecesAndLocations().values()) {
+        for (Piece capturedPiece : m.getCapturedPiecesAndLocations().values()) {
             addToScore(m.isUndo() ? -capturedPiece.getValue() : capturedPiece.getValue());
         }
-        for (Pair<Piece, Piece> convertedPiece: m.getConvertedPiecesAndLocations().values()) {
+        for (Pair<Piece, Piece> convertedPiece : m.getConvertedPiecesAndLocations().values()) {
             Piece newPiece = convertedPiece.getValue();
             addToScore(m.isUndo() ? -newPiece.getValue() : newPiece.getValue());
         }

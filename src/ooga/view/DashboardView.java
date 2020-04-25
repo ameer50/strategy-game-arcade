@@ -1,17 +1,22 @@
 package ooga.view;
 
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.layout.*;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import ooga.history.Move;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -141,7 +146,7 @@ public class DashboardView {
         return playerTwoScoreText;
     }
 
-    public void bindScores(IntegerProperty playerOneScore, IntegerProperty playerTwoScore){
+    public void bindScores(IntegerProperty playerOneScore, IntegerProperty playerTwoScore) {
         this.playerOneScore.bind(playerOneScore);
         this.playerTwoScore.bind(playerTwoScore);
     }
@@ -155,7 +160,7 @@ public class DashboardView {
 
         int[] position = {0, 0, 1, 0, 0, 1, 1, 1, 0, 2, 1, 2};
         int i = 0;
-        for(Button b: auxiliaryButtons.getButtons()){
+        for (Button b : auxiliaryButtons.getButtons()) {
             addGPaneElement(b, position[i++], position[i++]);
         }
         auxiliaryButtonPane.getStyleClass().add(GPANE_STYLE);
@@ -228,15 +233,16 @@ public class DashboardView {
         this.activePlayerText.setText(String.format("%s (%s)", activePlayerName, activePlayerColor));
     }
 
-    public VBox getDisplayBox(){
+    public VBox getDisplayBox() {
         return displayBox;
     }
 
-    private void addGPaneElement(Node b, int col, int row){
+    private void addGPaneElement(Node b, int col, int row) {
         auxiliaryButtonPane.add(b, col, row);
         GridPane.setHalignment(b, HPos.LEFT);
         GridPane.setValignment(b, VPos.CENTER);
     }
+
     public void setUpSaveFilePopup(EventHandler<ActionEvent> event) {
         Popup pop = new Popup(POPUP_STAGE_WIDTH, POPUP_STAGE_HEIGHT, popupStyle);
         pop.getNewPopup();
@@ -321,15 +327,15 @@ public class DashboardView {
         skipTurnFunction = skipTurn;
     }
 
-    public String getNewFileName(){
+    public String getNewFileName() {
         return newFileName;
     }
 
     private void setNewFileName(String str) {
         newFileName = str.equals("") ? String.format(res.getString(SAVED_JSON_PATH), EXAMPLE_FILE) : String.format(res.getString(SAVED_JSON_PATH), str);
     }
-    
-    public void setWinner(String winner){
+
+    public void setWinner(String winner) {
         this.winner = winner;
     }
 
@@ -341,7 +347,7 @@ public class DashboardView {
         return redoButton;
     }
 
-    public void toggleDarkMode(){
+    public void toggleDarkMode() {
         popupStyle = (popupStyle.equals(res.getString(POPUP_STYLE_SHEET))) ? res.getString(POPUP_DARK_SHEET) : res.getString(POPUP_STYLE_SHEET);
     }
 

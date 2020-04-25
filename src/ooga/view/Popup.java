@@ -7,8 +7,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.util.List;
-
 public class Popup {
 
     private static final String vboxStyle = "vbox";
@@ -18,7 +16,7 @@ public class Popup {
     private VBox popupBox;
     private BorderPane root;
 
-    public Popup(int stageWidth, int stageHeight, String stylesheet){
+    public Popup(int stageWidth, int stageHeight, String stylesheet) {
         stage = new Stage();
         stage.setWidth(stageWidth);
         stage.setHeight(stageHeight);
@@ -26,7 +24,7 @@ public class Popup {
         this.stylesheet = stylesheet;
     }
 
-    public void getNewPopup(){
+    public void getNewPopup() {
         root = new BorderPane();
         popupBox = new VBox();
         root.setCenter(popupBox);
@@ -36,28 +34,28 @@ public class Popup {
         stage.setScene(scene);
     }
 
-    public Stage getStage(){
+    public Stage getStage() {
         return stage;
     }
 
-    public void addButtonGroup(ButtonGroup buttons){
+    public void addButtonGroup(ButtonGroup buttons) {
         VBox buttonBox = new VBox();
-        for (Button b: buttons.getButtons()) {
+        for (Button b : buttons.getButtons()) {
             buttonBox.getChildren().add(b);
         }
         buttonBox.getStyleClass().add(vboxStyle);
         popupBox.getChildren().add(buttonBox);
     }
 
-    public VBox getPopupBox(){
+    public VBox getPopupBox() {
         return popupBox;
     }
 
-    public void closePopup(){
+    public void closePopup() {
         stage.close();
     }
 
-    public void setPopupStageTitle(String title){
+    public void setPopupStageTitle(String title) {
         stage.setTitle(title);
     }
 }

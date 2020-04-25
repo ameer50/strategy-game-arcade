@@ -8,7 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -16,7 +19,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 public class MenuScreen {
 
@@ -91,7 +96,7 @@ public class MenuScreen {
     private boolean isDarkMode;
     private String strategyType;
 
-    public MenuScreen(Stage stage){
+    public MenuScreen(Stage stage) {
         this.stage = stage;
         this.menuVBox = new VBox();
         this.isDarkMode = false;
@@ -172,8 +177,8 @@ public class MenuScreen {
         textFieldBox.getStyleClass().add(VBOX);
     }
 
-    private void setUpColorButtonActions(ButtonGroup colorOption, Button next){
-        for (Button b: colorOption.getButtons()) {
+    private void setUpColorButtonActions(ButtonGroup colorOption, Button next) {
+        for (Button b : colorOption.getButtons()) {
             b.setOnAction(e -> {
                 b.setDisable(true);
                 Button otherButton = colorOption.getButtons().get(colorOption.getButtons().indexOf(b) ^ 1);
@@ -185,7 +190,7 @@ public class MenuScreen {
         }
     }
 
-    private void setUpNextAction(Button next, TextField playerOneText, TextField playerTwoText, VBox textFieldBox){
+    private void setUpNextAction(Button next, TextField playerOneText, TextField playerTwoText, VBox textFieldBox) {
         if (!isOnePlayer) {
             textFieldBox.getChildren().add(playerTwoText);
             next.setOnAction(e -> {
@@ -195,8 +200,7 @@ public class MenuScreen {
                 playerTwoName = playerTwoText.getText();
                 setUpLoadGamePopUp();
             });
-        }
-        else {
+        } else {
             next.setOnAction(e -> {
                 assignTextIfEmpty(playerOneText, PLAYER_ONE);
                 playerOneName = playerOneText.getText();
@@ -232,9 +236,9 @@ public class MenuScreen {
         nextButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
         nextButton.setDisable(true);
 
-        for (Button b: cpuDifficulty.getButtons()) {
+        for (Button b : cpuDifficulty.getButtons()) {
             b.setOnAction((newEvent) -> {
-                for(Button button: cpuDifficulty.getButtons()){
+                for (Button button : cpuDifficulty.getButtons()) {
                     button.setDisable(false);
                 }
                 b.setDisable(true);
@@ -264,7 +268,7 @@ public class MenuScreen {
         goButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
         goButton.setDisable(true);
 
-        for (Button b: loadGameOption.getButtons()) {
+        for (Button b : loadGameOption.getButtons()) {
             b.setOnAction((newEvent) -> {
                 b.setDisable(true);
                 Button otherButton = loadGameOption.getButtons().get(loadGameOption.getButtons().indexOf(b) ^ 1);
@@ -298,7 +302,7 @@ public class MenuScreen {
         HBox hBox = new HBox();
         int[] dimensions = {IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE};
         int i = 0;
-        for (String s: List.of(CHECKERS_ICON, CHESS_ICON)) {
+        for (String s : List.of(CHECKERS_ICON, CHESS_ICON)) {
             StackPane stack = new StackPane();
             int width = dimensions[i++];
             int height = dimensions[i++];
@@ -314,7 +318,7 @@ public class MenuScreen {
         menuVBox.getChildren().add(hBox);
     }
 
-    private void arrangeButtons(){
+    private void arrangeButtons() {
         buttons = new ButtonGroup(List.of(CHESS, CHECKERS, CONNECT_FOUR, OTHELLO, CUSTOM));
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
@@ -336,18 +340,18 @@ public class MenuScreen {
         }
     }
 
-    private void setDarkModeListener(){
+    private void setDarkModeListener() {
         darkButton.setOnAction(event -> {
             toggleMenuDarkMode();
         });
     }
 
-    private void setStrategyType(String type){
+    private void setStrategyType(String type) {
         strategyType = type;
     }
 
-    private void assignTextIfEmpty(TextField tf, String text){
-        if(tf.getText().equals("")){
+    private void assignTextIfEmpty(TextField tf, String text) {
+        if (tf.getText().equals("")) {
             tf.setText(text);
         }
     }
@@ -360,19 +364,27 @@ public class MenuScreen {
         return fileChoice;
     }
 
-    public boolean getIsGameOnePlayer() { return isOnePlayer; }
+    public boolean getIsGameOnePlayer() {
+        return isOnePlayer;
+    }
 
-    public String getPlayerOneColor(){ return playerOneColor;}
+    public String getPlayerOneColor() {
+        return playerOneColor;
+    }
 
-    public String getPlayerTwoColor(){ return playerTwoColor;}
+    public String getPlayerTwoColor() {
+        return playerTwoColor;
+    }
 
-    public String getPlayerOneName() { return playerOneName; }
+    public String getPlayerOneName() {
+        return playerOneName;
+    }
 
     public String getPlayerTwoName() {
         return playerTwoName;
     }
 
-    public void toggleMenuDarkMode(){
+    public void toggleMenuDarkMode() {
         isDarkMode = !isDarkMode;
         scene.getStylesheets().remove(menuStyle);
         menuStyle = isDarkMode ? res.getString(MENU_DARK_SHEET) : res.getString(MENU_STYLE_SHEET);
@@ -381,7 +393,7 @@ public class MenuScreen {
     }
 
     public void setGameButtonListener(EventHandler<ActionEvent> e) {
-        for (Button b: buttons.getButtons()) {
+        for (Button b : buttons.getButtons()) {
             b.setOnAction(event -> {
                 gameChoice = b.getText();
                 this.goAction = e;
@@ -394,6 +406,7 @@ public class MenuScreen {
     public boolean isDarkMode() {
         return isDarkMode;
     }
+
     public String getStrategyType() {
         return strategyType;
     }

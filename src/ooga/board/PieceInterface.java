@@ -1,7 +1,6 @@
 package ooga.board;
 
 import java.awt.geom.Point2D;
-import java.io.Serializable;
 import java.util.List;
 
 public interface PieceInterface {
@@ -25,9 +24,6 @@ public interface PieceInterface {
     public boolean isSameColor();
 
     public void incrementMoveCount(boolean isUndo);
-
-
-
 
 
 }
