@@ -92,7 +92,7 @@ public class Controller extends Application {
     }
 
     private void instantiateBoard(String type) throws IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchMethodException, ClassNotFoundException {
-            Class boardClass = Class.forName(String.format("ooga.boar.%sBoard", type));
+            Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
             Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
             board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
                 processor.getPieceMovePatterns(), processor.getPieceScores());

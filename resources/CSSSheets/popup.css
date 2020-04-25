@@ -46,6 +46,20 @@
     -fx-alignment: center;
 }
 
+.close {
+    -fx-background-color:
+            linear-gradient(from 0% 0% to 50% 100%, #FFF8DC, #DC143C);
+    -fx-background-radius: 10;
+    -fx-text-fill: #F8F8FF;
+    -fx-font-weight: bold;
+    -fx-font-size: 20px;
+    -fx-font-family: "Trebuchet MS";
+    -fx-min-width: 120;
+    -fx-min-height: 40;
+    -fx-padding: 15 15 15 15;
+    -fx-alignment: center;
+}
+
 .button:hover {
     -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #be8264, #78503c);
 }
