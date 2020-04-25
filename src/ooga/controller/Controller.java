@@ -21,7 +21,7 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 
 public class Controller extends Application {
-
+    
     private long startTime;
     private Board board;
     private GameScreen gameScreen;
