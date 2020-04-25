@@ -26,6 +26,10 @@ public class CheckersBoard extends Board implements Serializable {
     }
   }
 
+  /**
+   * Checks the current state of the board to see if a player has won
+   * @return
+   */
   @Override
   public String checkWon() {
     String result = checkOneColor();
@@ -37,6 +41,10 @@ public class CheckersBoard extends Board implements Serializable {
     }
   }
 
+  /**
+   * Helper method for CheckWon to see if only one color is remaining on the board
+   * @return
+   */
   public String checkOneColor() {
     int numRed = 0;
     int numBlack = 0;
@@ -59,6 +67,10 @@ public class CheckersBoard extends Board implements Serializable {
     return null;
   }
 
+  /**
+   * Helper method to check if a piece has been cornered.
+   * @return
+   */
   public String checkTrapped() {
     int numRed = 0;
     int numBlack = 0;
@@ -82,6 +94,11 @@ public class CheckersBoard extends Board implements Serializable {
     return null;
   }
 
+  /**
+   * Get different move directions based on piece color and position on the board
+   * @param moveType
+   * @return
+   */
   public List<Integer> getMConsts(String moveType) {
     List<String> rawMoveData = Arrays.asList(moveConstantMap.getString(moveType).split(","));
     List<Integer> moveDataParsed = new ArrayList<Integer>();
@@ -91,6 +108,11 @@ public class CheckersBoard extends Board implements Serializable {
     return moveDataParsed;
   }
 
+  /**
+   * Gets  all the valid moves for a given piece on the board
+   * @param coordinate
+   * @return
+   */
   @Override
   public List<Point2D> getValidMoves(Point2D coordinate) {
     Piece piece = getPieceAt(coordinate);
@@ -109,7 +131,10 @@ public class CheckersBoard extends Board implements Serializable {
     return new ArrayList<>();
   }
 
-
+  /**
+   * Executes a given move
+   * @param m
+   */
   public void doMove(Move m) {
     int x_f = (int) m.getEndLocation().getX();
     Piece currPiece = getPieceAt(m.getStartLocation());
@@ -142,6 +167,12 @@ public class CheckersBoard extends Board implements Serializable {
     }
   }
 
+  /**
+   * Gets given moves that are classified as nonKill
+   * @param coordinate
+   * @param moveDirs
+   * @return
+   */
   private Point2D nonKill(Point2D coordinate, List<Integer> moveDirs) {
     int x = (int) coordinate.getX();
     int y = (int) coordinate.getY();
@@ -152,6 +183,13 @@ public class CheckersBoard extends Board implements Serializable {
     return null;
   }
 
+  /**
+   * Gets all the moves that a piece can do that are a kill
+   * @param coordinate
+   * @param currentPath
+   * @param moveDirs
+   * @return
+   */
   private Point2D kill(Point2D coordinate, Set<Point2D> currentPath, List<Integer> moveDirs) {
     int x = (int) coordinate.getX();
     int y = (int) coordinate.getY();
