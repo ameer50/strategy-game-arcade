@@ -126,7 +126,7 @@ public abstract class Board implements Serializable {
     }
   }
 
-  public void placePiece(Point2D coordinate, Piece piece) {
+  public void placePieceAt(Point2D coordinate, Piece piece) {
     pieceBiMap.forcePut(coordinate, piece);
   }
 

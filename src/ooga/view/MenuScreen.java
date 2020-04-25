@@ -61,6 +61,12 @@ public class MenuScreen {
     public static final String ASSIGNED_FILE_PATH = "resources/%s/default%s.json";
     public static final String MENU_DARK_SHEET = "MenuDarkSheet";
     public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
+    public static final String COLOR_1 = "Color1";
+    public static final String COLOR_2 = "Color2";
+    public static final String CPU_DIFFICULTY = "CPU Difficulty: ";
+    public static final String EASY = "Easy";
+    public static final String MEDIUM = "Medium";
+    public static final String HARD = "Hard";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private final FileChooser fileChooser = new FileChooser();
     private static final double STAGE_HEIGHT = 800;
@@ -146,21 +152,29 @@ public class MenuScreen {
     private void setUpColorPopUp() {
         myPopupScreen.getNewPopup();
         myPopupScreen.getStage().show();
-        ButtonGroup colorOption = new ButtonGroup(List.of(res.getString(gameChoice + "Color1"), res.getString(gameChoice + "Color2")));
-
+        ButtonGroup colorOption = new ButtonGroup(List.of(res.getString(gameChoice + COLOR_1), res.getString(gameChoice + COLOR_2)));
         colorOption.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(colorOption);
         VBox textFieldBox = myPopupScreen.getPopupBox();
-
         Text enterColorText = new Text(PLAYER_ONE_COLOR_PROMPT);
         enterColorText.getStyleClass().add(PLAYERNAME);
-
         if (!isOnePlayer) textFieldBox.getChildren().add(0, enterColorText);
 
         Button next = new Button(NEXT);
         next.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
         next.setDisable(true);
+        setUpColorButtonActions(colorOption, next);
+        Text nameText = new Text(ENTER_PLAYER_NAMES);
+        nameText.getStyleClass().add(PLAYERNAME);
+        TextField playerOneText = makeTextField(PLAYER_ONE);
+        TextField playerTwoText = makeTextField(PLAYER_TWO);
+        setUpNextAction(next, playerOneText, playerTwoText, textFieldBox);
+        textFieldBox.getChildren().addAll(nameText, playerOneText);
+        textFieldBox.setAlignment(Pos.CENTER);
+        textFieldBox.getStyleClass().add(VBOX);
+    }
 
+    private void setUpColorButtonActions(ButtonGroup colorOption, Button next){
         for (Button b: colorOption.getButtons()) {
             b.setOnAction(e -> {
                 b.setDisable(true);
@@ -169,35 +183,13 @@ public class MenuScreen {
                 playerOneColor = b.getText();
                 playerTwoColor = otherButton.getText();
                 next.setDisable(false);
-
             });
         }
+    }
 
-        Text nameText = new Text(ENTER_PLAYER_NAMES);
-        nameText.getStyleClass().add(PLAYERNAME);
-
-        TextField playerOneText = makeTextField(PLAYER_ONE, PLAYER_TEXT_MAX_WIDTH, FILE_TEXT_FIELD);
-        TextField playerTwoText = makeTextField(PLAYER_TWO, PLAYER_TEXT_MAX_WIDTH, FILE_TEXT_FIELD);
-
-        textFieldBox.getChildren().addAll(nameText, playerOneText);
-        textFieldBox.setAlignment(Pos.CENTER);
-        textFieldBox.getStyleClass().add(VBOX);
-
-
-        if (!isOnePlayer) textFieldBox.getChildren().add(playerTwoText);
-
-
-
-
-        if (isOnePlayer){
-            next.setOnAction(e -> {
-
-                assignTextIfEmpty(playerOneText, PLAYER_ONE);
-                playerOneName = playerOneText.getText();
-                setUpCPUDifficultyPopUp();
-            });
-
-        }else{
+    private void setUpNextAction(Button next, TextField playerOneText, TextField playerTwoText, VBox textFieldBox){
+        if (!isOnePlayer) {
+            textFieldBox.getChildren().add(playerTwoText);
             next.setOnAction(e -> {
                 assignTextIfEmpty(playerOneText, PLAYER_ONE);
                 assignTextIfEmpty(playerTwoText, PLAYER_TWO);
@@ -206,14 +198,20 @@ public class MenuScreen {
                 setUpLoadGamePopUp();
             });
         }
+        else {
+            next.setOnAction(e -> {
+                assignTextIfEmpty(playerOneText, PLAYER_ONE);
+                playerOneName = playerOneText.getText();
+                setUpCPUDifficultyPopUp();
+            });
+        }
         textFieldBox.getChildren().addAll(next);
     }
-
-    private TextField makeTextField(String promptText, int maxWidth, String style){
+    private TextField makeTextField(String promptText){
         TextField textField = new TextField();
         textField.setPromptText(promptText);
-        textField.setMaxWidth(maxWidth);
-        textField.getStyleClass().add(style);
+        textField.setMaxWidth(MenuScreen.PLAYER_TEXT_MAX_WIDTH);
+        textField.getStyleClass().add(MenuScreen.FILE_TEXT_FIELD);
         return textField;
     }
 
@@ -221,10 +219,10 @@ public class MenuScreen {
         myPopupScreen.getNewPopup();
         myPopupScreen.getStage().show();
 
-        Text difficultText = new Text("CPU Difficulty: ");
+        Text difficultText = new Text(CPU_DIFFICULTY);
         difficultText.getStyleClass().add(PLAYERNAME);
 
-        ButtonGroup cpuDifficulty = new ButtonGroup(List.of("Easy", "Medium", "Hard"));
+        ButtonGroup cpuDifficulty = new ButtonGroup(List.of(EASY, MEDIUM, HARD));
 
         cpuDifficulty.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(cpuDifficulty);
@@ -247,7 +245,6 @@ public class MenuScreen {
                 setStrategyType(res.getString(b.getText()));
             });
         }
-
 
         nextButton.setOnAction(e -> {
             setUpLoadGamePopUp();
@@ -304,7 +301,6 @@ public class MenuScreen {
         HBox hBox = new HBox();
         int[] dimensions = {IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE, IMAGE_SIZE};
         int i = 0;
-        int colIndex = 0;
         for (String s: List.of(CHECKERS_ICON, CHESS_ICON)) {
             StackPane stack = new StackPane();
             int width = dimensions[i++];
@@ -316,26 +312,21 @@ public class MenuScreen {
             stack.getChildren().addAll(background, picture);
 
             hBox.getChildren().add(stack);
-            colIndex += 2;
         }
         hBox.getStyleClass().add(HBOX);
         menuVBox.getChildren().add(hBox);
     }
 
     private void arrangeButtons(){
-
         buttons = new ButtonGroup(List.of(CHESS, CHECKERS, CONNECT_FOUR, OTHELLO, CUSTOM));
-
         VBox vbox = new VBox();
         for (Button b : buttons.getButtons()) {
             b.getStyleClass().add(BUTTONS_STYLE);
             vbox.getChildren().add(b);
-
         }
         vbox.getStyleClass().add(VBOX);
         menuVBox.getChildren().add(vbox);
     }
-
 
     private void assignFile(String choice) {
         if (choice.equals(DEFAULT_GAME)) {
@@ -390,7 +381,6 @@ public class MenuScreen {
         menuStyle = isDarkMode ? res.getString(MENU_DARK_SHEET) : res.getString(MENU_STYLE_SHEET);
         popupStyle = isDarkMode ? res.getString(POPUP_DARK_SHEET) : res.getString(POPUP_STYLE_SHEET);
         scene.getStylesheets().add(menuStyle);
-
     }
 
     public void setGameButtonListener(EventHandler<ActionEvent> e) {
@@ -403,7 +393,6 @@ public class MenuScreen {
             });
         }
     }
-
     public boolean isDarkMode() {
         return isDarkMode;
     }

@@ -2,22 +2,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.awt.*;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javafx.util.Pair;
-import ooga.board.Board;
 import ooga.board.CheckersBoard;
-import ooga.board.ChessBoard;
 import ooga.board.Piece;
 import ooga.history.Move;
 import ooga.json.JSONProcessor;
-import ooga.view.PieceView;
-import ooga.xml.XMLProcessor;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -94,7 +83,7 @@ public class CheckersBoardTests{
     @Test
     public void blackKillWhite(){
         Point2D point = new Point2D.Double(4,3);
-        board.placePiece(point, new Piece("Coin", "P2 1", 5, "Red"));
+        board.placePieceAt(point, new Piece("Coin", "P2 1", 5, "Red"));
         System.out.println(board);
         Move m = new Move(new Point2D.Double(5, 2), new Point2D.Double(3, 4));
         board.doMove(m);
@@ -110,7 +99,7 @@ public class CheckersBoardTests{
     @Test
     public void whiteKillBlack(){
         Point2D point = new Point2D.Double(3,2);
-        board.placePiece(point, new Piece("Coin", "P1 1", 5, "Black"));
+        board.placePieceAt(point, new Piece("Coin", "P1 1", 5, "Black"));
         System.out.println(board);
         Move m = new Move(new Point2D.Double(2, 1), new Point2D.Double(4, 3));
         board.doMove(m);
