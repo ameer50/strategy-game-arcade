@@ -28,14 +28,10 @@ public abstract class Player {
         for (Piece capturedPiece: m.getCapturedPiecesAndLocations().values()) {
             addToScore(m.isUndo() ? -capturedPiece.getValue() : capturedPiece.getValue());
         }
-
-        // score updating for converted pieces
-
         for (Pair<Piece, Piece> convertedPiece: m.getConvertedPiecesAndLocations().values()) {
             Piece newPiece = convertedPiece.getValue();
             addToScore(m.isUndo() ? -newPiece.getValue() : newPiece.getValue());
         }
-
     }
 
     public void addToScore(int amount) {
