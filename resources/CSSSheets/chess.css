@@ -192,14 +192,14 @@
     -fx-text-fill: white;
 }
 
-.list-cell:even { /* changed to even */
+.list-cell:even {
     -fx-background-color: #FFC0CB;
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }
 
-.list-cell:odd { /* changed to odd */
+.list-cell:odd {
     -fx-background-color: #FFF5EE;
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;

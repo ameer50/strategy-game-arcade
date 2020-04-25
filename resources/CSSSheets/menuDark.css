@@ -83,7 +83,7 @@
 
 .file-text-field {
     -fx-border-width: 0 0 1 0;
-/ / top, right, bottom, left -fx-background-color: #F8F8FF;
+    -fx-background-color: #F8F8FF;
     -fx-font: 20px "Helvatica";
     -fx-font-weight: bold;
     -fx-text-fill: BLACK;
