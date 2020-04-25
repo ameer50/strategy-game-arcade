@@ -161,17 +161,15 @@
 }
 
 .scores {
-    -fx-spacing: 15;
+    -fx-spacing: 10;
     -fx-alignment: center;
     -fx-vgap: 10;
     -fx-padding: 10;
 }
 
 .icons {
-    -fx-spacing: 25;
+    -fx-spacing: 10;
     -fx-alignment: center;
-    -fx-vgap: 10;
-    -fx-padding: 10;
 }
 
 .hboxlist {
