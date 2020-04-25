@@ -92,8 +92,8 @@
 
 .redborder {
     -fx-border-style: solid inside;
-    -fx-border-width: 4;
-    -fx-border-insets: 5;
+    -fx-border-width: 3;
+    -fx-border-insets: 3;
     -fx-border-color: #e60000;
 }
 
