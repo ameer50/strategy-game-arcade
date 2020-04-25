@@ -41,7 +41,7 @@ public class DashboardView {
     public static final String FILE_ENTER_TITLE = "Enter File Name";
     public static final int POPUP_STAGE_HEIGHT = 500;
     public static final int POPUP_STAGE_WIDTH = 500;
-    public static final String ENTER_JSON_FILENAME = "Type JSON Filename and press ENTER to save.";
+    public static final String ENTER_JSON_FILENAME = "Type JSON Filename and Press ENTER to Save";
     public static final String SAVE_FILE_STYLE = "savefile";
     public static final int FILE_SAVE_TEXT_FIELD_MAX_WIDTH = 200;
     public static final String FILE_TEXT_FIELD_STYLE = "file-text-field";
@@ -56,6 +56,7 @@ public class DashboardView {
     public static final String SAVED_JSON_PATH = "JSON_PATH";
     public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
     public static final String SKIP_TURN = "Skip Turn";
+    public static final String EXAMPLE = "example";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private VBox displayBox;
     private Text playerOneName;
@@ -248,17 +249,11 @@ public class DashboardView {
         TextField textField = new TextField();
         textField.setMaxWidth(FILE_SAVE_TEXT_FIELD_MAX_WIDTH);
         textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
+        textField.setPromptText(EXAMPLE);
         VBox textFieldBox = pop.getPopupBox();
-
-//        Button saveButton = new Button(SAVE);
-//        saveButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
-//        saveButton.setDisable(true);
-
-
 
         textFieldBox.getChildren().addAll(prefer, textField);
         textFieldBox.setAlignment(Pos.CENTER);
-
 
         textField.setOnAction(e -> {
             setNewFileName(textField.getText());
@@ -329,7 +324,6 @@ public class DashboardView {
     }
 
     private void setNewFileName(String str){
-
         if (str.equals("")){
             newFileName = String.format(res.getString(SAVED_JSON_PATH), "example");
         }else{
