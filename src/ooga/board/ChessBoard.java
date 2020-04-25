@@ -19,14 +19,14 @@ import javafx.util.Pair;
 import ooga.exceptions.ReflectionException;
 import ooga.exceptions.ResourceBundleException;
 import ooga.history.Move;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 
 public class ChessBoard extends Board implements Serializable {
 
   public static final String KING = "King";
   public static final String PAWN = "Pawn";
   public static final String KNIGHT = "Knight";
-  public static final String RESOURCE_BUNDLE_EXCEPTION = "ResourceBundleException";
+  public static final String RESOURCE_BUNDLE_EXCEPTION = "Could not find resource bundle";
   public static final String ERROR_MSG = "Could not create User Input resource bundles";
   public static final String MOVES_DIR = "src/properties/chessMoveConstants.properties";
   public static final String ISHIFTS = "IShifts";
@@ -48,8 +48,7 @@ public class ChessBoard extends Board implements Serializable {
       moveConstantMap = new PropertyResourceBundle(new FileInputStream(
           MOVES_DIR));
     } catch (IOException e) {
-      new DisplayError(RESOURCE_BUNDLE_EXCEPTION);
-      throw new ResourceBundleException(ERROR_MSG);
+      throw new SetUpError(RESOURCE_BUNDLE_EXCEPTION);
     }
   }
 
@@ -109,8 +108,7 @@ public class ChessBoard extends Board implements Serializable {
       Object ret = moveMethod.invoke(this, coord, params, piece);
       return (List<Point2D>) ret;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException g) {
-      new DisplayError(REFLECTION_EXCEPTION);
-      throw new ReflectionException(REFLECTION_ERR_MSG);
+      throw new SetUpError(REFLECTION_EXCEPTION);
     }
   }
 

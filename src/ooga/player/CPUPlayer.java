@@ -1,16 +1,14 @@
 package ooga.player;
 
-import java.awt.geom.Point2D;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import ooga.board.Board;
 import ooga.utility.StringUtility;
 import ooga.history.Move;
-import ooga.view.DisplayError;
+import ooga.view.SetUpError;
 
 public class CPUPlayer extends Player {
 
@@ -49,7 +47,7 @@ public class CPUPlayer extends Player {
       Object coordinateList = generator.invoke(this);
       moveCoordinates = (Move) coordinateList;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-      new DisplayError("Error in: " + generatorName);
+      new SetUpError("Error in: " + generatorName);
     }
 
     moveTimes.add((double) (startTime - System.currentTimeMillis()));
