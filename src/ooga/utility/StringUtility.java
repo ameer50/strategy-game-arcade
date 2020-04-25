@@ -4,10 +4,6 @@ import ooga.player.CPUPlayer;
 
 public class StringUtility {
 
-    public StringUtility() {
-    }
-
-    // TODO: Move this to a different class.
     public String strategyToString(CPUPlayer.StrategyType strategy) {
         String[] arr = strategy.toString().toLowerCase().split("_");
         String ret = "";
@@ -17,7 +13,6 @@ public class StringUtility {
         return ret;
     }
 
-    // TODO: Move this to a different class.
     public String capitalize(String word) {
         String uppercase = word.substring(0, 1).toUpperCase();
         String lowercase = word.substring(1);

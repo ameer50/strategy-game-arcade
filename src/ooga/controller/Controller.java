@@ -171,7 +171,12 @@ public class Controller extends Application {
         setUndoRedoListeners();
 
         dashboardView.setSaveClicked(e -> {
-            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
+            try {
+                processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
+            } catch (SetUpError error) {
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
+            }
         });
 
         dashboardView.setSkipTurnClicked(e -> {

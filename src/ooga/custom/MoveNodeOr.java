@@ -8,7 +8,6 @@ import java.util.List;
 public class MoveNodeOr extends MoveNode implements Serializable {
 
     public MoveNodeOr(List<MoveNode> children) {
-        // TODO: Throw an error if 'children' has less than two nodes.
         super(children);
     }
 

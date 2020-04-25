@@ -6,9 +6,6 @@ import java.util.List;
 
 public class Point2DUtility {
 
-    public Point2DUtility() {
-    }
-
     public List<Point2D> concatPointLists(List<Point2D> listA, List<Point2D> listB) {
         List<Point2D> pointList = new ArrayList();
         for (Point2D pointA : listA) {

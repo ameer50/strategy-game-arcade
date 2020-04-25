@@ -27,15 +27,12 @@ public class Piece implements Serializable {
         if (pattern != null && pattern.length() > 2 && pattern.substring(0, 2).contains("(")) {
             for (String pointStr : pattern.split("[)], ")) {
                 pointStr = pointStr.substring(1);
-                // System.out.println(pointStr);
                 Pattern regexp = Pattern.compile("(-?\\d), (-?\\d)");
                 Matcher matcher = regexp.matcher(pointStr);
                 matcher.matches();
 
                 int x = Integer.parseInt(matcher.group(1));
-                //System.out.println(matcher.group(1));
                 int y = Integer.parseInt(matcher.group(2));
-                //System.out.println(matcher.group(2));
                 displacements.add(new Point2D.Double(x, y));
             }
         }

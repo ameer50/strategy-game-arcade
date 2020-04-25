@@ -11,7 +11,6 @@ public class MoveNodeAnd extends MoveNode implements Serializable {
     private Point2DUtility utility;
 
     public MoveNodeAnd(List<MoveNode> children) {
-        /* TODO: Throw an error if 'children' has less than two nodes. */
         super(children);
         this.utility = new Point2DUtility();
     }

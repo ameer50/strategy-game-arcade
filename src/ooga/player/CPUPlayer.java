@@ -13,6 +13,9 @@ import java.util.Random;
 
 public class CPUPlayer extends Player {
 
+    public static final String ERROR_MESSAGE = "Error in: ";
+    public static final String GENERATE_MOVE = "generate%sMove";
+
     public enum StrategyType {
         TRIVIAL,
         RANDOM,
@@ -42,13 +45,13 @@ public class CPUPlayer extends Player {
         Move moveCoordinates = null;
 
         String strategyStr = utility.strategyToString(StrategyType.valueOf(strategy));
-        String generatorName = String.format("generate%sMove", strategyStr);
+        String generatorName = String.format(GENERATE_MOVE, strategyStr);
         try {
             Method generator = this.getClass().getDeclaredMethod(generatorName, null);
             Object coordinateList = generator.invoke(this);
             moveCoordinates = (Move) coordinateList;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            new SetUpError("Error in: " + generatorName);
+            throw new SetUpError(ERROR_MESSAGE + generatorName);
         }
 
         moveTimes.add((double) (startTime - System.currentTimeMillis()));
@@ -61,7 +64,6 @@ public class CPUPlayer extends Player {
         if (possibleMoves.size() != 0) {
             return possibleMoves.get(0);
         }
-        System.out.println("AI could not find a piece");
         return null;
     }
 
@@ -74,7 +76,6 @@ public class CPUPlayer extends Player {
             Move move = possibleMoves.get(index);
             return move;
         }
-        System.out.println("AI could not find a piece");
         return null;
     }
 
@@ -136,16 +137,6 @@ public class CPUPlayer extends Player {
             }
         }
         return bestValue;
-    }
-
-    public List<Integer> generateBruteForceMove() {
-        return null;
-        // TODO: Implement.
-    }
-
-    public List<Integer> generateSingleBranchMove() {
-        // TODO: Implement.
-        return null;
     }
 
     public double getRecentMoveTime() {

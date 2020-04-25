@@ -33,6 +33,14 @@ public class JSONProcessor {
     public static final String ERROR_MSG = "Error parsing JSON.";
     public static final String AND = " AND ";
     public static final String OR = " OR ";
+    public static final String DEFAULT_PARSE_ERROR = "Unable to parse/load in file";
+    public static final String WIDTH = "width";
+    public static final String HEIGHT = "height";
+    public static final String PARSE_PIECE_ERROR = "Error parsing piece scores";
+    public static final String PARSE_LOCATIONS_ERROR = "Error parsing piece locations";
+    public static final String PARSE_MOVE_PATTTERNS_ERROR = "Error parsing piece moves";
+    public static final String PARSE_MOVE_PATTERNS_ERROR = PARSE_MOVE_PATTTERNS_ERROR;
+    public static final String WRITE_TO_FILE_ERROR = "Could not write to file";
     protected String name;
     protected Map<String, String> settings;
     protected Map<Point2D, String> pieceLocations;
@@ -64,7 +72,7 @@ public class JSONProcessor {
             parsePieceLocations();
         } catch (ParseException | IOException e) {
             System.out.println(ERROR_MSG);
-            throw new SetUpError("Unable to parse/load in file.");
+            throw new SetUpError(DEFAULT_PARSE_ERROR);
         }
     }
 
@@ -73,11 +81,11 @@ public class JSONProcessor {
     }
 
     public int getWidth() {
-        return Math.toIntExact(Long.parseLong(settings.get("width")));
+        return Math.toIntExact(Long.parseLong(settings.get(WIDTH)));
     }
 
     public int getHeight() {
-        return Math.toIntExact(Long.parseLong(settings.get("height")));
+        return Math.toIntExact(Long.parseLong(settings.get(HEIGHT)));
     }
 
     public Map<String, String> getSettings() {
@@ -104,7 +112,7 @@ public class JSONProcessor {
                 pieceScores.put(piece, Math.toIntExact(toInt));
             }
         } catch (Exception e) {
-            throw new SetUpError("Error parsing piece scores");
+            throw new SetUpError(PARSE_PIECE_ERROR);
         }
     }
 
@@ -123,7 +131,7 @@ public class JSONProcessor {
                 }
             }
         } catch (Exception e) {
-            throw new SetUpError("Error parsing piece locations");
+            throw new SetUpError(PARSE_LOCATIONS_ERROR);
         }
     }
 
@@ -139,11 +147,10 @@ public class JSONProcessor {
                 addToPieceMoves(moves.get(PIECES));
                 for (String piece : pieceMoveNodes.keySet()) {
                     pieceMovePatterns.put(piece, pieceMoveNodes.get(piece).toString());
-                    // System.out.println(String.format("put %s : %s", piece, pieceMoveNodes.get(piece).toString()));
                 }
             }
         } catch (Exception e) {
-            throw new SetUpError("Error parsing piece moves");
+            throw new SetUpError(PARSE_MOVE_PATTERNS_ERROR);
         }
     }
 
@@ -241,7 +248,7 @@ public class JSONProcessor {
     }
 
     public void writeLocations(Board board, String filename) {
-        jo.remove("locations");
+        jo.remove(LOCATIONS);
         Map<String, ArrayList<String>> locations = new LinkedHashMap();
         List<Point2D> pieces = board.getPieceLocations();
         for (Point2D point : pieces) {
@@ -251,7 +258,7 @@ public class JSONProcessor {
             }
             locations.get(piece).add(String.format("%d, %d", (int) point.getX(), (int) point.getY()));
         }
-        jo.put("locations", locations);
+        jo.put(LOCATIONS, locations);
 
         try {
             FileWriter writer = new FileWriter(new File(filename));
@@ -259,7 +266,7 @@ public class JSONProcessor {
             writer.flush();
             writer.close();
         } catch (IOException e) {
-            throw new SetUpError("Could not find/load in the file");
+            throw new SetUpError(WRITE_TO_FILE_ERROR);
         }
     }
 }

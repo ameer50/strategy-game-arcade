@@ -13,7 +13,6 @@ public class MoveNodeLeaf extends MoveNode implements Serializable {
 
     @Override
     public MoveNode invokeConstructor(List<MoveNode> children) {
-        // Should never be called...
         return null;
     }
 

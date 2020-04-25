@@ -18,6 +18,7 @@ public abstract class Board implements Serializable {
     public static final String HEIGHT = "height";
     public static final String WIDTH = "width";
     public static final String BOTTOM_COLOR = "bottomColor";
+    public static final String COPY_BOARD_ERROR = "Copy (Preset Board) went wrong";
     protected Map<String, String> settings;
     public static final String ICON = "icon";
     protected Map<String, String> pieceMovePatterns;
@@ -219,10 +220,7 @@ public abstract class Board implements Serializable {
      */
     public List<Move> getPossibleMoves(String color) {
         List<Move> moves = new ArrayList<>();
-    /* switch to ArrayList to avoid concurrent modification exception
-    because getValidMoves modifies pieceBiMap */
-        List<Point2D> starts = new ArrayList<>();
-        starts.addAll(pieceBiMap.keySet());
+        List<Point2D> starts = new ArrayList<>(pieceBiMap.keySet());
         for (Point2D start : starts) {
             if (pieceBiMap.get(start) != null && pieceBiMap.get(start).getColor().equals(color)) {
                 for (Point2D end : getValidMoves(start)) {
@@ -254,7 +252,6 @@ public abstract class Board implements Serializable {
         Map<String, Integer> pieceScoresCopy = (Map<String, Integer>) utility.getSerializedCopy(pieceScores);
 
         Map<Point2D, String> locationsCopy = new HashMap<>();
-        /* Make sure that the copying mechanism below works. */
         for (Point2D point : pieceBiMap.keySet()) {
             Piece piece = pieceBiMap.get(point);
             if (piece != null) {
@@ -268,7 +265,7 @@ public abstract class Board implements Serializable {
             Board copy = constructor.newInstance(settingsCopy, locationsCopy, pieceMovePatternsCopy, pieceScoresCopy);
             return copy;
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
-            throw new SetUpError("Copy (Preset Board) went wrong");
+            throw new SetUpError(COPY_BOARD_ERROR);
         }
     }
 

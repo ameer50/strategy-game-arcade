@@ -6,8 +6,7 @@ import java.io.*;
 
 public class CopyUtility {
 
-    public CopyUtility() {
-    }
+    public static final String CANNOT_FIND_CLASS_ERROR = "Unable to find class";
 
     public Object getSerializedCopy(Object o) {
         try {
@@ -18,7 +17,7 @@ public class CopyUtility {
             ObjectInputStream objInputStream = new ObjectInputStream(inputStream);
             return objInputStream.readObject();
         } catch (ClassNotFoundException | IOException e) {
-            throw new SetUpError("Unable to find class");
+            throw new SetUpError(CANNOT_FIND_CLASS_ERROR);
         }
     }
 }

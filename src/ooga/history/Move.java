@@ -10,6 +10,8 @@ import java.util.Map;
 public class Move implements Cloneable {
 
     public static final String ERROR_MESSAGE = "Cannot get reverse move.";
+    public static final String MOVE_GENERATED_FORMAT = "%s added at (%d, %d)";
+    public static final String MOVE_DEFAULT_FORMAT = "%s from (%d, %d) to (%d, %d)";
     private Piece piece;
     private Point2D startLocation;
     private Point2D endLocation;
@@ -84,8 +86,8 @@ public class Move implements Cloneable {
     @Override
     public String toString() {
         if (isPieceGenerated)
-            return String.format("%s added at (%d, %d)", piece, (int) endLocation.getX(), (int) endLocation.getY());
-        return String.format("%s from (%d, %d) to (%d, %d)", piece, (int) startLocation.getX(), (int) startLocation.getY(), (int) endLocation.getX(), (int) endLocation.getY());
+            return String.format(MOVE_GENERATED_FORMAT, piece, (int) endLocation.getX(), (int) endLocation.getY());
+        return String.format(MOVE_DEFAULT_FORMAT, piece, (int) startLocation.getX(), (int) startLocation.getY(), (int) endLocation.getX(), (int) endLocation.getY());
     }
 
     public void addCapturedPiece(Piece capturedPiece, Point2D capturedPieceLocation) {
