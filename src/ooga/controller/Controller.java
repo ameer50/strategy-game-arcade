@@ -287,19 +287,4 @@ public class Controller extends Application {
         }));
         thread.start();
     }
-
-    private void printMessageAndTime(String message) {
-        long endTime = System.currentTimeMillis();
-        System.out.println(message);
-        System.out.println(String.format("time: %.2f", (float)(endTime-startTime)));
-    }
-
-    @Deprecated
-    private void stall(double millis) {
-        double initial = System.currentTimeMillis();
-        double elapsed = 0;
-        while (elapsed < millis) {
-            elapsed = System.currentTimeMillis() - initial;
-        }
-    }
 }
