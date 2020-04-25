@@ -24,27 +24,27 @@
     }
   },
   "locations": {
-    "White_Triangle": [
+    "Black_Triangle": [
       "5, 0",
       "4, 3"
     ],
-    "White_Square": [
+    "Black_Square": [
       "5, 1",
       "4, 4"
     ],
-    "White_Circle": [
+    "Black_Circle": [
       "5, 2",
       "4, 5"
     ],
-    "Black_Triangle": [
+    "White_Triangle": [
       "1, 0",
       "0, 3"
     ],
-    "Black_Square": [
+    "White_Square": [
       "1, 1",
       "0, 4"
     ],
-    "Black_Circle": [
+    "White_Circle": [
       "1, 2",
       "0, 5"
     ]
