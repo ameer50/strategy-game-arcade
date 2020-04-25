@@ -106,6 +106,12 @@ public abstract class Board implements Serializable {
     }
   }
 
+  public void removePieceAt(Point2D location){
+    if(pieceBiMap.containsKey(location)){
+      pieceBiMap.remove(location);
+    }
+  }
+
   public Piece getPieceAt(Point2D location) {
     if (isCellInBounds((int) location.getX(), (int) location.getY())) {
       return pieceBiMap.get(location);

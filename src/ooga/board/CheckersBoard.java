@@ -31,7 +31,6 @@ public class CheckersBoard extends Board implements Serializable {
       moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/moveConstants.properties"));
     } catch (IOException e) {
       new DisplayError("ResourceBundleException");
-      throw new ResourceBundleException("Could not create User Input resource bundles");
     }
   }
 
@@ -39,7 +38,6 @@ public class CheckersBoard extends Board implements Serializable {
   public String checkWon() {
     String result = checkOneColor();
     String result2 = checkTrapped();
-
     if (result != null) {
       return result;
     } else {
@@ -93,12 +91,12 @@ public class CheckersBoard extends Board implements Serializable {
   }
 
   public List<Integer> getMConsts(String moveType) {
-    List<String> ret = Arrays.asList(moveConstantMap.getString(moveType).split(","));
-    List<Integer> rett = new ArrayList<Integer>();
-    for (int i = 0; i < ret.size(); i++) {
-      rett.add(Integer.parseInt(ret.get(i)));
+    List<String> rawMoveData = Arrays.asList(moveConstantMap.getString(moveType).split(","));
+    List<Integer> moveDataParsed = new ArrayList<Integer>();
+    for (int i = 0; i < rawMoveData.size(); i++) {
+      moveDataParsed.add(Integer.parseInt(rawMoveData.get(i)));
     }
-    return rett;
+    return moveDataParsed;
   }
 
   @Override
@@ -122,29 +120,18 @@ public class CheckersBoard extends Board implements Serializable {
 
   public void doMove(Move m) {
     int x_f = (int) m.getEndLocation().getX();
-    int y_f = (int) m.getEndLocation().getY();
     Piece currPiece = getPieceAt(m.getStartLocation());
     m.setPiece(currPiece);
 
-//        if (m.isPromote() && m.isUndo()) {
-//            // demote backend
-//            currPiece.setType("Coin");
-//            currPiece.setMovePattern((currPiece.getColor().equals("White") ? "P2 1" : "P1 1"));
-//            currPiece.setValue(pieceScores.get(currPiece.getFullName()));
-//            // demote frontend
-//            promoteAction.process(m.getStartLocation());
-//        }
-
     placePiece(m.getStartLocation(), null);
     placePiece(m.getEndLocation(), currPiece);
-    pieceBiMap.forcePut(m.getEndLocation(), currPiece);
 
     if (killPaths.containsKey(m.getEndLocation())) {
       for (Point2D point : killPaths.get(m.getEndLocation())) {
         if (getPieceAt(point) != null) {
           m.addCapturedPiece(getPieceAt(point), point);
         }
-        removePiece(point);
+        removePieceAt(point);
       }
     }
 
@@ -158,7 +145,7 @@ public class CheckersBoard extends Board implements Serializable {
 
     for (Point2D location : m.getCapturedPiecesAndLocations().keySet()) {
       if (location != null) {
-        removePiece(location);
+        removePieceAt(location);
       }
     }
   }
@@ -171,7 +158,6 @@ public class CheckersBoard extends Board implements Serializable {
       return new Point2D.Double(x + moveDirs.get(0), y + moveDirs.get(1));
     }
     return null;
-
   }
 
   private Point2D kill(Point2D coordinate, Set<Point2D> currentPath, List<Integer> moveDirs) {
@@ -212,7 +198,6 @@ public class CheckersBoard extends Board implements Serializable {
     Set<Point2D> ret = new HashSet<>();
     ret.add(p1);
     ret.add(p2);
-
     ret.remove(null);
     return ret;
   }
@@ -224,10 +209,8 @@ public class CheckersBoard extends Board implements Serializable {
     ret.add(p3);
     ret.add(p4);
     Piece p = getPieceAt(coordinate);
-    getNextStepsP(p3, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()),
-        uord);
-    getNextStepsP(p4, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()),
-        uord);
+    getNextStepsP(p3, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()), uord);
+    getNextStepsP(p4, ret, new Piece(p.getType(), p.getMovePattern(), p.getValue(), p.getColor()), uord);
     ret.remove(null);
     return ret;
   }
@@ -237,11 +220,11 @@ public class CheckersBoard extends Board implements Serializable {
       return;
     }
     ret.add(start);
-    pieceBiMap.forcePut(start, p);
+    putPieceAt(start, p);
     getNextStepsP(kill(start, killPaths.get(start), getMConsts(uord + "_left_kill")), ret, p, uord);
-    getNextStepsP(kill(start, killPaths.get(start), getMConsts(uord + "_right_kill")), ret, p,
-        uord);
-    pieceBiMap.forcePut(start, null);
+    getNextStepsP(kill(start, killPaths.get(start), getMConsts(uord + "_right_kill")), ret, p, uord);
+    removePieceAt(start);
+    //putPieceAt(start, null);
   }
 
   private void getNextStepsKing(Point2D start, Set<Point2D> ret, Piece p) {
@@ -249,12 +232,13 @@ public class CheckersBoard extends Board implements Serializable {
       return;
     }
     ret.add(start);
-    pieceBiMap.forcePut(start, p);
+    putPieceAt(start, p);
     getNextStepsP(kill(start, killPaths.get(start), getMConsts("up_left_kill")), ret, p, "up");
     getNextStepsP(kill(start, killPaths.get(start), getMConsts("up_right_kill")), ret, p, "up");
     getNextStepsP(kill(start, killPaths.get(start), getMConsts("down_left_kill")), ret, p, "down");
     getNextStepsP(kill(start, killPaths.get(start), getMConsts("down_right_kill")), ret, p, "down");
-    pieceBiMap.forcePut(start, null);
+    removePieceAt(start);
+    //putPieceAt(start, null);
   }
 
   private Set<Point2D> king(Point2D coordinate) {
@@ -281,15 +265,12 @@ public class CheckersBoard extends Board implements Serializable {
     return ret;
   }
 
-  public boolean isOppColor(Piece currPiece, Piece oppPiece) {
+  private boolean isOppColor(Piece currPiece, Piece oppPiece) {
     if (currPiece == null || oppPiece == null) {
       return true;
     } else {
       return !(oppPiece.getColor().equals(currPiece.getColor()));
     }
   }
-
-  private void removePiece(Point2D coordinate) {
-    putPieceAt(coordinate, null);
-  }
+  
 }
