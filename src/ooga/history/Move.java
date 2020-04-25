@@ -10,6 +10,7 @@ import java.util.Map;
 
 public class Move implements Cloneable {
 
+    public static final String ERROR_MESSAGE = "Cannot get reverse move.";
     private Piece piece;
     private Point2D startLocation;
     private Point2D endLocation;
@@ -36,7 +37,7 @@ public class Move implements Cloneable {
             reverseMove.setUndo(true);
             return reverseMove;
         } catch (CloneNotSupportedException e) {
-            new SetUpError("Cannot get reverse move!");
+            System.out.println(ERROR_MESSAGE);
             return null;
         }
     }
@@ -55,7 +56,6 @@ public class Move implements Cloneable {
         endLocation = (Point2D) location.clone();
     }
 
-    /* TODO: replace instances of the above with instances of the below */
     public int getStartX() { return (int) startLocation.getX(); }
     public int getStartY() { return (int) startLocation.getY(); }
     public int getEndX() { return (int) endLocation.getX(); }

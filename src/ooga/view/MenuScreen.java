@@ -130,8 +130,6 @@ public class MenuScreen {
         setDarkModeListener();
     }
 
-
-
     private void setUpPlayerPopUp() {
         myPopupScreen.getNewPopup();
         myPopupScreen.getStage().show();
@@ -207,7 +205,8 @@ public class MenuScreen {
         }
         textFieldBox.getChildren().addAll(next);
     }
-    private TextField makeTextField(String promptText){
+
+    private TextField makeTextField(String promptText) {
         TextField textField = new TextField();
         textField.setPromptText(promptText);
         textField.setMaxWidth(MenuScreen.PLAYER_TEXT_MAX_WIDTH);
@@ -215,7 +214,7 @@ public class MenuScreen {
         return textField;
     }
 
-    private void setUpCPUDifficultyPopUp(){
+    private void setUpCPUDifficultyPopUp() {
         myPopupScreen.getNewPopup();
         myPopupScreen.getStage().show();
 
@@ -227,8 +226,6 @@ public class MenuScreen {
         cpuDifficulty.addStyle(res.getString(SETTINGS_BUTTONS));
         myPopupScreen.addButtonGroup(cpuDifficulty);
         VBox vBox = myPopupScreen.getPopupBox();
-
-
         vBox.getChildren().add(0, difficultText);
 
         Button nextButton = new Button(NEXT);
@@ -393,11 +390,11 @@ public class MenuScreen {
             });
         }
     }
+
     public boolean isDarkMode() {
         return isDarkMode;
     }
     public String getStrategyType() {
         return strategyType;
     }
-
 }

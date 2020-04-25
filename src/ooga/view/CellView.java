@@ -88,7 +88,6 @@ public class CellView extends StackPane {
         hasRedBorder = !hasRedBorder;
     }
 
-
     public void setOnClickFunction() {
         this.setOnMouseClicked(e -> {
             // unhighlight everything if a box is clicked that has nothing there
@@ -137,5 +136,4 @@ public class CellView extends StackPane {
     public boolean isHasRedBorder() {
         return hasRedBorder;
     }
-
 }

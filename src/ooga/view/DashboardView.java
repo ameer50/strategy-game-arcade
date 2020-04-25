@@ -57,6 +57,7 @@ public class DashboardView {
     public static final String POPUP_DARK_SHEET = "PopupDarkSheet";
     public static final String SKIP_TURN = "Skip Turn";
     public static final String EXAMPLE = "example";
+    public static final String EXAMPLE_FILE = "example";
     private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
     private VBox displayBox;
     private Text playerOneName;
@@ -324,12 +325,8 @@ public class DashboardView {
         return newFileName;
     }
 
-    private void setNewFileName(String str){
-        if (str.equals("")){
-            newFileName = String.format(res.getString(SAVED_JSON_PATH), "example");
-        }else{
-            newFileName = String.format(res.getString(SAVED_JSON_PATH), str);
-        }
+    private void setNewFileName(String str) {
+        newFileName = str.equals("") ? String.format(res.getString(SAVED_JSON_PATH), EXAMPLE_FILE) : String.format(res.getString(SAVED_JSON_PATH), str);
     }
     
     public void setWinner(String winner){

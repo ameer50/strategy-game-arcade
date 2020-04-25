@@ -21,7 +21,13 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 
 public class Controller extends Application {
-    
+
+    public static final String ICON_TAG = "icon";
+    public static final String BOARD_PACKAGE = "ooga.board.%sBoard";
+    public static final String INITIALIZE_BOARD_ERROR_MESSAGE = "Error creating board";
+    public static final String CPU_NAME = "CPU";
+    public static final String NEW_WINDOW_ERROR_MESSAGE = "Error creating new window";
+
     private Board board;
     private GameScreen gameScreen;
     private MenuScreen menuScreen;
@@ -43,6 +49,10 @@ public class Controller extends Application {
         launch();
     }
 
+    /**
+     * Initialize the stage and menu screen.
+     * @param primaryStage
+     */
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
@@ -74,7 +84,7 @@ public class Controller extends Application {
         gameScreen = new GameScreen(this.stage, board.getWidth(), board.getHeight(), processor.getPieceLocations());
 
         boardView = gameScreen.getBoardView();
-        boardView.arrangePlayerIcons(processor.getSettings().get("icon"), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
+        boardView.arrangePlayerIcons(processor.getSettings().get(ICON_TAG), menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
         dashboardView = gameScreen.getDashboardView();
         dashboardView.addIcons(boardView.getIcons());
         board.addPlayerIcons(menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
@@ -92,12 +102,12 @@ public class Controller extends Application {
 
     private void instantiateBoard(String type) {
         try {
-            Class boardClass = Class.forName(String.format("ooga.board.%sBoard", type));
+            Class boardClass = Class.forName(String.format(BOARD_PACKAGE, type));
             Constructor boardConstructor = boardClass.getDeclaredConstructor(Map.class, Map.class, Map.class, Map.class);
             board = (Board) boardConstructor.newInstance(processor.getSettings(), processor.getPieceLocations(),
                     processor.getPieceMovePatterns(), processor.getPieceScores());
         } catch (Exception e) {
-            throw new SetUpError("Error creating board");
+            throw new SetUpError(INITIALIZE_BOARD_ERROR_MESSAGE);
         }
     }
 
@@ -106,7 +116,7 @@ public class Controller extends Application {
         if (!menuScreen.getIsGameOnePlayer()) {
             playerTwo = new HumanPlayer(menuScreen.getPlayerTwoName(), menuScreen.getPlayerTwoColor(), board);
         } else {
-            playerTwo = CPU = new CPUPlayer("CPU", menuScreen.getPlayerTwoColor(), board, menuScreen.getStrategyType());
+            playerTwo = CPU = new CPUPlayer(CPU_NAME, menuScreen.getPlayerTwoColor(), board, menuScreen.getStrategyType());
         }
         dashboardView.setPlayerNames(playerOne.getName(), playerTwo.getName());
         dashboardView.bindScores(playerOne.getScore(), playerTwo.getScore());
@@ -299,7 +309,7 @@ public class Controller extends Application {
             try {
                 newSimulation.start(newStage);
             } catch (NullPointerException e) {
-                SetUpError error = new SetUpError("Error creating new window");
+                SetUpError error = new SetUpError(NEW_WINDOW_ERROR_MESSAGE);
                 error.show();
                 error.setReturnToMenuFunction(event -> setUpMenu());
             }

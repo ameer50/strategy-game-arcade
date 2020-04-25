@@ -95,9 +95,9 @@ public class BoardView implements BoardViewInterface, Iterable<CellView> {
 
     private void createIcons() {
         CellView playerOneIcon = new IconView(new Point2D.Double(numRows, 0), cellSize/2,
-            cellSize/2, "cellcolor1");
+            cellSize/2, CELL_COLOR_1);
         CellView playerTwoIcon = new IconView(new Point2D.Double(numRows, 1), cellSize/2,
-            cellSize/2, "cellcolor1");
+            cellSize/2, CELL_COLOR_1);
         cellList[cellList.length - 2] = playerOneIcon;
         cellList[cellList.length - 1] = playerTwoIcon;
         icons = List.of(playerOneIcon, playerTwoIcon);
