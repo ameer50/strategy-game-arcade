@@ -25,7 +25,6 @@ public abstract class MoveNode implements Serializable {
         StringBuilder builder = new StringBuilder();
         for (Point2D point : points) {
             builder.append(String.format("(%d, %d), ", (int) point.getX(), (int) point.getY()));
-            System.out.println(String.format("(%d, %d), ", (int) point.getX(), (int) point.getY()));
         }
         String str = builder.toString();
         return str.substring(0, str.length() - 3);

@@ -16,7 +16,6 @@ public class CustomBoard extends Board {
     }
 
     public String checkWon() {
-        // TODO: check for sides of the board with no more pieces
         return null;
     }
 

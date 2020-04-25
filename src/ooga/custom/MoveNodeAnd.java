@@ -38,8 +38,6 @@ public class MoveNodeAnd extends MoveNode implements Serializable {
         }
         List<Point2D> pointsB = b.generatePoints();
         List<Point2D> pointsA = a.generatePoints();
-        System.out.println(pointsA);
-        System.out.println(pointsB);
         return utility.concatPointLists(pointsA, pointsB);
     }
 }
