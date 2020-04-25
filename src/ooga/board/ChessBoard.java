@@ -2,16 +2,22 @@ package ooga.board;
 
 import java.awt.geom.Point2D;
 import java.awt.geom.Point2D.Double;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import javafx.util.Pair;
 import ooga.exceptions.ReflectionException;
+import ooga.exceptions.ResourceBundleException;
 import ooga.history.Move;
 import ooga.view.DisplayError;
 
@@ -20,30 +26,31 @@ public class ChessBoard extends Board implements Serializable {
   public static final String KING = "King";
   public static final String PAWN = "Pawn";
   public static final String KNIGHT = "Knight";
+  public static final String RESOURCE_BUNDLE_EXCEPTION = "ResourceBundleException";
+  public static final String ERROR_MSG = "Could not create User Input resource bundles";
+  public static final String MOVES_DIR = "src/properties/chessMoveConstants.properties";
+  public static final String ISHIFTS = "IShifts";
+  public static final String JSHIFTS = "JShifts";
+  public static final String MOVE_SPLIT = ", ";
+  public static final String REFLECTION_EXCEPTION = "ReflectionException";
+  public static final String REFLECTION_ERR_MSG = "Could not find defined method";
   private static ResourceBundle res = ResourceBundle.getBundle("resources", Locale.getDefault());
+  private static ResourceBundle moveConstantMap;
   public static final String WHITE = res.getString("ChessColor1");
   public static final String BLACK = res.getString("ChessColor2");
   public static final String QUEEN = "Queen";
   public static final String QUEEN_MOVE_PATTERN = "Any -1";
-  public static final String PAWN_MOVE_PATTERN = "PAWN -1";
-  public static final int[] upIShifts = {-1};
-  public static final int[] upJShifts = {0};
-  public static final int[] downIShifts = {1};
-  public static final int[] downJShifts = {0};
-  public static final int[] rightIShifts = {0};
-  public static final int[] rightJShifts = {1};
-  public static final int[] leftIShifts = {0};
-  public static final int[] leftJShifts = {-1};
-  public static final int[] lateralIShifts = {-1, 1, 0, 0};
-  public static final int[] lateralJShifts = {0, 0, -1, 1};
-  public static final int[] diagonalIShifts = {-1, -1, 1, 1};
-  public static final int[] diagonalJShifts = {-1, 1, -1, 1};
-  public static final int[] anyIShifts = {-1, 1, 0, 0, -1, -1, 1, 1};
-  public static final int[] anyJShifts = {0, 0, -1, 1, -1, 1, -1, 1};
 
   public ChessBoard(Map<String, String> settings, Map<Point2D, String> locations, Map<String, String> movePatterns,
       Map<String, Integer> scores) {
     super(settings, locations, movePatterns, scores);
+    try {
+      moveConstantMap = new PropertyResourceBundle(new FileInputStream(
+          MOVES_DIR));
+    } catch (IOException e) {
+      new DisplayError(RESOURCE_BUNDLE_EXCEPTION);
+      throw new ResourceBundleException(ERROR_MSG);
+    }
   }
 
   @Override
@@ -79,15 +86,16 @@ public class ChessBoard extends Board implements Serializable {
     }
     try {
       return getMovesFromShift(coord, moveType, params, piece);
-    } catch (IllegalAccessException | NoSuchFieldException e) {
+    } catch (MissingResourceException e) {
       return getMovesFromMethodName(coord, moveType, params, piece);
     }
   }
 
   private List<Point2D> getMovesFromShift(Point2D coord, String moveType, List<Integer> params,
-      Piece piece) throws NoSuchFieldException, IllegalAccessException {
-    int[] iShift = (int[]) this.getClass().getDeclaredField(moveType + "IShifts").get(null);
-    int[] jShift = (int[]) this.getClass().getDeclaredField(moveType + "JShifts").get(null);
+      Piece piece) throws MissingResourceException {
+    List<String> iShift = Arrays.asList(moveConstantMap.getString(moveType + ISHIFTS).split(MOVE_SPLIT));
+    List<String> jShift = Arrays.asList(moveConstantMap.getString(moveType + JSHIFTS).split(
+        MOVE_SPLIT));
 
     return move(coord, iShift, jShift, params, piece);
   }
@@ -101,8 +109,8 @@ public class ChessBoard extends Board implements Serializable {
       Object ret = moveMethod.invoke(this, coord, params, piece);
       return (List<Point2D>) ret;
     } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException g) {
-      new DisplayError("ReflectionException");
-      throw new ReflectionException("Could not apply reflection");
+      new DisplayError(REFLECTION_EXCEPTION);
+      throw new ReflectionException(REFLECTION_ERR_MSG);
     }
   }
 
@@ -525,17 +533,17 @@ public class ChessBoard extends Board implements Serializable {
     return ret;
   }
 
-  private List<Point2D> move(Point2D coords, int[] iShifts, int[] jShifts, List<Integer> params,
+  private List<Point2D> move(Point2D coords, List<String> iShifts, List<String> jShifts, List<Integer> params,
       Piece piece) {
     List<Point2D> ret = new ArrayList<>();
     int i = (int) coords.getX();
     int j = (int) coords.getY();
     int distance = params.get(0);
-    for (int shift = 0; shift < iShifts.length; shift++) {
+    for (int shift = 0; shift < iShifts.size(); shift++) {
       int inc = 1;
       while (inc <= distance || distance < 0) {
-        int newI = i + iShifts[shift] * inc;
-        int newJ = j + jShifts[shift] * inc;
+        int newI = i + Integer.parseInt(iShifts.get(shift)) * inc;
+        int newJ = j + Integer.parseInt(jShifts.get(shift)) * inc;
         Point2D newPoint = getPointIfValid(newI, newJ, piece);
         if (newPoint != null) {
           ret.add(newPoint);

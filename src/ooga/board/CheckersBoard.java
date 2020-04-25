@@ -28,7 +28,7 @@ public class CheckersBoard extends Board implements Serializable {
       Map<String, Integer> scores) {
     super(settings, locations, movePatterns, scores);
     try {
-      moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/moveConstants.properties"));
+      moveConstantMap = new PropertyResourceBundle(new FileInputStream("src/properties/checkersMoveConstants.properties"));
     } catch (IOException e) {
       new DisplayError("ResourceBundleException");
       throw new ResourceBundleException("Could not create User Input resource bundles");

@@ -63,7 +63,6 @@ public abstract class Board implements Serializable {
       String pieceColor = pieceArr[0];
       String pieceName = pieceArr[1];
 
-      System.out.println("pieceName = " + pieceName);
       int score = pieceScores.get(pieceName);
       String pattern = pieceMovePatterns.get(pieceName);
       Piece piece = new Piece(pieceName, pattern, score, pieceColor);
@@ -82,7 +81,7 @@ public abstract class Board implements Serializable {
         }
       }
       if (i != height-1) {
-        builder.append(", ");
+        builder.append("\n");
       }
     }
     return builder.toString();
@@ -206,8 +205,6 @@ public abstract class Board implements Serializable {
     List<Point2D> starts = new ArrayList<>();
     starts.addAll(pieceBiMap.keySet());
     for(Point2D start: starts){
-      System.out.println("start = " + start);
-      System.out.println("pieceBiMap.get(start) = " + pieceBiMap.get(start));
       if(pieceBiMap.get(start) != null && pieceBiMap.get(start).getColor().equals(color)){
         for (Point2D end : getValidMoves(start)) {
           moves.add(new Move(start, end));
