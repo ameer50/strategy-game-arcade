@@ -41,7 +41,7 @@ public class DashboardView {
     public static final String FILE_ENTER_TITLE = "Enter File Name";
     public static final int POPUP_STAGE_HEIGHT = 500;
     public static final int POPUP_STAGE_WIDTH = 500;
-    public static final String ENTER_JSON_FILENAME = "Enter JSON Filename:";
+    public static final String ENTER_JSON_FILENAME = "Type JSON Filename and press ENTER to save.";
     public static final String SAVE_FILE_STYLE = "savefile";
     public static final int FILE_SAVE_TEXT_FIELD_MAX_WIDTH = 200;
     public static final String FILE_TEXT_FIELD_STYLE = "file-text-field";
@@ -250,13 +250,17 @@ public class DashboardView {
         textField.getStyleClass().add(FILE_TEXT_FIELD_STYLE);
         VBox textFieldBox = pop.getPopupBox();
 
-        Button goButton = new Button(SAVE);
-        goButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
+//        Button saveButton = new Button(SAVE);
+//        saveButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
+//        saveButton.setDisable(true);
 
-        textFieldBox.getChildren().addAll(prefer, textField, goButton);
+
+
+        textFieldBox.getChildren().addAll(prefer, textField);
         textFieldBox.setAlignment(Pos.CENTER);
 
-        goButton.setOnAction(e -> {
+
+        textField.setOnAction(e -> {
             setNewFileName(textField.getText());
             pop.closePopup();
             event.handle(e);
@@ -325,7 +329,12 @@ public class DashboardView {
     }
 
     private void setNewFileName(String str){
-        newFileName = String.format(res.getString(SAVED_JSON_PATH), str);
+
+        if (str.equals("")){
+            newFileName = String.format(res.getString(SAVED_JSON_PATH), "example");
+        }else{
+            newFileName = String.format(res.getString(SAVED_JSON_PATH), str);
+        }
     }
     
     public void setWinner(String winner){
