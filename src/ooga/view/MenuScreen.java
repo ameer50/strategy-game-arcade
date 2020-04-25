@@ -229,7 +229,7 @@ public class MenuScreen {
         vBox.getChildren().add(0, difficultText);
 
         Button nextButton = new Button(NEXT);
-        nextButton.getStyleClass().add(res.getString(SELECT_BUTTON_STYLE));
+        nextButton.getStyleClass().add(res.getString(SETTINGS_BUTTONS));
         nextButton.setDisable(true);
 
         for (Button b: cpuDifficulty.getButtons()) {
