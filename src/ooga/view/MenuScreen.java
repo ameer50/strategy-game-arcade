@@ -168,8 +168,8 @@ public class MenuScreen {
         nameText.getStyleClass().add(PLAYERNAME);
         TextField playerOneText = makeTextField(PLAYER_ONE);
         TextField playerTwoText = makeTextField(PLAYER_TWO);
-        setUpNextAction(next, playerOneText, playerTwoText, textFieldBox);
         textFieldBox.getChildren().addAll(nameText, playerOneText);
+        setUpNextAction(next, playerOneText, playerTwoText, textFieldBox);
         textFieldBox.setAlignment(Pos.CENTER);
         textFieldBox.getStyleClass().add(VBOX);
     }
