@@ -18,6 +18,10 @@
     -fx-min-height: 60;
 }
 
+.button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #696969, #A9A9A9);
+}
+
 .label {
     -fx-font-size: 12px;
     -fx-font-weight: bold;
@@ -122,10 +126,6 @@
     -fx-min-width: 160;
     -fx-min-height: 35;
 
-}
-
-.button:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
 }
 
 .gpane {
