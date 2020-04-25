@@ -246,11 +246,14 @@ public class JSONProcessor {
 
   public void writeLocations(Board board, String filename) {
     jo.remove("locations");
-    Map locations = new LinkedHashMap();
+    Map<String, ArrayList<String>> locations = new LinkedHashMap();
     List<Point2D> pieces = board.getPieceLocations();
     for (Point2D point : pieces) {
       String piece = board.getPieceAt(point).getFullName();
-      locations.put(piece, String.format("%d, %d", (int) point.getX(), (int) point.getY()));
+      if(!locations.containsKey(piece)){
+        locations.put(piece, new ArrayList<>());
+      }
+      locations.get(piece).add(String.format("%d, %d", (int) point.getX(), (int) point.getY()));
     }
     jo.put("locations", locations);
 
