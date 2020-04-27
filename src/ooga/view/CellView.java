@@ -23,7 +23,7 @@ public class CellView extends StackPane {
     private ProcessCoordinateInterface movePieceFunction;
     private PieceView pieceView;
 
-    public CellView(Point2D coordinate, double width, double height, String cellColorStyle){
+    public CellView(Point2D coordinate, double width, double height, String cellColorStyle) {
         this.coordinate = coordinate;
         this.width = width;
         this.height = height;
@@ -37,7 +37,7 @@ public class CellView extends StackPane {
         setOnClickFunction();
     }
 
-    private void initialize(){
+    private void initialize() {
         Rectangle rectangle = new Rectangle(width, height);
         rectangle.getStyleClass().add(style);
         this.getChildren().addAll(rectangle);
@@ -68,7 +68,7 @@ public class CellView extends StackPane {
         return pieceView;
     }
 
-    public void toggleYellow(){
+    public void toggleYellow() {
         if (!hasYellowBorder) {
             this.getStyleClass().clear();
             this.getStyleClass().add(YELLOW_BORDER);
@@ -78,7 +78,7 @@ public class CellView extends StackPane {
         hasYellowBorder = !hasYellowBorder;
     }
 
-    public void toggleRed(){
+    public void toggleRed() {
         if (!hasRedBorder) {
             this.getStyleClass().clear();
             this.getStyleClass().add(RED_BORDER);
@@ -91,33 +91,33 @@ public class CellView extends StackPane {
     public void setOnClickFunction() {
         this.setOnMouseClicked(e -> {
             // unhighlight everything if a box is clicked that has nothing there
-            if (pieceView == null && !hasYellowBorder){
+            if (pieceView == null && !hasYellowBorder) {
                 noBorderFunction.process(coordinate);
                 return;
             }
             // if a piece is there, and it is not highlighted, trigger lambdas to highlight it red and its valid moves yellow
             // also unhighlight everything
-            if (!hasRedBorder && !hasYellowBorder){
+            if (!hasRedBorder && !hasYellowBorder) {
                 noBorderFunction.process(coordinate);
                 clickPieceFunction.process(coordinate);
-            // if a cell is yellow and clicked, trigger lambda to move the piece, unhighlight everything
+                // if a cell is yellow and clicked, trigger lambda to move the piece, unhighlight everything
             } else if (hasYellowBorder) {
                 movePieceFunction.process(coordinate);
                 noBorderFunction.process(coordinate);
-            // if other, just unhighlight all cells
+                // if other, just unhighlight all cells
             } else {
                 noBorderFunction.process(coordinate);
             }
         });
     }
 
-    public void toggleNoBorder(){
+    public void toggleNoBorder() {
         this.getStyleClass().clear();
         this.getStyleClass().add(BLACK_BORDER);
         hasRedBorder = hasYellowBorder = false;
     }
 
-    public void setPieceClicked(ProcessCoordinateInterface clicked){
+    public void setPieceClicked(ProcessCoordinateInterface clicked) {
         this.clickPieceFunction = clicked;
     }
 
@@ -125,7 +125,7 @@ public class CellView extends StackPane {
         this.movePieceFunction = clicked;
     }
 
-    public void setNoBorderFunction(ProcessCoordinateInterface clicked){
+    public void setNoBorderFunction(ProcessCoordinateInterface clicked) {
         this.noBorderFunction = clicked;
     }
 

@@ -6,13 +6,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import ooga.board.*;
+import ooga.board.Board;
+import ooga.board.Piece;
 import ooga.history.History;
 import ooga.history.Move;
 import ooga.json.JSONProcessor;
+import ooga.player.CPUPlayer;
 import ooga.player.HumanPlayer;
 import ooga.player.Player;
-import ooga.player.CPUPlayer;
 import ooga.utility.StringUtility;
 import ooga.view.*;
 
@@ -45,12 +46,13 @@ public class Controller extends Application {
     /**
      * Start of the program.
      */
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         launch();
     }
 
     /**
      * Initialize the stage and menu screen.
+     *
      * @param primaryStage
      */
     @Override
@@ -89,7 +91,7 @@ public class Controller extends Application {
         dashboardView.addIcons(boardView.getIcons());
         board.addPlayerIcons(menuScreen.getPlayerOneColor(), menuScreen.getPlayerTwoColor());
 
-        if (menuScreen.isDarkMode()){
+        if (menuScreen.isDarkMode()) {
             gameScreen.toggleGameDarkMode();
             dashboardView.toggleDarkMode();
         }
@@ -169,7 +171,12 @@ public class Controller extends Application {
         setUndoRedoListeners();
 
         dashboardView.setSaveClicked(e -> {
-            processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
+            try {
+                processor.writeLocations(board, gameScreen.getDashboardView().getNewFileName());
+            } catch (SetUpError error) {
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
+            }
         });
 
         dashboardView.setSkipTurnClicked(e -> {
@@ -237,14 +244,14 @@ public class Controller extends Application {
     }
 
     private void removeCapturedPieces(Move move) {
-        for (Point2D location: move.getCapturedPiecesAndLocations().keySet()) {
+        for (Point2D location : move.getCapturedPiecesAndLocations().keySet()) {
             if (board.getPieceAt(location) == null) boardView.getCellAt(location).setPieceView(null);
         }
     }
 
     private void replenishCapturedPieces(Move prevMove) {
         Map<Point2D, Piece> map = prevMove.getCapturedPiecesAndLocations();
-        for (Point2D capturedPieceLocation: map.keySet()) {
+        for (Point2D capturedPieceLocation : map.keySet()) {
             Piece capturedPiece = map.get(capturedPieceLocation);
             insertPiece(capturedPiece, capturedPieceLocation);
         }
@@ -252,7 +259,7 @@ public class Controller extends Application {
 
     private void convertPieces(Move m) {
         Map<Point2D, Pair<Piece, Piece>> map = m.getConvertedPiecesAndLocations();
-        for (Point2D convertedPieceLocation: map.keySet()) {
+        for (Point2D convertedPieceLocation : map.keySet()) {
             Piece convertedPiece = m.isUndo() ? map.get(convertedPieceLocation).getKey() : map.get(convertedPieceLocation).getValue();
             insertPiece(convertedPiece, convertedPieceLocation);
         }

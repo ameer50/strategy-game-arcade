@@ -7,18 +7,21 @@
     "bottomColor": "Black",
     "icon": "Disk"
   },
-
   "locations": {
-    "White_Disk": ["3, 4", "4, 3"],
-    "Black_Disk": ["3, 3", "4, 4"]
+    "White_Disk": [
+      "3, 4",
+      "4, 3"
+    ],
+    "Black_Disk": [
+      "3, 3",
+      "4, 4"
+    ]
   },
-
   "scores": {
     "Disk": 5
   },
-
   "moves": {
-    "pieces" : {
+    "pieces": {
       "Disk": "LATERAL -1"
     }
   }

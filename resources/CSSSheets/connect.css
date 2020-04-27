@@ -6,10 +6,9 @@
 }
 
 .button {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%,  WHITE, #ADD8E6);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, WHITE, #ADD8E6);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
@@ -114,8 +113,7 @@
 }
 
 .auxbuttons {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #fad2a0, #be8264);
     -fx-background-radius: 10;
     -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
@@ -178,7 +176,7 @@
     -fx-border-width: 5px;
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,  WHITE, #ADD8E6);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, WHITE, #ADD8E6);
     -fx-alignment: center;
 }
 
@@ -195,15 +193,15 @@
     -fx-text-fill: white;
 }
 
-.list-cell:even { /* changed to even */
+.list-cell:even {
     -fx-background-color: AZURE;
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }
 
-.list-cell:odd { /* changed to odd */
-    -fx-background-color:  #ADD8E6;
+.list-cell:odd {
+    -fx-background-color: #ADD8E6;
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;

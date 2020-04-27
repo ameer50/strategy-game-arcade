@@ -7,10 +7,9 @@
 }
 
 .button {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 18px;
@@ -23,10 +22,9 @@
 
 
 .settingsbuttons {
-    -fx-background-color:
-        linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #696969, BLACK);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 20px;
@@ -84,7 +82,7 @@
 }
 
 .file-text-field {
-    -fx-border-width: 0 0 1 0; // top, right, bottom, left
+    -fx-border-width: 0 0 1 0;
     -fx-background-color: #F8F8FF;
     -fx-font: 20px "Helvatica";
     -fx-font-weight: bold;
@@ -108,10 +106,9 @@
 }
 
 .darkmode {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
     -fx-font-weight: bold;
     -fx-font-size: 14px;

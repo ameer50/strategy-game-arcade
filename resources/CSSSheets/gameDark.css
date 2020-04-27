@@ -6,10 +6,9 @@
 }
 
 .button {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
     -fx-background-radius: 10;
-    -fx-background-insets: 0,1,2,3,0;
+    -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
     -fx-font-size: 30px;
@@ -17,6 +16,10 @@
     -fx-padding: 10 20 10 20;
     -fx-min-width: 250;
     -fx-min-height: 60;
+}
+
+.button:hover {
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, #696969, #A9A9A9);
 }
 
 .label {
@@ -113,8 +116,7 @@
 }
 
 .auxbuttons {
-    -fx-background-color:
-            linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
+    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
     -fx-background-radius: 10;
     -fx-background-insets: 0, 1, 2, 3, 0;
     -fx-text-fill: #F8F8FF;
@@ -124,10 +126,6 @@
     -fx-min-width: 160;
     -fx-min-height: 35;
 
-}
-
-.button:hover {
-    -fx-background-color: linear-gradient(from 0% 0% to 50% 100%, WHITE, #696969);
 }
 
 .gpane {
@@ -178,16 +176,16 @@
     -fx-border-width: 5px;
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#696969, BLACK);
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);
     -fx-alignment: center;
 }
 
 .listview {
-    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%,#696969, BLACK);;
+    -fx-border-color: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);;
     -fx-border-width: 10px;
     -fx-border-radius: 5px;
     -fx-background-radius: 10px;
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%,#696969, BLACK);;
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #696969, BLACK);;
 
 }
 
@@ -196,14 +194,14 @@
     -fx-text-fill: #FFFFF0;
 }
 
-.list-cell:even { /* changed to even */
+.list-cell:even {
     -fx-background-color: WHITE;
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }
 
-.list-cell:odd { /* changed to odd */
+.list-cell:odd {
     -fx-background-color: #696969;
     -fx-font-family: "Trebuchet MS";
     -fx-font-size: 12pt;

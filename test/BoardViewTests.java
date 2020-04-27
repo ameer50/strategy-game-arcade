@@ -1,9 +1,10 @@
-import javafx.stage.Stage;
 import ooga.board.Board;
 import ooga.board.ChessBoard;
 import ooga.history.Move;
 import ooga.json.JSONProcessor;
-import ooga.view.*;
+import ooga.view.BoardView;
+import ooga.view.CellView;
+import ooga.view.PieceView;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.DukeApplicationTest;
@@ -25,7 +26,7 @@ public class BoardViewTests extends DukeApplicationTest {
         JSONProcessor processor = new JSONProcessor();
         processor.parse(gameJSON);
         board = new ChessBoard(processor.getSettings(), processor.getPieceLocations(), processor.getPieceMovePatterns(), processor.getPieceScores());
-        boardView = new BoardView(8,8, processor.getPieceLocations());
+        boardView = new BoardView(8, 8, processor.getPieceLocations());
     }
 
     @Test
@@ -38,49 +39,49 @@ public class BoardViewTests extends DukeApplicationTest {
 
     @Test
     public void testValidPieceName() {
-        String pieceName = boardView.getCellAt(7,7).getPieceView().getPieceName();
+        String pieceName = boardView.getCellAt(7, 7).getPieceView().getPieceName();
         assertEquals(pieceName, "White_Rook");
     }
 
     @Test
     public void testHighlightValidMoves() {
-        List<Point2D> validMoves = board.getValidMoves(new Point2D.Double(6,7));
+        List<Point2D> validMoves = board.getValidMoves(new Point2D.Double(6, 7));
         boardView.highlightValidMoves(validMoves);
 
-        assertEquals(true, boardView.getCellAt(5,7).isHasYellowBorder());
-        assertEquals(true, boardView.getCellAt(4,7).isHasYellowBorder());
+        assertEquals(true, boardView.getCellAt(5, 7).isHasYellowBorder());
+        assertEquals(true, boardView.getCellAt(4, 7).isHasYellowBorder());
     }
 
     @Test
     public void testToggleRed() {
-        Point2D point = new Point2D.Double(6,7);
+        Point2D point = new Point2D.Double(6, 7);
         boardView.setSelectedLocation(point);
         assertEquals(true, boardView.getCellAt(point).isHasRedBorder());
     }
 
     @Test
     public void testdoMove() {
-        PieceView currPiece = boardView.getCellAt(6,7).getPieceView();
-        Move move = new Move(new Point2D.Double(6,7), new Point2D.Double(5,7));
+        PieceView currPiece = boardView.getCellAt(6, 7).getPieceView();
+        Move move = new Move(new Point2D.Double(6, 7), new Point2D.Double(5, 7));
         boardView.doMove(move);
-        assertEquals(null ,boardView.getCellAt(6,7).getPieceView());
-        assertEquals(currPiece, boardView.getCellAt(5,7).getPieceView());
+        assertEquals(null, boardView.getCellAt(6, 7).getPieceView());
+        assertEquals(currPiece, boardView.getCellAt(5, 7).getPieceView());
     }
 
     @Test
     public void testToggleNoBorder() {
-        boardView.getCellAt(6,7).toggleNoBorder();
+        boardView.getCellAt(6, 7).toggleNoBorder();
 
-        assertEquals(false, boardView.getCellAt(6,7).isHasRedBorder());
-        assertEquals(false, boardView.getCellAt(6,7).isHasYellowBorder());
+        assertEquals(false, boardView.getCellAt(6, 7).isHasRedBorder());
+        assertEquals(false, boardView.getCellAt(6, 7).isHasYellowBorder());
     }
 
     @Test
     public void testSetPiece() {
-        assertEquals(null, boardView.getCellAt(5,7).getPieceView());
+        assertEquals(null, boardView.getCellAt(5, 7).getPieceView());
         PieceView piece = new PieceView("White_Pawn");
-        boardView.getCellAt(5,7).setPieceView(piece);
-        assertEquals(piece, boardView.getCellAt(5,7).getPieceView());
+        boardView.getCellAt(5, 7).setPieceView(piece);
+        assertEquals(piece, boardView.getCellAt(5, 7).getPieceView());
     }
 
     @Test

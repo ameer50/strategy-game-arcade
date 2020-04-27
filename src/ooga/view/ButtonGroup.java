@@ -1,15 +1,9 @@
 package ooga.view;
 
+import javafx.scene.control.Button;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
-
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 
 public class ButtonGroup {
 
@@ -27,7 +21,7 @@ public class ButtonGroup {
         }
     }
 
-    public void addStyle(String style){
+    public void addStyle(String style) {
         for (Button button : buttons) {
             button.getStyleClass().add(style);
         }
