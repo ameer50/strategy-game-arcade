@@ -396,7 +396,7 @@ public class ChessBoard extends Board implements Serializable {
                 }
                 if (thisPieceMoves.contains(potentialPoint)) {
                     placePieceAt(potentialPoint, storedPiece);
-                    placePieceAt(kingPoint, storedPiece);
+                    placePieceAt(kingPoint, storedKing);
                     return true;
                 }
             }
