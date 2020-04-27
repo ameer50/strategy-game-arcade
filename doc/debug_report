@@ -1,0 +1,26 @@
+## Description
+
+When approaching check the king stops working.
+
+## Expected Behavior
+
+The king shouldn't stop working.
+
+## Current Behavior
+
+The king stops working.
+
+## Steps to Reproduce
+
+1. Move white pawn (6, 4) up 2
+2. Move black pawn (1, 3) down 2
+3. Kill white pawn
+4. Try to move king
+## Failure Logs
+
+NullPointerException
+checkWon JUNIT Test breaks
+
+## Hypothesis for Fixing the Bug
+
+When refactoring one variable was not updated properly causing the NullPointerException to occur.
