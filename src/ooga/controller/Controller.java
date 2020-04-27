@@ -70,6 +70,10 @@ public class Controller extends Application {
             } catch (SetUpError error) {
                 error.show();
                 error.setReturnToMenuFunction(event -> setUpMenu());
+            } catch (Exception ex) {
+                SetUpError error = new SetUpError("Error setting up");
+                error.show();
+                error.setReturnToMenuFunction(event -> setUpMenu());
             }
         });
     }
