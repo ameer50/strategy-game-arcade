@@ -1,0 +1,1 @@
+{"settings":{"name":"Othello","width":"8","icon":"Disk","type":"preset","height":"8","bottomColor":"White"},"scores":{"Disk":5},"moves":{"pieces":{"Disk":"LATERAL -1"}},"locations":{"White_Disk":["3, 3","4, 4"],"Black_Disk":["3, 4","4, 3"]}}

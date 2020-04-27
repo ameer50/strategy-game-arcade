@@ -1,0 +1,23 @@
+## Description
+
+Error checking leaks through catch statement.
+
+## Expected Behavior
+
+All errors should trigger popup.
+
+## Current Behavior
+
+MissingResourceException is not handled.
+
+## Steps to Reproduce
+
+Load checkers file into chess.
+
+## Failure Logs
+
+MissingResourceException
+
+## Hypothesis for Fixing the Bug
+
+Adding an extra catch statement should handle extra errors.
