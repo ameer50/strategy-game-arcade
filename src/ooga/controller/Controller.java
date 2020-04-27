@@ -28,6 +28,7 @@ public class Controller extends Application {
     public static final String INITIALIZE_BOARD_ERROR_MESSAGE = "Error creating board";
     public static final String CPU_NAME = "CPU";
     public static final String NEW_WINDOW_ERROR_MESSAGE = "Error creating new window";
+    public static final String GEN_ERR_MSG = "Error setting up";
 
     private Board board;
     private GameScreen gameScreen;
@@ -71,7 +72,7 @@ public class Controller extends Application {
                 error.show();
                 error.setReturnToMenuFunction(event -> setUpMenu());
             } catch (Exception ex) {
-                SetUpError error = new SetUpError("Error setting up");
+                SetUpError error = new SetUpError(GEN_ERR_MSG);
                 error.show();
                 error.setReturnToMenuFunction(event -> setUpMenu());
             }
